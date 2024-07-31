@@ -46,6 +46,7 @@ An alternative approach might be to construct an FT8 radio hat for a Raspberry 5
 1 PC Board artwork and fabrication
 2 Evaluate on-the-air performance
 * Evaluate power consumption
+* Replace the 7805 voltage regulator with something appropriate for battery operation
 * Evaluate performance of the 100 mW final compared to Class D BS170s
 * SI4735 receiver performance complexity vs Taylor Detector approach
 3 Consider use of a different DAC with a 3.3V reference for full-screen touch
