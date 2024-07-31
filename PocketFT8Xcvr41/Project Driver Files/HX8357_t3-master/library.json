@@ -1,0 +1,33 @@
+{
+  "name": "HX8357_t3",
+  "keywords": "display, tft, lcd, graphics, spi",
+  "description": "Optimized HX8357 (480x320 Color TFT) Display",
+  "authors": [
+    {
+        "name": "Limor Fried",
+        "url": "http://ladyada.net"
+    },
+    {
+        "name": "Paul Stoffregen",
+        "email": "paul@pjrc.com",
+        "url": "http://www.pjrc.com"
+    },
+    {
+        "name": "Alexander Martin",
+        "email": "a@alexandernmartin.com",
+        "url": "http://www.alexandernmartin.com",
+        "maintainer": true
+    }
+  ],
+  "exclude": [
+    "extras",
+    "*.bmp"
+  ],
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/Asaurus1/HX8357_t3"
+  },
+  "frameworks": "arduino",
+  "platforms": "*"
+}
