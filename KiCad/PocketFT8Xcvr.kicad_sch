@@ -4,6 +4,15 @@
 
   (paper "A4")
 
+  (title_block
+    (title "Pocket FT8 Transceiver")
+    (date "2024-07-31")
+    (rev "2.0")
+    (company "KQ7B")
+    (comment 1 "Original design by Charles Hill, Ricardo Caritti, Karlis Goba, Lars Petersen, et al")
+    (comment 2 "https://github.com/conr2286/PocketFT8Xcvr.git")
+  )
+
   (lib_symbols
     (symbol "2024-07-31_16-01-32:RLB9012-102KL" (pin_names (offset 0.254)) (in_bom yes) (on_board yes)
       (property "Reference" "L" (at 6.985 5.08 0)
