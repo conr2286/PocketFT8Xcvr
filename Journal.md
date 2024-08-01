@@ -6,7 +6,7 @@
 * What is the purpose of Charles' complex RC network between Si4735
   and Teensy?  The Skyworks application notes suggest a simple approach.
 * Is a notch needed in the output filter to reject the second harmonic?
-* Without T1 in Charles' original design, should the input imput impedance of the low-pass filter be designed for 50 ohms?
+* Why did Charles include T1 following the MMIC if the MMIC's output impedance is 50 ohms?
 
 # Log
 1. HX8537D molex connector wired to connect IM2 to +3OUT, avoiding the
