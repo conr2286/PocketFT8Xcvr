@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "dk_Transistors-FETs-MOSFETs-Single1")(type "KiCad")(uri "${KIPRJMOD}/mosfets/dk_Transistors-FETs-MOSFETs-Single.kicad_sym")(options "")(descr ""))
+  (lib (name "teensy1")(type "KiCad")(uri "/Users/jconrad/GitHub/KiCAD/JRC/teensy.kicad_sym")(options "")(descr ""))
+)
