@@ -800,6 +800,1050 @@
 				)
 			)
 		)
+		(symbol "C0805C334K4RAC7800_1"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0.254) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C"
+				(at 3.81 3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "10UF"
+				(at 3.81 -3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "0805"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "CAP CER 10UF 16V X5R 0805"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Kemet"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "C0805C106K4PAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "CAPC220145_140N_KEM CAPC220145_140N_KEM-M CAPC220145_140N_KEM-L"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_1_1_1"
+				(polyline
+					(pts
+						(xy 2.54 0) (xy 3.4798 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.4798 -1.905) (xy 3.4798 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 -1.905) (xy 4.1148 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 0) (xy 5.08 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 0)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_1_1_2"
+				(polyline
+					(pts
+						(xy -1.905 -4.1148) (xy 1.905 -4.1148)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.905 -3.4798) (xy 1.905 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -4.1148) (xy 0 -5.08)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 270)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 0 -7.62 90)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "C0805C334K4RAC7800_2"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0.254) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C"
+				(at 3.81 3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "10UF"
+				(at 3.81 -3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "0805"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "CAP CER 10UF 16V X5R 0805"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Kemet"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "C0805C106K4PAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "CAPC220145_140N_KEM CAPC220145_140N_KEM-M CAPC220145_140N_KEM-L"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_2_1_1"
+				(polyline
+					(pts
+						(xy 2.54 0) (xy 3.4798 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.4798 -1.905) (xy 3.4798 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 -1.905) (xy 4.1148 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 0) (xy 5.08 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 0)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_2_1_2"
+				(polyline
+					(pts
+						(xy -1.905 -4.1148) (xy 1.905 -4.1148)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.905 -3.4798) (xy 1.905 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -4.1148) (xy 0 -5.08)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 270)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 0 -7.62 90)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "C0805C334K4RAC7800_3"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0.254) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C"
+				(at 3.81 3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "10UF"
+				(at 3.81 -3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "0805"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "CAP CER 10UF 16V X5R 0805"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Kemet"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "C0805C106K4PAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "CAPC220145_140N_KEM CAPC220145_140N_KEM-M CAPC220145_140N_KEM-L"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_3_1_1"
+				(polyline
+					(pts
+						(xy 2.54 0) (xy 3.4798 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.4798 -1.905) (xy 3.4798 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 -1.905) (xy 4.1148 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 0) (xy 5.08 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 0)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_3_1_2"
+				(polyline
+					(pts
+						(xy -1.905 -4.1148) (xy 1.905 -4.1148)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.905 -3.4798) (xy 1.905 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -4.1148) (xy 0 -5.08)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 270)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 0 -7.62 90)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "C0805C334K4RAC7800_4"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0.254) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C"
+				(at 3.81 3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "10UF"
+				(at 3.81 -3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "0805"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "CAP CER 10UF 16V X5R 0805"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Kemet"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "C0805C106K4PAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "CAPC220145_140N_KEM CAPC220145_140N_KEM-M CAPC220145_140N_KEM-L"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_4_1_1"
+				(polyline
+					(pts
+						(xy 2.54 0) (xy 3.4798 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.4798 -1.905) (xy 3.4798 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 -1.905) (xy 4.1148 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 0) (xy 5.08 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 0)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_4_1_2"
+				(polyline
+					(pts
+						(xy -1.905 -4.1148) (xy 1.905 -4.1148)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.905 -3.4798) (xy 1.905 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -4.1148) (xy 0 -5.08)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 270)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 0 -7.62 90)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "Connector:Barrel_Jack"
 			(pin_names
 				(offset 1.016)
@@ -1585,6 +2629,536 @@
 				)
 			)
 		)
+		(symbol "Kemet2024-08-02_22-05-35:C0603C104K4RACTU"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0.254) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C"
+				(at 3.81 3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "0.1UF"
+				(at -4.318 -11.938 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "0603"
+				(at 1.27 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "C0603C104K4RACTU"
+				(at 1.778 -7.366 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+				(at 2.032 -3.048 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Kemet"
+				(at -1.27 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "C0603C104K4RAC7867"
+				(at 3.302 -9.398 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Tolerance" "10%"
+				(at 6.096 -11.938 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Voltage" "16V"
+				(at 1.524 -11.938 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "C0603C104K4RACTU"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "CAPC17595_95N_KEM CAPC17595_95N_KEM-M CAPC17595_95N_KEM-L"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "C0603C104K4RACTU_1_1"
+				(polyline
+					(pts
+						(xy 2.54 0) (xy 3.4798 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.4798 -1.905) (xy 3.4798 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 -1.905) (xy 4.1148 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 0) (xy 5.08 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 0)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "C0603C104K4RACTU_1_2"
+				(polyline
+					(pts
+						(xy -1.905 -4.1148) (xy 1.905 -4.1148)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.905 -3.4798) (xy 1.905 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -4.1148) (xy 0 -5.08)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 270)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 0 -7.62 90)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800"
+			(pin_names
+				(offset 0.254)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C"
+				(at 3.81 3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "C0805C334K4RAC7800"
+				(at 3.81 -3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "CAPC220145_140N_KEM"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_locked" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "C0805C334K4RAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "CAPC220145_140N_KEM CAPC220145_140N_KEM-M CAPC220145_140N_KEM-L"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_1_1"
+				(polyline
+					(pts
+						(xy 2.54 0) (xy 3.4798 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.4798 -1.905) (xy 3.4798 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 -1.905) (xy 4.1148 1.905)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.1148 0) (xy 5.08 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 0)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "C0805C334K4RAC7800_1_2"
+				(polyline
+					(pts
+						(xy -1.905 -4.1148) (xy 1.905 -4.1148)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.905 -3.4798) (xy 1.905 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -4.1148) (xy 0 -5.08)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -3.4798)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 270)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 0 -7.62 90)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "RF_AM_FM:Si4735-D60-GU"
 			(pin_names
 				(offset 1.016)
@@ -2231,489 +3805,6 @@
 						)
 					)
 					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "SparkFun-Capacitor:0.1uF_0603_25V_20%"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0.254)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "C"
-				(at 0.635 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "0.1uF"
-				(at 0.635 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-				(at 0 -11.43 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-				(at 0 -13.97 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Unpolarized capacitor"
-				(at 0 -19.05 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "PROD_ID" "CAP-00810"
-				(at 0 -16.51 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Voltage" "25V"
-				(at 0 -6.35 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Tolerance" "20%"
-				(at 0 -8.89 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "SparkFun cap capacitor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "C_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "0.1uF_0603_25V_20%_0_1"
-				(polyline
-					(pts
-						(xy -2.032 -0.762) (xy 2.032 -0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -2.032 0.762) (xy 2.032 0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "0.1uF_0603_25V_20%_1_1"
-				(pin passive line
-					(at 0 3.81 270)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -3.81 90)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "SparkFun-Capacitor:1.0uF_0603_16V_10%"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0.254)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "C"
-				(at 0.635 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "1.0uF"
-				(at 0.635 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-				(at 0 -11.43 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-				(at 0 -13.97 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Unpolarized capacitor"
-				(at 0 -19.05 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "PROD_ID" "CAP-13930"
-				(at -1.27 -16.51 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Voltage" "16V"
-				(at 0 -6.35 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Tolerance" "10%"
-				(at 0 -8.89 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "SparkFun cap capacitor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "C_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "1.0uF_0603_16V_10%_0_1"
-				(polyline
-					(pts
-						(xy -2.032 -0.762) (xy 2.032 -0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -2.032 0.762) (xy 2.032 0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "1.0uF_0603_16V_10%_1_1"
-				(pin passive line
-					(at 0 3.81 270)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -3.81 90)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "SparkFun-Capacitor:10uF_0603_6.3V_20%"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0.254)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "C"
-				(at 0.635 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "10uF"
-				(at 0.635 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-				(at 0 -11.43 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-				(at 0 -16.51 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Unpolarized capacitor"
-				(at 0 -19.05 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "PROD_ID" "CAP-11015"
-				(at -1.27 -13.97 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Voltage" "6.3V"
-				(at 0 -6.35 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Tolerance" "20%"
-				(at 0 -8.89 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "SparkFun cap capacitor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "C_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "10uF_0603_6.3V_20%_0_1"
-				(polyline
-					(pts
-						(xy -2.032 -0.762) (xy 2.032 -0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -2.032 0.762) (xy 2.032 0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "10uF_0603_6.3V_20%_1_1"
-				(pin passive line
-					(at 0 3.81 270)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -3.81 90)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4724,301 +5815,6 @@
 				)
 			)
 		)
-		(symbol "Transistor_FET:2N7000"
-			(pin_names hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "Q"
-				(at 5.08 1.905 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "2N7000"
-				(at 5.08 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
-				(at 5.08 -1.905 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-						(italic yes)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://www.vishay.com/docs/70226/70226.pdf"
-				(at 5.08 -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Description" "0.2A Id, 200V Vds, N-Channel MOSFET, 2.6V Logic Level, TO-92"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "N-Channel MOSFET Logic-Level"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "TO?92*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "2N7000_0_1"
-				(polyline
-					(pts
-						(xy 0.254 0) (xy -2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.254 1.905) (xy 0.254 -1.905)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 -1.27) (xy 0.762 -2.286)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 0.508) (xy 0.762 -0.508)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 2.286) (xy 0.762 1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 2.54) (xy 2.54 1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 0.762 1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.016 0) (xy 2.032 0.381) (xy 2.032 -0.381) (xy 1.016 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.794 0.508) (xy 2.921 0.381) (xy 3.683 0.381) (xy 3.81 0.254)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 3.302 0.381) (xy 2.921 -0.254) (xy 3.683 -0.254) (xy 3.302 0.381)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 1.651 0)
-					(radius 2.794)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 2.54 -1.778)
-					(radius 0.254)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(circle
-					(center 2.54 1.778)
-					(radius 0.254)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-			)
-			(symbol "2N7000_1_1"
-				(pin passive line
-					(at 2.54 -5.08 90)
-					(length 2.54)
-					(name "S"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -5.08 0 0)
-					(length 2.54)
-					(name "G"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 5.08 270)
-					(length 2.54)
-					(name "D"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "dk_Battery-Holders-Clips-Contacts:BS-7"
 			(pin_numbers hide)
 			(pin_names
@@ -6323,6 +7119,417 @@
 					(at 2.54 -5.08 90)
 					(length 2.54)
 					(name "C"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "dk_Transistors-FETs-MOSFETs-Single:2N7000"
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at -2.6924 3.6322 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify right)
+				)
+			)
+			(property "Value" "2N7000"
+				(at 3.4544 0 90)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "digikey-footprints:TO-92-3"
+				(at 5.08 5.08 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF"
+				(at 5.08 7.62 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Description" "MOSFET N-CH 60V 200MA TO-92"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Digi-Key_PN" "2N7000FS-ND"
+				(at 5.08 10.16 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "MPN" "2N7000"
+				(at 5.08 12.7 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Category" "Discrete Semiconductor Products"
+				(at 5.08 15.24 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Family" "Transistors - FETs, MOSFETs - Single"
+				(at 5.08 17.78 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "DK_Datasheet_Link" "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF"
+				(at 5.08 20.32 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "DK_Detail_Page" "/product-detail/en/on-semiconductor/2N7000/2N7000FS-ND/244278"
+				(at 5.08 22.86 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Description_1" "MOSFET N-CH 60V 200MA TO-92"
+				(at 5.08 25.4 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "ON Semiconductor"
+				(at 5.08 27.94 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Status" "Active"
+				(at 5.08 30.48 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "2N7000FS-ND"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "2N7000_0_1"
+				(circle
+					(center -1.27 0)
+					(radius 3.302)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(circle
+					(center 0 -1.905)
+					(radius 0.127)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 -1.397)
+					(radius 0.127)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -1.397) (xy -2.54 -1.397)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -5.08 -2.54) (xy -3.048 -2.54) (xy -3.048 1.397)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0 1.397) (xy -2.54 1.397)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.127 -1.905) (xy 1.016 -1.905) (xy 1.016 1.397) (xy 1.016 1.905) (xy -0.127 1.905)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 1.905)
+					(radius 0.127)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "2N7000_1_1"
+				(polyline
+					(pts
+						(xy -2.54 -1.397) (xy -2.54 -1.905)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 -1.397) (xy -2.54 -0.889)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -2.54 -0.508)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -2.54 0.508)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 1.905) (xy -2.54 0.889)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.524 0.508) (xy 0.508 0.508)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -1.778 0.508) (xy -1.778 -0.508) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 0.508) (xy 0.508 -0.254) (xy 1.524 -0.254) (xy 1.016 0.508)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(pin bidirectional line
+					(at 0 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 0 5.08 270)
+					(length 2.54)
+					(name "D"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -8294,22 +9501,16 @@
 		(uuid "11443122-cf77-4abd-b674-e17a0b393c26")
 	)
 	(junction
-		(at 74.93 120.65)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1bd59e67-3fa1-4f64-abdc-04043da1fefa")
-	)
-	(junction
-		(at 227.33 104.14)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1e560a2c-f16c-4a7a-9dfb-2be21d5effdc")
-	)
-	(junction
 		(at 227.33 142.24)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "236af8fe-c2e8-4f93-b15e-4084f59dd9be")
+	)
+	(junction
+		(at 227.33 116.84)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2573c946-8b15-4665-9e04-8368f2f931a7")
 	)
 	(junction
 		(at 72.39 31.75)
@@ -8328,6 +9529,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "380fe1ac-5d3e-4916-a577-e7a9c276dc10")
+	)
+	(junction
+		(at 201.93 142.24)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3b532b7b-0ce3-4371-91c3-eef3ded02cdb")
 	)
 	(junction
 		(at 207.01 142.24)
@@ -8366,12 +9573,6 @@
 		(uuid "6419a6bc-461e-499b-ba56-a45bf57ddb96")
 	)
 	(junction
-		(at 81.28 93.98)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "65afecdb-41d0-415c-be31-d01b3a266cf1")
-	)
-	(junction
 		(at 96.52 146.05)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -8382,6 +9583,18 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "75a02a4c-6488-4002-8d81-ad6d3d04fb4f")
+	)
+	(junction
+		(at 97.79 80.01)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7ad67f91-127f-4374-97f0-9e67a9e0f12c")
+	)
+	(junction
+		(at 81.28 93.98)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7da5c1d0-24de-4335-af5b-2cd16993bc44")
 	)
 	(junction
 		(at 196.85 152.4)
@@ -8400,12 +9613,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "83953dfd-298d-48ec-a393-9c6c17f28158")
-	)
-	(junction
-		(at 48.26 128.27)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "880bd75c-acd6-4978-812d-018fec23919e")
 	)
 	(junction
 		(at 88.9 97.79)
@@ -8436,12 +9643,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9d76379e-dff5-48c4-8661-ae11ef16d569")
-	)
-	(junction
-		(at 97.79 80.01)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "9f45ebad-d16c-4b3b-99c4-4f8a83ce82d2")
 	)
 	(junction
 		(at 220.98 81.28)
@@ -8526,6 +9727,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "da2de666-3f98-4e65-bf3e-4f11de21faf5")
+	)
+	(junction
+		(at 74.93 120.65)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e3f81bca-a938-4304-a478-35d0eb0a5eac")
 	)
 	(junction
 		(at 48.26 120.65)
@@ -8827,16 +10034,6 @@
 	)
 	(wire
 		(pts
-			(xy 227.33 144.78) (xy 227.33 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "070c6df7-4e4c-4a80-b51c-8f474c09b33d")
-	)
-	(wire
-		(pts
 			(xy 190.5 87.63) (xy 190.5 88.9)
 		)
 		(stroke
@@ -8917,16 +10114,6 @@
 	)
 	(wire
 		(pts
-			(xy 48.26 128.27) (xy 60.96 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0dcf828c-2a43-4728-8d16-c9fdab273272")
-	)
-	(wire
-		(pts
 			(xy 275.59 149.86) (xy 279.4 149.86)
 		)
 		(stroke
@@ -8954,16 +10141,6 @@
 			(type default)
 		)
 		(uuid "0f3d42b4-1fce-4355-9db7-48632505cc1c")
-	)
-	(wire
-		(pts
-			(xy 232.41 81.28) (xy 236.22 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "100e91bb-4e5e-464c-ae46-f3ecaa6a56ae")
 	)
 	(wire
 		(pts
@@ -8997,6 +10174,16 @@
 	)
 	(wire
 		(pts
+			(xy 261.62 54.61) (xy 261.62 107.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1724f39b-6c77-40f0-b794-95f7e97da56c")
+	)
+	(wire
+		(pts
 			(xy 207.01 119.38) (xy 207.01 123.19)
 		)
 		(stroke
@@ -9017,13 +10204,13 @@
 	)
 	(wire
 		(pts
-			(xy 227.33 129.54) (xy 227.33 132.08)
+			(xy 232.41 93.98) (xy 238.76 93.98)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "2107f43c-a9f9-4142-988a-6f0e586e5ab7")
+		(uuid "22c80eb0-a85b-4ee2-991d-5fd7ac2100ac")
 	)
 	(wire
 		(pts
@@ -9137,16 +10324,6 @@
 	)
 	(wire
 		(pts
-			(xy 227.33 139.7) (xy 227.33 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3319ed59-965d-4840-a7a5-4afebeeb18b6")
-	)
-	(wire
-		(pts
 			(xy 58.42 31.75) (xy 52.07 31.75)
 		)
 		(stroke
@@ -9204,6 +10381,16 @@
 			(type default)
 		)
 		(uuid "36f0cecf-44db-4943-9fc3-ad858048158d")
+	)
+	(wire
+		(pts
+			(xy 227.33 116.84) (xy 227.33 119.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "39726e72-7bff-4ffb-8b20-6cd363a16409")
 	)
 	(wire
 		(pts
@@ -9567,16 +10754,6 @@
 	)
 	(wire
 		(pts
-			(xy 97.79 80.01) (xy 104.14 80.01)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "651cf71a-1e96-4d36-ac4c-0f4fe1f7bbfe")
-	)
-	(wire
-		(pts
 			(xy 254 72.39) (xy 254 81.28)
 		)
 		(stroke
@@ -9627,7 +10804,7 @@
 	)
 	(wire
 		(pts
-			(xy 39.37 128.27) (xy 48.26 128.27)
+			(xy 39.37 128.27) (xy 60.96 128.27)
 		)
 		(stroke
 			(width 0)
@@ -9647,7 +10824,7 @@
 	)
 	(wire
 		(pts
-			(xy 220.98 81.28) (xy 224.79 81.28)
+			(xy 220.98 81.28) (xy 228.6 81.28)
 		)
 		(stroke
 			(width 0)
@@ -9687,7 +10864,7 @@
 	)
 	(wire
 		(pts
-			(xy 201.93 143.51) (xy 201.93 119.38)
+			(xy 201.93 143.51) (xy 201.93 142.24)
 		)
 		(stroke
 			(width 0)
@@ -9717,16 +10894,6 @@
 	)
 	(wire
 		(pts
-			(xy 261.62 54.61) (xy 261.62 107.95)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "77fc9d7b-4efa-429e-8e83-db9ff1565f7a")
-	)
-	(wire
-		(pts
 			(xy 213.36 124.46) (xy 219.71 124.46)
 		)
 		(stroke
@@ -9744,6 +10911,16 @@
 			(type default)
 		)
 		(uuid "797e0226-e638-4ea1-bb1e-3cd4b18cb685")
+	)
+	(wire
+		(pts
+			(xy 227.33 142.24) (xy 227.33 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7d5fcfa6-ef28-40cf-a8da-2aab2c342d61")
 	)
 	(wire
 		(pts
@@ -9797,6 +10974,16 @@
 	)
 	(wire
 		(pts
+			(xy 53.34 179.07) (xy 53.34 175.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "85a90326-2b21-4795-9556-33b24f98bb8b")
+	)
+	(wire
+		(pts
 			(xy 264.16 154.94) (xy 264.16 152.4)
 		)
 		(stroke
@@ -9834,6 +11021,16 @@
 			(type default)
 		)
 		(uuid "8b0d991a-e29e-4d04-b8df-20acd128e3c9")
+	)
+	(wire
+		(pts
+			(xy 201.93 142.24) (xy 207.01 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8b3f3948-6514-4e81-86e0-b368bddc8ba0")
 	)
 	(wire
 		(pts
@@ -9937,6 +11134,16 @@
 	)
 	(wire
 		(pts
+			(xy 201.93 119.38) (xy 201.93 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "97e02e0b-fb53-4b3a-815e-c06a558c9664")
+	)
+	(wire
+		(pts
 			(xy 220.98 81.28) (xy 220.98 93.98)
 		)
 		(stroke
@@ -9964,16 +11171,6 @@
 			(type default)
 		)
 		(uuid "9d238f3a-3b7b-4ca5-aed7-a7db7b2aba91")
-	)
-	(wire
-		(pts
-			(xy 238.76 93.98) (xy 232.41 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9f5186cd-83a1-4dd7-be2b-623cd050e357")
 	)
 	(wire
 		(pts
@@ -10147,7 +11344,7 @@
 	)
 	(wire
 		(pts
-			(xy 200.66 142.24) (xy 207.01 142.24)
+			(xy 200.66 142.24) (xy 201.93 142.24)
 		)
 		(stroke
 			(width 0)
@@ -10167,7 +11364,7 @@
 	)
 	(wire
 		(pts
-			(xy 227.33 119.38) (xy 227.33 120.65)
+			(xy 227.33 119.38) (xy 227.33 121.92)
 		)
 		(stroke
 			(width 0)
@@ -10214,6 +11411,16 @@
 			(type default)
 		)
 		(uuid "bb568348-71fd-4eca-8b07-e6db8eada931")
+	)
+	(wire
+		(pts
+			(xy 265.43 20.32) (xy 265.43 35.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bb983c34-f26c-45f0-83cb-18f2e7f3107f")
 	)
 	(wire
 		(pts
@@ -10287,6 +11494,16 @@
 	)
 	(wire
 		(pts
+			(xy 97.79 80.01) (xy 104.14 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c8f66ab8-6dd7-4e52-9d0c-250d512e798b")
+	)
+	(wire
+		(pts
 			(xy 78.74 167.64) (xy 86.36 167.64)
 		)
 		(stroke
@@ -10347,7 +11564,7 @@
 	)
 	(wire
 		(pts
-			(xy 227.33 114.3) (xy 227.33 119.38)
+			(xy 227.33 114.3) (xy 227.33 116.84)
 		)
 		(stroke
 			(width 0)
@@ -10417,7 +11634,7 @@
 	)
 	(wire
 		(pts
-			(xy 201.93 152.4) (xy 201.93 151.13)
+			(xy 201.93 151.13) (xy 201.93 152.4)
 		)
 		(stroke
 			(width 0)
@@ -10497,16 +11714,6 @@
 	)
 	(wire
 		(pts
-			(xy 53.34 179.07) (xy 53.34 175.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e2042450-e8f7-432b-8d20-396adf3e605a")
-	)
-	(wire
-		(pts
 			(xy 96.52 146.05) (xy 96.52 154.94)
 		)
 		(stroke
@@ -10514,16 +11721,6 @@
 			(type default)
 		)
 		(uuid "e3724d7a-260a-4600-b49a-d1a2aa142b34")
-	)
-	(wire
-		(pts
-			(xy 265.43 20.32) (xy 265.43 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e50c3998-6c63-4c26-b2b0-efd23667581a")
 	)
 	(wire
 		(pts
@@ -10564,6 +11761,16 @@
 			(type default)
 		)
 		(uuid "f03fd381-3b30-47de-96e8-a6c660c7b4ef")
+	)
+	(wire
+		(pts
+			(xy 227.33 139.7) (xy 227.33 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f2488b2a-a0c9-4e98-a817-247f44b580c1")
 	)
 	(wire
 		(pts
@@ -11016,9 +12223,9 @@
 		(uuid "faaf35af-adb9-47e8-a003-37033cca26c4")
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 97.79 83.82 0)
-		(mirror y)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 97.79 80.01 90)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -11026,7 +12233,7 @@
 		(dnp no)
 		(uuid "00115c6d-f28c-40a5-a85f-06e033305bbd")
 		(property "Reference" "C25"
-			(at 93.98 80.01 0)
+			(at 93.98 83.82 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -11034,35 +12241,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
-			(at 93.98 82.55 0)
+		(property "Value" "0.1UF"
+			(at 101.092 83.82 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 97.79 95.25 0)
+		(property "Footprint" "0603"
+			(at 102.87 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 97.79 97.79 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 105.156 81.788 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 97.79 102.87 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 100.838 82.042 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11071,7 +12279,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 93.98 85.09 0)
+			(at 99.06 83.82 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11081,7 +12289,7 @@
 			)
 		)
 		(property "Field5" "CAP-08604"
-			(at 97.79 76.2 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11090,7 +12298,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 97.79 100.33 0)
+			(at 114.3 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11098,8 +12306,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 97.79 90.17 0)
+		(property "Voltage" "16V"
+			(at 109.728 81.534 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11107,8 +12315,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 97.79 92.71 0)
+		(property "Tolerance" "10%"
+			(at 109.728 86.106 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 92.71 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 107.188 83.312 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11332,8 +12558,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 53.34 182.88 0)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 53.34 186.69 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -11341,7 +12567,7 @@
 		(dnp no)
 		(uuid "08468617-c92d-42a7-b500-6e68d767003a")
 		(property "Reference" "C22"
-			(at 57.404 181.102 0)
+			(at 55.626 180.848 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -11349,35 +12575,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "22NF"
-			(at 57.404 183.642 0)
+		(property "Value" "0.1UF"
+			(at 57.15 184.404 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 53.34 194.31 0)
+		(property "Footprint" "0603"
+			(at 58.42 185.42 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 53.34 196.85 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 60.706 184.912 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 53.34 201.93 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 56.388 184.658 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11386,7 +12613,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 57.15 184.15 0)
+			(at 54.61 182.88 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11396,7 +12623,7 @@
 			)
 		)
 		(property "Field5" "CAP-08604"
-			(at 57.15 182.8799 0)
+			(at 53.3399 182.88 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11406,7 +12633,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 53.34 199.39 0)
+			(at 69.85 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11414,23 +12641,39 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 57.15 185.4199 0)
+		(property "Voltage" "16V"
+			(at 65.278 185.166 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 57.15 187.9599 0)
+		(property "Tolerance" "10%"
+			(at 65.278 180.594 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 48.26 187.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 62.738 183.388 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -12046,8 +13289,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Transistor_FET:2N7000")
-		(at 224.79 124.46 0)
+		(lib_id "dk_Transistors-FETs-MOSFETs-Single:2N7000")
+		(at 227.33 127 0)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -12056,7 +13299,7 @@
 		(dnp no)
 		(uuid "147122a2-7c30-4ef2-b258-89d4d058b611")
 		(property "Reference" "Q3"
-			(at 228.6 125.73 0)
+			(at 231.14 128.27 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -12065,41 +13308,129 @@
 			)
 		)
 		(property "Value" "2N7000"
-			(at 228.6 123.19 0)
+			(at 230.7844 127 90)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+			)
+		)
+		(property "Footprint" "digikey-footprints:TO-92-3"
+			(at 232.41 132.08 0)
 			(effects
 				(font
 					(size 1.524 1.524)
 				)
 				(justify left)
+				(hide yes)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
-			(at 229.87 122.555 0)
+		(property "Datasheet" "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF"
+			(at 232.41 134.62 0)
 			(effects
 				(font
-					(size 1.27 1.27)
-					(italic yes)
+					(size 1.524 1.524)
 				)
 				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.vishay.com/docs/70226/70226.pdf"
-			(at 229.87 120.65 0)
+		(property "Description" "MOSFET N-CH 60V 200MA TO-92"
+			(at 227.33 127 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digi-Key_PN" "2N7000FS-ND"
+			(at 232.41 137.16 0)
+			(effects
+				(font
+					(size 1.524 1.524)
 				)
 				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Description" "0.2A Id, 200V Vds, N-Channel MOSFET, 2.6V Logic Level, TO-92"
-			(at 224.79 124.46 0)
+		(property "MPN" "2N7000"
+			(at 232.41 139.7 0)
 			(effects
 				(font
-					(size 1.27 1.27)
+					(size 1.524 1.524)
 				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Category" "Discrete Semiconductor Products"
+			(at 232.41 142.24 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Family" "Transistors - FETs, MOSFETs - Single"
+			(at 232.41 144.78 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "DK_Datasheet_Link" "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF"
+			(at 232.41 147.32 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "DK_Detail_Page" "/product-detail/en/on-semiconductor/2N7000/2N7000FS-ND/244278"
+			(at 232.41 149.86 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description_1" "MOSFET N-CH 60V 200MA TO-92"
+			(at 232.41 152.4 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "ON Semiconductor"
+			(at 232.41 154.94 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Status" "Active"
+			(at 232.41 157.48 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -12266,8 +13597,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 215.9 142.24 270)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 212.09 142.24 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12275,7 +13606,7 @@
 		(dnp no)
 		(uuid "175b58d0-73d8-4942-b76d-17dc90745cd8")
 		(property "Reference" "C19"
-			(at 215.9 148.59 90)
+			(at 218.44 142.24 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -12283,35 +13614,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100NF"
-			(at 215.9 146.05 90)
+		(property "Value" "0.1UF"
+			(at 216.154 146.304 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 204.47 142.24 0)
+		(property "Footprint" "0603"
+			(at 213.36 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 201.93 142.24 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 213.868 149.606 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 196.85 142.24 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 214.122 145.288 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12320,7 +13652,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 214.63 146.05 0)
+			(at 215.9 143.51 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -12330,7 +13662,7 @@
 			)
 		)
 		(property "Field5" "CAP-07885"
-			(at 223.52 142.24 0)
+			(at 212.09 134.62 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -12339,7 +13671,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 199.39 142.24 0)
+			(at 212.09 158.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12347,8 +13679,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 209.55 142.24 0)
+		(property "Voltage" "16V"
+			(at 213.614 154.178 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12356,8 +13688,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 207.01 142.24 0)
+		(property "Tolerance" "10%"
+			(at 218.186 154.178 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 210.82 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 215.392 151.638 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12381,8 +13731,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 38.1 91.44 0)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 38.1 95.25 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12390,7 +13740,7 @@
 		(dnp no)
 		(uuid "234b131f-62c7-418b-a0e7-69ae2e0ab59c")
 		(property "Reference" "C15"
-			(at 41.91 87.63 0)
+			(at 39.37 90.424 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -12398,35 +13748,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100NF"
-			(at 41.91 90.17 0)
+		(property "Value" "0.1UF"
+			(at 39.878 95.504 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 38.1 102.87 0)
+		(property "Footprint" "0603"
+			(at 43.18 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 38.1 105.41 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 45.466 93.472 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 38.1 110.49 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 41.148 93.218 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12435,7 +13786,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 41.91 92.71 0)
+			(at 39.37 91.44 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -12445,7 +13796,7 @@
 			)
 		)
 		(property "Field5" "CAP-07886"
-			(at 38.1 83.82 0)
+			(at 30.48 95.25 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -12454,7 +13805,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 38.1 107.95 0)
+			(at 54.61 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12462,8 +13813,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 38.1 97.79 0)
+		(property "Voltage" "16V"
+			(at 50.038 93.726 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12471,8 +13822,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 38.1 100.33 0)
+		(property "Tolerance" "10%"
+			(at 50.038 89.154 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 33.02 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 47.498 91.948 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12764,8 +14133,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Transistor_FET:2N7000")
-		(at 224.79 109.22 0)
+		(lib_id "dk_Transistors-FETs-MOSFETs-Single:2N7000")
+		(at 227.33 111.76 0)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -12774,7 +14143,7 @@
 		(dnp no)
 		(uuid "3254289d-b336-42b9-a64b-74efebd99400")
 		(property "Reference" "Q4"
-			(at 228.6 110.49 0)
+			(at 231.14 113.03 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -12783,41 +14152,129 @@
 			)
 		)
 		(property "Value" "2N7000"
-			(at 228.6 107.95 0)
+			(at 230.7844 111.76 90)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+			)
+		)
+		(property "Footprint" "digikey-footprints:TO-92-3"
+			(at 232.41 116.84 0)
 			(effects
 				(font
 					(size 1.524 1.524)
 				)
 				(justify left)
+				(hide yes)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
-			(at 229.87 107.315 0)
+		(property "Datasheet" "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF"
+			(at 232.41 119.38 0)
 			(effects
 				(font
-					(size 1.27 1.27)
-					(italic yes)
+					(size 1.524 1.524)
 				)
 				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.vishay.com/docs/70226/70226.pdf"
-			(at 229.87 105.41 0)
+		(property "Description" "MOSFET N-CH 60V 200MA TO-92"
+			(at 227.33 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digi-Key_PN" "2N7000FS-ND"
+			(at 232.41 121.92 0)
+			(effects
+				(font
+					(size 1.524 1.524)
 				)
 				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Description" "0.2A Id, 200V Vds, N-Channel MOSFET, 2.6V Logic Level, TO-92"
-			(at 224.79 109.22 0)
+		(property "MPN" "2N7000"
+			(at 232.41 124.46 0)
 			(effects
 				(font
-					(size 1.27 1.27)
+					(size 1.524 1.524)
 				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Category" "Discrete Semiconductor Products"
+			(at 232.41 127 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Family" "Transistors - FETs, MOSFETs - Single"
+			(at 232.41 129.54 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "DK_Datasheet_Link" "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF"
+			(at 232.41 132.08 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "DK_Detail_Page" "/product-detail/en/on-semiconductor/2N7000/2N7000FS-ND/244278"
+			(at 232.41 134.62 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description_1" "MOSFET N-CH 60V 200MA TO-92"
+			(at 232.41 137.16 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "ON Semiconductor"
+			(at 232.41 139.7 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Status" "Active"
+			(at 232.41 142.24 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -13484,8 +14941,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 111.76 27.94 90)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 107.95 27.94 0)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -13494,7 +14951,7 @@
 		(dnp no)
 		(uuid "56d9d805-e13e-4e87-9af3-0d6277a86d68")
 		(property "Reference" "C13"
-			(at 107.95 31.75 0)
+			(at 107.442 24.384 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -13502,35 +14959,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100NF"
-			(at 110.49 31.75 0)
+		(property "Value" "0.1UF"
+			(at 115.824 24.384 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 123.19 27.94 0)
+		(property "Footprint" "0603"
+			(at 109.22 22.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 125.73 27.94 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 109.728 20.574 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 130.81 27.94 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 109.982 24.892 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13539,7 +14997,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 113.03 31.75 0)
+			(at 111.76 26.67 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13549,7 +15007,7 @@
 			)
 		)
 		(property "Field5" "CAP-07886"
-			(at 104.14 27.94 0)
+			(at 107.95 35.56 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13558,7 +15016,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 128.27 27.94 0)
+			(at 107.95 11.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13566,8 +15024,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 118.11 27.94 0)
+		(property "Voltage" "16V"
+			(at 109.474 16.002 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13575,8 +15033,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 120.65 27.94 0)
+		(property "Tolerance" "10%"
+			(at 114.046 16.002 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 106.68 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 111.252 18.542 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13600,8 +15076,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 248.92 81.28 270)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 245.11 81.28 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -13609,7 +15085,7 @@
 		(dnp no)
 		(uuid "57fbf9c1-b907-40c0-8b41-b554da4b2052")
 		(property "Reference" "C1"
-			(at 248.92 87.63 90)
+			(at 251.46 84.074 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -13617,35 +15093,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "22NF"
-			(at 248.92 85.09 90)
+		(property "Value" "0.1UF"
+			(at 244.602 84.074 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 237.49 81.28 0)
+		(property "Footprint" "0603"
+			(at 246.38 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 234.95 81.28 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 246.888 88.646 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 229.87 81.28 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 247.142 84.328 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13654,7 +15131,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 247.65 85.09 0)
+			(at 248.92 82.55 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13664,7 +15141,7 @@
 			)
 		)
 		(property "Field5" "CAP-07885"
-			(at 256.54 81.28 0)
+			(at 245.11 73.66 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13673,7 +15150,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 232.41 81.28 0)
+			(at 245.11 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13681,8 +15158,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 242.57 81.28 0)
+		(property "Voltage" "16V"
+			(at 246.634 93.218 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13690,8 +15167,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 240.03 81.28 0)
+		(property "Tolerance" "10%"
+			(at 251.206 93.218 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 243.84 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 248.412 90.678 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13861,8 +15356,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 62.23 31.75 90)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 66.04 31.75 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -13870,15 +15365,6 @@
 		(dnp no)
 		(uuid "5a2581d9-dad1-4f9c-b2af-bd43ffed872f")
 		(property "Reference" "C12"
-			(at 58.42 27.94 0)
-			(effects
-				(font
-					(size 1.143 1.143)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100NF"
 			(at 60.96 27.94 0)
 			(effects
 				(font
@@ -13887,26 +15373,36 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 73.66 31.75 0)
+		(property "Value" "0.1UF"
+			(at 67.056 28.448 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+			)
+		)
+		(property "Footprint" "0603"
+			(at 64.77 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 76.2 31.75 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 64.262 24.384 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 81.28 31.75 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 64.008 28.702 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13915,7 +15411,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 63.5 27.94 0)
+			(at 62.23 30.48 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13925,7 +15421,7 @@
 			)
 		)
 		(property "Field5" "CAP-07886"
-			(at 54.61 31.75 0)
+			(at 66.04 39.37 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13934,7 +15430,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 78.74 31.75 0)
+			(at 66.04 15.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13942,8 +15438,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 68.58 31.75 0)
+		(property "Voltage" "16V"
+			(at 64.516 19.812 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13951,8 +15447,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 71.12 31.75 0)
+		(property "Tolerance" "10%"
+			(at 59.944 19.812 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 67.31 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 62.738 22.352 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13976,8 +15490,9 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:1.0uF_0603_16V_10%")
-		(at 228.6 93.98 270)
+		(lib_name "C0805C334K4RAC7800_1")
+		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
+		(at 224.79 93.98 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -13985,7 +15500,7 @@
 		(dnp no)
 		(uuid "5cccc4d6-bd70-439f-9e38-df4be63108c9")
 		(property "Reference" "C5"
-			(at 228.6 100.33 90)
+			(at 229.87 92.456 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -13993,35 +15508,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1.0UF"
-			(at 228.6 97.79 90)
+		(property "Value" "10UF"
+			(at 228.6 97.79 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 217.17 93.98 0)
+		(property "Footprint" "0805"
+			(at 224.79 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 214.63 93.98 0)
+		(property "Datasheet" "C0805C334K4RAC7800"
+			(at 224.79 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 209.55 93.98 0)
+		(property "Description" "CAP CER 10UF 16V X5R 0805"
+			(at 224.79 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14030,7 +15546,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-13930"
-			(at 212.09 92.71 0)
+			(at 223.52 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14039,7 +15555,7 @@
 			)
 		)
 		(property "Voltage" "16V"
-			(at 222.25 93.98 0)
+			(at 224.79 100.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14048,7 +15564,25 @@
 			)
 		)
 		(property "Tolerance" "10%"
-			(at 219.71 93.98 0)
+			(at 224.79 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 224.79 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0805C106K4PAC7800"
+			(at 224.79 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14513,8 +16047,9 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:10uF_0603_6.3V_20%")
-		(at 265.43 39.37 0)
+		(lib_name "C0805C334K4RAC7800_2")
+		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
+		(at 265.43 43.18 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14523,43 +16058,45 @@
 		(fields_autoplaced yes)
 		(uuid "6efa5437-dbd2-4be4-816c-63d503d93bdf")
 		(property "Reference" "C2"
-			(at 269.24 35.56 0)
+			(at 269.24 38.1 90)
 			(effects
 				(font
 					(size 1.143 1.143)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "10UF"
-			(at 269.24 38.1 0)
+			(at 269.24 40.6399 90)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 265.43 50.8 0)
+		(property "Footprint" "0805"
+			(at 265.43 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 265.43 55.88 0)
+		(property "Datasheet" "C0805C334K4RAC7800"
+			(at 265.43 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 265.43 58.42 0)
+		(property "Description" "CAP CER 10UF 16V X5R 0805"
+			(at 265.43 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14568,7 +16105,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-11015"
-			(at 264.16 53.34 0)
+			(at 279.4 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14577,7 +16114,7 @@
 			)
 		)
 		(property "Voltage" "6.3V"
-			(at 269.24 40.6399 0)
+			(at 266.6999 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14587,12 +16124,30 @@
 			)
 		)
 		(property "Tolerance" "20%"
-			(at 269.24 43.1799 0)
+			(at 269.2399 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 265.43 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0805C106K4PAC7800"
+			(at 265.43 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -14678,8 +16233,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 181.61 142.24 270)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 177.8 142.24 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14687,7 +16242,7 @@
 		(dnp no)
 		(uuid "73aad567-a632-4d3c-9be8-0445277c80a4")
 		(property "Reference" "C20"
-			(at 181.61 148.59 90)
+			(at 180.34 140.208 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -14695,35 +16250,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100NF"
-			(at 181.61 146.05 90)
+		(property "Value" "0.1UF"
+			(at 180.594 146.05 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 170.18 142.24 0)
+		(property "Footprint" "0603"
+			(at 179.07 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 167.64 142.24 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 179.578 149.606 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 162.56 142.24 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 179.832 145.288 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14732,7 +16288,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 180.34 146.05 0)
+			(at 181.61 143.51 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14742,7 +16298,7 @@
 			)
 		)
 		(property "Field5" "CAP-07885"
-			(at 189.23 142.24 0)
+			(at 177.8 134.62 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14751,7 +16307,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 165.1 142.24 0)
+			(at 177.8 158.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14759,8 +16315,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 175.26 142.24 0)
+		(property "Voltage" "16V"
+			(at 179.324 154.178 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14768,8 +16324,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 172.72 142.24 0)
+		(property "Tolerance" "10%"
+			(at 183.896 154.178 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 176.53 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 181.102 151.638 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14925,8 +16499,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 228.6 81.28 270)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 228.6 81.28 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14934,7 +16508,7 @@
 		(dnp no)
 		(uuid "76a8457d-d7ed-47d5-896c-2bb92be4a02b")
 		(property "Reference" "C4"
-			(at 228.6 87.63 90)
+			(at 234.442 83.82 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -14942,35 +16516,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100NF"
-			(at 228.6 85.09 90)
+		(property "Value" "0.1UF"
+			(at 227.838 84.074 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 217.17 81.28 0)
+		(property "Footprint" "0603"
+			(at 229.87 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 214.63 81.28 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 230.378 88.646 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 209.55 81.28 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 230.632 84.328 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14979,7 +16554,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 227.33 85.09 0)
+			(at 232.41 82.55 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14989,7 +16564,7 @@
 			)
 		)
 		(property "Field5" "CAP-07885"
-			(at 236.22 81.28 0)
+			(at 228.6 73.66 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14998,7 +16573,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 212.09 81.28 0)
+			(at 228.6 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15006,20 +16581,40 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 222.25 81.28 0)
+		(property "Voltage" "16V"
+			(at 230.124 93.218 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 219.71 81.28 0)
+		(property "Tolerance" "10%"
+			(at 234.696 93.218 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 227.33 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 231.902 90.678 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "2"
@@ -15038,8 +16633,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 74.93 124.46 0)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 74.93 128.27 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -15047,7 +16642,7 @@
 		(dnp no)
 		(uuid "7d18ef0e-6b26-4df6-8499-af87b8b5aa69")
 		(property "Reference" "C24"
-			(at 78.74 120.65 0)
+			(at 71.12 124.46 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -15055,35 +16650,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100NF"
-			(at 78.74 123.19 0)
+		(property "Value" "0.1UF"
+			(at 79.502 125.222 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 74.93 135.89 0)
+		(property "Footprint" "0603"
+			(at 80.01 127 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 74.93 138.43 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 82.296 126.492 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 74.93 143.51 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 77.978 126.238 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15092,7 +16688,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 78.74 125.73 0)
+			(at 76.2 124.46 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -15102,7 +16698,7 @@
 			)
 		)
 		(property "Field5" "CAP-08604"
-			(at 74.93 116.84 0)
+			(at 67.31 128.27 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -15111,7 +16707,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 74.93 140.97 0)
+			(at 91.44 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15119,8 +16715,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 74.93 130.81 0)
+		(property "Voltage" "16V"
+			(at 86.868 126.746 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15128,8 +16724,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 74.93 133.35 0)
+		(property "Tolerance" "10%"
+			(at 86.868 122.174 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 69.85 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 84.328 124.968 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15317,53 +16931,54 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 261.62 111.76 0)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 261.62 115.57 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "7fae902f-8a79-4297-8f7a-5ad0f4f0f8e3")
 		(property "Reference" "C3"
-			(at 265.43 106.68 0)
+			(at 256.794 110.49 90)
 			(effects
 				(font
 					(size 1.143 1.143)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
-		(property "Value" "100NF"
-			(at 265.43 109.22 0)
+		(property "Value" "0.1UF"
+			(at 252.73 113.538 90)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 261.62 123.19 0)
+		(property "Footprint" "0603"
+			(at 266.7 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 261.62 125.73 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 268.986 113.792 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 261.62 130.81 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 264.668 113.538 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15372,7 +16987,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 265.43 113.03 0)
+			(at 262.89 111.76 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -15382,7 +16997,7 @@
 			)
 		)
 		(property "Field5" "CAP-08390"
-			(at 265.43 111.7599 0)
+			(at 261.6199 111.76 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -15392,7 +17007,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 261.62 128.27 0)
+			(at 278.13 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15400,23 +17015,39 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 265.43 114.2999 0)
+		(property "Voltage" "16V"
+			(at 273.558 114.046 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 265.43 116.8399 0)
+		(property "Tolerance" "10%"
+			(at 273.558 109.474 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 256.54 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 271.018 112.268 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -15651,8 +17282,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 201.93 147.32 0)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 201.93 151.13 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -15660,7 +17291,7 @@
 		(dnp no)
 		(uuid "87c47a7e-73b9-4388-97c6-2b8ccfbf6593")
 		(property "Reference" "C21"
-			(at 205.74 143.51 0)
+			(at 198.12 147.32 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -15668,35 +17299,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100NF"
-			(at 205.74 146.05 0)
+		(property "Value" "0.1UF"
+			(at 205.74 147.828 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 201.93 158.75 0)
+		(property "Footprint" "0603"
+			(at 207.01 149.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 201.93 161.29 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 209.296 149.352 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 201.93 166.37 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 204.978 149.098 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15705,7 +17337,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 205.74 148.59 0)
+			(at 203.2 147.32 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -15715,7 +17347,7 @@
 			)
 		)
 		(property "Field5" "CAP-08390"
-			(at 201.93 139.7 0)
+			(at 194.31 151.13 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -15723,7 +17355,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 201.93 163.83 0)
+			(at 218.44 151.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15731,20 +17363,40 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 201.93 153.67 0)
+		(property "Voltage" "16V"
+			(at 213.868 149.606 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 201.93 156.21 0)
+		(property "Tolerance" "10%"
+			(at 213.868 145.034 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 196.85 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 211.328 147.828 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "2"
@@ -17022,8 +18674,9 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:10uF_0603_6.3V_20%")
-		(at 199.39 38.1 0)
+		(lib_name "C0805C334K4RAC7800_3")
+		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
+		(at 199.39 41.91 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17031,7 +18684,7 @@
 		(dnp no)
 		(uuid "c3b113a8-2c2a-43f1-a05f-02c621bb1748")
 		(property "Reference" "C7"
-			(at 202.692 37.592 0)
+			(at 198.12 44.958 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -17040,34 +18693,35 @@
 			)
 		)
 		(property "Value" "10UF"
-			(at 202.692 39.878 0)
+			(at 203.2 38.1 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 199.39 49.53 0)
+		(property "Footprint" "0805"
+			(at 199.39 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 199.39 54.61 0)
+		(property "Datasheet" "C0805C334K4RAC7800"
+			(at 199.39 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 199.39 57.15 0)
+		(property "Description" "CAP CER 10UF 16V X5R 0805"
+			(at 199.39 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17076,7 +18730,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-11015"
-			(at 198.12 52.07 0)
+			(at 213.36 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17085,7 +18739,7 @@
 			)
 		)
 		(property "Voltage" "6.3V"
-			(at 203.2 39.3699 0)
+			(at 200.6599 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17095,12 +18749,30 @@
 			)
 		)
 		(property "Tolerance" "20%"
-			(at 203.2 41.9099 0)
+			(at 203.1999 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 199.39 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0805C106K4PAC7800"
+			(at 199.39 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -17120,51 +18792,52 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 152.4 27.94 270)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 148.59 27.94 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "c676c266-25ca-47fb-9fed-77ccf3c17160")
 		(property "Reference" "C14"
-			(at 152.4 12.7 90)
+			(at 150.114 24.638 0)
 			(effects
 				(font
 					(size 1.143 1.143)
 				)
 			)
 		)
-		(property "Value" "100NF"
-			(at 152.4 15.24 90)
+		(property "Value" "0.1UF"
+			(at 155.956 24.384 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 140.97 27.94 0)
+		(property "Footprint" "0603"
+			(at 149.86 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 138.43 27.94 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 150.368 35.306 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 133.35 27.94 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 150.622 30.988 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17173,7 +18846,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 151.13 31.75 0)
+			(at 152.4 29.21 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -17183,7 +18856,7 @@
 			)
 		)
 		(property "Field5" "CAP-07886"
-			(at 152.4 17.78 90)
+			(at 138.43 27.94 90)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -17192,7 +18865,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 135.89 27.94 0)
+			(at 148.59 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17200,8 +18873,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 152.4 20.32 90)
+		(property "Voltage" "16V"
+			(at 150.114 39.878 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17209,8 +18882,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 152.4 22.86 90)
+		(property "Tolerance" "10%"
+			(at 154.686 39.878 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 147.32 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 151.892 37.338 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17234,9 +18925,9 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 55.88 101.6 0)
-		(mirror y)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 55.88 97.79 90)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17244,7 +18935,7 @@
 		(dnp no)
 		(uuid "c7655f53-5b51-4ed8-9330-9460761414af")
 		(property "Reference" "C16"
-			(at 52.07 97.79 0)
+			(at 52.578 98.298 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -17252,35 +18943,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
-			(at 52.07 100.33 0)
+		(property "Value" "0.1UF"
+			(at 57.404 97.79 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 55.88 113.03 0)
+		(property "Footprint" "0603"
+			(at 60.96 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 55.88 115.57 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 63.246 99.568 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 55.88 120.65 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 58.928 99.822 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17289,7 +18981,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 52.07 102.87 0)
+			(at 57.15 101.6 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -17299,7 +18991,7 @@
 			)
 		)
 		(property "Field5" "CAP-08604"
-			(at 55.88 93.98 0)
+			(at 48.26 97.79 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -17308,7 +19000,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 55.88 118.11 0)
+			(at 72.39 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17316,8 +19008,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 55.88 107.95 0)
+		(property "Voltage" "16V"
+			(at 67.818 99.314 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17325,8 +19017,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 55.88 110.49 0)
+		(property "Tolerance" "10%"
+			(at 67.818 103.886 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 50.8 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 65.278 101.092 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17899,9 +19609,9 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 227.33 135.89 0)
-		(mirror y)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 227.33 132.08 90)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17909,7 +19619,7 @@
 		(dnp no)
 		(uuid "dba8c2f2-4246-4c63-ba73-261f2d488ec9")
 		(property "Reference" "C11"
-			(at 223.52 132.08 0)
+			(at 223.52 135.89 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -17917,35 +19627,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100NF"
-			(at 223.52 134.62 0)
+		(property "Value" "0.1UF"
+			(at 239.268 127.762 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 227.33 147.32 0)
+		(property "Footprint" "0603"
+			(at 232.41 133.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 227.33 149.86 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 234.696 133.858 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 227.33 154.94 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 230.378 134.112 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17954,7 +19665,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 223.52 137.16 0)
+			(at 228.6 135.89 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -17964,7 +19675,7 @@
 			)
 		)
 		(property "Field5" "CAP-08390"
-			(at 227.33 128.27 0)
+			(at 219.71 132.08 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -17973,7 +19684,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 227.33 152.4 0)
+			(at 243.84 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17981,8 +19692,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 227.33 142.24 0)
+		(property "Voltage" "16V"
+			(at 239.268 133.604 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17990,8 +19701,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 227.33 144.78 0)
+		(property "Tolerance" "10%"
+			(at 239.268 138.176 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 222.25 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 236.728 135.382 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18412,9 +20141,9 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 48.26 124.46 0)
-		(mirror y)
+		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
+		(at 39.37 120.65 90)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18422,7 +20151,7 @@
 		(dnp no)
 		(uuid "e6410a1c-f967-4555-810a-e3ae23dc7ed8")
 		(property "Reference" "C23"
-			(at 44.45 123.19 0)
+			(at 38.1 124.46 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -18430,35 +20159,54 @@
 				(justify left)
 			)
 		)
-		(property "Value" "330NF"
-			(at 44.45 124.968 0)
+		(property "Value" "0.33UF"
+			(at 43.18 124.46 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "0603"
-			(at 47.2948 128.27 0)
+		(property "Footprint" "0805"
+			(at 39.37 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 48.26 124.46 0)
+		(property "Datasheet" "C0805C334K4RAC7800"
+			(at 39.37 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 48.26 124.46 0)
+			(at 39.37 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 39.37 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0805C334K4RAC7800"
+			(at 39.37 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18482,9 +20230,9 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 85.09 93.98 270)
-		(mirror x)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 88.9 93.98 0)
+		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18492,7 +20240,7 @@
 		(dnp no)
 		(uuid "f16f50f8-7c12-4362-b4ff-63c177d260cb")
 		(property "Reference" "C18"
-			(at 88.9 90.17 0)
+			(at 85.09 90.17 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -18500,35 +20248,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
-			(at 86.36 90.17 0)
+		(property "Value" "0.1UF"
+			(at 89.154 90.424 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 73.66 93.98 0)
+		(property "Footprint" "0603"
+			(at 87.63 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 71.12 93.98 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 87.122 101.346 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 66.04 93.98 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 86.868 97.028 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18537,7 +20286,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 83.82 90.17 0)
+			(at 85.09 95.25 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -18547,7 +20296,7 @@
 			)
 		)
 		(property "Field5" "CAP-08604"
-			(at 92.71 93.98 0)
+			(at 88.9 86.36 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -18556,7 +20305,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 68.58 93.98 0)
+			(at 88.9 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18564,8 +20313,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 78.74 93.98 0)
+		(property "Voltage" "16V"
+			(at 87.376 105.918 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18573,8 +20322,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 76.2 93.98 0)
+		(property "Tolerance" "10%"
+			(at 82.804 105.918 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 90.17 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 85.598 103.378 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18878,8 +20645,8 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:0.1uF_0603_25V_20%")
-		(at 62.23 101.6 0)
+		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
+		(at 62.23 105.41 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18887,7 +20654,7 @@
 		(dnp no)
 		(uuid "fdfad7ad-0781-4290-8d3a-99976cef60f5")
 		(property "Reference" "C17"
-			(at 65.786 101.092 0)
+			(at 63.754 105.664 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -18895,35 +20662,36 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
+		(property "Value" "0.1UF"
 			(at 65.786 103.124 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 62.23 113.03 0)
+		(property "Footprint" "0603"
+			(at 67.31 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 62.23 115.57 0)
+		(property "Datasheet" "C0603C104K4RACTU"
+			(at 69.596 103.632 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 62.23 120.65 0)
+		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
+			(at 65.278 103.378 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18932,7 +20700,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 66.04 102.87 0)
+			(at 63.5 101.6 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -18942,7 +20710,7 @@
 			)
 		)
 		(property "Field5" "CAP-08604"
-			(at 62.23 93.98 0)
+			(at 54.61 105.41 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -18951,7 +20719,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 62.23 118.11 0)
+			(at 78.74 105.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18959,8 +20727,8 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "25V"
-			(at 62.23 107.95 0)
+		(property "Voltage" "16V"
+			(at 74.168 103.886 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18968,8 +20736,26 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "20%"
-			(at 62.23 110.49 0)
+		(property "Tolerance" "10%"
+			(at 74.168 99.314 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 57.15 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0603C104K4RAC7867"
+			(at 71.628 102.108 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19128,8 +20914,9 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Capacitor:10uF_0603_6.3V_20%")
-		(at 236.22 20.32 90)
+		(lib_name "C0805C334K4RAC7800_4")
+		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
+		(at 240.03 20.32 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -19137,7 +20924,7 @@
 		(dnp no)
 		(uuid "ffe90fd8-f89b-4282-a59f-2dfa28545ebe")
 		(property "Reference" "C6"
-			(at 236.22 13.462 90)
+			(at 233.172 20.32 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -19145,33 +20932,35 @@
 			)
 		)
 		(property "Value" "10UF"
-			(at 236.22 16.002 90)
+			(at 236.22 16.51 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.524 1.524)
 				)
 			)
 		)
-		(property "Footprint" "SparkFun-Capacitor:C_0603_1608Metric"
-			(at 247.65 20.32 0)
+		(property "Footprint" "0805"
+			(at 240.03 20.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cdn.sparkfun.com/assets/8/a/4/a/5/Kemet_Capacitor_Datasheet.pdf"
-			(at 252.73 20.32 0)
+		(property "Datasheet" "C0805C334K4RAC7800"
+			(at 240.03 20.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
+					(italic yes)
 				)
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
-			(at 255.27 20.32 0)
+		(property "Description" "CAP CER 10UF 16V X5R 0805"
+			(at 240.03 20.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19180,7 +20969,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-11015"
-			(at 250.19 21.59 0)
+			(at 241.3 6.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19189,7 +20978,7 @@
 			)
 		)
 		(property "Voltage" "6.3V"
-			(at 236.22 12.7 90)
+			(at 232.41 20.32 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19198,7 +20987,25 @@
 			)
 		)
 		(property "Tolerance" "20%"
-			(at 236.22 15.24 90)
+			(at 234.95 20.32 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 240.03 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0805C106K4PAC7800"
+			(at 240.03 20.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
