@@ -4399,23 +4399,23 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "U"
-				(at -1.27 7.62 0)
+			(property "Reference" "U3"
+				(at -4.064 6.35 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Value" "GVA-84"
-				(at 2.54 5.08 0)
+			(property "Value" "GVA-84+"
+				(at 5.08 4.318 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Footprint" "Package_TO_SOT_SMD:SOT-89-3"
+			(property "Footprint" "SOT-89-4"
 				(at 1.27 10.16 0)
 				(effects
 					(font
@@ -4434,6 +4434,42 @@
 				)
 			)
 			(property "Description" "DC-7000MHz +16dB Gain Block, SOT-89"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Mini-Circuits"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "GVA-84+"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Type" "SMD"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" ""
 				(at 0 0 0)
 				(effects
 					(font
@@ -4522,6 +4558,24 @@
 						)
 					)
 					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at 0 2.54 90)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -19777,6 +19831,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 193.04 137.16 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ad75380b-57d7-4855-8426-d41824b0a8b1")
+		(property "Reference" "#PWR037"
+			(at 193.04 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 193.04 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 193.04 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 193.04 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 193.04 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "42cff8e8-9094-40e3-baa5-277cdf818667")
+		)
+		(instances
+			(project ""
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#PWR037")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "dk_Transistors-Bipolar-BJT-Single:2N3904")
 		(at 76.2 175.26 0)
 		(unit 1)
@@ -20899,7 +21019,7 @@
 				)
 			)
 		)
-		(property "Footprint" "digikey-footprints:TO-220-3"
+		(property "Footprint" "TO-220-3"
 			(at 66.04 115.57 0)
 			(effects
 				(font
@@ -21019,6 +21139,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 60.96 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "65116278-8429-4b15-9f31-35e44167960d")
 		)
@@ -21056,7 +21185,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MCP3422"
+		(property "Value" "MCP3422A1T-E/SN"
 			(at 74.5841 34.29 0)
 			(effects
 				(font
@@ -21083,7 +21212,44 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "2-Channel, 18-Bit, Delta-Sigma AD-Converter, I²C Interface, Reference, SOIC-8"
+		(property "Description" "IC ADC 18BIT SIGMA-DELTA 8SOIC"
+			(at 72.39 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "MCP3422A1T-E/SN"
+			(at 72.39 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" ""
+			(at 72.39 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 72.39 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Microchip Technology"
 			(at 72.39 44.45 0)
 			(effects
 				(font
@@ -21395,25 +21561,24 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "d92a1de6-18a2-4f12-8a6b-f20ebc687adb")
 		(property "Reference" "U3"
-			(at 193.04 132.08 0)
+			(at 188.976 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "GVA-84"
-			(at 193.04 134.62 0)
+		(property "Value" "GVA-84+"
+			(at 198.12 137.922 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-89-3"
+		(property "Footprint" "SOT-89-4"
 			(at 194.31 132.08 0)
 			(effects
 				(font
@@ -21440,6 +21605,42 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer" "Mini-Circuits"
+			(at 193.04 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "GVA-84+"
+			(at 193.04 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 193.04 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" ""
+			(at 193.04 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "c62d7c5c-7ed8-4dcd-a196-08494a79bb87")
 		)
@@ -21448,6 +21649,9 @@
 		)
 		(pin "3"
 			(uuid "60551670-34b4-4bca-8fd7-eb4292cc2fd2")
+		)
+		(pin "4"
+			(uuid "e0d7992c-b89f-4f48-ba29-3f549c320d01")
 		)
 		(instances
 			(project "PocketFT8Xcvr"
@@ -22782,7 +22986,43 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "AM/FM/SW/LW Broadcast Radio Receiver with RDS/RBDS"
+		(property "Description" "RF RX AM/FM 153KHZ-279KHZ 24SSOP"
+			(at 238.76 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Skyworks Solutions"
+			(at 238.76 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "SI4735-D60-GU"
+			(at 238.76 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" ""
+			(at 238.76 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 238.76 59.69 0)
 			(effects
 				(font
