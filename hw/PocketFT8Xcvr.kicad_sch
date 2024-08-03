@@ -13,400 +13,6 @@
 		(comment 2 "https://github.com/conr2286/PocketFT8Xcvr.git")
 	)
 	(lib_symbols
-		(symbol "2.0k_0603_1"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "R"
-				(at 0 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "2.0K"
-				(at 0 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" "0603"
-				(at 0 -4.318 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
-				(at 0 -8.89 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "RES 2K OHM 5% 1/10W 0603"
-				(at 0 -11.43 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Manufacturer" "Yageo"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Mfg Part #" "RC0603JR-072KL"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Notes" "Substitutions OK"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "SparkFun R res resistor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "R_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "2.0k_0603_1_0_1"
-				(polyline
-					(pts
-						(xy -2.286 0) (xy -2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.286 0) (xy 2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -0.762 0) (xy -1.143 -1.016) (xy -1.524 0) (xy -1.905 1.016) (xy -2.286 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 0) (xy 0.381 -1.016) (xy 0 0) (xy -0.381 1.016) (xy -0.762 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.286 0) (xy 1.905 -1.016) (xy 1.524 0) (xy 1.143 1.016) (xy 0.762 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "2.0k_0603_1_1_1"
-				(pin passive line
-					(at 3.81 0 180)
-					(length 1.27)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at -3.81 0 0)
-					(length 1.27)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "2.0k_0603_2"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "R"
-				(at 0 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "2.0K"
-				(at 0 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" "0603"
-				(at 0 -4.318 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
-				(at 0 -8.89 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "RES 2K OHM 5% 1/10W 0603"
-				(at 0 -11.43 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Manufacturer" "Yageo"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Mfg Part #" "RC0603JR-072KL"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Notes" "Substitutions OK"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "SparkFun R res resistor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "R_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "2.0k_0603_2_0_1"
-				(polyline
-					(pts
-						(xy -2.286 0) (xy -2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.286 0) (xy 2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -0.762 0) (xy -1.143 -1.016) (xy -1.524 0) (xy -1.905 1.016) (xy -2.286 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 0) (xy 0.381 -1.016) (xy 0 0) (xy -0.381 1.016) (xy -0.762 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.286 0) (xy 1.905 -1.016) (xy 1.524 0) (xy 1.143 1.016) (xy 0.762 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "2.0k_0603_2_1_1"
-				(pin passive line
-					(at 3.81 0 180)
-					(length 1.27)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at -3.81 0 0)
-					(length 1.27)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "2024-07-31_16-01-32:RLB9012-102KL"
 			(pin_names
 				(offset 0.254)
@@ -1605,6 +1211,401 @@
 				)
 			)
 		)
+		(symbol "BarrelJackTHT:PJ-037A"
+			(pin_names
+				(offset 0.254)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 8.89 6.35 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "PJ-037A"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "CONN1x2_PJ-037A_CUD"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "PJ-037A"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_locked" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "PJ-037A"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "CONN1x2_PJ-037A_CUD"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "PJ-037A_1_1"
+				(polyline
+					(pts
+						(xy 5.08 -5.08) (xy 12.7 -5.08)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 5.08 2.54) (xy 5.08 -5.08)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 10.16 -2.54) (xy 5.08 -2.54)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 10.16 -2.54) (xy 8.89 -3.3867)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 10.16 -2.54) (xy 8.89 -1.6933)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 10.16 0) (xy 5.08 0)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 10.16 0) (xy 8.89 -0.8467)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 10.16 0) (xy 8.89 0.8467)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 12.7 -5.08) (xy 12.7 2.54)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 12.7 2.54) (xy 5.08 2.54)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 0)
+					(length 5.08)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 0 -2.54 0)
+					(length 5.08)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "PJ-037A_1_2"
+				(polyline
+					(pts
+						(xy 5.08 -5.08) (xy 12.7 -5.08)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 5.08 2.54) (xy 5.08 -5.08)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.62 -2.54) (xy 5.08 -2.54)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.62 -2.54) (xy 8.89 -3.3867)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.62 -2.54) (xy 8.89 -1.6933)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.62 0) (xy 5.08 0)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.62 0) (xy 8.89 -0.8467)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.62 0) (xy 8.89 0.8467)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 12.7 -5.08) (xy 12.7 2.54)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 12.7 2.54) (xy 5.08 2.54)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 0)
+					(length 5.08)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 0 -2.54 0)
+					(length 5.08)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "C0805C334K4RAC7800_1"
 			(pin_numbers hide)
 			(pin_names
@@ -1612,13 +1613,12 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "C5"
-				(at 5.08 1.524 90)
+			(property "Reference" "C"
+				(at 3.81 3.81 0)
 				(effects
 					(font
-						(size 1.143 1.143)
+						(size 1.524 1.524)
 					)
-					(justify left)
 				)
 			)
 			(property "Value" "10UF"
@@ -1658,33 +1658,6 @@
 					(hide yes)
 				)
 			)
-			(property "PROD_ID" "CAP-13930"
-				(at -1.27 -16.51 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Voltage" "16V"
-				(at 0 -6.35 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Tolerance" "10%"
-				(at 0 -8.89 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
 			(property "Manufacturer" "Kemet"
 				(at 0 0 0)
 				(effects
@@ -1704,6 +1677,15 @@
 				)
 			)
 			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Type" "SMD"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1982,6 +1964,15 @@
 					(hide yes)
 				)
 			)
+			(property "Type" "SMD"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
 			(property "ki_keywords" "C0805C334K4RAC7800"
 				(at 0 0 0)
 				(effects
@@ -2244,6 +2235,15 @@
 				)
 			)
 			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Type" "SMD"
 				(at 0 0 0)
 				(effects
 					(font
@@ -2522,6 +2522,15 @@
 					(hide yes)
 				)
 			)
+			(property "Type" "SMD"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
 			(property "ki_keywords" "C0805C334K4RAC7800"
 				(at 0 0 0)
 				(effects
@@ -2697,185 +2706,6 @@
 					(at 0 -7.62 90)
 					(length 2.54)
 					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "Connector:Barrel_Jack"
-			(pin_names
-				(offset 1.016)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "J"
-				(at 0 5.334 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "Barrel_Jack"
-				(at 0 -5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 1.27 -1.016 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 1.27 -1.016 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "DC Barrel Jack"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "DC power barrel jack connector"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "BarrelJack*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "Barrel_Jack_0_1"
-				(rectangle
-					(start -5.08 3.81)
-					(end 5.08 -3.81)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type background)
-					)
-				)
-				(arc
-					(start -3.302 3.175)
-					(mid -3.9343 2.54)
-					(end -3.302 1.905)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(arc
-					(start -3.302 3.175)
-					(mid -3.9343 2.54)
-					(end -3.302 1.905)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy 5.08 2.54) (xy 3.81 2.54)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -3.81 -2.54) (xy -2.54 -2.54) (xy -1.27 -1.27) (xy 0 -2.54) (xy 2.54 -2.54) (xy 5.08 -2.54)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(rectangle
-					(start 3.683 3.175)
-					(end -3.302 1.905)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-			)
-			(symbol "Barrel_Jack_1_1"
-				(pin passive line
-					(at 7.62 2.54 180)
-					(length 2.54)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 7.62 -2.54 180)
-					(length 2.54)
-					(name "~"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3587,6 +3417,15 @@
 				)
 			)
 			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Type" "SMD"
 				(at 0 0 0)
 				(effects
 					(font
@@ -6009,8 +5848,7 @@
 		(symbol "SparkFun-Resistor:10k_0603"
 			(pin_numbers hide)
 			(pin_names
-				(offset 0)
-			)
+				(offset 0) hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -6076,6 +5914,15 @@
 				)
 			)
 			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Type" "SMD"
 				(at 0 0 0)
 				(effects
 					(font
@@ -6219,7 +6066,7 @@
 					)
 				)
 			)
-			(property "Value" "2.0k"
+			(property "Value" "2.0K"
 				(at 0 2.54 0)
 				(effects
 					(font
@@ -6227,7 +6074,7 @@
 					)
 				)
 			)
-			(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
+			(property "Footprint" "0603"
 				(at 0 -4.318 0)
 				(effects
 					(font
@@ -6245,7 +6092,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Resistor"
+			(property "Description" "RES 2K OHM 5% 1/10W 0603"
 				(at 0 -11.43 0)
 				(effects
 					(font
@@ -6254,8 +6101,35 @@
 					(hide yes)
 				)
 			)
-			(property "PROD_ID" "RES-08296"
-				(at 0 -6.858 0)
+			(property "Manufacturer" "Yageo"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "RC0603JR-072KL"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Type" "SMD"
+				(at 0 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -6424,7 +6298,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Resistor"
+			(property "Description" "RES 47K OHM 1/10W 5% 0603"
 				(at 0 -11.43 0)
 				(effects
 					(font
@@ -6448,6 +6322,7 @@
 					(font
 						(size 1.27 1.27)
 					)
+					(hide yes)
 				)
 			)
 			(property "Mfg Part #" "RC0603JR-0747KL"
@@ -6456,6 +6331,25 @@
 					(font
 						(size 1.27 1.27)
 					)
+					(hide yes)
+				)
+			)
+			(property "Type" "SMD"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
 				)
 			)
 			(property "ki_keywords" "SparkFun R res resistor"
@@ -11944,7 +11838,7 @@
 	)
 	(wire
 		(pts
-			(xy 220.98 81.28) (xy 228.6 81.28)
+			(xy 220.98 81.28) (xy 224.79 81.28)
 		)
 		(stroke
 			(width 0)
@@ -12434,6 +12328,16 @@
 	)
 	(wire
 		(pts
+			(xy 232.41 81.28) (xy 236.22 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "acbe4009-cea4-423e-9b41-69b345240506")
+	)
+	(wire
+		(pts
 			(xy 219.71 24.13) (xy 219.71 20.32)
 		)
 		(stroke
@@ -12784,7 +12688,7 @@
 	)
 	(wire
 		(pts
-			(xy 33.02 125.73) (xy 33.02 128.27)
+			(xy 33.02 123.19) (xy 33.02 128.27)
 		)
 		(stroke
 			(width 0)
@@ -13471,6 +13375,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 97.79 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "08c9827e-7a4f-4cda-b6de-6a59bca086d8")
 		)
@@ -13815,6 +13728,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 53.34 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "eb6dcd6d-42d7-443f-bf05-399a593b3556")
 		)
@@ -13858,7 +13780,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
+		(property "Footprint" "0603"
 			(at 218.948 38.1 0)
 			(effects
 				(font
@@ -13876,7 +13798,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
+		(property "Description" "RES 2K OHM 5% 1/10W 0603"
 			(at 226.06 38.1 0)
 			(effects
 				(font
@@ -13887,6 +13809,42 @@
 		)
 		(property "PROD_ID" "RES-08296"
 			(at 221.488 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 214.63 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-072KL"
+			(at 214.63 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 214.63 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 214.63 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13990,6 +13948,24 @@
 				(hide yes)
 			)
 		)
+		(property "Field8" ""
+			(at 60.96 160.02 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 60.96 160.02 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "bcff6f24-ac9c-4b80-8fe1-ec879b7b76b1")
 		)
@@ -14073,7 +14049,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "BS-7"
+		(property "Mfg Part #" "BS-7"
 			(at 129.54 124.46 0)
 			(effects
 				(font
@@ -14150,6 +14126,24 @@
 					(size 1.524 1.524)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 124.46 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" ""
+			(at 124.46 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -14372,9 +14366,9 @@
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "147122a2-7c30-4ef2-b258-89d4d058b611")
 		(property "Reference" "Q3"
 			(at 231.14 128.27 0)
@@ -14519,6 +14513,15 @@
 					(size 1.524 1.524)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Type" "THT"
+			(at 227.33 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -14734,6 +14737,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 212.09 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "831f0f81-ea2c-4b78-aaea-5a2f5a8b15e9")
 		)
@@ -14869,6 +14881,15 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 38.1 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 38.1 95.25 0)
 			(effects
 				(font
@@ -15167,9 +15188,9 @@
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "3254289d-b336-42b9-a64b-74efebd99400")
 		(property "Reference" "Q4"
 			(at 231.14 113.03 0)
@@ -15315,6 +15336,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "THT"
+			(at 227.33 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "fb352e1f-0699-4b50-803a-beecaa2aab25")
 		)
@@ -15418,7 +15448,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "510"
+		(property "Value" "510 Ohm"
 			(at 77.47 157.48 90)
 			(effects
 				(font
@@ -15483,6 +15513,15 @@
 		)
 		(property "Notes" "Substitutions OK"
 			(at 78.74 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 78.74 160.02 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16212,6 +16251,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 107.95 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "6cdfb48c-83ef-4081-885b-0c4028bb7ee8")
 		)
@@ -16246,7 +16294,7 @@
 			)
 		)
 		(property "Value" "0.1UF"
-			(at 244.602 84.074 0)
+			(at 248.92 85.09 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -16355,6 +16403,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 245.11 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5fb143e1-4e62-4268-be52-52caab98325b")
 		)
@@ -16438,7 +16495,6 @@
 		)
 	)
 	(symbol
-		(lib_name "2.0k_0603_2")
 		(lib_id "SparkFun-Resistor:2.0k_0603")
 		(at 190.5 92.71 90)
 		(unit 1)
@@ -16457,7 +16513,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "2.0k"
+		(property "Value" "2.0K"
 			(at 193.04 93.9799 90)
 			(effects
 				(font
@@ -16521,6 +16577,15 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 190.5 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 190.5 92.71 0)
 			(effects
 				(font
@@ -16672,6 +16737,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 66.04 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "1a0f0529-653a-4f9c-a1c7-6d93743f4128")
 		)
@@ -16797,6 +16871,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 224.79 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f1d77a70-468d-4d9b-b134-0bbd262482db")
 		)
@@ -16831,7 +16914,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "47k"
+		(property "Value" "47K"
 			(at 222.25 27.9399 90)
 			(effects
 				(font
@@ -16858,7 +16941,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
+		(property "Description" "RES 47K OHM 1/10W 5% 0603"
 			(at 208.28 27.94 0)
 			(effects
 				(font
@@ -16896,6 +16979,15 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 219.71 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 219.71 27.94 0)
 			(effects
 				(font
@@ -17167,7 +17259,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
+		(property "Description" "RES 47K OHM 1/10W 5% 0603"
 			(at 240.03 27.94 0)
 			(effects
 				(font
@@ -17213,6 +17305,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 251.46 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "815f89e3-90c2-49aa-854a-517bb35462d3")
 		)
@@ -17233,9 +17334,9 @@
 		(at 207.01 138.43 90)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "6e1611ac-bad0-487d-8469-f405efffafaf")
 		(property "Reference" "L3"
@@ -17321,6 +17422,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 207.01 138.43 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "7ae1e9bd-6168-4cf9-bf4e-2749a250a483")
 		)
@@ -17337,7 +17447,7 @@
 		)
 	)
 	(symbol
-		(lib_name "C0805C334K4RAC7800_2")
+		(lib_name "C0805C334K4RAC7800_3")
 		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
 		(at 265.43 43.18 90)
 		(unit 1)
@@ -17442,6 +17552,15 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 265.43 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 265.43 43.18 0)
 			(effects
 				(font
@@ -17659,6 +17778,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 177.8 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "b00c1bcd-7177-45d9-8211-1ee8c0ed7d46")
 		)
@@ -17808,7 +17936,7 @@
 	)
 	(symbol
 		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
-		(at 228.6 81.28 0)
+		(at 224.79 81.28 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17816,7 +17944,7 @@
 		(dnp no)
 		(uuid "76a8457d-d7ed-47d5-896c-2bb92be4a02b")
 		(property "Reference" "C4"
-			(at 234.442 83.82 90)
+			(at 230.632 83.82 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -17825,7 +17953,7 @@
 			)
 		)
 		(property "Value" "0.1UF"
-			(at 227.838 84.074 0)
+			(at 228.6 85.09 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -17833,7 +17961,7 @@
 			)
 		)
 		(property "Footprint" "0603"
-			(at 229.87 86.36 0)
+			(at 226.06 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17843,7 +17971,7 @@
 			)
 		)
 		(property "Datasheet" "C0603C104K4RACTU"
-			(at 230.378 88.646 0)
+			(at 226.568 88.646 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17853,7 +17981,7 @@
 			)
 		)
 		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
-			(at 230.632 84.328 0)
+			(at 226.822 84.328 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17862,7 +17990,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 232.41 82.55 0)
+			(at 228.6 82.55 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -17872,7 +18000,7 @@
 			)
 		)
 		(property "Field5" "CAP-07885"
-			(at 228.6 73.66 0)
+			(at 224.79 73.66 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -17881,7 +18009,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 228.6 97.79 0)
+			(at 224.79 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17890,7 +18018,7 @@
 			)
 		)
 		(property "Voltage" "16V"
-			(at 230.124 93.218 0)
+			(at 226.314 93.218 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17899,7 +18027,7 @@
 			)
 		)
 		(property "Tolerance" "10%"
-			(at 234.696 93.218 0)
+			(at 230.886 93.218 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17908,7 +18036,7 @@
 			)
 		)
 		(property "Manufacturer" "Kemet"
-			(at 227.33 76.2 0)
+			(at 223.52 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17917,7 +18045,7 @@
 			)
 		)
 		(property "Mfg Part #" "C0603C104K4RAC7867"
-			(at 231.902 90.678 0)
+			(at 228.092 90.678 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17926,7 +18054,16 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
-			(at 228.6 81.28 0)
+			(at 224.79 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 224.79 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18077,6 +18214,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 74.93 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "b3c1d8b8-0660-4213-a6cd-3f0171ef632b")
 		)
@@ -18097,9 +18243,9 @@
 		(at 78.74 148.59 90)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "7dc405fc-edd3-4c62-93b1-2655b1568b9b")
 		(property "Reference" "Q2"
@@ -18158,7 +18304,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "2N3906"
+		(property "Mfg Part #" "2N3906"
 			(at 66.04 143.51 0)
 			(effects
 				(font
@@ -18235,6 +18381,15 @@
 					(size 1.524 1.524)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Type" "THT"
+			(at 78.74 148.59 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -18386,6 +18541,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 261.62 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "a27fb6e9-d9c8-4548-a427-b083ad9f4df3")
 		)
@@ -18482,6 +18646,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 60.96 175.26 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "c87eaed3-71cc-4bda-bf2b-9538e2886b08")
 		)
@@ -18498,7 +18671,6 @@
 		)
 	)
 	(symbol
-		(lib_name "2.0k_0603_1")
 		(lib_id "SparkFun-Resistor:2.0k_0603")
 		(at 179.07 92.71 90)
 		(unit 1)
@@ -18535,7 +18707,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
 			(at 187.96 92.71 0)
 			(effects
 				(font
@@ -18573,6 +18745,15 @@
 		)
 		(property "Notes" "Substitutions OK"
 			(at 179.07 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 179.07 92.71 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18858,6 +19039,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 201.93 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "75da2cdd-9d3e-47f3-8c79-9c6c4d78fd89")
 		)
@@ -18944,9 +19134,9 @@
 		(at 96.52 175.26 90)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "934574a9-52cb-4ee9-9dd9-3ac010f6f4a9")
 		(property "Reference" "D1"
@@ -19075,7 +19265,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "5-1814400-1"
+		(property "Mfg Part #" "5-1814400-1"
 			(at 270.51 129.54 0)
 			(effects
 				(font
@@ -19155,6 +19345,34 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 275.59 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "5-1814400-1"
+			(at 270.51 129.54 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 275.59 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "b75df513-78d1-4e7a-ae29-ba59a2f9d762")
 		)
@@ -19176,9 +19394,9 @@
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "a16827e5-70cf-4515-bb61-6e4108b6b65d")
 		(property "Reference" "J1"
 			(at 26.67 7.62 0)
@@ -19563,9 +19781,9 @@
 		(at 76.2 175.26 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "af75d713-47a0-4f28-b15c-1a3ab7c415a4")
 		(property "Reference" "Q1"
@@ -19626,7 +19844,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "2N3904"
+		(property "Mfg Part #" "2N3904"
 			(at 81.28 162.56 0)
 			(effects
 				(font
@@ -19706,6 +19924,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "THT"
+			(at 76.2 175.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5c683594-46e9-49ca-9d04-c9b209e73174")
 		)
@@ -19725,17 +19952,17 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:Barrel_Jack")
-		(at 25.4 123.19 0)
+		(lib_id "BarrelJackTHT:PJ-037A")
+		(at 33.02 120.65 0)
+		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
+		(dnp yes)
 		(uuid "b04c605a-8249-4b21-b14b-bf2b3d7fa5b0")
 		(property "Reference" "J3"
-			(at 25.4 114.3 0)
+			(at 24.13 130.81 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19743,15 +19970,35 @@
 			)
 		)
 		(property "Value" "+12V"
-			(at 25.4 116.84 0)
+			(at 24.13 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 26.67 124.206 0)
+		(property "Footprint" "CONN1x2_PJ-037A_CUD"
+			(at 33.02 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "PJ-037A"
+			(at 33.02 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "CONN PWR JACK 2X5.5MM SOLDER"
+			(at 33.02 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19759,8 +20006,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 26.67 124.206 0)
+		(property "Manufacturer" "CUI Devices"
+			(at 33.02 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19768,8 +20015,26 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "DC Barrel Jack"
-			(at 25.4 123.19 0)
+		(property "Mfg Part #" "PJ-037A"
+			(at 33.02 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "THT"
+			(at 33.02 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" ""
+			(at 33.02 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19939,6 +20204,15 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 214.63 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 214.63 27.94 0)
 			(effects
 				(font
@@ -20160,7 +20434,7 @@
 		)
 	)
 	(symbol
-		(lib_name "C0805C334K4RAC7800_3")
+		(lib_name "C0805C334K4RAC7800_2")
 		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
 		(at 199.39 41.91 90)
 		(unit 1)
@@ -20263,6 +20537,15 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 199.39 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 199.39 41.91 0)
 			(effects
 				(font
@@ -20413,6 +20696,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 148.59 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "6cdfb48c-83ef-4081-885b-0c4028bb7ee9")
 		)
@@ -20549,6 +20841,15 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 55.88 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 55.88 97.79 0)
 			(effects
 				(font
@@ -20829,9 +21130,9 @@
 		(at 71.12 88.9 90)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "d4306852-0830-4c7d-b6fe-ffbf90f9ab31")
 		(property "Reference" "J4"
@@ -20951,7 +21252,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
+		(property "Description" "RES 51 OHM 5% 1/2W 1210"
 			(at 270.51 130.81 0)
 			(effects
 				(font
@@ -20962,6 +21263,42 @@
 		)
 		(property "PROD_ID" ""
 			(at 270.51 126.238 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 270.51 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC1210JR-0751RL"
+			(at 270.51 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 270.51 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 270.51 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21250,6 +21587,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 227.33 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "77e80ec2-a6d1-431c-b1da-4fa1b608f67f")
 		)
@@ -21337,9 +21683,9 @@
 		(at 132.08 99.06 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "e34b85dc-5ce4-4456-99df-1119ef8fec6d")
 		(property "Reference" "TN1"
@@ -21709,7 +22055,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
+		(property "Description" "CAP CER 0.33UF 16V X7R 0805"
 			(at 39.37 120.65 0)
 			(effects
 				(font
@@ -21737,6 +22083,15 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 39.37 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 39.37 120.65 0)
 			(effects
 				(font
@@ -21889,6 +22244,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 88.9 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "ca9e2510-8535-41a7-bb48-0125b5d0ed05")
 		)
@@ -21923,7 +22287,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "510"
+		(property "Value" "510 Ohm"
 			(at 95.25 157.48 90)
 			(effects
 				(font
@@ -21941,7 +22305,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 96.52 160.02 0)
 			(effects
 				(font
@@ -21988,6 +22352,15 @@
 		)
 		(property "Notes" "Substitutions OK"
 			(at 96.52 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 96.52 160.02 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22340,6 +22713,15 @@
 				(hide yes)
 			)
 		)
+		(property "Type" "SMD"
+			(at 62.23 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "78c9d83f-e757-4395-9aaf-6ea993cfc68b")
 		)
@@ -22591,6 +22973,15 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 240.03 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
 			(at 240.03 20.32 0)
 			(effects
 				(font
