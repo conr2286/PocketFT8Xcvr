@@ -3,9 +3,9 @@
 	(generator "kicad_symbol_editor")
 	(generator_version "8.0")
 	(symbol "C0805C334K4RAC7800"
+		(pin_numbers hide)
 		(pin_names
-			(offset 0.254)
-		)
+			(offset 0.254) hide)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -70,6 +70,14 @@
 					(size 1.27 1.27)
 				)
 				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 			)
 		)
 		(property "ki_keywords" "C0805C334K4RAC7800"

@@ -13,6 +13,400 @@
 		(comment 2 "https://github.com/conr2286/PocketFT8Xcvr.git")
 	)
 	(lib_symbols
+		(symbol "2.0k_0603_1"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "2.0K"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "0603"
+				(at 0 -4.318 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+				(at 0 -8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "RES 2K OHM 5% 1/10W 0603"
+				(at 0 -11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Yageo"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "RC0603JR-072KL"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "SparkFun R res resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "2.0k_0603_1_0_1"
+				(polyline
+					(pts
+						(xy -2.286 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.286 0) (xy 2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.762 0) (xy -1.143 -1.016) (xy -1.524 0) (xy -1.905 1.016) (xy -2.286 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 0) (xy 0.381 -1.016) (xy 0 0) (xy -0.381 1.016) (xy -0.762 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.286 0) (xy 1.905 -1.016) (xy 1.524 0) (xy 1.143 1.016) (xy 0.762 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "2.0k_0603_1_1_1"
+				(pin passive line
+					(at 3.81 0 180)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -3.81 0 0)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "2.0k_0603_2"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "2.0K"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "0603"
+				(at 0 -4.318 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+				(at 0 -8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "RES 2K OHM 5% 1/10W 0603"
+				(at 0 -11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Yageo"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "RC0603JR-072KL"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "SparkFun R res resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "2.0k_0603_2_0_1"
+				(polyline
+					(pts
+						(xy -2.286 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.286 0) (xy 2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.762 0) (xy -1.143 -1.016) (xy -1.524 0) (xy -1.905 1.016) (xy -2.286 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 0) (xy 0.381 -1.016) (xy 0 0) (xy -0.381 1.016) (xy -0.762 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.286 0) (xy 1.905 -1.016) (xy 1.524 0) (xy 1.143 1.016) (xy 0.762 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "2.0k_0603_2_1_1"
+				(pin passive line
+					(at 3.81 0 180)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -3.81 0 0)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "2024-07-31_16-01-32:RLB9012-102KL"
 			(pin_names
 				(offset 0.254)
@@ -375,6 +769,417 @@
 						)
 					)
 					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "2N7000_1"
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q4"
+				(at 3.81 1.27 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "2N7000"
+				(at 3.4544 0 90)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "digikey-footprints:TO-92-3"
+				(at 5.08 5.08 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF"
+				(at 5.08 7.62 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Description" "MOSFET N-CH 60V 200MA TO-92"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Digi-Key_PN" "2N7000FS-ND"
+				(at 5.08 10.16 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "MPN" "2N7000"
+				(at 5.08 12.7 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Category" "Discrete Semiconductor Products"
+				(at 5.08 15.24 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Family" "Transistors - FETs, MOSFETs - Single"
+				(at 5.08 17.78 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "DK_Datasheet_Link" "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF"
+				(at 5.08 20.32 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "DK_Detail_Page" "/product-detail/en/on-semiconductor/2N7000/2N7000FS-ND/244278"
+				(at 5.08 22.86 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Description_1" "MOSFET N-CH 60V 200MA TO-92"
+				(at 5.08 25.4 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "ON Semiconductor"
+				(at 5.08 27.94 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Status" "Active"
+				(at 5.08 30.48 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "2N7000FS-ND"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "2N7000_1_0_1"
+				(circle
+					(center -1.27 0)
+					(radius 3.302)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(circle
+					(center 0 -1.905)
+					(radius 0.127)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 -1.397)
+					(radius 0.127)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -1.397) (xy -2.54 -1.397)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -5.08 -2.54) (xy -3.048 -2.54) (xy -3.048 1.397)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0 1.397) (xy -2.54 1.397)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.127 -1.905) (xy 1.016 -1.905) (xy 1.016 1.397) (xy 1.016 1.905) (xy -0.127 1.905)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 1.905)
+					(radius 0.127)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "2N7000_1_1_1"
+				(polyline
+					(pts
+						(xy -2.54 -1.397) (xy -2.54 -1.905)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 -1.397) (xy -2.54 -0.889)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -2.54 -0.508)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -2.54 0.508)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 1.905) (xy -2.54 0.889)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.524 0.508) (xy 0.508 0.508)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -1.778 0.508) (xy -1.778 -0.508) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 0.508) (xy 0.508 -0.254) (xy 1.524 -0.254) (xy 1.016 0.508)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(pin free line
+					(at 0 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin free line
+					(at 0 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -807,12 +1612,13 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "C"
-				(at 3.81 3.81 0)
+			(property "Reference" "C5"
+				(at 5.08 1.524 90)
 				(effects
 					(font
-						(size 1.524 1.524)
+						(size 1.143 1.143)
 					)
+					(justify left)
 				)
 			)
 			(property "Value" "10UF"
@@ -852,6 +1658,33 @@
 					(hide yes)
 				)
 			)
+			(property "PROD_ID" "CAP-13930"
+				(at -1.27 -16.51 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Voltage" "16V"
+				(at 0 -6.35 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Tolerance" "10%"
+				(at 0 -8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
 			(property "Manufacturer" "Kemet"
 				(at 0 0 0)
 				(effects
@@ -862,6 +1695,15 @@
 				)
 			)
 			(property "Mfg Part #" "C0805C106K4PAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" "Substitutions OK"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1131,6 +1973,15 @@
 					(hide yes)
 				)
 			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
 			(property "ki_keywords" "C0805C334K4RAC7800"
 				(at 0 0 0)
 				(effects
@@ -1392,6 +2243,15 @@
 					(hide yes)
 				)
 			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
 			(property "ki_keywords" "C0805C334K4RAC7800"
 				(at 0 0 0)
 				(effects
@@ -1645,6 +2505,15 @@
 				)
 			)
 			(property "Mfg Part #" "C0805C106K4PAC7800"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" "Substitutions OK"
 				(at 0 0 0)
 				(effects
 					(font
@@ -2717,6 +3586,15 @@
 					(hide yes)
 				)
 			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
 			(property "ki_keywords" "C0603C104K4RACTU"
 				(at 0 0 0)
 				(effects
@@ -2909,9 +3787,9 @@
 			)
 		)
 		(symbol "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800"
+			(pin_numbers hide)
 			(pin_names
-				(offset 0.254)
-			)
+				(offset 0.254) hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -3805,6 +4683,214 @@
 						)
 					)
 					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "R_US_1"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R11"
+				(at 1.27 2.54 90)
+				(effects
+					(font
+						(size 1.143 1.143)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "510"
+				(at -1.27 2.54 90)
+				(effects
+					(font
+						(size 1.143 1.143)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" "0603"
+				(at 1.016 -0.254 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "RES 510 OHM 5% 1/10W 0603"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "PROD_ID" "RES-08296"
+				(at 0 -6.858 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Yageo"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "RC0603JR-07510RL"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "R_US_1_0_1"
+				(polyline
+					(pts
+						(xy 0 -2.286) (xy 0 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.286) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -0.762) (xy 1.016 -1.143) (xy 0 -1.524) (xy -1.016 -1.905) (xy 0 -2.286)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0.762) (xy 1.016 0.381) (xy 0 0) (xy -1.016 -0.381) (xy 0 -0.762)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.286) (xy 1.016 1.905) (xy 0 1.524) (xy -1.016 1.143) (xy 0 0.762)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_US_1_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4944,7 +6030,7 @@
 					)
 				)
 			)
-			(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
+			(property "Footprint" "0603"
 				(at 0 -4.318 0)
 				(effects
 					(font
@@ -4953,7 +6039,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+			(property "Datasheet" ""
 				(at 0 -8.89 0)
 				(effects
 					(font
@@ -4962,7 +6048,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Resistor"
+			(property "Description" "RES 47.0K OHM 1/8W 0805 SMD"
 				(at 0 -11.43 0)
 				(effects
 					(font
@@ -4971,8 +6057,26 @@
 					(hide yes)
 				)
 			)
-			(property "PROD_ID" "RES-00824"
-				(at 0 -6.35 0)
+			(property "Manufacturer" "YAGEO"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mfg Part #" "RC0603JR-0710KL"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -5302,7 +6406,7 @@
 					)
 				)
 			)
-			(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
+			(property "Footprint" "0603"
 				(at 0 -4.318 0)
 				(effects
 					(font
@@ -5311,7 +6415,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+			(property "Datasheet" "RES 47K OHM 1/10W 5% 0603"
 				(at 0 -8.89 0)
 				(effects
 					(font
@@ -5336,6 +6440,22 @@
 						(size 1.27 1.27)
 					)
 					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Yageo"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Mfg Part #" "RC0603JR-0747KL"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
 				)
 			)
 			(property "ki_keywords" "SparkFun R res resistor"
@@ -10144,7 +11264,7 @@
 	)
 	(wire
 		(pts
-			(xy 96.52 162.56) (xy 96.52 171.45)
+			(xy 96.52 163.83) (xy 96.52 171.45)
 		)
 		(stroke
 			(width 0)
@@ -10774,7 +11894,7 @@
 	)
 	(wire
 		(pts
-			(xy 78.74 162.56) (xy 78.74 167.64)
+			(xy 78.74 163.83) (xy 78.74 167.64)
 		)
 		(stroke
 			(width 0)
@@ -10784,7 +11904,7 @@
 	)
 	(wire
 		(pts
-			(xy 60.96 162.56) (xy 60.96 167.64)
+			(xy 60.96 163.83) (xy 60.96 167.64)
 		)
 		(stroke
 			(width 0)
@@ -11104,7 +12224,7 @@
 	)
 	(wire
 		(pts
-			(xy 60.96 146.05) (xy 60.96 154.94)
+			(xy 60.96 146.05) (xy 60.96 156.21)
 		)
 		(stroke
 			(width 0)
@@ -11234,7 +12354,7 @@
 	)
 	(wire
 		(pts
-			(xy 78.74 153.67) (xy 78.74 154.94)
+			(xy 78.74 153.67) (xy 78.74 156.21)
 		)
 		(stroke
 			(width 0)
@@ -11714,7 +12834,7 @@
 	)
 	(wire
 		(pts
-			(xy 96.52 146.05) (xy 96.52 154.94)
+			(xy 96.52 146.05) (xy 96.52 156.21)
 		)
 		(stroke
 			(width 0)
@@ -12342,6 +13462,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 97.79 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "08c9827e-7a4f-4cda-b6de-6a59bca086d8")
 		)
@@ -12677,6 +13806,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 53.34 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "eb6dcd6d-42d7-443f-bf05-399a593b3556")
 		)
@@ -12773,85 +13911,7 @@
 	)
 	(symbol
 		(lib_id "SparkFun-Resistor:5.1k_0603")
-		(at 60.96 175.26 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "0d27f275-095a-4ff0-99b6-f928bc4ab705")
-		(property "Reference" "R10"
-			(at 62.23 172.72 90)
-			(effects
-				(font
-					(size 1.143 1.143)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "5.1K"
-			(at 59.69 172.72 90)
-			(effects
-				(font
-					(size 1.143 1.143)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
-			(at 60.96 179.578 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
-			(at 60.96 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 60.96 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "PROD_ID" "RES-12083"
-			(at 60.96 181.864 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "5d7e6847-5a03-4ae6-99cf-765528aa13fb")
-		)
-		(pin "1"
-			(uuid "6c23b1fb-26b9-4c65-910d-df88a487effd")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "R10")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "SparkFun-Resistor:5.1k_0603")
-		(at 60.96 158.75 270)
+		(at 60.96 160.02 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12859,7 +13919,7 @@
 		(dnp no)
 		(uuid "0ebaceb7-21d7-4362-a231-8dcf526f1b98")
 		(property "Reference" "R9"
-			(at 63.5 160.02 90)
+			(at 63.5 161.29 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -12868,7 +13928,7 @@
 			)
 		)
 		(property "Value" "5.1K"
-			(at 63.5 157.48 90)
+			(at 63.5 158.75 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -12876,8 +13936,8 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
-			(at 56.642 158.75 0)
+		(property "Footprint" "0603"
+			(at 56.642 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12885,8 +13945,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
-			(at 52.07 158.75 0)
+		(property "Datasheet" ""
+			(at 52.07 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12894,8 +13954,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 49.53 158.75 0)
+		(property "Description" "RES 5.1K OHM 5% 1/10W 0603"
+			(at 49.53 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12903,8 +13963,26 @@
 				(hide yes)
 			)
 		)
-		(property "PROD_ID" "RES-12083"
-			(at 54.356 158.75 0)
+		(property "Manufacturer" "Yageo"
+			(at 60.96 160.02 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-075K1L"
+			(at 60.96 160.02 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 60.96 160.02 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13354,7 +14432,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "2N7000"
+		(property "Mfg Part #" "2N7000"
 			(at 232.41 139.7 0)
 			(effects
 				(font
@@ -13416,6 +14494,16 @@
 		)
 		(property "Manufacturer" "ON Semiconductor"
 			(at 232.41 154.94 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "MPN" "2N7000"
+			(at 232.41 139.7 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13513,84 +14601,6 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "#PWR036")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "SparkFun-Resistor:2.0k_0603")
-		(at 78.74 158.75 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "15077000-d8fb-41bf-9160-b02884d035ce")
-		(property "Reference" "R8"
-			(at 81.28 160.02 90)
-			(effects
-				(font
-					(size 1.143 1.143)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "510"
-			(at 81.28 157.48 90)
-			(effects
-				(font
-					(size 1.143 1.143)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
-			(at 74.422 158.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
-			(at 69.85 158.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 67.31 158.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "PROD_ID" "RES-08296"
-			(at 71.882 158.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "63adc260-673d-4cb3-8b86-7f5077a52168")
-		)
-		(pin "1"
-			(uuid "b9068534-61ea-4f23-8d98-32954dd5bdc8")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "R8")
 					(unit 1)
 				)
 			)
@@ -13708,6 +14718,15 @@
 		)
 		(property "Mfg Part #" "C0603C104K4RAC7867"
 			(at 215.392 151.638 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 212.09 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13842,6 +14861,15 @@
 		)
 		(property "Mfg Part #" "C0603C104K4RAC7867"
 			(at 47.498 91.948 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 38.1 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14067,9 +15095,9 @@
 		(at 264.16 148.59 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "317a5006-1d7a-4ac0-8c14-e1e6c3ded7c0")
 		(property "Reference" "C8"
@@ -14081,7 +15109,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "75"
+		(property "Value" "75PF"
 			(at 267.97 149.86 0)
 			(effects
 				(font
@@ -14133,6 +15161,7 @@
 		)
 	)
 	(symbol
+		(lib_name "2N7000_1")
 		(lib_id "dk_Transistors-FETs-MOSFETs-Single:2N7000")
 		(at 227.33 111.76 0)
 		(mirror x)
@@ -14268,13 +15297,21 @@
 				(hide yes)
 			)
 		)
-		(property "Status" "Active"
-			(at 232.41 142.24 0)
+		(property "Mfg Part #" "2N7000"
+			(at 227.33 111.76 0)
 			(effects
 				(font
-					(size 1.524 1.524)
+					(size 1.27 1.27)
 				)
-				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitions OK"
+			(at 227.33 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -14363,6 +15400,112 @@
 		)
 	)
 	(symbol
+		(lib_name "R_US_1")
+		(lib_id "Device:R_US")
+		(at 78.74 160.02 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3b827409-91f4-4f3d-81aa-f8a8d92f5474")
+		(property "Reference" "R8"
+			(at 80.01 157.48 90)
+			(effects
+				(font
+					(size 1.143 1.143)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "510"
+			(at 77.47 157.48 90)
+			(effects
+				(font
+					(size 1.143 1.143)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "0603"
+			(at 79.756 160.274 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 78.74 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "RES 510 OHM 5% 1/10W 0603"
+			(at 78.74 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "PROD_ID" "RES-08296"
+			(at 78.74 166.878 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 78.74 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-07510RL"
+			(at 78.74 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 78.74 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "5f462742-317d-4e59-8427-e3a295925e5a")
+		)
+		(pin "1"
+			(uuid "191d9ab1-c3c3-4d39-922f-5f414dc23852")
+		)
+		(instances
+			(project "PocketFT8Xcvr"
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "R8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+5V")
 		(at 156.21 27.94 270)
 		(unit 1)
@@ -14433,9 +15576,9 @@
 		(at 255.27 132.08 90)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "44b1f77a-91fa-453b-b18a-5c69d01a310d")
 		(property "Reference" "C26"
 			(at 255.016 126.492 90)
@@ -14445,7 +15588,7 @@
 				)
 			)
 		)
-		(property "Value" "47 pf"
+		(property "Value" "47PF"
 			(at 255.016 128.524 90)
 			(effects
 				(font
@@ -14453,7 +15596,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+		(property "Footprint" "0805"
 			(at 266.7 132.08 0)
 			(effects
 				(font
@@ -15060,6 +16203,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 107.95 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "6cdfb48c-83ef-4081-885b-0c4028bb7ee8")
 		)
@@ -15194,6 +16346,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 245.11 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5fb143e1-4e62-4268-be52-52caab98325b")
 		)
@@ -15277,6 +16438,7 @@
 		)
 	)
 	(symbol
+		(lib_name "2.0k_0603_2")
 		(lib_id "SparkFun-Resistor:2.0k_0603")
 		(at 190.5 92.71 90)
 		(unit 1)
@@ -15304,7 +16466,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
+		(property "Footprint" "0603"
 			(at 194.818 92.71 0)
 			(effects
 				(font
@@ -15322,7 +16484,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
+		(property "Description" "RES 2K OHM 5% 1/10W 0603"
 			(at 201.93 92.71 0)
 			(effects
 				(font
@@ -15333,6 +16495,33 @@
 		)
 		(property "PROD_ID" "RES-08296"
 			(at 197.358 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 190.5 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-072KL"
+			(at 190.5 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 190.5 92.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15474,6 +16663,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 66.04 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "1a0f0529-653a-4f9c-a1c7-6d93743f4128")
 		)
@@ -15590,6 +16788,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 224.79 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f1d77a70-468d-4d9b-b134-0bbd262482db")
 		)
@@ -15616,7 +16823,7 @@
 		(fields_autoplaced yes)
 		(uuid "680b4348-0517-4dee-98c7-bfc0609cd42f")
 		(property "Reference" "R4"
-			(at 222.25 26.6699 90)
+			(at 222.25 25.3999 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15625,7 +16832,7 @@
 			)
 		)
 		(property "Value" "47k"
-			(at 222.25 29.2099 90)
+			(at 222.25 27.9399 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15633,7 +16840,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
+		(property "Footprint" "0603"
 			(at 215.392 27.94 0)
 			(effects
 				(font
@@ -15642,7 +16849,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+		(property "Datasheet" "RES 47K OHM 1/10W 5% 0603"
 			(at 210.82 27.94 0)
 			(effects
 				(font
@@ -15662,6 +16869,34 @@
 		)
 		(property "PROD_ID" "RES-07871"
 			(at 213.106 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 222.25 30.4799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-0747KL"
+			(at 219.71 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 219.71 27.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15755,9 +16990,9 @@
 		(at 255.27 142.24 90)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "6c7a6a55-da3c-417f-937c-54b35e8c4946")
 		(property "Reference" "L1"
@@ -15823,9 +17058,9 @@
 		(at 236.22 142.24 90)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "6c84ab77-e345-4629-84e0-57a3359072a1")
 		(property "Reference" "L2"
@@ -15897,7 +17132,7 @@
 		(fields_autoplaced yes)
 		(uuid "6cc892d0-b206-4311-a980-3767cacb19ea")
 		(property "Reference" "R3"
-			(at 254 26.67 90)
+			(at 254 25.4 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -15906,7 +17141,7 @@
 			)
 		)
 		(property "Value" "47K"
-			(at 254 29.21 90)
+			(at 254 27.94 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -15914,7 +17149,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
+		(property "Footprint" "0603"
 			(at 247.142 27.94 0)
 			(effects
 				(font
@@ -15923,7 +17158,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+		(property "Datasheet" "RES 47K OHM 1/10W 5% 0603"
 			(at 242.57 27.94 0)
 			(effects
 				(font
@@ -15943,6 +17178,34 @@
 		)
 		(property "PROD_ID" "RES-07871"
 			(at 244.856 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 251.46 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-0747KL"
+			(at 254 30.4799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 251.46 27.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16013,7 +17276,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "vertical inductor"
+		(property "Description" "FIXED IND 1MH 510MA 2.9 OHM TH"
 			(at 207.01 138.43 0)
 			(effects
 				(font
@@ -16023,6 +17286,33 @@
 			)
 		)
 		(property "Digi-Key_PN" "RLB9012-102KL-N"
+			(at 207.01 138.43 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Bourns"
+			(at 207.01 138.43 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RLB9012-102KL"
+			(at 207.01 138.43 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" ""
 			(at 207.01 138.43 90)
 			(effects
 				(font
@@ -16143,6 +17433,15 @@
 			)
 		)
 		(property "Mfg Part #" "C0805C106K4PAC7800"
+			(at 265.43 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
 			(at 265.43 43.18 0)
 			(effects
 				(font
@@ -16344,6 +17643,15 @@
 		)
 		(property "Mfg Part #" "C0603C104K4RAC7867"
 			(at 181.102 151.638 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 177.8 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16617,6 +17925,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 228.6 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5fb143e1-4e62-4268-be52-52caab98325c")
 		)
@@ -16744,6 +18061,15 @@
 		)
 		(property "Mfg Part #" "C0603C104K4RAC7867"
 			(at 84.328 124.968 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 74.93 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17051,6 +18377,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 261.62 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "a27fb6e9-d9c8-4548-a427-b083ad9f4df3")
 		)
@@ -17067,6 +18402,103 @@
 		)
 	)
 	(symbol
+		(lib_id "SparkFun-Resistor:5.1k_0603")
+		(at 60.96 175.26 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "81361b8c-5de8-4ca3-ba15-82497673a3d0")
+		(property "Reference" "R10"
+			(at 62.23 172.72 90)
+			(effects
+				(font
+					(size 1.143 1.143)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "5.1K"
+			(at 59.69 172.72 90)
+			(effects
+				(font
+					(size 1.143 1.143)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "0603"
+			(at 60.96 179.578 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 60.96 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "RES 5.1K OHM 5% 1/10W 0603"
+			(at 60.96 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 60.96 175.26 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-075K1L"
+			(at 60.96 175.26 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 60.96 175.26 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "c87eaed3-71cc-4bda-bf2b-9538e2886b08")
+		)
+		(pin "1"
+			(uuid "f0dade6f-c6f0-4850-98e1-4254b6714816")
+		)
+		(instances
+			(project "PocketFT8Xcvr"
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "R10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_name "2.0k_0603_1")
 		(lib_id "SparkFun-Resistor:2.0k_0603")
 		(at 179.07 92.71 90)
 		(unit 1)
@@ -17085,7 +18517,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "2.0k"
+		(property "Value" "2.0K"
 			(at 181.61 93.9799 90)
 			(effects
 				(font
@@ -17094,7 +18526,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
+		(property "Footprint" "0603"
 			(at 183.388 92.71 0)
 			(effects
 				(font
@@ -17103,7 +18535,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+		(property "Datasheet" ""
 			(at 187.96 92.71 0)
 			(effects
 				(font
@@ -17112,7 +18544,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
+		(property "Description" "RES 2K OHM 5% 1/10W 0603"
 			(at 190.5 92.71 0)
 			(effects
 				(font
@@ -17121,8 +18553,26 @@
 				(hide yes)
 			)
 		)
-		(property "PROD_ID" "RES-08296"
-			(at 185.928 92.71 0)
+		(property "Manufacturer" "Yageo"
+			(at 179.07 92.71 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-072KL"
+			(at 179.07 92.71 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 179.07 92.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17216,9 +18666,9 @@
 		(at 245.11 148.59 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "8617831e-f4d9-492b-b07d-1c0bd487cba8")
 		(property "Reference" "C9"
@@ -17230,7 +18680,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "243"
+		(property "Value" "243PF"
 			(at 248.92 149.86 0)
 			(effects
 				(font
@@ -17392,6 +18842,15 @@
 		)
 		(property "Mfg Part #" "C0603C104K4RAC7867"
 			(at 211.328 147.828 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 201.93 151.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18425,7 +19884,7 @@
 				)
 			)
 		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
+		(property "Footprint" "0603"
 			(at 218.948 27.94 0)
 			(effects
 				(font
@@ -18443,7 +19902,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
+		(property "Description" "RES 47.0K OHM 1/8W 0805 SMD"
 			(at 226.06 27.94 0)
 			(effects
 				(font
@@ -18454,6 +19913,33 @@
 		)
 		(property "PROD_ID" "RES-00824"
 			(at 220.98 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "YAGEO"
+			(at 214.63 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-0710KL"
+			(at 214.63 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 214.63 27.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18776,6 +20262,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 199.39 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d4efd231-2f3a-425e-afb6-26a0050a3243")
 		)
@@ -18902,6 +20397,15 @@
 		)
 		(property "Mfg Part #" "C0603C104K4RAC7867"
 			(at 151.892 37.338 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 148.59 27.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19044,6 +20548,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 55.88 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "e475f38d-b909-442d-8d3d-fc0e229dc6f1")
 		)
@@ -19125,7 +20638,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "L7805CV"
+		(property "Mfg Part #" "L7805CV"
 			(at 66.04 107.95 0)
 			(effects
 				(font
@@ -19412,7 +20925,7 @@
 				)
 			)
 		)
-		(property "Value" "51"
+		(property "Value" "51 OHM"
 			(at 270.51 115.57 0)
 			(effects
 				(font
@@ -19628,7 +21141,7 @@
 			)
 		)
 		(property "Value" "0.1UF"
-			(at 239.268 127.762 0)
+			(at 231.394 135.636 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -19721,6 +21234,15 @@
 		)
 		(property "Mfg Part #" "C0603C104K4RAC7867"
 			(at 236.728 135.382 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 227.33 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20214,6 +21736,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 39.37 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "9ffacae9-3838-4443-9db4-bd0d6c11a3ae")
 		)
@@ -20349,6 +21880,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 88.9 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "ca9e2510-8535-41a7-bb48-0125b5d0ed05")
 		)
@@ -20365,8 +21905,9 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Resistor:2.0k_0603")
-		(at 96.52 158.75 270)
+		(lib_name "R_US_1")
+		(lib_id "Device:R_US")
+		(at 96.52 160.02 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -20374,7 +21915,7 @@
 		(dnp no)
 		(uuid "f8c030e9-0864-490b-a8d3-27cdd01cc368")
 		(property "Reference" "R11"
-			(at 99.06 160.02 90)
+			(at 97.79 157.48 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -20383,7 +21924,7 @@
 			)
 		)
 		(property "Value" "510"
-			(at 99.06 157.48 90)
+			(at 95.25 157.48 90)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -20391,8 +21932,8 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "SparkFun-Resistor:R_0603_1608Metric"
-			(at 92.202 158.75 0)
+		(property "Footprint" "0603"
+			(at 97.536 160.274 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20400,8 +21941,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
-			(at 87.63 158.75 0)
+		(property "Datasheet" "~"
+			(at 96.52 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20409,8 +21950,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 85.09 158.75 0)
+		(property "Description" "RES 510 OHM 5% 1/10W 0603"
+			(at 96.52 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20419,7 +21960,34 @@
 			)
 		)
 		(property "PROD_ID" "RES-08296"
-			(at 89.662 158.75 0)
+			(at 96.52 166.878 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 96.52 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-07510RL"
+			(at 96.52 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 96.52 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20447,9 +22015,9 @@
 		(at 227.33 148.59 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "fac18230-5e4f-4847-b555-e613cac107b1")
 		(property "Reference" "C10"
@@ -20461,7 +22029,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "75"
+		(property "Value" "75PF"
 			(at 231.14 149.86 0)
 			(effects
 				(font
@@ -20763,6 +22331,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 62.23 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "78c9d83f-e757-4395-9aaf-6ea993cfc68b")
 		)
@@ -21005,6 +22582,15 @@
 			)
 		)
 		(property "Mfg Part #" "C0805C106K4PAC7800"
+			(at 240.03 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
 			(at 240.03 20.32 0)
 			(effects
 				(font

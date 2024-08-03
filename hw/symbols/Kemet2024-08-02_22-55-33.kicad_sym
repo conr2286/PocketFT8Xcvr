@@ -72,6 +72,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes" "Substitutions OK"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(property "ki_keywords" "C0805C334K4RAC7800"
 			(at 0 0 0)
 			(effects
