@@ -25,7 +25,7 @@
 				)
 			)
 		)
-		(property "Footprint" "0603"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 1.27 -5.08 0)
 			(effects
 				(font

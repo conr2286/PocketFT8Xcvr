@@ -51,7 +51,13 @@
           "min_clearance": 0.5
         }
       },
-      "diff_pair_dimensions": [],
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
+        }
+      ],
       "drc_exclusions": [],
       "meta": {
         "version": 2
@@ -110,21 +116,21 @@
       },
       "rules": {
         "max_error": 0.005,
-        "min_clearance": 0.0,
+        "min_clearance": 0.2,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.0,
         "min_hole_clearance": 0.25,
-        "min_hole_to_hole": 0.25,
-        "min_microvia_diameter": 0.2,
-        "min_microvia_drill": 0.1,
+        "min_hole_to_hole": 0.3,
+        "min_microvia_diameter": 0.5,
+        "min_microvia_drill": 0.2,
         "min_resolved_spokes": 2,
         "min_silk_clearance": 0.0,
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.0,
-        "min_via_annular_width": 0.1,
-        "min_via_diameter": 0.5,
+        "min_track_width": 0.3,
+        "min_via_annular_width": 0.6,
+        "min_via_diameter": 0.3,
         "solder_mask_clearance": 0.0,
         "solder_mask_min_width": 0.0,
         "solder_mask_to_copper_clearance": 0.0,
@@ -173,7 +179,10 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [],
+      "track_widths": [
+        0.0,
+        0.2
+      ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
           "corner_radius_percentage": 80,
@@ -200,7 +209,16 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [],
+      "via_dimensions": [
+        {
+          "diameter": 0.0,
+          "drill": 0.0
+        },
+        {
+          "diameter": 0.8,
+          "drill": 0.4
+        }
+      ],
       "zones_allow_external_fillets": false
     },
     "ipc2581": {
@@ -218,20 +236,7 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [
-      "lib_symbol_issues|1244600|1371600|11d984bf-94fd-4672-b1e9-ee23b98ed8e7|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|1320800|990600|e34b85dc-5ce4-4456-99df-1119ef8fec6d|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|1930400|1422400|d92a1de6-18a2-4f12-8a6b-f20ebc687adb|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|2273300|1117600|3254289d-b336-42b9-a64b-74efebd99400|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|241300|622300|a16827e5-70cf-4515-bb61-6e4108b6b65d|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|2717800|1422400|8501db54-650b-42f2-92de-5f9d33015ad8|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|304800|1206500|503b7a35-9129-4584-ae9c-8b583c5ac39b|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|393700|1206500|e6410a1c-f967-4555-810a-e3ae23dc7ed8|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|711200|889000|d4306852-0830-4c7d-b6fe-ffbf90f9ab31|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|787400|1600200|3b827409-91f4-4f3d-81aa-f8a8d92f5474|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|965200|1600200|f8c030e9-0864-490b-a8d3-27cdd01cc368|00000000-0000-0000-0000-000000000000|||",
-      "pin_to_pin|977900|800100|08c9827e-7a4f-4cda-b6de-6a59bca086d8|5e35e9db-f37d-4495-87e2-621dd0e716b3|/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c|/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c|/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-    ],
+    "erc_exclusions": [],
     "meta": {
       "version": 0
     },
@@ -431,7 +436,7 @@
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
       "pin_not_driven": "error",
-      "pin_to_pin": "warning",
+      "pin_to_pin": "error",
       "power_pin_not_driven": "error",
       "similar_labels": "warning",
       "simulation_model_issue": "ignore",
@@ -453,17 +458,85 @@
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.2,
+        "clearance": 0.25,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
         "line_style": 0,
-        "microvia_diameter": 0.3,
-        "microvia_drill": 0.1,
+        "microvia_diameter": 0.4,
+        "microvia_drill": 0.15,
         "name": "Default",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.25,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.25,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.4,
+        "microvia_drill": 0.15,
+        "name": "AF",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.25,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.66,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.4,
+        "microvia_drill": 0.15,
+        "name": "Clocks",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.33,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.25,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.4,
+        "microvia_drill": 0.15,
+        "name": "PWR",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 2.0,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.66,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.4,
+        "microvia_drill": 0.15,
+        "name": "RF",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.33,
         "via_diameter": 0.8,
         "via_drill": 0.4,
         "wire_width": 6
@@ -473,8 +546,48 @@
       "version": 3
     },
     "net_colors": null,
-    "netclass_assignments": null,
-    "netclass_patterns": []
+    "netclass_assignments": {
+      "/RCLK": "Clocks",
+      "/XCLK": "Clocks"
+    },
+    "netclass_patterns": [
+      {
+        "netclass": "PWR",
+        "pattern": "+3.3V"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "+5V"
+      },
+      {
+        "netclass": "Clocks",
+        "pattern": "/XCLK"
+      },
+      {
+        "netclass": "Clocks",
+        "pattern": "/RCLK"
+      },
+      {
+        "netclass": "Clocks",
+        "pattern": "/SCL"
+      },
+      {
+        "netclass": "Clocks",
+        "pattern": "/SDA"
+      },
+      {
+        "netclass": "Clocks",
+        "pattern": "/MOSI"
+      },
+      {
+        "netclass": "Clocks",
+        "pattern": "/MISO"
+      },
+      {
+        "netclass": "Clocks",
+        "pattern": "/DCLK"
+      }
+    ]
   },
   "pcbnew": {
     "last_paths": {
