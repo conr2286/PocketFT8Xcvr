@@ -384,6 +384,231 @@
 				)
 			)
 		)
+		(symbol "2024-08-05_00-31-14:BU2032SM-JJ-GTR"
+			(pin_names
+				(offset 0.254)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "B"
+				(at 4.826 3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "BU2032SM-JJ-GTR"
+				(at 4.826 -3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "BU2032SM-JJ-GTR_MPD"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "BU2032SM-JJ-GTR"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_locked" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "BU2032SM-JJ-GTR"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "BU2032SM-JJ-GTR_MPD"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "BU2032SM-JJ-GTR_0_1"
+				(polyline
+					(pts
+						(xy 1.778 1.27) (xy 2.794 1.27)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.286 0.762) (xy 2.286 1.778)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 0) (xy 3.4798 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.556 -1.778) (xy 3.556 1.778)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.572 0.762) (xy 4.572 -0.762)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 5.588 -1.778) (xy 5.588 1.778)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 6.604 0) (xy 7.62 0)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 6.604 0.762) (xy 6.604 -0.762)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.366 1.27) (xy 8.382 1.27)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at 10.16 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 0 0 0)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "22-23-2021_1"
 			(pin_names
 				(offset 3)
@@ -7590,296 +7815,6 @@
 				)
 			)
 		)
-		(symbol "dk_Battery-Holders-Clips-Contacts:BS-7"
-			(pin_numbers hide)
-			(pin_names
-				(offset 1.016)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "BAT1"
-				(at 3.81 1.651 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "BS-7"
-				(at 3.81 -0.889 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "digikey-footprints:Battery_Holder_Coin_2032_BS-7"
-				(at 5.08 5.08 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "http://www.memoryprotectiondevices.com/datasheets/BS-7-datasheet.pdf"
-				(at 5.08 7.62 90)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Description" "BATTERY HOLDER COIN 20MM PC PIN"
-				(at 5.08 25.4 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Digi-Key_PN" "BS-7-ND"
-				(at 5.08 10.16 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "MPN" "BS-7"
-				(at 5.08 12.7 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Category" "Battery Products"
-				(at 5.08 15.24 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Family" "Battery Holders, Clips, Contacts"
-				(at 5.08 17.78 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "DK_Datasheet_Link" "http://www.memoryprotectiondevices.com/datasheets/BS-7-datasheet.pdf"
-				(at 5.08 20.32 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "DK_Detail_Page" "/product-detail/en/mpd-memory-protection-devices/BS-7/BS-7-ND/389447"
-				(at 5.08 22.86 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Manufacturer" "MPD (Memory Protection Devices)"
-				(at 5.08 27.94 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Status" "Active"
-				(at 5.08 30.48 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Description_1" "BATTERY HOLDER COIN 20MM PC PIN"
-				(at 5.08 25.4 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "BS-7-ND"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "BS-7_1_1"
-				(polyline
-					(pts
-						(xy 0 -2.54) (xy 0 -1.905)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 1.905) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 -1.905) (xy -1.27 -1.905)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 0.635) (xy -1.27 0.635)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 2.286) (xy 1.27 3.302)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.778 2.794) (xy 0.762 2.794)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 -0.635) (xy -2.54 -0.635)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 1.905) (xy -2.54 1.905)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(pin free line
-					(at 0 -5.08 90)
-					(length 2.54)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "Neg"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin free line
-					(at 0 5.08 270)
-					(length 2.54)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "Pos"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "dk_PMIC-Voltage-Regulators-Linear:L7805CV"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -14863,8 +14798,8 @@
 		)
 	)
 	(symbol
-		(lib_id "dk_Battery-Holders-Clips-Contacts:BS-7")
-		(at 124.46 137.16 0)
+		(lib_id "2024-08-05_00-31-14:BU2032SM-JJ-GTR")
+		(at 124.46 132.08 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14873,7 +14808,7 @@
 		(fields_autoplaced yes)
 		(uuid "11d984bf-94fd-4672-b1e9-ee23b98ed8e7")
 		(property "Reference" "BAT1"
-			(at 128.27 135.509 0)
+			(at 127 135.8899 90)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14881,8 +14816,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "BS-7"
-			(at 128.27 138.049 0)
+		(property "Value" "BU2032SM-JJ-GTR"
+			(at 127 138.4299 90)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14890,48 +14825,37 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "BS-7:BS-7_MPD"
-			(at 129.54 132.08 0)
+		(property "Footprint" "BU2032SM-JJ-GTR_MPD"
+			(at 124.46 132.08 0)
 			(effects
 				(font
-					(size 1.524 1.524)
+					(size 1.27 1.27)
+					(italic yes)
 				)
-				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "http://www.memoryprotectiondevices.com/datasheets/BS-7-datasheet.pdf"
-			(at 129.54 129.54 90)
+		(property "Datasheet" "BU2032SM-JJ-GTR"
+			(at 124.46 132.08 0)
 			(effects
 				(font
-					(size 1.524 1.524)
+					(size 1.27 1.27)
+					(italic yes)
 				)
-				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Description" "BATTERY HOLDER COIN 20MM PC PIN"
-			(at 129.54 111.76 0)
+		(property "Description" "BATT HOLDER COIN 20MM 1 CELL SMD"
+			(at 124.46 132.08 0)
 			(effects
 				(font
-					(size 1.524 1.524)
+					(size 1.27 1.27)
 				)
-				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Digi-Key_PN" "BS-7-ND"
-			(at 129.54 127 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "BS-7"
-			(at 129.54 124.46 0)
+		(property "Mfg Part #" "BU2032SM-JJ-GTR"
+			(at 137.16 137.16 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14941,7 +14865,7 @@
 			)
 		)
 		(property "Category" "Battery Products"
-			(at 129.54 121.92 0)
+			(at 139.7 137.16 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14951,27 +14875,7 @@
 			)
 		)
 		(property "Family" "Battery Holders, Clips, Contacts"
-			(at 129.54 119.38 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Datasheet_Link" "http://www.memoryprotectiondevices.com/datasheets/BS-7-datasheet.pdf"
-			(at 129.54 116.84 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Detail_Page" "/product-detail/en/mpd-memory-protection-devices/BS-7/BS-7-ND/389447"
-			(at 129.54 114.3 0)
+			(at 142.24 137.16 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14981,7 +14885,7 @@
 			)
 		)
 		(property "Manufacturer" "MPD (Memory Protection Devices)"
-			(at 129.54 109.22 0)
+			(at 152.4 137.16 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14991,7 +14895,7 @@
 			)
 		)
 		(property "Status" "Active"
-			(at 129.54 106.68 0)
+			(at 154.94 137.16 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -15001,7 +14905,7 @@
 			)
 		)
 		(property "Description_1" "BATTERY HOLDER COIN 20MM PC PIN"
-			(at 129.54 111.76 0)
+			(at 149.86 137.16 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -15011,7 +14915,7 @@
 			)
 		)
 		(property "Type" "SMD"
-			(at 124.46 137.16 0)
+			(at 124.46 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15019,8 +14923,8 @@
 				(hide yes)
 			)
 		)
-		(property "Notes" ""
-			(at 124.46 137.16 0)
+		(property "Notes" "Must mount topside"
+			(at 124.46 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15028,10 +14932,10 @@
 				(hide yes)
 			)
 		)
-		(pin "Neg"
+		(pin "1"
 			(uuid "9a1151e7-4853-4a2d-820e-4f81a6e8f345")
 		)
-		(pin "Pos"
+		(pin "2"
 			(uuid "eb640a47-1a3d-48f1-9f9e-1b629e5816d7")
 		)
 		(instances
