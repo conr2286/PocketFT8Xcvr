@@ -1,4 +1,11 @@
-24578216079130663
+24581661909055424
+ASTX_H11_25_000MHZ_T
+XTAL_ASTX-H11-25.000MHZ-T
+
+
+0
+4
+4
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -88934,6 +88941,13 @@ SI4735-D60-GU
 0
 24
 24
+SI5351C-B-GM1
+QFN50P300X300X90-17N-D
+16 pin QFNxx
+Integrated Circuit
+0
+17
+17
 Sensor
 ASAIR_AM2302_P2.54mm_Lead2.75mm_TabDown
 Temperature and humidity module, http://akizukidenshi.com/download/ds/aosong/AM2302.pdf

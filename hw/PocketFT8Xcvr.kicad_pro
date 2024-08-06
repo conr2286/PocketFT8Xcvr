@@ -546,10 +546,7 @@
       "version": 3
     },
     "net_colors": null,
-    "netclass_assignments": {
-      "/RCLK": "Clocks",
-      "/XCLK": "Clocks"
-    },
+    "netclass_assignments": null,
     "netclass_patterns": [
       {
         "netclass": "PWR",
