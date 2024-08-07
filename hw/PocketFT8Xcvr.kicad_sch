@@ -17272,6 +17272,7 @@
 					(size 1.27 1.27)
 				)
 				(justify left top)
+				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.arrow.com/en/products/si5351c-b-gm1/skyworks-solutions?region=nac"
@@ -22766,9 +22767,9 @@
 		(at 60.96 120.65 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "c9620c6c-f3dd-4b4a-a973-3e395d4b399b")
 		(property "Reference" "U4"
