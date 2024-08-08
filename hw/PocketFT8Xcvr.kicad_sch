@@ -11560,12 +11560,6 @@
 		(uuid "3676a3d6-cb3d-4bdb-bbc6-9d9e609dc68e")
 	)
 	(junction
-		(at 163.83 187.96)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "378e6528-5a37-4845-b338-ffd48ad09e5e")
-	)
-	(junction
 		(at 26.67 149.86)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -11726,12 +11720,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c00dc18f-9fa5-4ac4-bd2d-cfdf2ecc804e")
-	)
-	(junction
-		(at 168.91 173.99)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "c1b64c0e-517a-45f2-8443-342d2e46aa1e")
 	)
 	(junction
 		(at 168.91 168.91)
@@ -12619,16 +12607,6 @@
 	)
 	(wire
 		(pts
-			(xy 163.83 187.96) (xy 168.91 187.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "40cb76de-2492-4293-bdad-62a0b100c693")
-	)
-	(wire
-		(pts
 			(xy 160.02 40.64) (xy 165.1 40.64)
 		)
 		(stroke
@@ -12656,16 +12634,6 @@
 			(type default)
 		)
 		(uuid "4393a96c-9ba9-4236-98f5-86e7402a00b6")
-	)
-	(wire
-		(pts
-			(xy 168.91 177.8) (xy 168.91 173.99)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "452308fc-8940-4034-bba0-ae34a9140c1c")
 	)
 	(wire
 		(pts
@@ -12929,23 +12897,13 @@
 	)
 	(wire
 		(pts
-			(xy 163.83 176.53) (xy 163.83 187.96)
+			(xy 163.83 176.53) (xy 163.83 190.5)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "5f684c52-0017-4e0d-9b99-8a82fab03434")
-	)
-	(wire
-		(pts
-			(xy 163.83 187.96) (xy 163.83 190.5)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5fb2a9bd-a75e-44d2-b7f9-9c3f59432b42")
 	)
 	(wire
 		(pts
@@ -13226,26 +13184,6 @@
 			(type default)
 		)
 		(uuid "85989d72-19d6-405b-9a68-157b4cc08d06")
-	)
-	(wire
-		(pts
-			(xy 19.05 182.88) (xy 19.05 179.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "85a90326-2b21-4795-9556-33b24f98bb8b")
-	)
-	(wire
-		(pts
-			(xy 168.91 187.96) (xy 168.91 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "86aea617-85f6-4922-9018-c212d7edf129")
 	)
 	(wire
 		(pts
@@ -15056,159 +14994,6 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "#PWR09")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
-		(at 19.05 190.5 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "08468617-c92d-42a7-b500-6e68d767003a")
-		(property "Reference" "C22"
-			(at 21.336 184.658 0)
-			(effects
-				(font
-					(size 1.143 1.143)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "0.1UF"
-			(at 22.86 188.214 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 24.13 189.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "C0603C104K4RACTU"
-			(at 26.416 188.722 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
-			(at 22.098 188.468 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field4" ""
-			(at 20.32 186.69 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Field5" "CAP-08604"
-			(at 19.0499 186.69 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "PROD_ID" "CAP-00810"
-			(at 35.56 190.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Voltage" "16V"
-			(at 30.988 188.976 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Tolerance" "10%"
-			(at 30.988 184.404 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Kemet"
-			(at 13.97 191.77 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "C0603C104K4RAC7867"
-			(at 28.448 187.198 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes" "Substitutions OK"
-			(at 19.05 190.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Type" "SMD"
-			(at 19.05 190.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "eb6dcd6d-42d7-443f-bf05-399a593b3556")
-		)
-		(pin "2"
-			(uuid "51bca704-aec4-4419-8a50-a6f139817d38")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "C22")
 					(unit 1)
 				)
 			)
@@ -18804,158 +18589,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
-		(at 168.91 185.42 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "67ae60cd-58c9-438f-b463-9475368f2ad4")
-		(property "Reference" "C30"
-			(at 172.212 179.832 90)
-			(effects
-				(font
-					(size 1.143 1.143)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "0.1UF"
-			(at 172.72 183.642 90)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 173.99 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "C0603C104K4RACTU"
-			(at 176.276 183.642 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
-			(at 171.958 183.388 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field4" ""
-			(at 170.18 181.61 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Field5" "CAP-08604"
-			(at 161.29 185.42 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "PROD_ID" "CAP-00810"
-			(at 185.42 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Voltage" "16V"
-			(at 180.848 183.896 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Tolerance" "10%"
-			(at 180.848 179.324 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Kemet"
-			(at 163.83 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "C0603C104K4RAC7867"
-			(at 178.308 182.118 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes" "Substitutions OK"
-			(at 168.91 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Type" "SMD"
-			(at 168.91 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "6e5759fb-44b6-4b0a-8ba7-c79aa138ca31")
-		)
-		(pin "2"
-			(uuid "c4a09395-0d93-4bc8-8ffe-bd418606c499")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "C30")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "SparkFun-Resistor:47k_0603")
 		(at 219.71 27.94 270)
 		(unit 1)
@@ -19200,6 +18833,72 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "L1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 158.75 149.86 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "6c832ab7-78a2-45e0-81ec-afc3a85f3d93")
+		(property "Reference" "#PWR036"
+			(at 158.75 153.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3.3V"
+			(at 158.75 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 158.75 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 158.75 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
+			(at 158.75 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3d0050d7-c523-4c87-b31c-02211b542596")
+		)
+		(instances
+			(project ""
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#PWR036")
 					(unit 1)
 				)
 			)
@@ -22404,72 +22103,6 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "#PWR017")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 19.05 190.5 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "be201cc3-8290-4c43-aa61-38bd7649b836")
-		(property "Reference" "#PWR031"
-			(at 19.05 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 19.05 195.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 19.05 190.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 19.05 190.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 19.05 190.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "488765eb-879e-46d1-a667-aa35069ad82a")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "#PWR031")
 					(unit 1)
 				)
 			)
