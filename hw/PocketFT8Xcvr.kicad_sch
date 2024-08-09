@@ -11019,10 +11019,10 @@
 		(uuid "2cfa053d-5c6d-49e0-b12c-455bcbfd5274")
 	)
 	(junction
-		(at 96.52 44.45)
+		(at 85.36 44.45)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "3545791d-33e0-4a72-9639-53989df93e46")
+		(uuid "2fdcb574-1857-4283-a0e4-f626788ecefa")
 	)
 	(junction
 		(at 115.57 167.64)
@@ -11065,6 +11065,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "4e8f153b-fdfa-4254-a922-015797b7da68")
+	)
+	(junction
+		(at 91.44 44.45)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "553130ba-efce-4e93-8cdf-2ff8add7a9e9")
 	)
 	(junction
 		(at 264.16 142.24)
@@ -11193,10 +11199,22 @@
 		(uuid "c92d6514-797d-41eb-861a-ad700e8916fc")
 	)
 	(junction
+		(at 85.36 52.07)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c9779dfc-fce1-45f0-bbe4-ec1fe18cc24f")
+	)
+	(junction
 		(at 214.63 33.02)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "cf629a04-0b33-4b6b-a546-b2bbdd355022")
+	)
+	(junction
+		(at 85.36 49.53)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "d0e16e5e-2fd7-4e5c-abf4-44b6ef43bea4")
 	)
 	(junction
 		(at 207.01 109.22)
@@ -11215,6 +11233,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "da2de666-3f98-4e65-bf3e-4f11de21faf5")
+	)
+	(junction
+		(at 85.36 46.99)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e266a0c3-3d92-4ddb-a523-beb342555109")
 	)
 	(junction
 		(at 162.56 40.64)
@@ -11616,6 +11640,16 @@
 	)
 	(wire
 		(pts
+			(xy 91.44 44.45) (xy 104.14 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "03d46157-da8a-4b01-a7e4-4936ee1b1892")
+	)
+	(wire
+		(pts
 			(xy 34.29 67.31) (xy 104.14 67.31)
 		)
 		(stroke
@@ -11816,16 +11850,6 @@
 	)
 	(wire
 		(pts
-			(xy 96.52 44.45) (xy 104.14 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2097a80d-cf08-4bbd-9f14-823a6df640a2")
-	)
-	(wire
-		(pts
 			(xy 232.41 93.98) (xy 238.76 93.98)
 		)
 		(stroke
@@ -11936,7 +11960,7 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 46.99) (xy 104.14 46.99)
+			(xy 85.09 46.99) (xy 85.36 46.99)
 		)
 		(stroke
 			(width 0)
@@ -12066,7 +12090,7 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 49.53) (xy 104.14 49.53)
+			(xy 85.09 49.53) (xy 85.36 49.53)
 		)
 		(stroke
 			(width 0)
@@ -12203,6 +12227,16 @@
 			(type default)
 		)
 		(uuid "4efb32fd-19be-4608-b33e-6b0c3e5bbcea")
+	)
+	(wire
+		(pts
+			(xy 85.36 52.07) (xy 85.09 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4fa07396-19f7-43da-bca4-d77744e25690")
 	)
 	(wire
 		(pts
@@ -13016,6 +13050,16 @@
 	)
 	(wire
 		(pts
+			(xy 85.36 44.45) (xy 91.44 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bbb871aa-340a-4501-a904-ed2e97057e3e")
+	)
+	(wire
+		(pts
 			(xy 115.57 163.83) (xy 115.57 167.64)
 		)
 		(stroke
@@ -13073,6 +13117,16 @@
 			(type default)
 		)
 		(uuid "c4084768-69b3-4e5a-92a8-7c58663f759b")
+	)
+	(wire
+		(pts
+			(xy 85.36 49.53) (xy 104.14 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c464a6df-49d2-4432-9e5b-cca77f0809fa")
 	)
 	(wire
 		(pts
@@ -13306,6 +13360,16 @@
 	)
 	(wire
 		(pts
+			(xy 85.36 46.99) (xy 104.14 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ebf9bbfa-8194-4826-8b46-f03a4d39b03d")
+	)
+	(wire
+		(pts
 			(xy 279.4 119.38) (xy 279.4 149.86)
 		)
 		(stroke
@@ -13356,7 +13420,7 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 44.45) (xy 96.52 44.45)
+			(xy 85.09 44.45) (xy 85.36 44.45)
 		)
 		(stroke
 			(width 0)
@@ -13436,7 +13500,7 @@
 	)
 	(wire
 		(pts
-			(xy 91.44 52.07) (xy 85.09 52.07)
+			(xy 91.44 52.07) (xy 85.36 52.07)
 		)
 		(stroke
 			(width 0)
@@ -13650,6 +13714,17 @@
 		)
 		(uuid "69fe4475-eb19-4a55-92a8-e98f18360930")
 	)
+	(label "GPSTX"
+		(at 97.79 46.99 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6cc2049a-4bc7-4873-812f-98455230c9bf")
+	)
 	(label "DCLK"
 		(at 57.15 21.59 0)
 		(fields_autoplaced yes)
@@ -13814,6 +13889,17 @@
 			(justify left bottom)
 		)
 		(uuid "ea2f765d-d7c5-42c1-b1cb-6945c018ea6f")
+	)
+	(label "GPSRX"
+		(at 97.79 49.53 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f2f95899-452d-4aad-a8fb-333315e1b3cf")
 	)
 	(label "PTT"
 		(at 160.02 77.47 0)
@@ -17305,7 +17391,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 96.52 44.45 180)
+		(at 91.44 44.45 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17314,7 +17400,7 @@
 		(fields_autoplaced yes)
 		(uuid "58479fa8-58ad-4a06-bb50-53d857867df9")
 		(property "Reference" "#PWR08"
-			(at 96.52 38.1 0)
+			(at 91.44 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17323,7 +17409,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 99.06 43.1799 0)
+			(at 93.98 43.1799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17332,7 +17418,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 96.52 44.45 0)
+			(at 91.44 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17341,7 +17427,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 96.52 44.45 0)
+			(at 91.44 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17350,7 +17436,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 96.52 44.45 0)
+			(at 91.44 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19936,16 +20022,16 @@
 	)
 	(symbol
 		(lib_id "dk_Rectangular-Connectors-Headers-Male-Pins:0022232041")
-		(at 82.55 44.45 270)
+		(at 83.82 44.45 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "99a9a843-37bf-4702-abab-c55d1b365e6c")
 		(property "Reference" "J3"
-			(at 81.28 38.1 90)
+			(at 82.55 38.1 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19953,7 +20039,7 @@
 			)
 		)
 		(property "Value" "GPS"
-			(at 81.28 40.64 90)
+			(at 82.55 40.64 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19961,7 +20047,7 @@
 			)
 		)
 		(property "Footprint" "digikey-footprints:PinHeader_1x4_P2.54mm_Drill1.02mm"
-			(at 87.63 49.53 0)
+			(at 88.9 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -19971,7 +20057,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.molex.com/pdm_docs/sd/022232041_sd.pdf"
-			(at 90.17 49.53 0)
+			(at 91.44 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -19981,7 +20067,7 @@
 			)
 		)
 		(property "Description" "CONN HEADER VERT 4POS 2.54MM"
-			(at 82.55 44.45 0)
+			(at 83.82 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19990,7 +20076,7 @@
 			)
 		)
 		(property "Digi-Key_PN" "WM4202-ND"
-			(at 92.71 49.53 0)
+			(at 93.98 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -20000,7 +20086,7 @@
 			)
 		)
 		(property "MPN" "0022232041"
-			(at 95.25 49.53 0)
+			(at 96.52 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -20010,7 +20096,7 @@
 			)
 		)
 		(property "Category" "Connectors, Interconnects"
-			(at 97.79 49.53 0)
+			(at 99.06 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -20020,7 +20106,7 @@
 			)
 		)
 		(property "Family" "Rectangular Connectors - Headers, Male Pins"
-			(at 100.33 49.53 0)
+			(at 101.6 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -20030,7 +20116,7 @@
 			)
 		)
 		(property "DK_Datasheet_Link" "https://www.molex.com/pdm_docs/sd/022232041_sd.pdf"
-			(at 102.87 49.53 0)
+			(at 104.14 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -20040,7 +20126,7 @@
 			)
 		)
 		(property "DK_Detail_Page" "/product-detail/en/molex/0022232041/WM4202-ND/26671"
-			(at 105.41 49.53 0)
+			(at 106.68 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -20050,7 +20136,7 @@
 			)
 		)
 		(property "Description_1" "CONN HEADER VERT 4POS 2.54MM"
-			(at 107.95 49.53 0)
+			(at 109.22 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -20060,7 +20146,7 @@
 			)
 		)
 		(property "Manufacturer" "Molex"
-			(at 110.49 49.53 0)
+			(at 111.76 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -20070,7 +20156,7 @@
 			)
 		)
 		(property "Status" "Active"
-			(at 113.03 49.53 0)
+			(at 114.3 49.53 0)
 			(effects
 				(font
 					(size 1.524 1.524)
