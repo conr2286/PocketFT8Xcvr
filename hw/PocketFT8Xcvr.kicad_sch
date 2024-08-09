@@ -4970,257 +4970,6 @@
 				)
 			)
 		)
-		(symbol "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0.254) hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "C"
-				(at 3.81 3.81 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-				)
-			)
-			(property "Value" "C0805C334K4RAC7800"
-				(at 3.81 -3.81 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-				)
-			)
-			(property "Footprint" "CAPC220145_140N_KEM"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-						(italic yes)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "C0805C334K4RAC7800"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-						(italic yes)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_locked" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "C0805C334K4RAC7800"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "CAPC220145_140N_KEM CAPC220145_140N_KEM-M CAPC220145_140N_KEM-L"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "C0805C334K4RAC7800_1_1"
-				(polyline
-					(pts
-						(xy 2.54 0) (xy 3.4798 0)
-					)
-					(stroke
-						(width 0.2032)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 3.4798 -1.905) (xy 3.4798 1.905)
-					)
-					(stroke
-						(width 0.2032)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 4.1148 -1.905) (xy 4.1148 1.905)
-					)
-					(stroke
-						(width 0.2032)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 4.1148 0) (xy 5.08 0)
-					)
-					(stroke
-						(width 0.2032)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(pin unspecified line
-					(at 0 0 0)
-					(length 2.54)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin unspecified line
-					(at 7.62 0 180)
-					(length 2.54)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(symbol "C0805C334K4RAC7800_1_2"
-				(polyline
-					(pts
-						(xy -1.905 -4.1148) (xy 1.905 -4.1148)
-					)
-					(stroke
-						(width 0.2032)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.905 -3.4798) (xy 1.905 -3.4798)
-					)
-					(stroke
-						(width 0.2032)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 -4.1148) (xy 0 -5.08)
-					)
-					(stroke
-						(width 0.2032)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 -2.54) (xy 0 -3.4798)
-					)
-					(stroke
-						(width 0.2032)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(pin unspecified line
-					(at 0 0 270)
-					(length 2.54)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin unspecified line
-					(at 0 -7.62 90)
-					(length 2.54)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "RF_AM_FM:Si4735-D60-GU"
 			(pin_names
 				(offset 1.016)
@@ -8138,445 +7887,6 @@
 				)
 			)
 		)
-		(symbol "dk_PMIC-Voltage-Regulators-Linear:L7805CV"
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "U"
-				(at 0 3.81 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-				)
-			)
-			(property "Value" "L7805CV"
-				(at 0 6.35 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-				)
-			)
-			(property "Footprint" "digikey-footprints:TO-220-3"
-				(at 5.08 5.08 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "http://www.st.com/content/ccc/resource/technical/document/datasheet/41/4f/b3/b0/12/d4/47/88/CD00000444.pdf/files/CD00000444.pdf/jcr:content/translations/en.CD00000444.pdf"
-				(at 5.08 7.62 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Description" "IC REG LINEAR 5V 1.5A TO220AB"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Digi-Key_PN" "497-1443-5-ND"
-				(at 5.08 10.16 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "MPN" "L7805CV"
-				(at 5.08 12.7 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Category" "Integrated Circuits (ICs)"
-				(at 5.08 15.24 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Family" "PMIC - Voltage Regulators - Linear"
-				(at 5.08 17.78 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "DK_Datasheet_Link" "http://www.st.com/content/ccc/resource/technical/document/datasheet/41/4f/b3/b0/12/d4/47/88/CD00000444.pdf/files/CD00000444.pdf/jcr:content/translations/en.CD00000444.pdf"
-				(at 5.08 20.32 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "DK_Detail_Page" "/product-detail/en/stmicroelectronics/L7805CV/497-1443-5-ND/585964"
-				(at 5.08 22.86 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Description_1" "IC REG LINEAR 5V 1.5A TO220AB"
-				(at 5.08 25.4 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Manufacturer" "STMicroelectronics"
-				(at 5.08 27.94 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Status" "Active"
-				(at 5.08 30.48 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "497-1443-5-ND"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "L7805CV_1_1"
-				(rectangle
-					(start -5.08 2.54)
-					(end 5.08 -5.08)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type background)
-					)
-				)
-				(pin power_in line
-					(at -7.62 0 0)
-					(length 2.54)
-					(name "IN"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 -7.62 90)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 7.62 0 180)
-					(length 2.54)
-					(name "OUT"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "dk_Rectangular-Connectors-Headers-Male-Pins:22-23-2021"
-			(pin_names
-				(offset 3)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "J?"
-				(at -6.35 -1.27 90)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "22-23-2021"
-				(at -3.81 -1.27 90)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" "digikey-footprints:PinHeader_1x2_P2.54mm_Drill1.02mm"
-				(at 5.08 5.08 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://media.digikey.com/pdf/Data%20Sheets/Molex%20PDFs/A-6373-N_Series_Dwg_2010-12-03.pdf"
-				(at 5.08 7.62 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Description" "CONN HEADER VERT 2POS 2.54MM"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Digi-Key_PN" "WM4200-ND"
-				(at 5.08 10.16 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "MPN" "22-23-2021"
-				(at 5.08 12.7 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Category" "Connectors, Interconnects"
-				(at 5.08 15.24 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Family" "Rectangular Connectors - Headers, Male Pins"
-				(at 5.08 17.78 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "DK_Datasheet_Link" "https://media.digikey.com/pdf/Data%20Sheets/Molex%20PDFs/A-6373-N_Series_Dwg_2010-12-03.pdf"
-				(at 5.08 20.32 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "DK_Detail_Page" "/product-detail/en/molex/22-23-2021/WM4200-ND/26667"
-				(at 5.08 22.86 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Description_1" "CONN HEADER VERT 2POS 2.54MM"
-				(at 5.08 25.4 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Manufacturer" "Molex"
-				(at 5.08 27.94 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Status" "Active"
-				(at 5.08 30.48 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "WM4200-ND KK 6373"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "22-23-2021_1_1"
-				(rectangle
-					(start -1.27 0)
-					(end 3.81 -2.54)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type background)
-					)
-				)
-				(rectangle
-					(start -0.254 -1.143)
-					(end 0.254 -1.651)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(rectangle
-					(start 2.286 -1.143)
-					(end 2.794 -1.651)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(pin passive line
-					(at 0 2.54 270)
-					(length 2.54)
-					(name "+++"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 2.54 270)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "dk_Transistors-Bipolar-BJT-Single:2N3904"
 			(pin_names
 				(offset 0)
@@ -9566,126 +8876,6 @@
 						)
 					)
 					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "power:+12V"
-			(power)
-			(pin_numbers hide)
-			(pin_names
-				(offset 0) hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "#PWR"
-				(at 0 -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Value" "+12V"
-				(at 0 3.556 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Power symbol creates a global label with name \"+12V\""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "global power"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "+12V_0_1"
-				(polyline
-					(pts
-						(xy -0.762 1.27) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 0) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 2.54) (xy 0.762 1.27)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "+12V_1_1"
-				(pin power_in line
-					(at 0 0 90)
-					(length 0)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -11584,6 +10774,12 @@
 		(uuid "4d46dddd-f8d2-45f0-a53d-53a3d244c519")
 	)
 	(junction
+		(at 185.42 46.99)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "4e8f153b-fdfa-4254-a922-015797b7da68")
+	)
+	(junction
 		(at 264.16 142.24)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -11656,22 +10852,10 @@
 		(uuid "93a05912-0b8a-40dc-ae7b-181e0ec06255")
 	)
 	(junction
-		(at 165.1 40.64)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "99af911a-8017-4f8b-a903-34bb1c83d50a")
-	)
-	(junction
 		(at 220.98 81.28)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a1472937-40e2-4da2-8437-6985b5e09fec")
-	)
-	(junction
-		(at 39.37 120.65)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "a1794ae8-912a-42ce-9043-b2cfa71e6c96")
 	)
 	(junction
 		(at 34.29 97.79)
@@ -11680,22 +10864,10 @@
 		(uuid "a19e452f-7539-439a-92b6-2d192b7ffa23")
 	)
 	(junction
-		(at 39.37 128.27)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "a2941bcb-8ebb-4b43-af9d-0909e0110974")
-	)
-	(junction
 		(at 245.11 142.24)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a7f28208-5aa8-4c75-8cdc-71f5d96cb84f")
-	)
-	(junction
-		(at 60.96 128.27)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "abb837e1-bb31-4514-84e0-d4f531ba4490")
 	)
 	(junction
 		(at 44.45 171.45)
@@ -11764,16 +10936,10 @@
 		(uuid "da2de666-3f98-4e65-bf3e-4f11de21faf5")
 	)
 	(junction
-		(at 74.93 120.65)
+		(at 162.56 40.64)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "e3f81bca-a938-4304-a478-35d0eb0a5eac")
-	)
-	(junction
-		(at 48.26 120.65)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "ea54acaa-abaf-49f2-b631-a54afd4b02f2")
+		(uuid "e51f5bc2-1da1-4485-8319-a03ddf376b34")
 	)
 	(junction
 		(at 275.59 149.86)
@@ -12247,7 +11413,7 @@
 	)
 	(wire
 		(pts
-			(xy 160.02 49.53) (xy 170.18 49.53)
+			(xy 160.02 49.53) (xy 167.64 49.53)
 		)
 		(stroke
 			(width 0)
@@ -12597,17 +11763,7 @@
 	)
 	(wire
 		(pts
-			(xy 68.58 120.65) (xy 74.93 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3f082880-6f5e-4c66-a615-5ff36a34360f")
-	)
-	(wire
-		(pts
-			(xy 160.02 40.64) (xy 165.1 40.64)
+			(xy 160.02 40.64) (xy 162.56 40.64)
 		)
 		(stroke
 			(width 0)
@@ -12667,6 +11823,16 @@
 	)
 	(wire
 		(pts
+			(xy 185.42 46.99) (xy 208.28 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "48ed17c3-b961-4429-b5c0-e89f85d661e2")
+	)
+	(wire
+		(pts
 			(xy 241.3 81.28) (xy 238.76 81.28)
 		)
 		(stroke
@@ -12697,7 +11863,7 @@
 	)
 	(wire
 		(pts
-			(xy 165.1 39.37) (xy 165.1 40.64)
+			(xy 162.56 39.37) (xy 162.56 40.64)
 		)
 		(stroke
 			(width 0)
@@ -12717,6 +11883,16 @@
 	)
 	(wire
 		(pts
+			(xy 160.02 46.99) (xy 185.42 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4e8b5e5a-9445-4a04-b6dc-1adfb3f85639")
+	)
+	(wire
+		(pts
 			(xy 214.63 43.18) (xy 208.28 43.18)
 		)
 		(stroke
@@ -12724,16 +11900,6 @@
 			(type default)
 		)
 		(uuid "4efb32fd-19be-4608-b33e-6b0c3e5bbcea")
-	)
-	(wire
-		(pts
-			(xy 165.1 40.64) (xy 165.1 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4f03b1d7-3eb7-46f4-8aef-312581cc1fc6")
 	)
 	(wire
 		(pts
@@ -13017,16 +12183,6 @@
 	)
 	(wire
 		(pts
-			(xy 39.37 128.27) (xy 60.96 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6b53dea7-eb9a-4f36-834e-14489eb703be")
-	)
-	(wire
-		(pts
 			(xy 201.93 109.22) (xy 207.01 109.22)
 		)
 		(stroke
@@ -13044,16 +12200,6 @@
 			(type default)
 		)
 		(uuid "6d36d354-ada0-4162-91cd-9721b627aba2")
-	)
-	(wire
-		(pts
-			(xy 48.26 120.65) (xy 53.34 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6e693c82-bdda-4aea-8f9a-9984f22777e8")
 	)
 	(wire
 		(pts
@@ -13437,6 +12583,16 @@
 	)
 	(wire
 		(pts
+			(xy 162.56 40.64) (xy 167.64 40.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a409bbb7-f8de-4485-b6e6-e2d13b5fb4bd")
+	)
+	(wire
+		(pts
 			(xy 44.45 157.48) (xy 44.45 160.02)
 		)
 		(stroke
@@ -13507,26 +12663,6 @@
 	)
 	(wire
 		(pts
-			(xy 39.37 120.65) (xy 48.26 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b1cea34e-a012-41e4-9cf2-5e4f80292af2")
-	)
-	(wire
-		(pts
-			(xy 160.02 46.99) (xy 208.28 46.99)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b236d03d-9e82-44c1-9364-65e67b7bf882")
-	)
-	(wire
-		(pts
 			(xy 227.33 119.38) (xy 227.33 121.92)
 		)
 		(stroke
@@ -13564,16 +12700,6 @@
 			(type default)
 		)
 		(uuid "b8d4f515-5746-4008-a314-8ed84dc54859")
-	)
-	(wire
-		(pts
-			(xy 160.02 44.45) (xy 165.1 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b997fb87-63a7-48ed-91b5-6a01638adb68")
 	)
 	(wire
 		(pts
@@ -13657,26 +12783,6 @@
 	)
 	(wire
 		(pts
-			(xy 60.96 128.27) (xy 74.93 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c51170d4-cc3a-417d-b99c-600da011a5c6")
-	)
-	(wire
-		(pts
-			(xy 33.02 120.65) (xy 39.37 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c8694a8c-62d9-4521-b62a-83464e77321c")
-	)
-	(wire
-		(pts
 			(xy 97.79 80.01) (xy 104.14 80.01)
 		)
 		(stroke
@@ -13737,16 +12843,6 @@
 	)
 	(wire
 		(pts
-			(xy 33.02 128.27) (xy 39.37 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cfb8a4dc-8e83-42e0-b9ef-d66ad5b5304d")
-	)
-	(wire
-		(pts
 			(xy 147.32 149.86) (xy 147.32 156.21)
 		)
 		(stroke
@@ -13797,6 +12893,16 @@
 	)
 	(wire
 		(pts
+			(xy 167.64 40.64) (xy 167.64 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d78f18b1-0a78-4d05-92a7-f5164b474271")
+	)
+	(wire
+		(pts
 			(xy 251.46 35.56) (xy 217.17 35.56)
 		)
 		(stroke
@@ -13834,16 +12940,6 @@
 			(type default)
 		)
 		(uuid "da97b8ee-bd91-41b4-a7fb-1fe1cc706eea")
-	)
-	(wire
-		(pts
-			(xy 33.02 123.19) (xy 33.02 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dd361d27-495c-4d02-b8e0-dad9da423a99")
 	)
 	(wire
 		(pts
@@ -15445,72 +14541,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 39.37 120.65 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "129147df-b435-4af2-8df5-6035ae5bc842")
-		(property "Reference" "#FLG02"
-			(at 39.37 118.745 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "PWR_FLAG"
-			(at 39.37 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Special symbol for telling ERC where power comes from"
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "259ce620-4819-4f52-8192-f72d80431e9d")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "#FLG02")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 44.45 190.5 0)
 		(unit 1)
@@ -16210,72 +15240,6 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "C28")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+12V")
-		(at 48.26 120.65 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "2902505f-f8a3-400e-a9b5-d6835223c3a3")
-		(property "Reference" "#PWR034"
-			(at 48.26 124.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+12V"
-			(at 48.26 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 48.26 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 48.26 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+12V\""
-			(at 48.26 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "d882728e-57fe-4457-9f6a-f82910b9aa6e")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "#PWR034")
 					(unit 1)
 				)
 			)
@@ -17323,166 +16287,6 @@
 		)
 	)
 	(symbol
-		(lib_id "dk_Rectangular-Connectors-Headers-Male-Pins:22-23-2021")
-		(at 30.48 120.65 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(uuid "503b7a35-9129-4584-ae9c-8b583c5ac39b")
-		(property "Reference" "J3"
-			(at 29.21 117.602 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "22-23-2021"
-			(at 29.21 116.84 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" "digikey-footprints:PinHeader_1x2_P2.54mm_Drill1.02mm"
-			(at 35.56 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://media.digikey.com/pdf/Data%20Sheets/Molex%20PDFs/A-6373-N_Series_Dwg_2010-12-03.pdf"
-			(at 38.1 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "CONN HEADER VERT 2POS 2.54MM"
-			(at 30.48 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Digi-Key_PN" "WM4200-ND"
-			(at 40.64 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "MPN" "22-23-2021"
-			(at 43.18 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Category" "Connectors, Interconnects"
-			(at 45.72 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Family" "Rectangular Connectors - Headers, Male Pins"
-			(at 48.26 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Datasheet_Link" "https://media.digikey.com/pdf/Data%20Sheets/Molex%20PDFs/A-6373-N_Series_Dwg_2010-12-03.pdf"
-			(at 50.8 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Detail_Page" "/product-detail/en/molex/22-23-2021/WM4200-ND/26667"
-			(at 53.34 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description_1" "CONN HEADER VERT 2POS 2.54MM"
-			(at 55.88 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Molex"
-			(at 58.42 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Status" "Active"
-			(at 60.96 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "dd3b8701-45cf-42b2-98a5-bd968e3d238e")
-		)
-		(pin "1"
-			(uuid "8d391ab2-eb4a-4de9-84c0-e8fb33ea8f1f")
-		)
-		(instances
-			(project ""
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "J3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 115.57 27.94 0)
 		(unit 1)
@@ -17751,7 +16555,7 @@
 	)
 	(symbol
 		(lib_id "power:+3.3V")
-		(at 170.18 49.53 180)
+		(at 167.64 49.53 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17760,7 +16564,7 @@
 		(fields_autoplaced yes)
 		(uuid "569d81ea-9fe2-4c71-8833-a6fe387bdbe6")
 		(property "Reference" "#PWR04"
-			(at 170.18 45.72 0)
+			(at 167.64 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17769,7 +16573,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 170.18 54.61 0)
+			(at 167.64 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17777,7 +16581,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 170.18 49.53 0)
+			(at 167.64 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17786,7 +16590,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 170.18 49.53 0)
+			(at 167.64 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17795,7 +16599,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 170.18 49.53 0)
+			(at 167.64 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19344,72 +18148,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+5V")
-		(at 74.93 120.65 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "7349f08b-d345-454a-86d5-2fa5af73e9c4")
-		(property "Reference" "#PWR033"
-			(at 74.93 124.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+5V"
-			(at 74.93 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 74.93 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 74.93 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+5V\""
-			(at 74.93 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "8d98db9b-2b79-4f04-8674-1a096807dc1e")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "#PWR033")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
 		(at 177.8 142.24 0)
 		(unit 1)
@@ -19840,158 +18578,6 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "C4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
-		(at 74.93 128.27 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "7d18ef0e-6b26-4df6-8499-af87b8b5aa69")
-		(property "Reference" "C24"
-			(at 71.12 124.46 0)
-			(effects
-				(font
-					(size 1.143 1.143)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "0.1UF"
-			(at 79.502 125.222 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 80.01 127 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "C0603C104K4RACTU"
-			(at 82.296 126.492 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
-			(at 77.978 126.238 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field4" ""
-			(at 76.2 124.46 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Field5" "CAP-08604"
-			(at 67.31 128.27 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "PROD_ID" "CAP-00810"
-			(at 91.44 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Voltage" "16V"
-			(at 86.868 126.746 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Tolerance" "10%"
-			(at 86.868 122.174 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Kemet"
-			(at 69.85 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "C0603C104K4RAC7867"
-			(at 84.328 124.968 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes" "Substitutions OK"
-			(at 74.93 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Type" "SMD"
-			(at 74.93 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b3c1d8b8-0660-4213-a6cd-3f0171ef632b")
-		)
-		(pin "2"
-			(uuid "63db5bd1-201f-4ced-be1e-b2e2212086f1")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "C24")
 					(unit 1)
 				)
 			)
@@ -20530,72 +19116,6 @@
 			(project ""
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "R1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 39.37 128.27 0)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "834737fe-8db1-4d30-88c3-9ae60ad9d488")
-		(property "Reference" "#FLG03"
-			(at 39.37 130.175 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "PWR_FLAG"
-			(at 39.37 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 39.37 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 39.37 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Special symbol for telling ERC where power comes from"
-			(at 39.37 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "af73436e-2998-4b67-bdfe-e51e4bffc80f")
-		)
-		(instances
-			(project ""
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "#FLG03")
 					(unit 1)
 				)
 			)
@@ -21159,7 +19679,7 @@
 	)
 	(symbol
 		(lib_id "power:+5V")
-		(at 165.1 39.37 0)
+		(at 162.56 39.37 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -21168,7 +19688,7 @@
 		(fields_autoplaced yes)
 		(uuid "a200f563-09a4-49cb-84a7-e10bed6706c7")
 		(property "Reference" "#PWR02"
-			(at 165.1 43.18 0)
+			(at 162.56 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21177,7 +19697,7 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 165.1 34.29 0)
+			(at 162.56 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21185,7 +19705,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 165.1 39.37 0)
+			(at 162.56 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21194,7 +19714,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 165.1 39.37 0)
+			(at 162.56 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21203,7 +19723,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+5V\""
-			(at 165.1 39.37 0)
+			(at 162.56 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22109,6 +20629,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 167.64 36.83 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c0d2f0ec-9c10-4449-bcc9-c617f1621eeb")
+		(property "Reference" "#FLG01"
+			(at 167.64 34.925 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 167.64 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 167.64 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 167.64 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 167.64 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "42b69992-32c2-4388-a9ec-c77457793d87")
+		)
+		(instances
+			(project ""
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#FLG01")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_name "C0805C334K4RAC7800_4")
 		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
 		(at 199.39 41.91 90)
@@ -22390,179 +20976,6 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "C14")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "dk_PMIC-Voltage-Regulators-Linear:L7805CV")
-		(at 60.96 120.65 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "c9620c6c-f3dd-4b4a-a973-3e395d4b399b")
-		(property "Reference" "U4"
-			(at 60.96 113.03 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Value" "L7805CV"
-			(at 60.96 115.57 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Footprint" "TO-220-3"
-			(at 66.04 115.57 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "http://www.st.com/content/ccc/resource/technical/document/datasheet/41/4f/b3/b0/12/d4/47/88/CD00000444.pdf/files/CD00000444.pdf/jcr:content/translations/en.CD00000444.pdf"
-			(at 66.04 113.03 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "IC REG LINEAR 5V 1.5A TO220AB"
-			(at 66.04 95.25 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Digi-Key_PN" "497-1443-5-ND"
-			(at 66.04 110.49 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "L7805CV"
-			(at 66.04 107.95 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Category" "Integrated Circuits (ICs)"
-			(at 66.04 105.41 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Family" "PMIC - Voltage Regulators - Linear"
-			(at 66.04 102.87 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Datasheet_Link" "http://www.st.com/content/ccc/resource/technical/document/datasheet/41/4f/b3/b0/12/d4/47/88/CD00000444.pdf/files/CD00000444.pdf/jcr:content/translations/en.CD00000444.pdf"
-			(at 66.04 100.33 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Detail_Page" "/product-detail/en/stmicroelectronics/L7805CV/497-1443-5-ND/585964"
-			(at 66.04 97.79 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "STMicroelectronics"
-			(at 66.04 92.71 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Status" "Active"
-			(at 66.04 90.17 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description_1" "IC REG LINEAR 5V 1.5A TO220AB"
-			(at 66.04 95.25 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Type" "SMD"
-			(at 60.96 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "3"
-			(uuid "65116278-8429-4b15-9f31-35e44167960d")
-		)
-		(pin "2"
-			(uuid "c39f2cc2-b6cc-4dca-ad59-2b5cb6f6b5aa")
-		)
-		(pin "1"
-			(uuid "dea95936-6ddf-4562-a963-1b0be573e70c")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "U4")
 					(unit 1)
 				)
 			)
@@ -23681,113 +22094,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
-		(at 39.37 120.65 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "e6410a1c-f967-4555-810a-e3ae23dc7ed8")
-		(property "Reference" "C23"
-			(at 38.1 124.46 0)
-			(effects
-				(font
-					(size 1.143 1.143)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "0.33UF"
-			(at 43.18 124.46 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Footprint" "0805"
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "C0805C334K4RAC7800"
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "CAP CER 0.33UF 16V X7R 0805"
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Kemet"
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "C0805C334K4RAC7800"
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes" "Substitutions OK"
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Type" "SMD"
-			(at 39.37 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9ffacae9-3838-4443-9db4-bd0d6c11a3ae")
-		)
-		(pin "2"
-			(uuid "e991eda7-b96c-48a0-b67a-32123faa7d89")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "C23")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "ASTX-H11-25.000MHZ-T:ASTX-H11-25.000MHZ-T")
 		(at 88.9 172.72 0)
 		(unit 1)
@@ -24027,6 +22333,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 185.42 46.99 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f99ceb09-84fe-446a-86eb-f236b99227c6")
+		(property "Reference" "#FLG02"
+			(at 185.42 45.085 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 185.42 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 185.42 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 185.42 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 185.42 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "24c0153f-0537-4945-88a8-5ac9e66518e2")
+		)
+		(instances
+			(project ""
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#FLG02")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_name "C_2")
 		(lib_id "Device:C")
 		(at 227.33 148.59 0)
@@ -24158,72 +22530,6 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "#PWR010")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 60.96 128.27 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "fd088515-caa7-42b3-92d5-bb35f7d0a983")
-		(property "Reference" "#PWR035"
-			(at 60.96 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 60.96 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 60.96 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 60.96 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ac08f970-9a89-46f9-9b93-2273bc20e86f")
-		)
-		(instances
-			(project "PocketFT8Xcvr"
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "#PWR035")
 					(unit 1)
 				)
 			)
