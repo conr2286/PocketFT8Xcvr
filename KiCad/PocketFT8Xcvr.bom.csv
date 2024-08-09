@@ -1,16 +1,15 @@
-"Reference","Value","Footprint","Qty","#","Manufacturer","Description","Notes","Mfg Part #","Type"
-"BAT1","BS-7","digikey-footprints:Battery_Holder_Coin_2032_BS-7","1","1","MPD (Memory Protection Devices)","BATTERY HOLDER COIN 20MM PC PIN","","BS-7","SMD"
-"C1,C3,C4,C11,C12,C13,C14,C15,C16,C17,C18,C19,C20,C21,C22,C24,C25","0.1UF","0603","17","2","Kemet","CAP CER 0.1UF 16V X7R 0603","Substitutions OK","C0603C104K4RAC7867","SMD"
-"C2,C5,C6,C7","10UF","0805","4","3","Kemet","CAP CER 10UF 16V X5R 0805","Substitutions OK","C0805C106K4PAC7800","SMD"
-"C23","0.33UF","0805","1","4","Kemet","CAP CER 0.33UF 16V X7R 0805","Substitutions OK","C0805C334K4RAC7800","SMD"
-"J2","ANT","digikey-footprints:RF_SMA_RightAngle_5-1814400-1","1","5","TE Connectivity AMP Connectors","CONN SMA JACK R/A 50 OHM PCB","Substitutions OK","5-1814400-1","SMD"
-"R1,R2,R5","2.0K","0603","3","6","Yageo","RES 2K OHM 5% 1/10W 0603","Substitutions OK","RC0603JR-072KL","SMD"
-"R3,R4","47K","0603","2","7","Yageo","RES 47K OHM 1/10W 5% 0603","Substitutions OK","RC0603JR-0747KL","SMD"
-"R6","10K","0603","1","8","YAGEO","RES 47.0K OHM 1/8W 0805 SMD","Substitutions OK","RC0603JR-0710KL","SMD"
-"R7","51 OHM","0603","1","9","Yageo","RES 51 OHM 5% 1/2W 1210","Substitutions OK","RC1210JR-0751RL","SMD"
-"R8,R11","510 Ohm","0603","2","10","Yageo","RES 510 OHM 5% 1/10W 0603","Substitutions OK","RC0603JR-07510RL","SMD"
-"R9,R10","5.1K","0603","2","11","Yageo","RES 5.1K OHM 5% 1/10W 0603","Substitutions OK","RC0603JR-075K1L","SMD"
-"U1","MCP3422A1T-E/SN","Package_SO:SOIC-8_3.9x4.9mm_P1.27mm","1","12","Microchip Technology","IC ADC 18BIT SIGMA-DELTA 8SOIC","","MCP3422A1T-E/SN","SMD"
-"U2","Si4735-D60-GU","Package_SO:SSOP-24_3.9x8.7mm_P0.635mm","1","13","Skyworks Solutions","RF RX AM/FM 153KHZ-279KHZ 24SSOP","","SI4735-D60-GU","SMD"
-"U3","GVA-84+","SOT-89-4","1","14","Mini-Circuits","DC-7000MHz +16dB Gain Block, SOT-89","","GVA-84+","SMD"
-"U4","L7805CV","TO-220-3","1","15","STMicroelectronics","IC REG LINEAR 5V 1.5A TO220AB","","L7805CV","SMD"
+Reference,Value,Footprint,Qty,#,Manufacturer,Description,Notes,Mfg Part #,Type
+Y1,ASTX-H11-25.000MHZ-T,ASTX_H11_25_000MHZ_T:XTAL_ASTX-H11-25.000MHZ-T,1,1,Abracon,ASTX-H11-25.000MHZ-T.  -30 ~ +75C,,ASTX-H11-25.000MHZ-T,SMD
+U3,GVA-84+,Package_TO_SOT_SMD:SOT-89-3_Handsoldering,1,2,Mini-Circuits,"DC-7000MHz +16dB Gain Block, SOT-89",hand soldering footprint used for better heat sink,GVA-84+,SMD
+U2,Si4735-D60-GU,Package_SO:SSOP-24_3.9x8.7mm_P0.635mm,1,3,Skyworks Solutions,RF RX AM/FM 153KHZ-279KHZ 24SSOP,,SI4735-D60-GU,SMD
+U1,MCP3422A1T-E/SN,Package_SO:SOIC-8_3.9x4.9mm_P1.27mm,1,4,Microchip Technology,IC ADC 18BIT SIGMA-DELTA 8SOIC,,MCP3422A1T-E/SN,SMD
+"R9,R10",5.1K,Resistor_SMD:R_0603_1608Metric,2,5,Yageo,RES 5.1K OHM 5% 1/10W 0603,Substitutions OK,RC0603JR-075K1L,SMD
+"R8,R11",510 Ohm,Resistor_SMD:R_0603_1608Metric,2,6,Yageo,RES 510 OHM 5% 1/10W 0603,Substitutions OK,RC0603JR-07510RL,SMD
+R7,51 OHM,Resistor_SMD:R_0603_1608Metric,1,7,Yageo,RES 51 OHM 5% 1/2W 1210,Substitutions OK,RC1210JR-0751RL,SMD
+R6,10K,Resistor_SMD:R_0603_1608Metric,1,8,Yageo,RES 47.0K OHM 1/8W 0805 SMD,Substitutions OK,RC0603JR-0710KL,SMD
+"R3,R4",47K,Resistor_SMD:R_0603_1608Metric,2,9,Yageo,RES 47K OHM 1/10W 5% 0603,Substitutions OK,RC0603JR-0747KL,SMD
+"R1,R2,R5",2.0K,Resistor_SMD:R_0603_1608Metric,3,10,Yageo,RES 2K OHM 5% 1/10W 0603,Substitutions OK,RC0603JR-072KL,SMD
+IC1,SI5351C-B-GM1,SI5351C-B-GM1:QFN50P300X300X90-17N-D,1,11,Skyworks,"Clock Generators & Support Products I2C programmable, any-frequency, any-output, reference clock input, 4-output LVCMOS clock generator",,,
+"C2,C5,C6,C7",10UF,Capacitor_SMD:C_0805_2012Metric,4,12,Kemet,CAP CER 10UF 16V X5R 0805,Substitutions OK,C0805C106K4PAC7800,SMD
+"C1,C3,C4,C11,C12,C13,C14,C15,C16,C17,C19,C20,C25,C27,C28,C29",0.1UF,Capacitor_SMD:C_0603_1608Metric,16,13,Kemet,CAP CER 0.1UF 16V X7R 0603,Substitutions OK,C0603C104K4RAC7867,SMD
+BAT1,BU2032SM-JJ-GTR,BU2032SM-JJ-GTR_MPD,1,14,MPD (Memory Protection Devices),BATT HOLDER COIN 20MM 1 CELL SMD,Must mount topside,BU2032SM-JJ-GTR,SMD

@@ -11339,10 +11339,6 @@
 		(uuid "3f8110c0-bfb1-4712-a973-7e5dae6079d8")
 	)
 	(no_connect
-		(at 132.08 132.08)
-		(uuid "40823e6a-e032-4ea9-a331-3128b0187647")
-	)
-	(no_connect
 		(at 104.14 95.25)
 		(uuid "411a1b40-7bd0-455d-9baf-57fb8d800143")
 	)
@@ -11417,10 +11413,6 @@
 	(no_connect
 		(at 20.32 57.15)
 		(uuid "814bfe23-71c8-42e4-a2f1-a84f3da731a4")
-	)
-	(no_connect
-		(at 128.27 132.08)
-		(uuid "815a3442-3982-4b06-ae85-4e17f50e1806")
 	)
 	(no_connect
 		(at 160.02 121.92)
@@ -13190,6 +13182,16 @@
 	)
 	(wire
 		(pts
+			(xy 124.46 137.16) (xy 124.46 132.08)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d468cd4e-6a4f-420f-a298-694f5a673bff")
+	)
+	(wire
+		(pts
 			(xy 245.11 144.78) (xy 245.11 142.24)
 		)
 		(stroke
@@ -13227,6 +13229,16 @@
 			(type default)
 		)
 		(uuid "d8245fbf-b171-4e59-8497-d3aca5e160ea")
+	)
+	(wire
+		(pts
+			(xy 132.08 134.62) (xy 132.08 132.08)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d895e17d-3a70-41c9-986b-252e3d67398b")
 	)
 	(wire
 		(pts
@@ -14001,6 +14013,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 97.79 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 97.79 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "08c9827e-7a4f-4cda-b6de-6a59bca086d8")
 		)
@@ -14212,6 +14242,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 115.57 181.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 115.57 181.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 115.57 181.61 0)
 			(effects
 				(font
@@ -14534,6 +14582,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 214.63 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 214.63 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "10b55085-88ff-477d-8675-72ec4cc753ea")
 		)
@@ -14648,6 +14714,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 26.67 163.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 26.67 163.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "bcff6f24-ac9c-4b80-8fe1-ec879b7b76b1")
 		)
@@ -14665,16 +14749,15 @@
 	)
 	(symbol
 		(lib_id "2024-08-05_00-31-14:BU2032SM-JJ-GTR")
-		(at 124.46 132.08 270)
+		(at 124.46 137.16 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "11d984bf-94fd-4672-b1e9-ee23b98ed8e7")
 		(property "Reference" "BAT1"
-			(at 127 135.8899 90)
+			(at 116.586 144.018 90)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14683,7 +14766,7 @@
 			)
 		)
 		(property "Value" "BU2032SM-JJ-GTR"
-			(at 127 138.4299 90)
+			(at 99.822 146.558 90)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14692,7 +14775,7 @@
 			)
 		)
 		(property "Footprint" "BU2032SM-JJ-GTR_MPD"
-			(at 124.46 132.08 0)
+			(at 124.46 137.16 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14702,7 +14785,7 @@
 			)
 		)
 		(property "Datasheet" "BU2032SM-JJ-GTR"
-			(at 124.46 132.08 0)
+			(at 124.46 137.16 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14712,7 +14795,7 @@
 			)
 		)
 		(property "Description" "BATT HOLDER COIN 20MM 1 CELL SMD"
-			(at 124.46 132.08 0)
+			(at 124.46 137.16 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14721,7 +14804,7 @@
 			)
 		)
 		(property "Mfg Part #" "BU2032SM-JJ-GTR"
-			(at 137.16 137.16 0)
+			(at 137.16 142.24 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14731,7 +14814,7 @@
 			)
 		)
 		(property "Category" "Battery Products"
-			(at 139.7 137.16 0)
+			(at 139.7 142.24 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14741,7 +14824,7 @@
 			)
 		)
 		(property "Family" "Battery Holders, Clips, Contacts"
-			(at 142.24 137.16 0)
+			(at 142.24 142.24 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14751,7 +14834,7 @@
 			)
 		)
 		(property "Manufacturer" "MPD (Memory Protection Devices)"
-			(at 152.4 137.16 0)
+			(at 152.4 142.24 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14761,7 +14844,7 @@
 			)
 		)
 		(property "Status" "Active"
-			(at 154.94 137.16 0)
+			(at 154.94 142.24 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14771,7 +14854,7 @@
 			)
 		)
 		(property "Description_1" "BATTERY HOLDER COIN 20MM PC PIN"
-			(at 149.86 137.16 0)
+			(at 149.86 142.24 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -14781,7 +14864,7 @@
 			)
 		)
 		(property "Type" "SMD"
-			(at 124.46 132.08 0)
+			(at 124.46 137.16 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14790,7 +14873,25 @@
 			)
 		)
 		(property "Notes" "Must mount topside"
-			(at 124.46 132.08 0)
+			(at 124.46 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 124.46 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 124.46 137.16 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15110,6 +15211,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 227.33 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 227.33 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "9768b926-fea9-480a-8f94-f82f8896fc94")
 		)
@@ -15265,6 +15384,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 212.09 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 212.09 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "831f0f81-ea2c-4b78-aaea-5a2f5a8b15e9")
 		)
@@ -15409,6 +15546,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 38.1 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 38.1 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 38.1 95.25 0)
 			(effects
 				(font
@@ -15627,6 +15782,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 133.35 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 133.35 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 133.35 167.64 0)
 			(effects
 				(font
@@ -15904,6 +16077,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 264.16 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 264.16 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "47db2b2e-bacf-494c-b405-c331434cfc3e")
 		)
@@ -16083,6 +16274,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 227.33 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 227.33 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "fb352e1f-0699-4b50-803a-beecaa2aab25")
 		)
@@ -16096,6 +16305,72 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "Q4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 128.27 132.08 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "357530c6-7ff2-4c4b-8031-b0439e2d6d5c")
+		(property "Reference" "#PWR043"
+			(at 128.27 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3.3V"
+			(at 128.27 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 128.27 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 128.27 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
+			(at 128.27 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f2137a6b-0403-4d12-a297-860a7c7ce999")
+		)
+		(instances
+			(project ""
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#PWR043")
 					(unit 1)
 				)
 			)
@@ -16259,6 +16534,24 @@
 		)
 		(property "Type" "SMD"
 			(at 44.45 163.83 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 44.45 163.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 44.45 163.83 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16444,6 +16737,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 255.27 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 255.27 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "c6a39f70-0b34-4c75-a8d2-da26b0838fe3")
 		)
@@ -16544,7 +16855,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_Name" "Skyworks"
+		(property "Manufacturer" "Skyworks"
 			(at -534.9 160.02 0)
 			(effects
 				(font
@@ -16561,6 +16872,24 @@
 					(size 1.27 1.27)
 				)
 				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 149.86 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 149.86 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -17228,6 +17557,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 107.95 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 107.95 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "6cdfb48c-83ef-4081-885b-0c4028bb7ee8")
 		)
@@ -17372,6 +17719,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 245.11 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 245.11 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 245.11 81.28 0)
 			(effects
 				(font
@@ -17562,6 +17927,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 190.5 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 190.5 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "03da216a-3efd-43f0-9b76-1b5ec92ff404")
 		)
@@ -17706,6 +18089,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 66.04 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 66.04 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 66.04 96.52 0)
 			(effects
 				(font
@@ -17914,6 +18315,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 224.79 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 224.79 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f1d77a70-468d-4d9b-b134-0bbd262482db")
 		)
@@ -18022,6 +18441,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 219.71 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 219.71 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 219.71 27.94 0)
 			(effects
 				(font
@@ -18164,6 +18601,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 255.27 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 255.27 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "1e06890e-adcc-4482-a815-e581cef3b3d5")
 		)
@@ -18298,6 +18753,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 236.22 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 236.22 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "1e06890e-adcc-4482-a815-e581cef3b3d6")
 		)
@@ -18406,6 +18879,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 251.46 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 251.46 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 251.46 27.94 0)
 			(effects
 				(font
@@ -18524,6 +19015,24 @@
 		)
 		(property "Type" "SMD"
 			(at 207.01 138.43 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 207.01 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 207.01 138.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18661,6 +19170,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 265.43 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 265.43 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 265.43 43.18 0)
 			(effects
 				(font
@@ -18813,6 +19340,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 177.8 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 177.8 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 177.8 142.24 0)
 			(effects
 				(font
@@ -19105,6 +19650,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 224.79 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 224.79 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5fb143e1-4e62-4268-be52-52caab98325c")
 		)
@@ -19275,6 +19838,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 44.45 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 44.45 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "661d8b8a-a509-44f7-b2cf-e4e3acead4d0")
 		)
@@ -19432,6 +20013,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 261.62 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 261.62 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "a27fb6e9-d9c8-4548-a427-b083ad9f4df3")
 		)
@@ -19530,6 +20129,24 @@
 		)
 		(property "Type" "SMD"
 			(at 26.67 179.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 26.67 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 26.67 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19636,6 +20253,24 @@
 		)
 		(property "Type" "SMD"
 			(at 179.07 92.71 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 179.07 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 179.07 92.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19805,6 +20440,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 271.78 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 271.78 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "bc45ccea-e95f-4ef7-8fa8-fca8c9e7a5e1")
 		)
@@ -19867,6 +20520,24 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 245.11 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 245.11 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 245.11 148.59 0)
 			(effects
 				(font
@@ -20027,6 +20698,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 193.04 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 193.04 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "94208603-d988-4e4f-8b9f-ece55f5e0d5c")
 		)
@@ -20175,6 +20864,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 132.08 134.62 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "929a4240-d1ce-4c2a-9681-4b6aba46e9f0")
+		(property "Reference" "#PWR044"
+			(at 132.08 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 132.08 139.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 132.08 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 132.08 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 132.08 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7b43f8a0-a456-4119-a1db-7439587820a2")
+		)
+		(instances
+			(project ""
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#PWR044")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:LED")
 		(at 62.23 179.07 90)
 		(unit 1)
@@ -20221,6 +20976,24 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
+			(at 62.23 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 62.23 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 62.23 179.07 0)
 			(effects
 				(font
@@ -20389,6 +21162,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 83.82 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 83.82 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "8d01e8f9-79d3-4968-82d5-f013205597f9")
 		)
@@ -20455,6 +21246,24 @@
 			)
 		)
 		(property "Description" "Generic connector, single row, 01x20, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 29.21 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 29.21 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 29.21 62.23 0)
 			(effects
 				(font
@@ -20994,6 +21803,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 15.24 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 15.24 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "Y+"
 			(uuid "d2bdd65a-884d-4648-8fae-8871d9507932")
 		)
@@ -21220,6 +22047,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 41.91 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 41.91 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5c683594-46e9-49ca-9d04-c9b209e73174")
 		)
@@ -21240,7 +22085,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 124.46 142.24 0)
+		(at 124.46 147.32 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -21249,7 +22094,7 @@
 		(fields_autoplaced yes)
 		(uuid "b3d24c1a-58d2-4c7b-8105-08185b3313dc")
 		(property "Reference" "#PWR026"
-			(at 124.46 148.59 0)
+			(at 124.46 153.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21258,7 +22103,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 124.46 147.32 0)
+			(at 124.46 152.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21266,7 +22111,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 124.46 142.24 0)
+			(at 124.46 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21275,7 +22120,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 124.46 142.24 0)
+			(at 124.46 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21284,7 +22129,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 124.46 142.24 0)
+			(at 124.46 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21366,7 +22211,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "YAGEO"
+		(property "Manufacturer" "Yageo"
 			(at 214.63 27.94 0)
 			(effects
 				(font
@@ -21394,6 +22239,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 214.63 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 214.63 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 214.63 27.94 0)
 			(effects
 				(font
@@ -21670,6 +22533,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 199.39 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 199.39 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d4efd231-2f3a-425e-afb6-26a0050a3243")
 		)
@@ -21813,6 +22694,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 148.59 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 148.59 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 148.59 27.94 0)
 			(effects
 				(font
@@ -21995,6 +22894,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 72.39 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 72.39 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "8"
 			(uuid "1ead9d1c-9640-445b-bee5-ef5cbbb1e0e4")
 		)
@@ -22118,6 +23035,24 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
+			(at 270.51 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 270.51 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 270.51 119.38 0)
 			(effects
 				(font
@@ -22295,6 +23230,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 193.04 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 193.04 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "c62d7c5c-7ed8-4dcd-a196-08494a79bb87")
 		)
@@ -22443,6 +23396,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 227.33 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 227.33 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 227.33 132.08 0)
 			(effects
 				(font
@@ -22603,6 +23574,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 158.75 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 158.75 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "985405d1-9fd1-459e-97c1-730926915867")
 		)
@@ -22730,6 +23719,24 @@
 			)
 		)
 		(property "Description" "Teensy 4.1 Microcontroller"
+			(at 132.08 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 132.08 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 132.08 99.06 0)
 			(effects
 				(font
@@ -23117,7 +24124,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "https://abracon.com/Oscillators/ASTX-H11.pdf"
 			(at 88.9 172.72 0)
 			(effects
 				(font
@@ -23126,7 +24133,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "ASTX-H11-25.000MHZ-T.  -30 ~ +75C"
 			(at 88.9 172.72 0)
 			(effects
 				(font
@@ -23175,13 +24182,40 @@
 				(hide yes)
 			)
 		)
-		(property "MANUFACTURER" "Abracon"
+		(property "Manufacturer" "Abracon"
 			(at 76.708 183.134 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 88.9 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "ASTX-H11-25.000MHZ-T"
+			(at 88.9 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 88.9 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -23343,6 +24377,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 177.8 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 177.8 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "2b7896c1-b81b-4bee-bf3b-4e1717908045")
 		)
@@ -23450,6 +24502,24 @@
 		)
 		(property "Type" "SMD"
 			(at 62.23 163.83 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 62.23 163.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 62.23 163.83 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23586,6 +24656,24 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 227.33 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 227.33 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 227.33 148.59 0)
 			(effects
 				(font
@@ -23765,6 +24853,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer_Name" ""
+			(at 238.76 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 238.76 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "24"
 			(uuid "968d5f4c-53af-4931-9369-d6b6030cab23")
 		)
@@ -23923,7 +25029,7 @@
 		(dnp no)
 		(uuid "ffe90fd8-f89b-4282-a59f-2dfa28545ebe")
 		(property "Reference" "C6"
-			(at 233.172 20.32 90)
+			(at 234.188 23.114 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -24022,6 +25128,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 240.03 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 240.03 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
 			(at 240.03 20.32 0)
 			(effects
 				(font
