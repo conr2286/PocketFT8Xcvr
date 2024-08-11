@@ -42,7 +42,7 @@
 
 
 HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 14,12);
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 313);
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 313);  //The 313 ohms is a guess for the touchpad resistance
 
 Si5351 si5351;
 SI4735 si4735;
