@@ -169,7 +169,7 @@ if(decode_flag == 0) process_data();
     if(xmit_flag == 1 ){
         int offset_index = 5;
 
-        if(ft8_xmit_counter >= offset_index && ft8_xmit_counter < 79 + offset_index ){
+        if( >= offset_index && ft8_xmit_counter < 79 + offset_index ){
         set_FT8_Tone(tones[ft8_xmit_counter - offset_index ]);
         }
 

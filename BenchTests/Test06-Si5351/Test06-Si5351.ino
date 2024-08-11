@@ -4,11 +4,11 @@ NAME
 
 DESCRIPTION
   Initializes the Si5351 and programs CLK0 and CLK2.  If successful,
-  CLK0 (RCLK, the receiver clock) will output a ### kHz signal, and
-  CLK2 (XCLK, the transmitter clock) will output a 14100 kHz signal.
-  Both signals can be confirmed with a frequency counter.
+  CLK0 (XCLK, the transmitter clock) will output a 14100 kHz signal, and
+  CLK2 (RCLK, the receiver clock) will output a 3276800 Hz signal.
+  Both signals should be confirmed with a frequency counter.
 
-EXERCISED
+EXERCISED,
   + I2C bus
   + Si5351 connectivity
   + TCXO and Si5351 operation
