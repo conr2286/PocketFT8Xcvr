@@ -616,7 +616,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "./CAM",
+      "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
