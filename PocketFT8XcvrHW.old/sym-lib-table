@@ -1,4 +1,0 @@
-(sym_lib_table
-  (version 7)
-  (lib (name "teensy1")(type "KiCad")(uri "/Users/jconrad/GitHub/KiCAD/JRC/teensy.kicad_sym")(options "")(descr ""))
-)

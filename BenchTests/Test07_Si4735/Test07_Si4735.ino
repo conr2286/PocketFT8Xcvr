@@ -79,8 +79,7 @@ void setup() {
   delay(10);
   currentFrequency = si4735.getFrequency();
   si4735.setVolume(50);
-  Serial.print("CurrentFrequency = ");
-  Serial.println(currentFrequency);
+  Serial.print("CurrentFrequency = "); Serial.println(currentFrequency);
 }
 
 // the loop function runs over and over again forever
@@ -89,9 +88,8 @@ void loop() {
 }
 
 //Installs SSB patch code in SI4735
-void loadSSB()
-{
-  si4735.queryLibraryId(); // Is it really necessary here? I will check it.
+void loadSSB() {
+  si4735.queryLibraryId();  // Is it really necessary here? I will check it.
   si4735.patchPowerUp();
   //si4735.setPowerUp(1, 1, 1, 0, 1, SI473X_ANALOG_DIGITAL_AUDIO);
   //si4735.radioPowerUp();
@@ -107,4 +105,3 @@ void loadSSB()
   //si4735.setSSBConfig(bandwidthIdx, 1, 0, 1, 0, 1);
   si4735.setSSBConfig(2, 1, 0, 1, 0, 1);  //2 = 3 kc bandwidth
 }
-
