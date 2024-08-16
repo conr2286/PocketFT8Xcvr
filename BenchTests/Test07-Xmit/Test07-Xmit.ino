@@ -1,24 +1,24 @@
 /**
 NAME
-  Test06-Si5351 -- Test the Si5351 clock generator
+  Test07-Si5351 -- Test the entire transmitter's RF chain
 
 DESCRIPTION
   Initializes the Si5351 and programs CLK0 and CLK2.  If successful,
-  CLK0 (XCLK, the transmitter clock) will output a 14100 kHz signal, and
-  CLK2 (RCLK, the receiver clock) will output a 14200 kHz signal.
-  Both signals should be confirmed with a frequency counter.
+  CLK0 (XCLK, the transmitter clock) will output a 14100 kHz signal.
+  Both signals should be confirmed with a frequency counter at the
+  antenna connector.
 
 EXERCISED,
   + I2C bus
   + Si5351 connectivity
   + TCXO and Si5351 operation
+  + PTT and transmitter's RF chain
 
 NOTE
   + This is the first use of the TCXO whose 25.000 mHz signal
   appears on its pin 3 and on the Si5351 CLKIN pin 6
   + The CLK0 XCLK signal appears on Si5351 pin 13, C20 and U3 pin 1
   + The CLK2 RCLK signal appears on Si5351 pin 9 and Si4735 pin 19
-  + The PTT signal is not exercised and consequently not the RF chain
 
 REFERENCES
 
@@ -33,6 +33,9 @@ ATTRIBUTION
 
 // Set I2C bus to use: Wire, Wire1, etc.
 #define WIRE Wire
+
+//Exercise the Push-to-Talk Pin
+#define PTT_Pin 13
 
 Si5351 si5351;
 
@@ -61,12 +64,12 @@ void setup() {
     while (1)
       ;
   }
-  err = si5351.set_freq(14200000ULL, SI5351_CLK2);
-  if (err) {
-    printf("Error:  set_freq(...,CLK2\n");
-    while (1)
-      ;
-  }
+
+
+  //Turn on the transmitter's RF chain
+  pinMode(PTT_Pin, OUTPUT);
+  digitalWrite(PTT_Pin, HIGH);  //Transmit
+
 }
 
 
