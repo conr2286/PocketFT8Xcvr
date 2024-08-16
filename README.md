@@ -1,5 +1,5 @@
 # PocketFT8Xcvr41
-An implementation of Charles Hill's Palm-Sized Pocket FT8 Transceiver updated for Teensy 4.1 with SMD peripherals
+An implementation of Charles Hill's Palm-Sized Pocket FT8 Transceiver updated for Teensy 4.1 with SMD components on a 4-Layer board
 
 # Version 1.00 (Under development)
 
@@ -8,21 +8,22 @@ An implementation of Charles Hill's Palm-Sized Pocket FT8 Transceiver updated fo
 * Si4735 Library developed by Ricardo Caritti: https://github.com/pu2clr/SI4735
 * FT8 Decoding Library by Karlis Goba: https://github.com/kgoba/ft8_lib
 * Enhancements by Lars Petersen, OZ1BXM
-* PC Board by Jim Conrad, KQ7B
+* PC Board by Jim Conrad, KQ7B (retired engineer)
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 Please use this software at your own risk
 
-# Features
+# V1.00 Features
 * FT8 Message Transmit and Receive
 * Small Size, 4.0 X 2.8"
+* TCXO
 * 100 mW power output @ 50 ohm load
 * 1 uVolt Receiver Sensitivity
-* Powered by a USB-A source (e.g. portable power bank)
+* Powered by a single USB-A source (e.g. portable consumer power bank)
 * Si4735 SSB Receiver & Si5351 Transmit FSK Clock, GVA-84+ MMIC
 * SD Card Contact Logging
-* 320 X 480 Resistive  Color Touch Screen
+* Adafruit 320 X 480 Resistive Color Touch Screen
 
 # DSP Audio Architecture
 Decoding FT8 requires significant data storage and processing speed.
@@ -32,20 +33,28 @@ In order to optimize both program storage and processing speed requirements so t
 The algorithms developed by Karlis Goba use the 3.125 Hz spaced FFT bins to be screened in both frequency and time so that errors in symbol frequency and time reception  can be overcome to provide really great FT8 decoding. The end spacing of the FT8 algorithms is 6.25 Hz.
 
 # Motivation
-I (KQ7B) liked Charles Hill's concept of a portable FT8 transceiver for the Idaho mountains (my home).  Rather than starting with a clean slate, I chose to investigate a Pocket FT8 with minimal revisions, largely confined to those necessary for the Teensy 4.1 (as the 3.6 is no longer available), and to fab a "real" PC Board.  The idea is to use this as a foundation for incremental improvements after evaluating what changes are truly merited.
+Charles Hill's concept of a portable FT8 transceiver is perfect for SOTA and the U.S. Idaho mountains (my home).  Rather than starting with a clean slate, I chose to start with a compact implementation of Pocket FT8 with minimal revision, largely confined to that necessary for the Teensy 4.1 (as the 3.6 is no longer available) and a 4-layer board.  The idea is to use Pocket FT8 as a foundation for incremental improvements by evaluating what changes are truly merited.
 
-An alternative approach, previously investigated as YASDR, might be to construct an FT8 radio hat for a Raspberry 5 supporting the comprehensive wsjtx/etc natively but with substantially higher power requirements for the RP5.
+An alternative approach, previously investigated as YASDR, might be to construct an FT8 radio hat for a Raspberry 5 supporting the comprehensive wsjtx/etc natively.  This archived approach offers considerable flexibility but with substantially higher power requirements (I'm getting too old to pack heavy batteries in the mountains;).
 
-# Investigations
-* PC Board artwork and fabrication
-* Bench testing/rework
+# Manifest
+* BenchTests:  Arduino sketches for incremental tests of the hardware
+* Bibliography:  "The shoulders of giants"
+* Investigations:  Code and simulations exploring supporting technologies
+* KiCad:  Just a folder where KiCad likes to place the BOM output file
+* PocketFT8XcvrFW:  Arduino firmware sketch for the Pocket FT8 transceiver
+* PocketFT8XcvrHW:  KiCad 8 project files for the PCB
+
+# ToDo
+* Bench testing/rework to replicate Charlie's Pocket FT8 functionality
 * Add harmonic trap to the low-pass filter
 * Evaluate on-the-air performance
-* Add code to support the GPS module for time/date/location
-* Evalutate 20m version
-* Consider alternatives for higher power (e.g. 1..2 watts) Class-D operation
-* SI4735 receiver performance complexity vs Tayloe Detector approach
+* Add code to support a GPS module for time/date/location
+* Evalutate 20m and 40m versions for SOTA operation
+* Consider higher power (e.g. 1..2 watts) Class-D finals with BS170s
+* Evaluate SI4735 receiver simplicity vs Tayloe Detector performance
 * Find a DAC with a 3.3V reference for full-screen touch
+* USB-C power
 
 # Status and Next Steps
-* August, 2024:  PCB design is complete but not fully reviewed by PCB fab.  The original firmware sketch is compiling for Teensy 4.1 but is not yet tested.  Next Step:  Develop tests to exercise the Version 1.00 hardware.
+* August 15, 2024:  PCB gerbers and pos files submitted to PCBWay for fabrication and assembly of the V1.00 lab prototype.  Developed several bench tests for evaluating assembled boards.  Completed initial work to port Charlie's code to this hw implementation (e.g. use of an SI5351C driven by a TCXO, etc).
