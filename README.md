@@ -1,7 +1,9 @@
 # PocketFT8Xcvr41
 An implementation of Charles Hill's Palm-Sized Pocket FT8 Transceiver updated for Teensy 4.1 with SMD components on a 4-Layer board
 
-# Version 1.00 (Under development)
+# Versions
+* 1.00 Original submission to PCBWay
+* 1.01 Resubmit to PCBWay using SI5351C-B-GM for unobtanium SI5351C-B-GM1 package
 
 # Attribution and License
 * Copyright (C) 2021, Charles Hill
@@ -14,7 +16,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 Please use this software at your own risk
 
-# V1.00 Features
+# Features
 * FT8 Message Transmit and Receive
 * Small Size, 4.0 X 2.8"
 * TCXO
@@ -57,4 +59,4 @@ An alternative approach, previously investigated as YASDR, might be to construct
 * USB-C power
 
 # Status and Next Steps
-* August 15, 2024:  PCB gerbers and pos files submitted to PCBWay for fabrication and assembly of the V1.00 lab prototype.  Developed several bench tests for evaluating assembled boards.  Completed initial work to port Charlie's code to this hw implementation (e.g. use of an SI5351C driven by a TCXO, etc).
+* August 16, 2024:  PCB gerbers and pos files resubmitted to PCBWay for fabrication and assembly of the lab prototype.  Developed several bench tests for evaluating assembled boards.  Completed initial work to port Charlie's code to this hw implementation (e.g. use of an SI5351C driven by a TCXO, etc).
