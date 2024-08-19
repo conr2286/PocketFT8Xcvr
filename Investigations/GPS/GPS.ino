@@ -26,6 +26,8 @@ int8_t gpsSecond;
 int8_t gpsHundred;
 int8_t gpsOffset = 2;
 
+bool gpsAvailable = false;
+
 
 void setup() {
   Serial1.begin(9600);  //Teensy pins 0 and 1 for RX1 and TX1
@@ -33,6 +35,7 @@ void setup() {
 
 void parse_NEMA(void) {
   while (Serial1.available()) {
+    gpsAvailable = true;
     if (gps.encode(Serial1.read())) {  // process gps messages
       // when TinyGPS reports new data...
       unsigned long age;
@@ -57,9 +60,11 @@ void parse_NEMA(void) {
 }
 
 void loop() {
-  if (Serial1.available()) {
-    parse_NEMA();
+  parse_NEMA();
+  if (gpsAvailable) {
+    printf("%2d:%2d:%2d lat/lon %f %f %12s\n", gpsHour, gpsMinute, gpsSecond, flat, flon, Locator);
+  } else {
+    printf("GPS not available\n");
   }
-  printf("%2d:%2d:%2d lat/lon %f %f %12s\n", gpsHour, gpsMinute, gpsSecond, flat, flon, Locator);
   delay(10000);
 }
