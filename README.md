@@ -20,9 +20,9 @@ Please use this software at your own risk
 * FT8 Message Transmit and Receive
 * Small Size, 4.0 X 2.8"
 * TCXO
-* 100 mW power output @ 50 ohm load
+* 100 mW power output @ 50 ohm load (well...)
 * 1 uVolt Receiver Sensitivity
-* Powered by a single USB-A source (e.g. portable consumer power bank)
+* Powered by a single USB source (e.g. portable consumer power bank)
 * Si4735 SSB Receiver & Si5351 Transmit FSK Clock, GVA-84+ MMIC
 * SD Card Contact Logging
 * Adafruit 320 X 480 Resistive Color Touch Screen
@@ -35,28 +35,29 @@ In order to optimize both program storage and processing speed requirements so t
 The algorithms developed by Karlis Goba use the 3.125 Hz spaced FFT bins to be screened in both frequency and time so that errors in symbol frequency and time reception  can be overcome to provide really great FT8 decoding. The end spacing of the FT8 algorithms is 6.25 Hz.
 
 # Motivation
-Charles Hill's concept of a portable FT8 transceiver is perfect for SOTA and the U.S. Idaho mountains (my home).  Rather than starting with a clean slate, I chose to start with a compact implementation of Pocket FT8 with minimal revision, largely confined to that necessary for the Teensy 4.1 (as the 3.6 is no longer available) and a 4-layer board.  The idea is to use Pocket FT8 as a foundation for incremental improvements by evaluating what changes are truly merited.
+Charles Hill's concept of a portable FT8 transceiver is ideal for POTA/SOTA in the U.S. Idaho mountains (my home).  The entire transceiver fits in a compact enclosure, the power demand is acceptable, and it can operate from a USB power source familiar to backpackers.  Rather than start with a clean slate, I chose to start with a compact implementation of Pocket FT8 with minimal revision, largely confined to that necessary for the Teensy 4.1 (as the 3.6 is no longer available) and implemented on a single 4-layer board.  The idea is to reproduce it, identify and resolve its shortcomings in subsequent revisions, and keep it highly portable.
 
 An alternative approach, previously investigated as YASDR, might be to construct an FT8 radio hat for a Raspberry 5 supporting the comprehensive wsjtx/etc natively.  This archived approach offers considerable flexibility but with substantially higher power requirements (I'm getting too old to pack heavy batteries in the mountains;).
 
 # Manifest
 * BenchTests:  Arduino sketches for incremental tests of the hardware
 * Bibliography:  "The shoulders of giants"
-* Investigations:  Code and simulations exploring supporting technologies
+* Investigations:  Code and simulations exploring future technologies
 * KiCad:  Just a folder where KiCad likes to place the BOM output file
-* PocketFT8XcvrFW:  Arduino firmware sketch for the Pocket FT8 transceiver
-* PocketFT8XcvrHW:  KiCad 8 project files for the PCB
+* PocketFT8XcvrFW:  Arduino 2.0 firmware sketch for the Pocket FT8 transceiver
+* PocketFT8XcvrHW:  KiCad 8 files for the PCB
 
 # ToDo
 * Bench testing/rework to replicate Charlie's Pocket FT8 functionality
-* Add harmonic trap to the low-pass filter
+* Consider a harmonic trap in the low-pass filter
+* Also consider a Chebyshev low-pass filter
 * Evaluate on-the-air performance
-* Add code to support a GPS module for time/date/location
-* Evalutate 20m and 40m versions for SOTA operation
-* Consider higher power (e.g. 1..2 watts) Class-D finals with BS170s
-* Evaluate SI4735 receiver simplicity vs Tayloe Detector performance
+* Support a GPS module for time/date/location
+* Investigate 20m and 40m versions for POTA/SOTA operation
+* Investigate higher power (e.g. 1..2 watts) Class-D finals with BS170s operating at 5V
+* Evaluate the SI4735 receiver's simplicity vs benefits of a Tayloe Detector --- is it really worth it?
 * Find a DAC with a 3.3V reference for full-screen touch
 * USB-C power
 
 # Status and Next Steps
-* August 16, 2024:  PCB gerbers and pos files resubmitted to PCBWay for fabrication and assembly of the lab prototype.  Developed several bench tests for evaluating assembled boards.  Completed initial work to port Charlie's code to this hw implementation (e.g. use of an SI5351C driven by a TCXO, etc).
+* August 20, 2024:  V1.01 PCB gerbers and pos files submitted to PCBWay for fabrication and assembly of the lab prototype.  Developed several bench tests for evaluating assembled boards.  Completed initial work to port Charlie's code to this hw implementation (e.g. use of an SI5351C driven by a TCXO, etc).  Various enhancement investigations underway while awaiting boards.
