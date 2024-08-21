@@ -3589,7 +3589,7 @@
 				)
 			)
 		)
-		(property "Footprint" "1210"
+		(property "Footprint" "1206"
 			(at 99.06 85.09 0)
 			(effects
 				(font
@@ -3599,7 +3599,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "CAP CER 0.1UF 50V C0G/NP0 1210"
+		(property "Datasheet" "C1206C104K1RAC7210"
 			(at 98.552 82.804 0)
 			(effects
 				(font
@@ -3609,7 +3609,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "CAP CER 0.1UF 50V C0G/NP0 1210"
+		(property "Description" "CAP CER 0.1UF 100V X7R 1206"
 			(at 98.298 87.122 0)
 			(effects
 				(font
@@ -3618,7 +3618,7 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "50V"
+		(property "Voltage" "100V"
 			(at 98.806 78.232 0)
 			(effects
 				(font
@@ -3627,7 +3627,7 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "5%"
+		(property "Tolerance" "10%"
 			(at 94.234 78.232 0)
 			(effects
 				(font
@@ -3645,7 +3645,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mfg Part #" "C1210C104J5GAC7800"
+		(property "Mfg Part #" "C1206C104K1RAC7210"
 			(at 97.028 80.772 0)
 			(effects
 				(font
@@ -3712,7 +3712,7 @@
 				)
 			)
 		)
-		(property "Footprint" "1210"
+		(property "Footprint" "0805"
 			(at 107.95 80.3148 0)
 			(effects
 				(font
@@ -3721,7 +3721,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "CAP CER 1000PF 50V C0G/NP0 1210"
+		(property "Datasheet" "CAP CER 1000PF 50V X7R 0805"
 			(at 113.03 80.01 0)
 			(effects
 				(font
@@ -3730,7 +3730,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "CAP CER 1000PF 50V C0G/NP0 1210"
+		(property "Description" "CAP CER 1000PF 50V X7R 0805"
 			(at 115.57 81.28 0)
 			(effects
 				(font
@@ -3748,7 +3748,7 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "5%"
+		(property "Tolerance" "10%"
 			(at 105.41 81.28 0)
 			(effects
 				(font
@@ -3775,7 +3775,16 @@
 				(hide yes)
 			)
 		)
-		(property "Mfg" "Kemet"
+		(property "Manufacturer" "Kemet"
+			(at 96.52 81.28 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0805C102K5RAC7800"
 			(at 96.52 81.28 90)
 			(effects
 				(font
@@ -3923,6 +3932,24 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 45.72 62.23 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Texas Instruments"
+			(at 45.72 62.23 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "SN74LVC2G86DCTR"
 			(at 45.72 62.23 90)
 			(effects
 				(font
@@ -4618,7 +4645,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "1210"
+		(property "Footprint" "1206"
 			(at 186.3852 101.6 0)
 			(effects
 				(font
@@ -4654,7 +4681,7 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "1kV"
+		(property "Voltage" "100V"
 			(at 185.42 96.52 0)
 			(effects
 				(font
@@ -4663,7 +4690,7 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "100%"
+		(property "Tolerance" "2%"
 			(at 185.42 99.06 0)
 			(effects
 				(font
@@ -4887,7 +4914,7 @@
 				)
 			)
 		)
-		(property "Footprint" "1210"
+		(property "Footprint" "1206"
 			(at 189.23 72.6948 0)
 			(effects
 				(font
@@ -4914,16 +4941,7 @@
 				(hide yes)
 			)
 		)
-		(property "PROD_ID" "CAP-00000"
-			(at 191.77 73.66 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Voltage" "1kV"
+		(property "Voltage" ""
 			(at 184.15 73.66 0)
 			(effects
 				(font
@@ -4932,8 +4950,35 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "100%"
+		(property "Tolerance" ""
 			(at 186.69 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 177.8 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Field8" ""
+			(at 177.8 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Value to be determined by lab experiment"
+			(at 177.8 73.66 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5396,7 +5441,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "1210"
+		(property "Footprint" "1206"
 			(at 171.1452 101.6 0)
 			(effects
 				(font
@@ -5432,7 +5477,7 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "1kV"
+		(property "Voltage" "50V"
 			(at 170.18 96.52 0)
 			(effects
 				(font
@@ -5441,7 +5486,7 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "100%"
+		(property "Tolerance" "5%"
 			(at 170.18 99.06 0)
 			(effects
 				(font
@@ -5559,7 +5604,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "1210"
+		(property "Footprint" "1206"
 			(at 154.6352 101.6 0)
 			(effects
 				(font
@@ -5595,7 +5640,7 @@
 				(hide yes)
 			)
 		)
-		(property "Voltage" "1kV"
+		(property "Voltage" "100V"
 			(at 153.67 96.52 0)
 			(effects
 				(font
@@ -5604,7 +5649,7 @@
 				(hide yes)
 			)
 		)
-		(property "Tolerance" "100%"
+		(property "Tolerance" "2%"
 			(at 153.67 99.06 0)
 			(effects
 				(font
