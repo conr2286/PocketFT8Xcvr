@@ -1579,7 +1579,7 @@
 		)
 		(uuid "fe6771d8-6a97-4100-949f-5024aba3536b")
 	)
-	(text_box "Notes:  Ideal Class E tank capacitor values calculated by https://people.physics.anu.edu.au/~dxt103/calculators/class-e.php approximated here by standard capacitor values.\n\nTank circuit calculations performed for 3 paralleled BS170 transistors, Coss(parallel) = 51 pF.\n\nR4 inserted to simulate Q(L2).\n\nVPULSE and R1 approximate drive from 3 paralleled 74ACT00 gates.\n\nQ1, Q2 and Q3 paralleled to reduce their effective (paralleled) Rds for use with 5V supply.  Their paralleled Ciss ~= 85 pF.\n"
+	(text_box "Notes:  Ideal Class E tank capacitor values calculated by https://people.physics.anu.edu.au/~dxt103/calculators/class-e.php approximated here by standard capacitor values.\n\nTank circuit calculations performed for 3 paralleled BS170 transistors, Coss(parallel) = 51 pF.\n\nR4 inserted to simulate tank circuit Q.\n\nVPULSE and R1 approximate drive from 3 paralleled 74ACT00 gates.\n\nQ1, Q2 and Q3 paralleled to reduce their effective (paralleled) Rds for use with 5V supply.  Their paralleled Ciss ~= 85 pF.\n"
 		(exclude_from_sim no)
 		(at 121.92 102.87 0)
 		(size 73.66 30.48)
@@ -2705,7 +2705,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "360 p"
+		(property "Value" "368p"
 			(at 119.38 81.2799 0)
 			(effects
 				(font
@@ -2766,6 +2766,24 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+			)
+		)
+		(property "Sim.Device" "C"
+			(at 0 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=+ 2=-"
+			(at 0 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -3005,7 +3023,7 @@
 				)
 			)
 		)
-		(property "Value" "510 p"
+		(property "Value" "510p"
 			(at 123.19 63.5 90)
 			(effects
 				(font
@@ -3270,7 +3288,7 @@
 				)
 			)
 		)
-		(property "Value" "1.28 u"
+		(property "Value" "1.28u"
 			(at 143.51 71.12 0)
 			(effects
 				(font
