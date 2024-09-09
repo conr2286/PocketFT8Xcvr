@@ -4,7 +4,7 @@
     {
       "analysis": "TRAN",
       "commands": [
-        ".tran 1n 400n",
+        ".tran 1n 1.2u 1u",
         ".kicad adjustpaths",
         ".save all",
         ".probe alli",
@@ -21,8 +21,18 @@
       "showGrid": true,
       "traces": [
         {
-          "color": "rgb(55, 126, 184)",
-          "signal": "V(Net-_Q1-D_)",
+          "color": "rgb(141, 160, 203)",
+          "signal": "I(MQ2:d)",
+          "trace_type": 258
+        },
+        {
+          "color": "rgb(152, 78, 163)",
+          "signal": "V(/Vd1)",
+          "trace_type": 257
+        },
+        {
+          "color": "rgb(166, 86, 40)",
+          "signal": "V(Net-_Q1-G_)",
           "trace_type": 257
         },
         {

@@ -35,7 +35,7 @@ ATTRIBUTION
 #include "HX8357_t3n.h"
 
 //Build the display object using pin numbers from Charlie's Pocket FT8 code
-HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 14, 12);
+HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);
 
 
 void setup() {
