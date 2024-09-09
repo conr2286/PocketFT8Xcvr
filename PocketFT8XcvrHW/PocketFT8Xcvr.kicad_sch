@@ -11666,16 +11666,6 @@
 	)
 	(wire
 		(pts
-			(xy 175.26 74.93) (xy 175.26 21.59)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "00feaffa-f7e6-4879-9524-499b9144f2c8")
-	)
-	(wire
-		(pts
 			(xy 212.09 67.31) (xy 212.09 76.2)
 		)
 		(stroke
@@ -11793,16 +11783,6 @@
 			(type default)
 		)
 		(uuid "0ebdedde-9281-4fb0-b01a-cd75130a0752")
-	)
-	(wire
-		(pts
-			(xy 160.02 74.93) (xy 175.26 74.93)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0f3d42b4-1fce-4355-9db7-48632505cc1c")
 	)
 	(wire
 		(pts
@@ -12786,6 +12766,16 @@
 	)
 	(wire
 		(pts
+			(xy 160.02 77.47) (xy 175.26 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9802c4e9-0fbf-4445-a578-8c8764cfce92")
+	)
+	(wire
+		(pts
 			(xy 199.39 33.02) (xy 199.39 34.29)
 		)
 		(stroke
@@ -13153,6 +13143,16 @@
 			(type default)
 		)
 		(uuid "d3833b7e-700b-4ad7-ba8d-c946dfcb2773")
+	)
+	(wire
+		(pts
+			(xy 175.26 21.59) (xy 175.26 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d3a45bf5-bcaf-43e6-8d90-3e4dab5b879e")
 	)
 	(wire
 		(pts
@@ -13564,6 +13564,17 @@
 		)
 		(uuid "30e22c8b-a5da-41f9-a30c-0fdf1a070c34")
 	)
+	(label "PTT"
+		(at 160.02 74.93 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3abad053-6cff-44e6-9012-c07516a2f4d7")
+	)
 	(label "SDA"
 		(at 160.02 64.77 0)
 		(fields_autoplaced yes)
@@ -13816,17 +13827,6 @@
 			(justify left bottom)
 		)
 		(uuid "f2f95899-452d-4aad-a8fb-333315e1b3cf")
-	)
-	(label "PTT"
-		(at 160.02 77.47 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "f4d759e8-93fc-4363-a3f6-3befcc3bf176")
 	)
 	(label "X-"
 		(at 160.02 92.71 0)

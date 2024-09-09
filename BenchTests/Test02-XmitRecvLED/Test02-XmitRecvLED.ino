@@ -10,9 +10,8 @@ EXERCISED
   to the Teensy GPIO PTT pin by blinking the XMIT LED.
 
 NOTE
-  Currently, Charlie's PocketFT8 code uses the same pin (13) for PTT 
-  as the Teensy 4.1 on-board LED.  This test is more-or-less superfluous
-  unless somebody changes the PTT pin assignment.
+  Teensy 3.6 used digital pin 13 in the original Pocket FT8 implementation;
+  Teensy 4.1 necessitated a change to pin 14.
 
 ATTRIBUTION
   Adapted by KQ7B from public domain work by Scott Fitzgerald, Arturo Guadalupi, and Colby Newman
@@ -20,19 +19,29 @@ ATTRIBUTION
 */
 
 //Exercise the Push-to-Talk Pin
-#define PTT_Pin 13
+#define PTT_Pin 14
 
 
 // the setup function runs once when you press reset or power the board
 void setup() {
+
+  Serial.begin(9600);
+  Serial.println("Starting...");
+  delay(100);
+
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(PTT_Pin, OUTPUT);
+  digitalWrite(PTT_Pin, LOW);
+
+  delay(5000);
+
 }
 
 // the loop function runs over and over again forever
 void loop() {
+  Serial.println("Looping...");
   digitalWrite(PTT_Pin, HIGH);  // turn the LED on (HIGH is the voltage level)
-  delay(1000);                      // wait for a second
+  delay(5000);                  // wait for a second
   digitalWrite(PTT_Pin, LOW);   // turn the LED off by making the voltage LOW
-  delay(1000);                      // wait for a second
+  delay(5000);                  // wait for a while
 }
