@@ -30,7 +30,7 @@
 
 #define AM_FUNCTION 1
 #define RESET_PIN 20
-#define PTT_Pin 13
+#define PTT_Pin 14          //Teensy 4.1
 #define USB 2
 
 
@@ -41,7 +41,7 @@
 #define XP 39  // can be a digital pin
 
 
-HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 14, 12);
+HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);      //Teensy 4.1 pins
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 282);      //The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen
 
 Si5351 si5351;

@@ -1,6 +1,6 @@
 /*
 NAME
-  Test03-HelloWorld -- Exercise the display
+  Test03-Display -- Exercise the display
 
 DESCRIPTION
   This is the first test requiring the display to be plugged into
@@ -8,6 +8,11 @@ DESCRIPTION
   the display, exercising the display and its PCB connections
   (power, SPI, etc) to Teensy.  It also prints some diagnostics to
   the console to hopefully assist with debugging.
+
+NOTE
+  The original Pocket FT8 implementation with Teensy 3.6 had SCK on
+  digital pin 14.  The Teensy 4.1 implementation required a move to
+  pin 13.
 
 EXERCISED
   + HX8357D controller and its display
@@ -34,7 +39,7 @@ ATTRIBUTION
 //#include <HX8357_t3.h>
 #include "HX8357_t3n.h"
 
-//Build the display object using pin numbers from Charlie's Pocket FT8 code
+//Build the display object using Teensy 4.1 pin numbers
 HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);
 
 
