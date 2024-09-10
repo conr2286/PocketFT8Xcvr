@@ -24,7 +24,7 @@
 
 #define NUMSAMPLES 2
 
-uint8_t address = 0x68;  //Or 0x69?
+uint8_t address = 0x69;  //Original I2C address was 0x68 but V1.01 chip reports 0x68
 MCP342x adc = MCP342x(address);
 
 TSPoint::TSPoint(void) {
