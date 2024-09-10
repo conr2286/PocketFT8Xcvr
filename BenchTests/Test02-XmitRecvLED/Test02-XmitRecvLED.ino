@@ -3,7 +3,8 @@ NAME
   Test02-XmitRecvLED --- Blink the PocketFT8Xcvr XMIT LED
 
 DESCRIPTION
-  This is the first test (well... after smoke) of the PocketFT8Xcvr PCB.
+  This test exercises the PTT signal pin's ability to place the rig
+  in its transmit mode
 
 EXERCISED
   It confirms the transceiver's Transmit/Receive switching circuit responds

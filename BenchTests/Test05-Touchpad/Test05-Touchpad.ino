@@ -48,7 +48,7 @@ ATTRIBUTION
 
 
 //Build the display object using pin numbers from Charlie's Pocket FT8 code
-HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 14, 12);
+HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);  //Teensy 4.1 moved SCK to dig pin 13
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 313);  //The 313 ohms is a guess for the touchpad resistance
 
 
@@ -71,6 +71,8 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
+
+  Serial.println("Loop...");
 
   // a point object holds x y and z coordinates
   TSPoint p = ts.getPoint();

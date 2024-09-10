@@ -24,7 +24,7 @@
 
 #define NUMSAMPLES 2
 
-  uint8_t address = 0x68;
+  uint8_t address = 0x69;
   MCP342x adc = MCP342x(address);
 
 TSPoint::TSPoint(void) { x = y = z = 0; }

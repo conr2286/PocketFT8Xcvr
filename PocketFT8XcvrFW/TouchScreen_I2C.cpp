@@ -24,10 +24,12 @@
 
 #define NUMSAMPLES 2
 
-  uint8_t address = 0x68;
-  MCP342x adc = MCP342x(address);
+uint8_t address = 0x68;  //Or 0x69?
+MCP342x adc = MCP342x(address);
 
-TSPoint::TSPoint(void) { x = y = z = 0; }
+TSPoint::TSPoint(void) {
+  x = y = z = 0;
+}
 /**
  * @brief Construct a new TSPoint::TSPoint object
  *
@@ -100,11 +102,11 @@ TSPoint TouchScreen::getPoint(void) {
 
   digitalWrite(_xm, HIGH);
   digitalWrite(_xp, LOW);
-  delayMicroseconds(20); // Fast ARM chips need to allow voltages to settle
+  delayMicroseconds(20);  // Fast ARM chips need to allow voltages to settle
 
   for (i = 0; i < NUMSAMPLES; i++) {
-   // samples[i] = analogRead(_yp);
-   err = adc.convertAndRead(MCP342x::channel1, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1,1000000, value1, status);
+    // samples[i] = analogRead(_yp);
+    err = adc.convertAndRead(MCP342x::channel1, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value1, status);
     samples[i] = value1;
   }
 
@@ -115,12 +117,12 @@ TSPoint TouchScreen::getPoint(void) {
   if (samples[0] - samples[1] < -4 || samples[0] - samples[1] > 4) {
     valid = 0;
   } else {
-    samples[1] = (samples[0] + samples[1]) >> 1; // average 2 samples
+    samples[1] = (samples[0] + samples[1]) >> 1;  // average 2 samples
   }
 #endif
 
   y = samples[1];
-  
+
 
   pinMode(_xp, INPUT);
   pinMode(_xm, INPUT);
@@ -129,12 +131,12 @@ TSPoint TouchScreen::getPoint(void) {
 
   digitalWrite(_ym, LOW);
   digitalWrite(_yp, HIGH);
-  delayMicroseconds(20); // Fast ARM chips need to allow voltages to settle
+  delayMicroseconds(20);  // Fast ARM chips need to allow voltages to settle
 
 
   for (i = 0; i < NUMSAMPLES; i++) {
     //samples[i] = analogRead(_xm);
-    err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1,1000000, value2, status);
+    err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value2, status);
     samples[i] = value2;
   }
 
@@ -145,7 +147,7 @@ TSPoint TouchScreen::getPoint(void) {
   if (samples[0] - samples[1] < -4 || samples[0] - samples[1] > 4) {
     valid = 0;
   } else {
-    samples[1] = (samples[0] + samples[1]) >> 1; // average 2 samples
+    samples[1] = (samples[0] + samples[1]) >> 1;  // average 2 samples
   }
 #endif
 
@@ -153,9 +155,9 @@ TSPoint TouchScreen::getPoint(void) {
 
 
 
-  if (!valid) 
+  if (!valid)
     z = 0;
-    else 
+  else
     z = x + y;
 
   return TSPoint(x, y, z);
@@ -172,7 +174,7 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
 
   Wire.begin();
   MCP342x::generalCallReset();
-  delay(1); // MC342x needs 300us to settle, wait 1ms
+  delay(1);  // MC342x needs 300us to settle, wait 1ms
 
 #if defined(USE_FAST_PINIO)
   xp_port = portOutputRegister(digitalPinToPort(_xp));
