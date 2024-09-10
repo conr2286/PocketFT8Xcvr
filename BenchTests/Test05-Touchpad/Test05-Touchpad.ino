@@ -46,6 +46,24 @@ ATTRIBUTION
 #define YM 36  // can be a digital pin
 #define XP 39  // can be a digital pin
 
+#if 1
+// Touchpad calibrarion as investigated on V1.01 hardware
+#define TS_MINX 320
+#define TS_MINY 417
+#define TS_MAXX 2047
+#define TS_MAXY 2047
+#else
+// Touchpad calibration as defined by button.cpp in PocketFT8XcvrFW
+#define TS_MINX 150
+#define TS_MINY 160
+#define TS_MAXX 1475
+#define TS_MAXY 1400
+#endif
+
+//Other touchpad constants replicated from button.cpp in PocketFT8XcvrFW
+#define MINPRESSURE 120
+#define PENRADIUS 3
+
 
 //Build the display object using pin numbers from Charlie's Pocket FT8 code
 HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);  //Teensy 4.1 moved SCK to dig pin 13
@@ -62,11 +80,20 @@ void setup() {
   //Initialize the display
   tft.begin(HX8357D);
   tft.fillScreen(HX8357_BLACK);
-  tft.setRotation(1);
   tft.setTextColor(HX8357_YELLOW);
+  tft.setRotation(3);  //PocketFT8FW uses 3
   tft.setTextSize(2);
 
   delay(100);
+
+  //Identify locaton of the origin
+  tft.fillCircle(0, 0, PENRADIUS, HX8357_BLUE);
+  tft.setCursor(0, 0);
+  tft.println("(0,0)");
+
+  //And also the opposite corner
+  tft.fillCircle(tft.width(),tft.height(),PENRADIUS,HX8357_WHITE);
+
 }
 
 // the loop function runs over and over again forever
@@ -79,17 +106,28 @@ void loop() {
 
   // we have some minimum pressure we consider 'valid'
   // pressure of 0 means no pressing!
-  if (p.z > ts.pressureThreshhold) {
-    Serial.print("X = ");
+  if (p.z > MINPRESSURE) {
+
+    //Report the raw position from getPoint()
+    Serial.print("X=");
     Serial.print(p.x);
-    Serial.print("\tY = ");
+    Serial.print("\tY=");
     Serial.print(p.y);
-    Serial.print("\tPressure = ");
-    Serial.println(p.z);
+    Serial.print("\tPressure=");
+    Serial.print(p.z);
+
+    //Report the mapped position a la button.cpp in PocketFT8XcvrFW
+    unsigned mappedX = map(p.x, TS_MINX, TS_MAXX, 0, 480);
+    unsigned mappedY = map(p.y, TS_MINY, TS_MAXY, 0, 320);
+    Serial.print("\tMappedX=");
+    Serial.print(mappedX);
+    Serial.print("\tmappedY=");
+    Serial.println(mappedY);
+
+    tft.fillCircle(mappedX, mappedY, PENRADIUS, HX8357_RED);
 
     //Display the touchpoint (it should lie underfinger)
-    tft.drawPixel(p.x, p.y, HX8357_YELLOW);
-
+    //tft.drawPixel(p.x, p.y, HX8357_YELLOW);
   }
 
   delay(100);
