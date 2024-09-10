@@ -124,7 +124,7 @@ void setup(void) {
   delay(10);
   si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
   delay(10);
-  si4735.setSSB(18000, 18400, 18100, 1, USB);
+  si4735.setSSB(18000, 18400, 18100, 1, USB);   //Sets the recv's band limits, initial freq, and mode
 
   delay(10);
   currentFrequency = si4735.getFrequency();

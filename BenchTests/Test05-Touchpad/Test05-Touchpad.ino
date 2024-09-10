@@ -72,7 +72,7 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
 
-  Serial.println("Loop...");
+  //Serial.println("Loop...");
 
   // a point object holds x y and z coordinates
   TSPoint p = ts.getPoint();
