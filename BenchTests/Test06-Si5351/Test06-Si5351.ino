@@ -37,42 +37,58 @@ ATTRIBUTION
 Si5351 si5351;
 
 void setup() {
-  bool err;
+  bool err; 
 
+  Serial.begin(9600);
   delay(100);
-  printf("Starting...\n");
+  Serial.println("Starting...");
+  delay(100);
+
+  //while(!Serial.available()) {  Serial.print("> "); delay(1000);}
+  //String s = Serial.readString();
+  //Serial.println("\nContinuing...\n");
 
   //Initialize SI5351 (load cap won't actually be used with CLKIN) for Pocket FT8
-  bool found = si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);
+  Serial.println("\nInitialize the SI5351");
+  bool found = si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000UL, 0);
   if (!found) {
-    printf("Error:  SI5351 not found\n");
+    Serial.println("Error:  SI5351 not found");
     while (1)
       ;  //Hang here
   }
 
   //Configure SI5351 PLLs to use external CLKIN rather than XTAL
+  Serial.println("\n Configuring PLLA for CLKIN...");
   si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);
-  si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);
+  //si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);
 
-  //Configure CLK0 and CLK2 for 14100 kHz and 14200 kHz respectively
-  err = si5351.set_freq(14100000ULL, SI5351_CLK0);
+  //Configure CLK0 for 10 mHz
+  Serial.println("\n Set freq of CLK0...");
+  err = si5351.set_freq(1400000000UL, SI5351_CLK0);
   if (err) {
-    printf("Error:  set_freq(...,CLK0\n");
+    Serial.println("Error:  set_freq(...,CLK0");
     while (1)
       ;
   }
-  err = si5351.set_freq(14200000ULL, SI5351_CLK2);
+
+
+  err = si5351.set_freq(1810000000UL, SI5351_CLK2);
   if (err) {
-    printf("Error:  set_freq(...,CLK2\n");
+    Serial.println("Error:  set_freq(...,CLK2");
     while (1)
       ;
   }
+
 }
 
 
 void loop() {
 
-  //Output SI5351 status every 10 seconds
+  //Serial.println("Loop...");
+
+
+/*
+  //Output SI5351 status every 5 seconds
   si5351.update_status();
   Serial.print("SYS_INIT: ");
   Serial.print(si5351.dev_status.SYS_INIT);
@@ -84,6 +100,8 @@ void loop() {
   Serial.print(si5351.dev_status.LOS);
   Serial.print("  REVID: ");
   Serial.println(si5351.dev_status.REVID);
+*/
 
-  delay(10000);
+  delay(1000);
+
 }

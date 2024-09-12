@@ -74,8 +74,8 @@ void setup() {
 
   //Initialize the Arduino world and let console know we're starting
   Serial.begin(9600);
-  Serial.println("Starting...");
   delay(100);
+  Serial.println("Starting...");
 
   //Initialize the display
   tft.begin(HX8357D);
@@ -92,8 +92,7 @@ void setup() {
   tft.println("(0,0)");
 
   //And also the opposite corner
-  tft.fillCircle(tft.width(),tft.height(),PENRADIUS,HX8357_WHITE);
-
+  tft.fillCircle(tft.width(), tft.height(), PENRADIUS, HX8357_WHITE);
 }
 
 // the loop function runs over and over again forever
