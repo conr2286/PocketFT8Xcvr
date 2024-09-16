@@ -20,15 +20,11 @@
 //#include <Wire.h>
 
 // This is calibration data for the raw touch data to the screen coordinates
-//#define TS_MINX 155
-//#define TS_MINY 155
-//#define TS_MAXX 1475
-//#define TS_MAXY 1450
-
+// using 510 Ohm resistors to reduce the driven voltage to Y+ and X-
 #define TS_MINX 132
 #define TS_MINY 146
-#define TS_MAXX 1715 //1654
-#define TS_MAXY 1130 //1106
+#define TS_MAXX 1715 
+#define TS_MAXY 1130 
 
 #define MINPRESSURE 120
 #define PENRADIUS 3
