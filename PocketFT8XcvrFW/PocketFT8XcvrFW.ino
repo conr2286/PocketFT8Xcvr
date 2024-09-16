@@ -152,10 +152,10 @@ void setup(void) {
   delay(10);
   display_value(360, 40, (int)currentFrequency);
 
-  receive_sequence();
+  //receive_sequence();
 
-  update_synchronization();
-  set_Station_Coordinates(Locator);
+  //update_synchronization();
+  //set_Station_Coordinates(Locator);
   display_all_buttons();
   open_log_file();
 }
