@@ -9,6 +9,9 @@ DESCRIPTION
   (power, SPI, etc) to Teensy.  It also prints some diagnostics to
   the console to hopefully assist with debugging.
 
+  This enhanced test will now display the various screen rotations
+  in loop with a delay between rotations.
+
 NOTE
   The original Pocket FT8 implementation with Teensy 3.6 had SCK on
   digital pin 14.  The Teensy 4.1 implementation required a move to
@@ -42,6 +45,7 @@ ATTRIBUTION
 //Build the display object using Teensy 4.1 pin numbers
 HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);
 
+unsigned rotation = 0;
 
 void setup() {
 
@@ -53,7 +57,7 @@ void setup() {
   //Initialize the display
   tft.begin(HX8357D);
   tft.fillScreen(HX8357_BLACK);
-  tft.setRotation(1);
+  tft.setRotation(rotation);
 
   delay(100);
 
@@ -77,12 +81,22 @@ void setup() {
   //Output the test message to the display
   tft.setCursor(0, 0);
   tft.setTextColor(HX8357_WHITE);
-  tft.setTextSize(1);
-  tft.println("Hello world!");
-
+  tft.setTextSize(2);
+  tft.print("Rotation=");
+  tft.print(rotation);
 }
 
 // the loop function runs over and over again forever
 void loop() {
-  delay(100);
+  delay(5000);
+  rotation++;
+  Serial.print("Rotation=");
+  Serial.println(rotation);
+  tft.setCursor(0, 0);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setTextSize(2);
+  tft.setRotation(rotation);
+  tft.print("Rotation=");
+  tft.print(rotation);
+  if (rotation==3) rotation=0;
 }

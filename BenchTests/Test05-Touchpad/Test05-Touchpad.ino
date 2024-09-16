@@ -6,6 +6,9 @@ DESCRIPTION
   Touchpad bench test.  The exercise loops, printing on the console the touchpoint's 
   X/Y location and pressure.
 
+  If the test works correctly, the (0,0) origin will be identified on the display, and
+  red dots will appear at the touchpoints.
+
 EXERCISED
   + HX8357D controller and its display
   + SPI connectivity with the HX8357D
@@ -17,8 +20,10 @@ EXERCISED
 
 NOTE
   + Pocket FT8 uses the MCP3422 A/D converter [1] to read the touchpad.
-  Unfortunately [2], the MCP3422 uses a 2.048 V reference while the touchpad
-  is supplied by a 3.3 V source restricting touch to 2/3 of the pad.
+  Unfortunately [2], the MCP3422 uses a 2.048 V reference while the touchpad.  To
+  workaround this issue, the HW uses a 510 Ohm resistor between the X- and Y+
+  connections on Teensy to reduce the maximum voltage seen by the MCP3422 to
+  values within its range (<2.048V).
   + Touchpad initialization of 313 ohms is guessing the pad's actual resistance
 
 REFERENCES
@@ -46,19 +51,13 @@ ATTRIBUTION
 #define YM 36  // can be a digital pin
 #define XP 39  // can be a digital pin
 
-#if 1
+
 // Touchpad calibrarion as investigated on V1.01 hardware
-#define TS_MINX 320
-#define TS_MINY 417
-#define TS_MAXX 2047
-#define TS_MAXY 2047
-#else
-// Touchpad calibration as defined by button.cpp in PocketFT8XcvrFW
-#define TS_MINX 150
-#define TS_MINY 160
-#define TS_MAXX 1475
-#define TS_MAXY 1400
-#endif
+#define TS_MINX 132
+#define TS_MINY 146
+#define TS_MAXX 1715
+#define TS_MAXY 1130
+
 
 //Other touchpad constants replicated from button.cpp in PocketFT8XcvrFW
 #define MINPRESSURE 120
@@ -102,26 +101,29 @@ void loop() {
 
   // a point object holds x y and z coordinates
   TSPoint p = ts.getPoint();
+  unsigned tx = ts.readTouchX();
 
   // we have some minimum pressure we consider 'valid'
   // pressure of 0 means no pressing!
   if (p.z > MINPRESSURE) {
 
     //Report the raw position from getPoint()
-    Serial.print("X=");
-    Serial.print(p.x);
-    Serial.print("\tY=");
-    Serial.print(p.y);
-    Serial.print("\tPressure=");
-    Serial.print(p.z);
+    // Serial.print("X=");
+    // Serial.print(p.x);
+    // Serial.print("\tY=");
+    // Serial.print(p.y);
+    // Serial.print("\tPressure=");
+    // Serial.print(p.z);
+    // Serial.print(", readTouchX()=");
+    // Serial.print(tx);
 
     //Report the mapped position a la button.cpp in PocketFT8XcvrFW
     unsigned mappedX = map(p.x, TS_MINX, TS_MAXX, 0, 480);
     unsigned mappedY = map(p.y, TS_MINY, TS_MAXY, 0, 320);
-    Serial.print("\tMappedX=");
-    Serial.print(mappedX);
-    Serial.print("\tmappedY=");
-    Serial.println(mappedY);
+    // Serial.print("\tMappedX=");
+    // Serial.print(mappedX);
+    // Serial.print("\tmappedY=");
+    // Serial.println(mappedY);
 
     tft.fillCircle(mappedX, mappedY, PENRADIUS, HX8357_RED);
 
@@ -129,5 +131,6 @@ void loop() {
     //tft.drawPixel(p.x, p.y, HX8357_YELLOW);
   }
 
-  delay(100);
+
+  // delay(100);
 }

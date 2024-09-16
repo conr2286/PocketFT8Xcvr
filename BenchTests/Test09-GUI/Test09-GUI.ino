@@ -3,8 +3,11 @@ NAME
   Test09-GUI coordinates the GUI's display and touchscreen components
 
 DESCRIPTION
-  This is the first test requiring significant coordination between the
-  graphical display and touchscreen input devices
+  This test exercises the GUI buttons.  Be sure Test05-Touchpad is working correctly
+  before exercising the GUI.
+
+  A successfull test will display touchpoint and button data, and indicate if
+  executeButton() is invoked for button 0..8
 
 EXERCISED
   + HX8357D controller and its display
@@ -14,7 +17,7 @@ EXERCISED
   + Analog connectivity between MCP3422 and touchpad
   + Touchpad
   + Coordinate coordination between display and touchpad
-  + Buttons
+  + GUI Buttons
 
 NOTE
   + Why Pocket FT8 used a private HX8357 library has not been investigated,
@@ -52,14 +55,14 @@ ATTRIBUTION
 
 //Build the display and touchscreen objects using Teensy 4.1 pin numbers
 HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 282);      //The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 282);  //The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen
 
 
 void setup() {
 
   //Initialize the Arduino world and let console know we're starting
   Serial.begin(9600);
-  Serial.println("Starting...");
+  Serial.println("Starting Test09-GUI...");
   delay(100);
 
   //Initialize the display
@@ -90,11 +93,10 @@ void setup() {
 
   //Display buttons
   display_all_buttons();
-
-
 }
 
 // the loop function runs over and over again forever
 void loop() {
-  delay(100);
+  //delay(100);
+  process_touch();
 }

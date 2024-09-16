@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 //#include <HX8357_t3.h>
 #include "HX8357_t3n.h"
 #include "button.h"
@@ -18,10 +25,10 @@
 //#define TS_MAXX 1475
 //#define TS_MAXY 1450
 
-#define TS_MINX 150
-#define TS_MINY 160
-#define TS_MAXX 1475
-#define TS_MAXY 1400
+#define TS_MINX 132
+#define TS_MINY 146
+#define TS_MAXX 1715 //1654
+#define TS_MAXY 1130 //1106
 
 #define MINPRESSURE 120
 #define PENRADIUS 3
@@ -29,7 +36,7 @@
 extern HX8357_t3n tft;
 extern TouchScreen ts;
 
-extern int Transmit_Armned;
+//extern int Transmit_Armned;
 
 //extern SI4735 si4735;
 //extern uint16_t currentFrequency;
@@ -38,15 +45,15 @@ extern int Transmit_Armned;
 uint16_t draw_x, draw_y, touch_x, touch_y;
 int test;
 
-extern int master_decoded;
-extern void sync_FT8(void);
-extern uint16_t cursor_freq;
-extern int tune_flag;
-extern uint16_t cursor_line;
-extern int offset_freq;
+//extern int master_decoded;
+//extern void sync_FT8(void);
+//extern uint16_t cursor_freq;
+//extern int tune_flag;
+//extern uint16_t cursor_line;
+//extern int offset_freq;
 #define ft8_shift 6.25
 int start_up_offset_freq;
-extern int log_flag, logging_on;
+//extern int log_flag, logging_on;
 
 int CQ_Flag;
 int Beacon_State;
@@ -176,6 +183,7 @@ void display_all_buttons(void) {
 void checkButton(void) {
 
   for (uint8_t i = 0; i < numButtons; i++) {
+    //Serial.print("testButton("); Serial.print(i); Serial.print(")="); Serial.println(testButton(i));
     if (testButton(i) == 1 && sButtonData[i].active_state) {
       sButtonData[i].state = !sButtonData[i].state;
       drawButton(i);
@@ -187,6 +195,10 @@ void checkButton(void) {
 int button_delay = 100;
 
 void executeButton(uint16_t index) {
+
+  Serial.print("executeButton(");
+  Serial.print(index);
+  Serial.println(")");
   int Idx = 0;
   switch (index) {
 
@@ -203,7 +215,7 @@ void executeButton(uint16_t index) {
       break;
 
     case 1:
-      set_message(1);
+      //set_message(1);
       sButtonData[1].state = true;
       drawButton(1);
       delay(button_delay);
@@ -212,7 +224,7 @@ void executeButton(uint16_t index) {
       break;
 
     case 2:
-      set_message(2);
+      //set_message(2);
       sButtonData[2].state = true;
       drawButton(2);
       delay(button_delay);
@@ -221,7 +233,7 @@ void executeButton(uint16_t index) {
       break;
 
     case 3:
-      set_message(3);
+      //set_message(3);
       sButtonData[3].state = true;
       drawButton(3);
       delay(button_delay);
@@ -230,7 +242,7 @@ void executeButton(uint16_t index) {
       break;
 
     case 4:
-      clear_FT8_message();
+      //clear_FT8_message();
       sButtonData[4].state = true;
       drawButton(4);
       delay(button_delay);
@@ -240,47 +252,47 @@ void executeButton(uint16_t index) {
 
     case 5:
       if (sButtonData[5].state) {
-        tune_On_sequence();
-        tune_flag = 1;
+        //tune_On_sequence();
+        //tune_flag = 1;
         delay(button_delay);
       } else {
-        tune_Off_sequence();
-        tune_flag = 0;
+        //tune_Off_sequence();
+        //tune_flag = 0;
         delay(button_delay);
       }
       break;
 
     case 6:
       if (sButtonData[6].state) {
-        Transmit_Armned = 1;
+        //Transmit_Armned = 1;
         delay(button_delay);
       } else {
-        Transmit_Armned = 0;
+        //Transmit_Armned = 0;
         delay(button_delay);
       }
       break;
 
     case 7:
-      if (log_flag == 1 && sButtonData[7].state) {
+      //if (log_flag == 1 && sButtonData[7].state) {
 
-        logging_on = 1;
-        sButtonData[7].state = true;
-        drawButton(7);
-        delay(button_delay);
+      //logging_on = 1;
+      sButtonData[7].state = true;
+      drawButton(7);
+      delay(button_delay);
 
-      } else {
-        logging_on = 0;
-        sButtonData[7].state = false;
-        drawButton(7);
-        delay(button_delay);
-      }
+      //} else {
+      //logging_on = 0;
+      //sButtonData[7].state = false;
+      //drawButton(7);
+      //delay(button_delay);
+      //}
       break;
 
     case 8:
       sButtonData[8].state = true;
       drawButton(8);
       delay(button_delay);
-      sync_FT8();
+      //sync_FT8();
       sButtonData[8].state = false;
       drawButton(8);
       delay(button_delay);
@@ -325,20 +337,32 @@ void executeButton(uint16_t index) {
 
 void terminate_transmit_armed(void) {
 
-  Transmit_Armned = 0;
-  receive_sequence();
+  //Transmit_Armned = 0;
+  //receive_sequence();
   sButtonData[6].state = false;
   drawButton(6);
 }
 
 int testButton(uint8_t index) {
 
-  if ((draw_x > sButtonData[index].x) && (draw_x < sButtonData[index].x + sButtonData[index].w) && (draw_y > sButtonData[index].y) && (draw_y < sButtonData[index].y + sButtonData[index].h)) return 1;
+  Serial.print("testButton(");
+  Serial.print(index);
+  Serial.print(") draw_x and sButtonData: "); Serial.print(draw_x); Serial.print(" "); Serial.print(sButtonData[index].x);
+  Serial.print(" "); Serial.println(sButtonData[index].w);
+  Serial.print(") draw_y and sButtonData: "); Serial.print(draw_y); Serial.print(" "); Serial.print(sButtonData[index].y);
+  Serial.print(" "); Serial.println(sButtonData[index].h);
 
-  else
-
+  if ((draw_x > sButtonData[index].x) && (draw_x < sButtonData[index].x + sButtonData[index].w) && (draw_y > sButtonData[index].y) && (draw_y < sButtonData[index].y + sButtonData[index].h)) {
+    //Serial.println(1);
+    return 1;
+  } else {
+    //Serial.print("0:  draw_x="); Serial.print(draw_x);
+    //Serial.print(", draw_y="); Serial.print(draw_y);
+    //Serial.println(0);
     return 0;
+  }
 }
+
 
 void check_FT8_Touch(void) {
 
@@ -349,36 +373,43 @@ void check_FT8_Touch(void) {
   if (draw_x < 400 && (draw_y > 90 && draw_y < 300)) {
     y_test = draw_y - 90;
     FT_8_TouchIndex = y_test / 25;
-    if (FT_8_TouchIndex < master_decoded) display_selected_call(FT_8_TouchIndex);
+    //if (FT_8_TouchIndex < master_decoded) display_selected_call(FT_8_TouchIndex);
   }
 }
 
+#if 0
 void check_WF_Touch(void) {
   if (draw_x < 350 && draw_y < 90) {
 
     cursor_line = draw_x;
-    cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-    set_Xmit_Freq();
+    //cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
+    //set_Xmit_Freq();
   }
 }
 
 
 void set_startup_freq(void) {
   cursor_line = 100;
-  start_up_offset_freq = EEPROMReadInt(10);
-  cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
+  //start_up_offset_freq = EEPROMReadInt(10);
+  //cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
   offset_freq = start_up_offset_freq;
 }
-
+#endif
 
 void process_touch(void) {
+
+
 
   pi = ts.getPoint();
 
   if (pi.z > MINPRESSURE) {
-    //Serial.print("Value0 = "); Serial.println(pi.z);
-    //Serial.print("Value1 = "); Serial.println(pi.y);
-    //Serial.print("Value2 = "); Serial.println(pi.x);
+
+    //Serial.print("Touch Valuez = ");
+    //Serial.println(pi.z);
+    //Serial.print("Touch Valuey = ");
+    //Serial.println(pi.y);
+    //Serial.print("Touch Valuex = ");
+    //Serial.println(pi.x);
     pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
     pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
     tft.fillCircle(pw.x, pw.y, PENRADIUS, HX8357_YELLOW);
@@ -387,8 +418,8 @@ void process_touch(void) {
     draw_y = pw.y;
 
     checkButton();
-    check_FT8_Touch();
-    check_WF_Touch();
+    //check_FT8_Touch();
+    //check_WF_Touch();
   }
 }
 
@@ -400,13 +431,13 @@ void process_serial(void) {
   if (Serial.available() > 0) {
     incoming_byte = Serial.read();
     //display_value(240,200,incoming_byte);
-    if (incoming_byte == 117) offset_freq = offset_freq + 10;
-    if (incoming_byte == 100) offset_freq = offset_freq - 10;
+    //if (incoming_byte == 117) offset_freq = offset_freq + 10;
+    //if (incoming_byte == 100) offset_freq = offset_freq - 10;
     //display_value(240, 220, ( int ) offset_freq);
-    Serial.println(offset_freq);
-    set_Xmit_Freq();
+    //Serial.println(offset_freq);
+    //set_Xmit_Freq();
     if (incoming_byte == 115) {
-      store_encoders();
+      //store_encoders();
       Serial.println("offset_freq stored");
     }
   }
@@ -416,9 +447,9 @@ void process_serial(void) {
 
 void store_encoders(void) {
 
-  EEPROMWriteInt(10, offset_freq);
+  //EEPROMWriteInt(10, offset_freq);
   delay(button_delay);
-  test = EEPROMReadInt(10);
+  //test = EEPROMReadInt(10);
 }
 
 
@@ -428,20 +459,21 @@ void EEPROMWriteInt(int address, int value) {
 
   byte byte1 = internal_value >> 8;
   byte byte2 = internal_value & 0xFF;
-  EEPROM.write(address, byte1);
-  EEPROM.write(address + 1, byte2);
+  //EEPROM.write(address, byte1);
+  //EEPROM.write(address + 1, byte2);
 }
 
 int EEPROMReadInt(int address) {
-  uint16_t byte1 = EEPROM.read(address);
-  uint16_t byte2 = EEPROM.read(address + 1);
-  uint16_t internal_value = (byte1 << 8 | byte2);
+  //uint16_t byte1 = EEPROM.read(address);
+  //uint16_t byte2 = EEPROM.read(address + 1);
+  //uint16_t internal_value = (byte1 << 8 | byte2);
 
-  return (int)internal_value - 32768;
+  //return (int)internal_value - 32768;
 }
 
 #define IOEXP16_ADDR 0x24
 
+#if 0
 void LPF_SendRegister(uint8_t reg, uint8_t val) {
   Wire.begin();
   Wire.beginTransmission(IOEXP16_ADDR);
@@ -469,7 +501,7 @@ void LPF_write(uint16_t data) {
 }  // output port cmd: write bits D15-D0 to IO1.7-0.0
 
 void LPF_set_latch(uint8_t io, bool latch) {  // reset all latches and set latch k to corresponding GPIO, all relays share a common (ground) GPIO
-#define LATCH_TIME 30                         // set/reset time latch relay
+#define LATCH_TIME 30  // set/reset time latch relay
   if (latch) {
     LPF_write((1U << io) | 0x0000);
     delay(LATCH_TIME);
@@ -500,3 +532,4 @@ void LPF_set_lpf(uint8_t f) {
     prev_lpf_io = lpf_io;
   };  // set relay
 }
+#endif
