@@ -4,7 +4,7 @@
 #include "decode_ft8.h"
 #include "gen_ft8.h"
 #include "button.h"
-#define PTT_Pin 13
+#define PTT_Pin 14            //For Teensy 4.1
 #include <SI4735.h>
 
 #define FT8_TONE_SPACING        625
