@@ -30,7 +30,7 @@
 
 #define AM_FUNCTION 1
 #define RESET_PIN 20
-#define PTT_Pin 14          //Teensy 4.1
+#define PTT_Pin 14  //Teensy 4.1
 #define USB 2
 
 
@@ -41,8 +41,8 @@
 #define XP 39  // can be a digital pin
 
 
-HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);      //Teensy 4.1 pins
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 282);      //The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen
+HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);  //Teensy 4.1 pins
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 282);  //The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen
 
 Si5351 si5351;
 SI4735 si4735;
@@ -94,11 +94,11 @@ void setup(void) {
   tft.setRotation(3);
   tft.setTextSize(2);
 
-  si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);        //Charlie's correction was 2200 if that someday matters
-  si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN); //KQ7B V1.00 uses cmos CLKIN, not a XTAL
-  si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN); //All PLLs using CLKIN
+  si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          //Charlie's correction was 2200 if that someday matters
+  si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  //KQ7B V1.00 uses cmos CLKIN, not a XTAL
+  si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  //All PLLs using CLKIN
   si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
-  si5351.set_freq(3276800, SI5351_CLK2);                    //Receiver  
+  si5351.set_freq(3276800, SI5351_CLK2);  //Receiver
   si5351.output_enable(SI5351_CLK2, 1);
 
   // Gets and sets the Si47XX I2C bus address
@@ -124,7 +124,7 @@ void setup(void) {
   delay(10);
   si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
   delay(10);
-  si4735.setSSB(18000, 18400, 18100, 1, USB);   //Sets the recv's band limits, initial freq, and mode
+  si4735.setSSB(18000, 18400, 18100, 1, USB);  //Sets the recv's band limits, initial freq, and mode
 
   delay(10);
   currentFrequency = si4735.getFrequency();
@@ -152,10 +152,10 @@ void setup(void) {
   delay(10);
   display_value(360, 40, (int)currentFrequency);
 
-  //receive_sequence();
+  receive_sequence();
 
-  //update_synchronization();
-  //set_Station_Coordinates(Locator);
+  update_synchronization();
+  set_Station_Coordinates(Locator);
   display_all_buttons();
   open_log_file();
 }
@@ -163,6 +163,12 @@ void setup(void) {
 
 
 void loop() {
+  Serial.print("loop() decode_flag=");
+  Serial.print(decode_flag);
+  Serial.print(", DSP_Flag=");
+  Serial.print(DSP_Flag);
+  Serial.print(", xmit_flag=");
+  Serial.println(xmit_flag);
 
   if (decode_flag == 0) process_data();
 
