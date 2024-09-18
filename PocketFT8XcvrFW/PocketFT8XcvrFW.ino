@@ -1,4 +1,4 @@
-
+#include "DEBUG.h"
 
 #include <Audio.h>
 #include <Wire.h>
@@ -84,6 +84,8 @@ int log_flag, logging_on;
 
 void setup(void) {
   Serial.begin(9600);
+  delay(100);
+  DTRACE();
 
   setSyncProvider(getTeensy3Time);
   delay(100);
@@ -125,7 +127,7 @@ void setup(void) {
   si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
   delay(10);
   //si4735.setSSB(18000, 18400, 18100, 1, USB);  //Sets the recv's band limits, initial freq, and mode
-  si4735.setSSB(7000, 7300, 7074, 1, USB );       //FT8 is always USB?
+  si4735.setSSB(7000, 7300, 7074, 1, USB);  //FT8 is always USB?
   delay(10);
   currentFrequency = si4735.getFrequency();
   si4735.setVolume(50);
@@ -163,19 +165,22 @@ void setup(void) {
 
 
 void loop() {
-  Serial.print("loop() decode_flag=");
-  Serial.print(decode_flag);
-  Serial.print(", DSP_Flag=");
-  Serial.print(DSP_Flag);
-  Serial.print(", xmit_flag=");
-  Serial.println(xmit_flag);
+
+  DTRACE();
+  DPRINTF("Decode_flag=%u, DSP_FLAG=%u, xmit_flag=%u\n", decode_flag, DSP_Flag, xmit_flag);
 
   if (decode_flag == 0) process_data();
 
-  if (DSP_Flag == 1) {
-    process_FT8_FFT();
+  DTRACE();
+  DPRINTF("Decode_flag=%u, DSP_FLAG=%u, xmit_flag=%u\n", decode_flag, DSP_Flag, xmit_flag);
 
+
+  if (DSP_Flag == 1) {
+    DTRACE();
+    process_FT8_FFT();
+    DTRACE();
     if (xmit_flag == 1) {
+      DTRACE();
       int offset_index = 5;
 
       if (ft8_xmit_counter >= offset_index && ft8_xmit_counter < 79 + offset_index) {
@@ -190,14 +195,15 @@ void loop() {
         receive_sequence();
         terminate_transmit_armed();
       }
-    }
+    }  //xmit_flag
 
     DSP_Flag = 0;
     display_time(360, 0);
     display_date(360, 60);
-  }
+  }  //DSP_Flag
 
 
+  DTRACE();
 
   if (decode_flag == 1) {
 
@@ -205,13 +211,14 @@ void loop() {
     master_decoded = num_decoded_msg;
     decode_flag = 0;
     if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
-  }
+  }  //decode_flag
 
+  DTRACE();
   update_synchronization();
   // rtc_synchronization();
   process_touch();
   if (tune_flag == 1) process_serial();
-}
+}  //loop()
 
 time_t getTeensy3Time() {
   return Teensy3Clock.get();

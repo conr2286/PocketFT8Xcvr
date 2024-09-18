@@ -1,4 +1,5 @@
-//#include <HX8357_t3.h>
+
+#include "DEBUG.h"
 #include "HX8357_t3n.h"
 #include "button.h"
 #include "display.h"
@@ -184,6 +185,7 @@ int button_delay = 100;
 
 void executeButton(uint16_t index) {
   int Idx = 0;
+  DPRINTF("executeButton(%u)\n",index);
   switch (index) {
 
     case 0:
@@ -372,9 +374,7 @@ void process_touch(void) {
   pi = ts.getPoint();
 
   if (pi.z > MINPRESSURE) {
-    //Serial.print("Value0 = "); Serial.println(pi.z);
-    //Serial.print("Value1 = "); Serial.println(pi.y);
-    //Serial.print("Value2 = "); Serial.println(pi.x);
+    DTRACE();
     pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
     pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
     tft.fillCircle(pw.x, pw.y, PENRADIUS, HX8357_YELLOW);

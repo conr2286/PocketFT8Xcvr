@@ -1,4 +1,5 @@
 //#include <HX8357_t3.h>. //T3.6
+#include "DEBUG.h"
 #include "HX8357_t3n.h"
 #include "Process_DSP.h"
 #include "WF_Table.h"
@@ -38,7 +39,7 @@ arm_cfft_radix4_instance_q15 aux_inst;
 uint8_t export_fft_power[ft8_msg_samples * ft8_buffer * 4];
 
 void init_DSP(void) {
-  arm_rfft_init_q15(&fft_inst, &aux_inst, FFT_SIZE, 0);        //T4.1
+  arm_rfft_init_q15(&fft_inst, &aux_inst, FFT_SIZE, 0);  //T4.1
   for (int i = 0; i < FFT_SIZE; ++i) window[i] = ft_blackman_i(i, FFT_SIZE);
   offset_step = (int)ft8_buffer * 4;
 }
@@ -61,22 +62,24 @@ float ft_blackman_i(int i, int N) {
 
 // Compute FFT magnitudes (log power) for each timeslot in the signal
 void extract_power(int offset) {
-
+  DTRACE();
 
   // Loop over two possible time offsets (0 and block_size/2)
   for (int time_sub = 0; time_sub <= input_gulp_size / 2; time_sub += input_gulp_size / 2) {
-
+    DTRACE();
     for (int i = 0; i < FFT_SIZE; i++) window_dsp_buffer[i] = (q15_t)((float)dsp_buffer[i + time_sub] * window[i]);
-
+    DTRACE();
     arm_rfft_q15(&fft_inst, window_dsp_buffer, dsp_output);
+    DTRACE();
     arm_shift_q15(&dsp_output[0], 5, &FFT_Scale[0], FFT_SIZE * 2);
+    DTRACE();
     arm_cmplx_mag_squared_q15(&FFT_Scale[0], &FFT_Magnitude[0], FFT_SIZE);
-
+    DTRACE();
     for (int j = 0; j < FFT_SIZE / 2; j++) {
       FFT_Mag_10[j] = 10 * (int32_t)FFT_Magnitude[j];
       mag_db[j] = 5.0 * log((float)FFT_Mag_10[j] + 0.1);
     }
-
+    DTRACE();
     // Loop over two possible frequency bin offsets (for averaging)
     for (int freq_sub = 0; freq_sub < 2; ++freq_sub) {
       for (int j = 0; j < ft8_buffer; ++j) {
@@ -94,14 +97,15 @@ void extract_power(int offset) {
 
 
 void process_FT8_FFT(void) {
-
+  DTRACE();
   if (ft8_flag == 1) {
+    DTRACE();
 
     master_offset = offset_step * FT_8_counter;
     extract_power(master_offset);
-
+    DTRACE();
     update_offset_waterfall(master_offset);
-
+    DTRACE();
     FT_8_counter++;
     if (FT_8_counter == ft8_msg_samples) {
       ft8_flag = 0;
