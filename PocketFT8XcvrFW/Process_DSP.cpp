@@ -1,5 +1,5 @@
 //#include <HX8357_t3.h>. //T3.6
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "HX8357_t3n.h"
 #include "Process_DSP.h"
 #include "WF_Table.h"
@@ -99,13 +99,13 @@ void extract_power(int offset) {
 void process_FT8_FFT(void) {
   DTRACE();
   if (ft8_flag == 1) {
-    DTRACE();
+    //DTRACE();
 
     master_offset = offset_step * FT_8_counter;
     extract_power(master_offset);
-    DTRACE();
+    //DTRACE();
     update_offset_waterfall(master_offset);
-    DTRACE();
+
     FT_8_counter++;
     if (FT_8_counter == ft8_msg_samples) {
       ft8_flag = 0;
