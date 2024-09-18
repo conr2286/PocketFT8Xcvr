@@ -84,8 +84,13 @@ int log_flag, logging_on;
 
 void setup(void) {
   Serial.begin(9600);
-  delay(100);
+  while (!Serial);
   DTRACE();
+  if (CrashReport) {
+    Serial.print(CrashReport);
+    delay(5000);
+  }
+
 
   setSyncProvider(getTeensy3Time);
   delay(100);
@@ -166,13 +171,13 @@ void setup(void) {
 
 void loop() {
 
-  DTRACE();
-  DPRINTF("Decode_flag=%u, DSP_FLAG=%u, xmit_flag=%u\n", decode_flag, DSP_Flag, xmit_flag);
+  //DTRACE();
+  //DPRINTF("Decode_flag=%u, DSP_FLAG=%u, xmit_flag=%u\n", decode_flag, DSP_Flag, xmit_flag);
 
   if (decode_flag == 0) process_data();
 
-  DTRACE();
-  DPRINTF("Decode_flag=%u, DSP_FLAG=%u, xmit_flag=%u\n", decode_flag, DSP_Flag, xmit_flag);
+  //DTRACE();
+  //DPRINTF("Decode_flag=%u, DSP_FLAG=%u, xmit_flag=%u\n", decode_flag, DSP_Flag, xmit_flag);
 
 
   if (DSP_Flag == 1) {
@@ -203,7 +208,7 @@ void loop() {
   }  //DSP_Flag
 
 
-  DTRACE();
+  //DTRACE();
 
   if (decode_flag == 1) {
 
@@ -213,7 +218,7 @@ void loop() {
     if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
   }  //decode_flag
 
-  DTRACE();
+  //DTRACE();
   update_synchronization();
   // rtc_synchronization();
   process_touch();
