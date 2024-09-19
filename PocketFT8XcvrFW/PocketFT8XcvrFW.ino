@@ -56,8 +56,8 @@ q15_t dsp_buffer[3 * input_gulp_size] __attribute__((aligned(4)));
 q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
-char Station_Call[] = "UrCall";  //six character call sign + /0
-char Locator[] = "UrLo";         // four character locator  + /0
+char Station_Call[] = "KQ7B";  //six character call sign + /0
+char Locator[] = "DN15";         // four character locator  + /0
 
 uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
@@ -171,19 +171,12 @@ void setup(void) {
 
 void loop() {
 
-  //DTRACE();
-  //DPRINTF("Decode_flag=%u, DSP_FLAG=%u, xmit_flag=%u\n", decode_flag, DSP_Flag, xmit_flag);
-
   if (decode_flag == 0) process_data();
-
-  //DTRACE();
-  //DPRINTF("Decode_flag=%u, DSP_FLAG=%u, xmit_flag=%u\n", decode_flag, DSP_Flag, xmit_flag);
-
 
   if (DSP_Flag == 1) {
     DTRACE();
     process_FT8_FFT();
-    DTRACE();
+
     if (xmit_flag == 1) {
       DTRACE();
       int offset_index = 5;
@@ -207,9 +200,6 @@ void loop() {
     display_date(360, 60);
   }  //DSP_Flag
 
-
-  //DTRACE();
-
   if (decode_flag == 1) {
 
     num_decoded_msg = ft8_decode();
@@ -218,12 +208,15 @@ void loop() {
     if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
   }  //decode_flag
 
-  //DTRACE();
   update_synchronization();
   // rtc_synchronization();
+
   process_touch();
   if (tune_flag == 1) process_serial();
+
 }  //loop()
+
+
 
 time_t getTeensy3Time() {
   return Teensy3Clock.get();

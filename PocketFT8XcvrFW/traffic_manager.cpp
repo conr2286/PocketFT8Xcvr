@@ -1,3 +1,4 @@
+#include "DEBUG.h"
 #include "si5351.h"
 #include "traffic_manager.h"
 #include "display.h"
@@ -90,7 +91,11 @@ uint64_t F_Long, F_FT8, F_Offset;
 
     void service_CQ (void) {
 
+      DTRACE();
+
       int receive_index;
+
+      DPRINTF("Beacon_State=%u\n",Beacon_State);
 
       switch (Beacon_State) {
 

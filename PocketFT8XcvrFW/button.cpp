@@ -17,8 +17,8 @@
 // using 510 Ohm resistors to reduce the driven voltage to Y+ and X-
 #define TS_MINX 132
 #define TS_MINY 146
-#define TS_MAXX 1715 
-#define TS_MAXY 1130 
+#define TS_MAXX 1715
+#define TS_MAXY 1130
 
 #define MINPRESSURE 120
 #define PENRADIUS 3
@@ -179,22 +179,26 @@ void checkButton(void) {
       executeButton(i);
     }
   }
+  DTRACE();
+  DPRINTF("CQ_Flag=%u\n", CQ_Flag);
 }
 
 int button_delay = 100;
 
 void executeButton(uint16_t index) {
   int Idx = 0;
-  DPRINTF("executeButton(%u)\n",index);
+  DPRINTF("executeButton(%u)\n", index);
   switch (index) {
 
     case 0:
-
+      DTRACE();
       if (sButtonData[0].state) {
+        DTRACE();
         CQ_Flag = 1;
         sButtonData[6].active_state = false;
         Beacon_State = 0;
       } else {
+        DTRACE();
         CQ_Flag = 0;
         sButtonData[6].active_state = true;
       }
@@ -318,6 +322,8 @@ void executeButton(uint16_t index) {
       }
       break;
   }
+  DTRACE();
+  DPRINTF("CQ_Flag=%u\n", CQ_Flag);
 }
 
 
@@ -386,6 +392,7 @@ void process_touch(void) {
     check_FT8_Touch();
     check_WF_Touch();
   }
+  
 }
 
 

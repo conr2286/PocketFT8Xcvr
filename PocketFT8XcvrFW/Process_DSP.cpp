@@ -1,5 +1,5 @@
-//#include <HX8357_t3.h>. //T3.6
-#include "NODEBUG.h"
+#include "DEBUG.h"
+//#include "NODEBUG.h"
 #include "HX8357_t3n.h"
 #include "Process_DSP.h"
 #include "WF_Table.h"
@@ -119,6 +119,8 @@ void process_FT8_FFT(void) {
 
 void update_offset_waterfall(int offset) {
 
+  DTRACE();
+
   for (int j = ft8_min_bin; j < ft8_buffer; j++) FFT_Buffer[j] = export_fft_power[j + offset];
 
   int bar;
@@ -138,7 +140,7 @@ void update_offset_waterfall(int offset) {
 
   if (num_decoded_msg > 0 && WF_counter == 0) {
     display_messages(num_decoded_msg);
-
+    DTRACE();
     if (CQ_Flag == 1) service_CQ();
     else
       Check_Calling_Stations(num_decoded_msg);
