@@ -324,7 +324,7 @@ void executeButton(uint16_t index) {
   }
   DTRACE();
   DPRINTF("CQ_Flag=%u\n", CQ_Flag);
-}
+} //execute_button()
 
 
 void terminate_transmit_armed(void) {
