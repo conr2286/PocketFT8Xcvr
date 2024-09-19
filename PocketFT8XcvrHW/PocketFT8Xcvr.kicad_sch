@@ -23857,7 +23857,7 @@
 				)
 			)
 		)
-		(property "Value" "10K"
+		(property "Value" "2.2K"
 			(at 212.09 27.94 0)
 			(effects
 				(font
@@ -23874,7 +23874,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+		(property "Datasheet" ""
 			(at 223.52 27.94 0)
 			(effects
 				(font
@@ -23883,7 +23883,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 47.0K OHM 1/8W 0805 SMD"
+		(property "Description" ""
 			(at 226.06 27.94 0)
 			(effects
 				(font
@@ -23892,7 +23892,7 @@
 				(hide yes)
 			)
 		)
-		(property "PROD_ID" "RES-00824"
+		(property "PROD_ID" ""
 			(at 220.98 27.94 0)
 			(effects
 				(font
@@ -23910,7 +23910,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mfg Part #" "RC0603JR-0710KL"
+		(property "Mfg Part #" ""
 			(at 214.63 27.94 0)
 			(effects
 				(font
