@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Pocket FT8 Transceiver")
-		(date "2024-07-31")
+		(date "2024-09-30")
 		(rev "1.10")
 		(company "KQ7B")
 		(comment 1 "Original design by Charles Hill, Ricardo Caritti, Karlis Goba, Lars Petersen, et al")
@@ -16436,7 +16436,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "75PF"
+		(property "Value" "910pf"
 			(at 267.97 149.86 0)
 			(effects
 				(font
@@ -17283,7 +17283,7 @@
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom no)
-		(on_board yes)
+		(on_board no)
 		(dnp yes)
 		(uuid "44b1f77a-91fa-453b-b18a-5c69d01a310d")
 		(property "Reference" "C26"
@@ -19206,7 +19206,7 @@
 				)
 			)
 		)
-		(property "Value" "0.5uH"
+		(property "Value" "1.2uh"
 			(at 255.27 138.43 90)
 			(effects
 				(font
@@ -19394,7 +19394,7 @@
 				)
 			)
 		)
-		(property "Value" "0.5uH"
+		(property "Value" "1.2uh"
 			(at 236.22 138.43 90)
 			(effects
 				(font
@@ -21623,7 +21623,7 @@
 		(fields_autoplaced yes)
 		(uuid "8617831e-f4d9-492b-b07d-1c0bd487cba8")
 		(property "Reference" "C9"
-			(at 248.92 147.32 0)
+			(at 248.92 147.3199 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21631,8 +21631,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "243PF"
-			(at 248.92 149.86 0)
+		(property "Value" "1300pf"
+			(at 248.92 149.8599 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27098,7 +27098,7 @@
 		(fields_autoplaced yes)
 		(uuid "fac18230-5e4f-4847-b555-e613cac107b1")
 		(property "Reference" "C10"
-			(at 231.14 147.32 0)
+			(at 231.14 147.3199 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27106,8 +27106,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "75PF"
-			(at 231.14 149.86 0)
+		(property "Value" "910pf"
+			(at 231.14 149.8599 0)
 			(effects
 				(font
 					(size 1.27 1.27)
