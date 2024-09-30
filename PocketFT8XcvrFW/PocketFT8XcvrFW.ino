@@ -170,15 +170,17 @@ void setup(void) {
 
 
 void loop() {
+  D1TRACE();
+  D1PRINTF("decode_flag=%u\n",decode_flag);
 
   if (decode_flag == 0) process_data();
 
   if (DSP_Flag == 1) {
-    DTRACE();
+    //DTRACE();
     process_FT8_FFT();
 
     if (xmit_flag == 1) {
-      DTRACE();
+      //DTRACE();
       int offset_index = 5;
 
       if (ft8_xmit_counter >= offset_index && ft8_xmit_counter < 79 + offset_index) {
@@ -243,6 +245,7 @@ void loadSSB() {
 
 void process_data() {
 
+  D1TRACE();
 
   if (queue1.available() >= num_que_blocks) {
 
@@ -256,7 +259,7 @@ void process_data() {
       dsp_buffer[i + input_gulp_size] = dsp_buffer[i + 2 * input_gulp_size];
       dsp_buffer[i + 2 * input_gulp_size] = input_gulp[i];
     }
-
+    D1TRACE();
     DSP_Flag = 1;
   }
 }
@@ -265,7 +268,7 @@ void process_data() {
 static void copy_to_fft_buffer(void *destination, const void *source) {
   const uint16_t *src = (const uint16_t *)source;
   uint16_t *dst = (uint16_t *)destination;
-
+  D1TRACE();
   for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
     *dst++ = *src++;  // real sample plus a zero for imaginary
   }

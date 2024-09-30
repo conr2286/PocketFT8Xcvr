@@ -23,9 +23,12 @@ ATTRIBUTION
 
 */
 
+
 #define DEBUG_STREAM Serial
 
 #define DPRINTF(...) DEBUG_STREAM.printf(__VA_ARGS__ );
 #define DTRACE()     DEBUG_STREAM.printf("%s:%u\n",__FILE__,__LINE__);
+#define D1PRINTF(...) {static bool D1F__LINE__=true; if (D1F__LINE__) {DEBUG_STREAM.printf(__VA_ARGS__); D1F__LINE__=false;}}
+#define D1TRACE()     {static bool D1T__LINE__=true; if (D1T__LINE__) {DEBUG_STREAM.printf("%s:%u\n",__FILE__,__LINE__); D1T__LINE__=false;}}
 
 
