@@ -14967,9 +14967,9 @@
 		(at 109.22 135.89 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "11d984bf-94fd-4672-b1e9-ee23b98ed8e7")
 		(property "Reference" "BAT1"
 			(at 101.346 142.748 90)
