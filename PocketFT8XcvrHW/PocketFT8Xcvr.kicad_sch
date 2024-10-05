@@ -17283,7 +17283,7 @@
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom no)
-		(on_board no)
+		(on_board yes)
 		(dnp yes)
 		(uuid "44b1f77a-91fa-453b-b18a-5c69d01a310d")
 		(property "Reference" "C26"
