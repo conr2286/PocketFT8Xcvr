@@ -7975,7 +7975,7 @@
 				)
 			)
 		)
-		(symbol "dk_Rectangular-Connectors-Headers-Male-Pins:0022232041"
+		(symbol "dk_Rectangular-Connectors-Headers-Male-Pins:B5B-XH-A_LF__SN_"
 			(pin_names
 				(offset 1.016)
 			)
@@ -7983,22 +7983,25 @@
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "J3"
-				(at -6.35 -1.27 90)
+				(at 12.446 -3.556 90)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify right)
 				)
 			)
-			(property "Value" "GPS"
-				(at -3.81 -1.27 90)
+			(property "Value" "B5B-XH-A_LF__SN_"
+				(at 4.064 -3.81 90)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify right)
+					(hide yes)
 				)
 			)
-			(property "Footprint" "digikey-footprints:PinHeader_1x4_P2.54mm_Drill1.02mm"
+			(property "Footprint" "digikey-footprints:PinHeader_1x5_P2.5mm_Drill1.1mm"
 				(at 5.08 5.08 0)
 				(effects
 					(font
@@ -8008,7 +8011,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://www.molex.com/pdm_docs/sd/022232041_sd.pdf"
+			(property "Datasheet" "http://www.jst-mfg.com/product/pdf/eng/eXH.pdf"
 				(at 5.08 7.62 0)
 				(effects
 					(font
@@ -8018,7 +8021,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "CONN HEADER VERT 4POS 2.54MM"
+			(property "Description" "CONN HEADER VERT 5POS 2.5MM"
 				(at 0 0 0)
 				(effects
 					(font
@@ -8027,7 +8030,7 @@
 					(hide yes)
 				)
 			)
-			(property "Digi-Key_PN" "WM4202-ND"
+			(property "Digi-Key_PN" "455-2270-ND"
 				(at 5.08 10.16 0)
 				(effects
 					(font
@@ -8037,7 +8040,7 @@
 					(hide yes)
 				)
 			)
-			(property "MPN" "0022232041"
+			(property "MPN" "B5B-XH-A(LF)(SN)"
 				(at 5.08 12.7 0)
 				(effects
 					(font
@@ -8067,7 +8070,7 @@
 					(hide yes)
 				)
 			)
-			(property "DK_Datasheet_Link" "https://www.molex.com/pdm_docs/sd/022232041_sd.pdf"
+			(property "DK_Datasheet_Link" "http://www.jst-mfg.com/product/pdf/eng/eXH.pdf"
 				(at 5.08 20.32 0)
 				(effects
 					(font
@@ -8077,7 +8080,7 @@
 					(hide yes)
 				)
 			)
-			(property "DK_Detail_Page" "/product-detail/en/molex/0022232041/WM4202-ND/26671"
+			(property "DK_Detail_Page" "/product-detail/en/jst-sales-america-inc/B5B-XH-A(LF)(SN)/455-2270-ND/1530483"
 				(at 5.08 22.86 0)
 				(effects
 					(font
@@ -8087,7 +8090,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description_1" "CONN HEADER VERT 4POS 2.54MM"
+			(property "Description_1" "CONN HEADER VERT 5POS 2.5MM"
 				(at 5.08 25.4 0)
 				(effects
 					(font
@@ -8097,7 +8100,7 @@
 					(hide yes)
 				)
 			)
-			(property "Manufacturer" "Molex"
+			(property "Manufacturer" "JST Sales America Inc."
 				(at 5.08 27.94 0)
 				(effects
 					(font
@@ -8117,7 +8120,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "WM4202-ND KK 6373"
+			(property "ki_keywords" "455-2270-ND XH"
 				(at 0 0 0)
 				(effects
 					(font
@@ -8126,10 +8129,10 @@
 					(hide yes)
 				)
 			)
-			(symbol "0022232041_1_1"
+			(symbol "B5B-XH-A_LF__SN__1_1"
 				(rectangle
 					(start -1.27 0)
-					(end 8.89 -8.89)
+					(end 11.43 -2.54)
 					(stroke
 						(width 0)
 						(type solid)
@@ -8182,10 +8185,21 @@
 						(type outline)
 					)
 				)
+				(rectangle
+					(start 9.906 -1.143)
+					(end 10.414 -1.651)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type outline)
+					)
+				)
 				(pin passive line
-					(at 0 1.27 270)
+					(at 0 2.54 270)
 					(length 2.54)
-					(name "GND"
+					(name "PPS__"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -8201,9 +8215,9 @@
 					)
 				)
 				(pin passive line
-					(at 2.54 1.27 270)
+					(at 2.54 2.54 270)
 					(length 2.54)
-					(name "GPSTX"
+					(name "TXD__"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -8219,9 +8233,9 @@
 					)
 				)
 				(pin passive line
-					(at 5.08 1.27 270)
+					(at 5.08 2.54 270)
 					(length 2.54)
-					(name "GPSRX"
+					(name "RXD__"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -8237,9 +8251,9 @@
 					)
 				)
 				(pin passive line
-					(at 7.62 1.27 270)
+					(at 7.62 2.54 270)
 					(length 2.54)
-					(name "+3.3V"
+					(name "GND__"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -8247,6 +8261,24 @@
 						)
 					)
 					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 10.16 2.54 270)
+					(length 2.54)
+					(name "+5V__"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -11155,12 +11187,6 @@
 		(uuid "4e8f153b-fdfa-4254-a922-015797b7da68")
 	)
 	(junction
-		(at 91.44 44.45)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "553130ba-efce-4e93-8cdf-2ff8add7a9e9")
-	)
-	(junction
 		(at 264.16 142.24)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -11397,6 +11423,10 @@
 	(no_connect
 		(at 20.32 62.23)
 		(uuid "3a60b5be-6acf-420d-981f-8246db479362")
+	)
+	(no_connect
+		(at 81.28 44.45)
+		(uuid "3ef2b505-9381-44f2-b398-226397b6283e")
 	)
 	(no_connect
 		(at 34.29 64.77)
@@ -11676,16 +11706,6 @@
 	)
 	(wire
 		(pts
-			(xy 91.44 44.45) (xy 104.14 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "03d46157-da8a-4b01-a7e4-4936ee1b1892")
-	)
-	(wire
-		(pts
 			(xy 34.29 67.31) (xy 104.14 67.31)
 		)
 		(stroke
@@ -11693,6 +11713,16 @@
 			(type default)
 		)
 		(uuid "0400cfcf-e3a8-4068-afe9-c222dc322e7d")
+	)
+	(wire
+		(pts
+			(xy 81.28 49.53) (xy 104.14 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0717fb98-f0a0-4df9-a9cc-9ee5f35dcb88")
 	)
 	(wire
 		(pts
@@ -11976,16 +12006,6 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 46.99) (xy 104.14 46.99)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3274de03-dd53-48c4-b316-c1954437cb5b")
-	)
-	(wire
-		(pts
 			(xy 34.29 62.23) (xy 55.88 62.23)
 		)
 		(stroke
@@ -12116,16 +12136,6 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 49.53) (xy 104.14 49.53)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "42dd77ca-77aa-458c-b50b-314cc102bc78")
-	)
-	(wire
-		(pts
 			(xy 264.16 144.78) (xy 264.16 142.24)
 		)
 		(stroke
@@ -12206,6 +12216,16 @@
 	)
 	(wire
 		(pts
+			(xy 92.71 52.07) (xy 92.71 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4aef7433-255e-418e-acfb-b46633831390")
+	)
+	(wire
+		(pts
 			(xy 245.11 154.94) (xy 245.11 152.4)
 		)
 		(stroke
@@ -12256,16 +12276,6 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 52.07) (xy 91.44 52.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4fa07396-19f7-43da-bca4-d77744e25690")
-	)
-	(wire
-		(pts
 			(xy 207.01 142.24) (xy 212.09 142.24)
 		)
 		(stroke
@@ -12313,6 +12323,16 @@
 			(type default)
 		)
 		(uuid "55c3e35c-d8e4-4a15-a271-7c4f09939619")
+	)
+	(wire
+		(pts
+			(xy 81.28 54.61) (xy 87.63 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "55eb1502-7050-4e31-8e3c-290d5b9cb65c")
 	)
 	(wire
 		(pts
@@ -12543,6 +12563,16 @@
 			(type default)
 		)
 		(uuid "77d0aed4-9200-4620-8224-d841d0b6210f")
+	)
+	(wire
+		(pts
+			(xy 81.28 52.07) (xy 92.71 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "786170f4-0456-4e54-8f64-bd2c2c197343")
 	)
 	(wire
 		(pts
@@ -13266,6 +13296,16 @@
 	)
 	(wire
 		(pts
+			(xy 97.79 44.45) (xy 104.14 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "db3ad2f0-bbdf-4d37-a67e-c0226b996ff8")
+	)
+	(wire
+		(pts
 			(xy 190.5 87.63) (xy 190.5 88.9)
 		)
 		(stroke
@@ -13396,16 +13436,6 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 44.45) (xy 91.44 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f41dccb4-ca62-4658-a89a-9bf1348aeff1")
-	)
-	(wire
-		(pts
 			(xy 265.43 43.18) (xy 265.43 62.23)
 		)
 		(stroke
@@ -13493,6 +13523,16 @@
 			(type default)
 		)
 		(uuid "fed7ad68-ee03-403a-abc7-14c2c6671faa")
+	)
+	(wire
+		(pts
+			(xy 81.28 46.99) (xy 104.14 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ffd4e578-cb45-4a68-b78d-dc4ba13212a1")
 	)
 	(label "Y-"
 		(at 34.29 57.15 0)
@@ -13671,7 +13711,7 @@
 		(uuid "69fe4475-eb19-4a55-92a8-e98f18360930")
 	)
 	(label "GPSTX"
-		(at 97.79 46.99 0)
+		(at 96.02 46.99 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -13858,7 +13898,7 @@
 		(uuid "ea2f765d-d7c5-42c1-b1cb-6945c018ea6f")
 	)
 	(label "GPSRX"
-		(at 97.79 49.53 0)
+		(at 96.52 49.53 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -15941,72 +15981,6 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "C15")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3.3V")
-		(at 91.44 52.07 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "24a8f4b4-56c8-4397-8b51-5cc6875ee038")
-		(property "Reference" "#PWR033"
-			(at 91.44 48.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3.3V"
-			(at 91.44 57.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 91.44 52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 91.44 52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 91.44 52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "2a48038c-d5af-4b0e-a6b4-7098211da3b0")
-		)
-		(instances
-			(project ""
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "#PWR033")
 					(unit 1)
 				)
 			)
@@ -18258,7 +18232,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 91.44 44.45 180)
+		(at 97.79 44.45 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18267,7 +18241,7 @@
 		(fields_autoplaced yes)
 		(uuid "58479fa8-58ad-4a06-bb50-53d857867df9")
 		(property "Reference" "#PWR08"
-			(at 91.44 38.1 0)
+			(at 97.79 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18276,7 +18250,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 93.98 43.1799 0)
+			(at 100.33 43.1799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18285,7 +18259,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 91.44 44.45 0)
+			(at 97.79 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18294,7 +18268,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 91.44 44.45 0)
+			(at 97.79 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18303,7 +18277,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 91.44 44.45 0)
+			(at 97.79 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21011,6 +20985,177 @@
 		)
 	)
 	(symbol
+		(lib_id "dk_Rectangular-Connectors-Headers-Male-Pins:B5B-XH-A_LF__SN_")
+		(at 78.74 44.45 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8108b9e2-d221-4d8b-8ca4-85899e120c97")
+		(property "Reference" "J3"
+			(at 78.232 57.404 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "B5B-XH-A_LF__SN_"
+			(at 74.93 48.514 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+		(property "Footprint" "digikey-footprints:PinHeader_1x5_P2.5mm_Drill1.1mm"
+			(at 83.82 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://www.jst-mfg.com/product/pdf/eng/eXH.pdf"
+			(at 86.36 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "CONN HEADER VERT 5POS 2.5MM"
+			(at 78.74 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digi-Key_PN" "455-2270-ND"
+			(at 88.9 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "MPN" "B5B-XH-A(LF)(SN)"
+			(at 91.44 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Category" "Connectors, Interconnects"
+			(at 93.98 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Family" "Rectangular Connectors - Headers, Male Pins"
+			(at 96.52 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "DK_Datasheet_Link" "http://www.jst-mfg.com/product/pdf/eng/eXH.pdf"
+			(at 99.06 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "DK_Detail_Page" "/product-detail/en/jst-sales-america-inc/B5B-XH-A(LF)(SN)/455-2270-ND/1530483"
+			(at 101.6 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description_1" "CONN HEADER VERT 5POS 2.5MM"
+			(at 104.14 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "JST Sales America Inc."
+			(at 106.68 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Status" "Active"
+			(at 109.22 49.53 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "bb93b1c2-5224-486a-9a43-4ba451b33b8d")
+		)
+		(pin "5"
+			(uuid "a51513ba-cb13-4ec5-9e21-651feae2392f")
+		)
+		(pin "3"
+			(uuid "37cc168f-b60a-407c-88e3-c5fe38804fb8")
+		)
+		(pin "4"
+			(uuid "beac2e51-d442-4502-938e-19ed63518db9")
+		)
+		(pin "2"
+			(uuid "f28c4611-6025-4bcd-91a7-d076034fa223")
+		)
+		(instances
+			(project ""
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "J3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "SparkFun-Resistor:5.1k_0603")
 		(at 26.67 179.07 0)
 		(unit 1)
@@ -21731,6 +21876,72 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "C9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+5V")
+		(at 87.63 54.61 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "87c902a3-429f-42ac-ba51-18e9a027cf39")
+		(property "Reference" "#PWR033"
+			(at 87.63 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+5V"
+			(at 87.63 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 87.63 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 87.63 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+5V\""
+			(at 87.63 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d6086e36-0f6c-4c74-ba61-a6cacd72566a")
+		)
+		(instances
+			(project ""
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#PWR033")
 					(unit 1)
 				)
 			)
@@ -22482,226 +22693,6 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "#PWR047")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "dk_Rectangular-Connectors-Headers-Male-Pins:0022232041")
-		(at 83.82 44.45 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "99a9a843-37bf-4702-abab-c55d1b365e6c")
-		(property "Reference" "J3"
-			(at 82.55 38.1 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GPS"
-			(at 82.55 40.64 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "digikey-footprints:PinHeader_1x4_P2.54mm_Drill1.02mm"
-			(at 88.9 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.molex.com/pdm_docs/sd/022232041_sd.pdf"
-			(at 91.44 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "CONN HEADER VERT 4POS 2.54MM"
-			(at 83.82 44.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Digi-Key_PN" "WM4202-ND"
-			(at 93.98 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "MPN" "0022232041"
-			(at 96.52 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Category" "Connectors, Interconnects"
-			(at 99.06 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Family" "Rectangular Connectors - Headers, Male Pins"
-			(at 101.6 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Datasheet_Link" "https://www.molex.com/pdm_docs/sd/022232041_sd.pdf"
-			(at 104.14 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Detail_Page" "/product-detail/en/molex/0022232041/WM4202-ND/26671"
-			(at 106.68 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description_1" "CONN HEADER VERT 4POS 2.54MM"
-			(at 109.22 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Molex"
-			(at 111.76 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Status" "Active"
-			(at 114.3 49.53 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Name" ""
-			(at 83.82 44.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MANUFACTURER" ""
-			(at 83.82 44.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Height" ""
-			(at 83.82 44.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Part_Number" ""
-			(at 83.82 44.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Part Number" ""
-			(at 83.82 44.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Price/Stock" ""
-			(at 83.82 44.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "8d01e8f9-79d3-4968-82d5-f013205597f9")
-		)
-		(pin "3"
-			(uuid "e7e2f4c8-e260-4e6f-9f1b-001d082aa44b")
-		)
-		(pin "2"
-			(uuid "c5349689-9739-4396-8305-205e54e72bfc")
-		)
-		(pin "4"
-			(uuid "4f8d3a7f-442b-42d2-9313-550de4bae003")
-		)
-		(instances
-			(project ""
-				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "J3")
 					(unit 1)
 				)
 			)
@@ -26387,6 +26378,72 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "#PWR03")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 92.71 54.61 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e8d6208d-d60c-449d-847d-bc28e613a154")
+		(property "Reference" "#PWR050"
+			(at 92.71 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 92.71 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 92.71 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 92.71 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 92.71 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3ce4918e-0a3e-4b85-b686-a6295fd574f8")
+		)
+		(instances
+			(project ""
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#PWR050")
 					(unit 1)
 				)
 			)
