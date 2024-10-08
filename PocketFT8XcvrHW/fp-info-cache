@@ -1,4 +1,11 @@
-25129458260903813
+25138099819422856
+1N5817T
+DO-41_DIO
+
+1N5817-T 
+0
+2
+2
 ASTX_H11_25_000MHZ_T
 XTAL_ASTX-H11-25.000MHZ-T
 
@@ -63042,6 +63049,13 @@ L_Toroid Horizontal series Radial pin pitch 63.20mm  diameter 69.1mm Vishay TJ9
 2
 2
 Inductor_THT
+L_Toroid_Vertical_BIFILAR
+L_Toroid, Vertical series, Radial, pin pitch=5.08mm, , length*width=10*5mm^2
+L_Toroid Vertical series Radial pin pitch 5.08mm  length 10mm width 5mm
+0
+4
+4
+Inductor_THT
 L_Toroid_Vertical_L10.0mm_W5.0mm_P5.08mm
 L_Toroid, Vertical series, Radial, pin pitch=5.08mm, , length*width=10*5mm^2
 L_Toroid Vertical series Radial pin pitch 5.08mm  length 10mm width 5mm
@@ -102178,6 +102192,27 @@ MCP3422A0-E/SN
 0
 8
 8
+sn74act244dwr
+DW20
+
+SN74ACT244DWR 
+0
+20
+20
+sn74act244dwr
+DW20-L
+
+SN74ACT244DWR 
+0
+20
+20
+sn74act244dwr
+DW20-M
+
+SN74ACT244DWR 
+0
+20
+20
 teensy
 Teensy1.0
 11
@@ -102253,8 +102288,8 @@ Teensy41
 
 
 0
-65
-65
+60
+60
 teensy
 Teensy_LC
 
