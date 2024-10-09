@@ -16993,7 +16993,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "910pf"
+		(property "Value" "750 pF"
 			(at 264.414 151.13 0)
 			(effects
 				(font
@@ -19786,7 +19786,7 @@
 				)
 			)
 		)
-		(property "Value" "1.2uh"
+		(property "Value" "1.3 uH"
 			(at 257.81 138.43 90)
 			(effects
 				(font
@@ -19974,7 +19974,7 @@
 				)
 			)
 		)
-		(property "Value" "1.2uh"
+		(property "Value" "1.5 uH"
 			(at 245.11 138.43 90)
 			(effects
 				(font
@@ -20928,7 +20928,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1300pf"
+		(property "Value" "1200 pF"
 			(at 239.776 151.13 0)
 			(effects
 				(font
@@ -22262,7 +22262,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1300pf"
+		(property "Value" "1200 pF"
 			(at 252.476 151.13 0)
 			(effects
 				(font
@@ -23799,7 +23799,7 @@
 				)
 			)
 		)
-		(property "Value" "1.2uh"
+		(property "Value" "1.3 uH"
 			(at 232.41 138.43 90)
 			(effects
 				(font
@@ -27303,7 +27303,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "910pf"
+		(property "Value" "750 pF"
 			(at 226.822 151.13 0)
 			(effects
 				(font
