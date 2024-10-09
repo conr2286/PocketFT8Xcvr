@@ -21,6 +21,7 @@
 #include "button.h"
 #include "locator.h"
 #include "traffic_manager.h"
+#include "pins.h"
 
 #include "Arduino.h"
 #include "AudioStream.h"
@@ -29,20 +30,11 @@
 #include "constants.h"
 
 #define AM_FUNCTION 1
-#define RESET_PIN 20
-#define PTT_Pin 14  //Teensy 4.1
 #define USB 2
 
 
-// These are the four touchscreen analog pins
-#define YP 38  // must be an analog pin, use "An" notation!
-#define XM 37  // must be an analog pin, use "An" notation!
-#define YM 36  // can be a digital pin
-#define XP 39  // can be a digital pin
-
-
-HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);  //Teensy 4.1 pins
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 282);  //The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen
+HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  //Teensy 4.1 pins
+TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   //The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 
 Si5351 si5351;
 SI4735 si4735;
@@ -57,7 +49,7 @@ q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
 char Station_Call[] = "KQ7B";  //six character call sign + /0
-char Locator[] = "DN15";         // four character locator  + /0
+char Locator[] = "DN15";       // four character locator  + /0
 
 uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
@@ -84,7 +76,8 @@ int log_flag, logging_on;
 
 void setup(void) {
   Serial.begin(9600);
-  while (!Serial);
+  while (!Serial)
+    ;
   DTRACE();
   if (CrashReport) {
     Serial.print(CrashReport);
@@ -109,7 +102,7 @@ void setup(void) {
   si5351.output_enable(SI5351_CLK2, 1);
 
   // Gets and sets the Si47XX I2C bus address
-  int16_t si4735Addr = si4735.getDeviceI2CAddress(RESET_PIN);
+  int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
   if (si4735Addr == 0) {
     Serial.println("Si473X not found!");
     Serial.flush();
@@ -145,8 +138,13 @@ void setup(void) {
   Serial.println("Use keyboard u to raise, d to lower, & s to save ");
   Serial.println(" ");
 
-  pinMode(PTT_Pin, OUTPUT);
-  digitalWrite(PTT_Pin, LOW);
+  //Turn off the transmitter
+  pinMode(PIN_PTT, OUTPUT);
+  digitalWrite(PIN_PTT, LOW);
+
+  //Turn on the receiver (Req'd for V2.0 boards)
+  pinMode(PIN_RCV, OUTPUT);
+  digitalWrite(PIN_RCV, HIGH);
 
   init_DSP();
   initalize_constants();
@@ -171,7 +169,7 @@ void setup(void) {
 
 void loop() {
   D1TRACE();
-  D1PRINTF("decode_flag=%u\n",decode_flag);
+  D1PRINTF("decode_flag=%u\n", decode_flag);
 
   if (decode_flag == 0) process_data();
 
