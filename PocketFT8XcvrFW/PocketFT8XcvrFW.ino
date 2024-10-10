@@ -86,6 +86,8 @@ void setup(void) {
   }
 
 
+
+
   setSyncProvider(getTeensy3Time);
   delay(100);
 
@@ -257,9 +259,9 @@ void loadSSB() {
 
 void process_data() {
 
-  D1TRACE();
-
   if (queue1.available() >= num_que_blocks) {
+
+    //DPRINTF("num_que_blocks=%d\n",num_que_blocks);
 
     for (int i = 0; i < num_que_blocks; i++) {
       copy_to_fft_buffer(input_gulp + block_size * i, queue1.readBuffer());
@@ -271,7 +273,7 @@ void process_data() {
       dsp_buffer[i + input_gulp_size] = dsp_buffer[i + 2 * input_gulp_size];
       dsp_buffer[i + 2 * input_gulp_size] = input_gulp[i];
     }
-    D1TRACE();
+
     DSP_Flag = 1;
   }
 }

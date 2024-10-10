@@ -5,7 +5,7 @@
  *      Author: user
  */
 
-
+#include "DEBUG.h"
 #include "decode.h"
 
 #include <math.h>
@@ -48,6 +48,7 @@ extern void display_value(int x, int y, int value);
 // Localize top N candidates in frequency and time according to their sync strength (looking at Costas symbols)
 // We treat and organize the candidate list as a min-heap (empty initially).
 int find_sync(const uint8_t *power, int num_blocks, int num_bins, const uint8_t *sync_map, int num_candidates, Candidate *heap, int min_score) {
+  DPRINTF("num_blocks=%d, num_bins=%d, num_candidates=%d, min_score=%d\n", num_blocks,num_bins,num_candidates,min_score);
     int heap_size = 0;
     max_score = 0;
    // int x = 500;
@@ -102,7 +103,7 @@ int find_sync(const uint8_t *power, int num_blocks, int num_bins, const uint8_t 
                 }
                 score /= num_symbols;
 
-               // if(score > max_score) max_score = score;
+               if(score > max_score) max_score = score;   //Can comment-out this line
                 if (score < min_score) continue;
 
                 // If the heap is full AND the current candidate is better than
@@ -130,7 +131,7 @@ int find_sync(const uint8_t *power, int num_blocks, int num_bins, const uint8_t 
 
     } //end of alt
 
-    
+    DPRINTF("max_score=%d\n",max_score);
     return heap_size;
 }
 

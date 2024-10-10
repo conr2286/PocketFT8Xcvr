@@ -108,13 +108,13 @@ void extract_power(int offset) {
 
 
 void process_FT8_FFT(void) {
-  //DTRACE();
+
   if (ft8_flag == 1) {
-    //DTRACE();
+
 
     master_offset = offset_step * FT_8_counter;
     extract_power(master_offset);
-    //DTRACE();
+
     update_offset_waterfall(master_offset);
 
     FT_8_counter++;
@@ -139,6 +139,8 @@ void update_offset_waterfall(int offset) {
     WF_index[x] = bar;
   }
 
+  //DPRINTF("offset=%d, ft8_min_bin=%d, ft8_buffer=%d\n",offset,ft8_min_bin,ft8_buffer);
+
   //tft.graphicsMode();
   for (int k = ft8_min_bin; k < ft8_buffer; k++) {
     tft.drawPixel(k - ft8_min_bin, WF_counter, WFPalette[WF_index[k]]);
@@ -149,7 +151,6 @@ void update_offset_waterfall(int offset) {
 
   if (num_decoded_msg > 0 && WF_counter == 0) {
     display_messages(num_decoded_msg);
-    DTRACE();
     if (CQ_Flag == 1) service_CQ();
     else
       Check_Calling_Stations(num_decoded_msg);

@@ -41,7 +41,7 @@ const int kMax_candidates = 20;
 const int kMax_decoded_messages = 6;  //chhh 27 feb
 const int kMax_message_length = 20;
 
-const int kMin_score = 40;  // Minimum sync score threshold for candidates
+const int kMin_score = 40;  // Minimum sync score threshold for candidates (40)
 
 int validate_locator(char locator[]);
 int strindex(char s[], char t[]);
@@ -98,8 +98,6 @@ extern int log_flag, logging_on;
 
 int ft8_decode(void) {
 
-  DTRACE();
-
   // Find top candidates by Costas sync score and localize them in time and frequency
   Candidate candidate_list[kMax_candidates];
 
@@ -111,7 +109,7 @@ int ft8_decode(void) {
   // Go over candidates and attempt to decode messages
   int num_decoded = 0;
 
-  DPRINTF("ft8_decode:  num_candidates=%u\n",num_candidates);
+  DPRINTF("num_candidates=%u\n",num_candidates);
 
   for (int idx = 0; idx < num_candidates; ++idx) {
     Candidate cand = candidate_list[idx];
@@ -137,7 +135,7 @@ int ft8_decode(void) {
     a91[10] = 0;
     a91[11] = 0;
     uint16_t chksum2 = crc(a91, 96 - 14);
-    DPRINTF("ft8_decode:  chksum=%u chksum2=%u\n",chksum, chksum2);
+    DPRINTF("chksum=%u chksum2=%u\n",chksum, chksum2);
     if (chksum != chksum2) continue;
 
     char message[kMax_message_length];
@@ -149,7 +147,7 @@ int ft8_decode(void) {
     if (rc < 0) continue;
 
     sprintf(message, "%s %s %s ", field1, field2, field3);
-    DPRINTF("ft8_decode:  %s %s %s \n", field1, field2, field3);
+    DPRINTF("message='%s %s %s' \n", field1, field2, field3);
 
 
     // Check for duplicate messages (TODO: use hashing)
