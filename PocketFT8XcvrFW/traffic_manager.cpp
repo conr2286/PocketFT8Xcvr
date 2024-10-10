@@ -79,6 +79,7 @@ void set_Xmit_Freq() {
   // display_value(400, 320, ( int ) cursor_freq);
   // display_value(400, 360,  offset_freq);
   F_Long = (uint64_t)((currentFrequency * 1000 + cursor_freq + offset_freq) * 100);
+  DPRINTF("currentFrequency=%u, cursor_freq=%u, offset_freq=%u, F_Long=%llu\n", currentFrequency, cursor_freq, offset_freq, F_Long);
   //F_Long = (uint64_t) ((currentFrequency * 1000 + cursor_freq ) * 100);
   si5351.set_freq(F_Long, SI5351_CLK0);
 }

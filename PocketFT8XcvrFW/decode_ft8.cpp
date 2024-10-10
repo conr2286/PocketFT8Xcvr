@@ -5,6 +5,8 @@
  *      Author: user
  */
 
+#include "DEBUG.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -39,18 +41,18 @@ const int kMax_candidates = 20;
 const int kMax_decoded_messages = 6;  //chhh 27 feb
 const int kMax_message_length = 20;
 
-const int kMin_score = 40;		// Minimum sync score threshold for candidates
+const int kMin_score = 40;  // Minimum sync score threshold for candidates
 
 int validate_locator(char locator[]);
-int strindex(char s[],char t[]);
+int strindex(char s[], char t[]);
 
 extern uint32_t ft8_time;
-extern uint8_t export_fft_power[ft8_msg_samples*ft8_buffer*4] ;
+extern uint8_t export_fft_power[ft8_msg_samples * ft8_buffer * 4];
 
 extern int ND;
 extern int NS;
 
-extern int NN ;
+extern int NN;
 // Define the LDPC sizes
 extern int N;
 extern int K;
@@ -66,7 +68,7 @@ Decode new_decoded[20];
 Calling_Station Answer_CQ[100];
 CQ_Station Calling_CQ[8];
 
-int 	num_calls;  // number of unique calling stations
+int num_calls;  // number of unique calling stations
 int num_call_checks;
 int num_CQ_calls;
 int num_calls_to_CQ_station;
@@ -89,173 +91,173 @@ extern int CQ_State;
 extern int Beacon_State;
 
 extern char Target_Call[7];
-extern int Target_RSL; // four character RSL  + /0
+extern int Target_RSL;  // four character RSL  + /0
 
 extern time_t getTeensy3Time();
 extern int log_flag, logging_on;
 
 int ft8_decode(void) {
 
-    // Find top candidates by Costas sync score and localize them in time and frequency
-    Candidate candidate_list[kMax_candidates];
+  DTRACE();
 
-    int num_candidates = find_sync(export_fft_power, ft8_msg_samples, ft8_buffer, kCostas_map, kMax_candidates, candidate_list, kMin_score);
-    char    decoded[kMax_decoded_messages][kMax_message_length];
+  // Find top candidates by Costas sync score and localize them in time and frequency
+  Candidate candidate_list[kMax_candidates];
 
-    const float fsk_dev = 6.25f;    // tone deviation in Hz and symbol rate
+  int num_candidates = find_sync(export_fft_power, ft8_msg_samples, ft8_buffer, kCostas_map, kMax_candidates, candidate_list, kMin_score);
+  char decoded[kMax_decoded_messages][kMax_message_length];
 
-    // Go over candidates and attempt to decode messages
-    int num_decoded = 0;
+  const float fsk_dev = 6.25f;  // tone deviation in Hz and symbol rate
 
-    for (int idx = 0; idx < num_candidates; ++idx) {
-        Candidate cand = candidate_list[idx];
-        float freq_hz  = (cand.freq_offset + cand.freq_sub / 2.0f) * fsk_dev;
+  // Go over candidates and attempt to decode messages
+  int num_decoded = 0;
 
-        float   log174[N];
-        extract_likelihood(export_fft_power, ft8_buffer, cand, kGray_map, log174);
+  DPRINTF("ft8_decode:  num_candidates=%u\n",num_candidates);
 
-        // bp_decode() produces better decodes, uses way less memory
-        uint8_t plain[N];
-        int     n_errors = 0;
-        bp_decode(log174, kLDPC_iterations, plain, &n_errors);
-        
-        if (n_errors > 0)    continue;
+  for (int idx = 0; idx < num_candidates; ++idx) {
+    Candidate cand = candidate_list[idx];
+    float freq_hz = (cand.freq_offset + cand.freq_sub / 2.0f) * fsk_dev;
 
-        // Extract payload + CRC (first K bits)
-        uint8_t a91[K_BYTES];
-        pack_bits(plain, K, a91);
-        
-        // Extract CRC and check it
-        uint16_t chksum = ((a91[9] & 0x07) << 11) | (a91[10] << 3) | (a91[11] >> 5);
-        a91[9] &= 0xF8;
-        a91[10] = 0;
-        a91[11] = 0;
-        uint16_t chksum2 = crc(a91, 96 - 14);
-        if (chksum != chksum2)   continue;
-        
-        char message[kMax_message_length];
+    float log174[N];
+    extract_likelihood(export_fft_power, ft8_buffer, cand, kGray_map, log174);
 
-        char field1[14];
-        char field2[14];
-        char field3[7];
-        int rc = unpack77_fields(a91, field1, field2, field3);
-        if (rc < 0) continue;
-        
-        sprintf(message,"%s %s %s ",field1, field2, field3);
-        
-        // Check for duplicate messages (TODO: use hashing)
-        bool found = false;
-        for (int i = 0; i < num_decoded; ++i) {
-            if (0 == strcmp(decoded[i], message)) {
-                found = true;
-                break;
-            }
-        }
+    // bp_decode() produces better decodes, uses way less memory
+    uint8_t plain[N];
+    int n_errors = 0;
+    bp_decode(log174, kLDPC_iterations, plain, &n_errors);
 
-		int raw_RSL;
-		int display_RSL;
-		float distance;
+    if (n_errors > 0) continue;
 
-      getTeensy3Time();
-      char rtc_string[10];   // print format stuff
-      sprintf(rtc_string,"%2i:%2i:%2i",hour(),minute(),second());
+    // Extract payload + CRC (first K bits)
+    uint8_t a91[K_BYTES];
+    pack_bits(plain, K, a91);
 
-        if (!found && num_decoded < kMax_decoded_messages) {
-        	if(strlen(message) < kMax_message_length) {
-            strcpy(decoded[num_decoded], message);
+    // Extract CRC and check it
+    uint16_t chksum = ((a91[9] & 0x07) << 11) | (a91[10] << 3) | (a91[11] >> 5);
+    a91[9] &= 0xF8;
+    a91[10] = 0;
+    a91[11] = 0;
+    uint16_t chksum2 = crc(a91, 96 - 14);
+    DPRINTF("ft8_decode:  chksum=%u chksum2=%u\n",chksum, chksum2);
+    if (chksum != chksum2) continue;
 
-            new_decoded[num_decoded].sync_score = cand.score;
-            new_decoded[num_decoded].freq_hz = (int)freq_hz;
-            strcpy(new_decoded[num_decoded].field1, field1);
-            strcpy(new_decoded[num_decoded].field2, field2);
-            strcpy(new_decoded[num_decoded].field3, field3);
-            strcpy(new_decoded[num_decoded].decode_time, rtc_string);
-            
-			raw_RSL = new_decoded[num_decoded].sync_score;
-			if (raw_RSL > 160) raw_RSL = 160;
-			display_RSL = (raw_RSL - 160 ) / 6;
-			new_decoded[num_decoded].snr = display_RSL;
+    char message[kMax_message_length];
 
-			char Target_Locator[] = "    ";
+    char field1[14];
+    char field2[14];
+    char field3[7];
+    int rc = unpack77_fields(a91, field1, field2, field3);
+    if (rc < 0) continue;
 
-			strcpy(Target_Locator, new_decoded[num_decoded].field3);
-
-			if (validate_locator(Target_Locator)  == 1) {
-				distance = Target_Distance(Target_Locator);
-				new_decoded[num_decoded].distance = (int)distance;
-			}
-			else
-			new_decoded[num_decoded].distance = 0;
-      
-            ++num_decoded;
-            
-        	}
-
-        }
-    }  //End of big decode loop
+    sprintf(message, "%s %s %s ", field1, field2, field3);
+    DPRINTF("ft8_decode:  %s %s %s \n", field1, field2, field3);
 
 
-    return num_decoded;
+    // Check for duplicate messages (TODO: use hashing)
+    bool found = false;
+    for (int i = 0; i < num_decoded; ++i) {
+      if (0 == strcmp(decoded[i], message)) {
+        found = true;
+        break;
+      }
+    }
 
-}
+    int raw_RSL;
+    int display_RSL;
+    float distance;
 
-    
-void display_messages(int decoded_messages){
+    getTeensy3Time();
+    char rtc_string[10];  // print format stuff
+    sprintf(rtc_string, "%2i:%2i:%2i", hour(), minute(), second());
 
-	    char message[kMax_message_length];
-      char big_gulp[60];
+    if (!found && num_decoded < kMax_decoded_messages) {
+      if (strlen(message) < kMax_message_length) {
+        strcpy(decoded[num_decoded], message);
 
-      tft.fillRect(0, 100, 240, 140, HX8357_BLACK);
-  
-  		for (int i = 0; i<decoded_messages && i<message_limit; i++ ){
-  		sprintf(message,"%s %s %s",new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
+        new_decoded[num_decoded].sync_score = cand.score;
+        new_decoded[num_decoded].freq_hz = (int)freq_hz;
+        strcpy(new_decoded[num_decoded].field1, field1);
+        strcpy(new_decoded[num_decoded].field2, field2);
+        strcpy(new_decoded[num_decoded].field3, field3);
+        strcpy(new_decoded[num_decoded].decode_time, rtc_string);
 
-      sprintf(big_gulp,"%s %s", new_decoded[i].decode_time, message);
-      tft.setTextColor(HX8357_YELLOW , HX8357_BLACK);
-      tft.setTextSize(2);
-      tft.setCursor(0, 100 + i *25 );
-      tft.print(message);
+        raw_RSL = new_decoded[num_decoded].sync_score;
+        if (raw_RSL > 160) raw_RSL = 160;
+        display_RSL = (raw_RSL - 160) / 6;
+        new_decoded[num_decoded].snr = display_RSL;
 
-      //if (logging_on == 1) write_log_data(big_gulp);
-      
-		}
-    
+        char Target_Locator[] = "    ";
+
+        strcpy(Target_Locator, new_decoded[num_decoded].field3);
+
+        if (validate_locator(Target_Locator) == 1) {
+          distance = Target_Distance(Target_Locator);
+          new_decoded[num_decoded].distance = (int)distance;
+        } else
+          new_decoded[num_decoded].distance = 0;
+
+        ++num_decoded;
+      }
+    }
+  }  //End of big decode loop
+
+
+  return num_decoded;
 }
 
 
-void display_selected_call(int index){
-                  
-      char selected_station[18];
-      char blank[] = "        ";
-      strcpy(Target_Call, new_decoded[index].field2);
-      Target_RSL = new_decoded[index].snr;
+void display_messages(int decoded_messages) {
 
-      sprintf(selected_station,"%7s %3i",Target_Call, Target_RSL);
-      tft.setTextColor(HX8357_YELLOW , HX8357_BLACK);
-      tft.setTextSize(2);
-      tft.setCursor(360, 20 );
-      tft.print(blank);
-      tft.setCursor(360, 20 );
-      tft.print(Target_Call);
+  char message[kMax_message_length];
+  char big_gulp[60];
+
+  tft.fillRect(0, 100, 240, 140, HX8357_BLACK);
+
+  for (int i = 0; i < decoded_messages && i < message_limit; i++) {
+    sprintf(message, "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
+
+    sprintf(big_gulp, "%s %s", new_decoded[i].decode_time, message);
+    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+    tft.setTextSize(2);
+    tft.setCursor(0, 100 + i * 25);
+    tft.print(message);
+
+    //if (logging_on == 1) write_log_data(big_gulp);
+  }
 }
 
 
-void display_details(int decoded_messages){
+void display_selected_call(int index) {
 
-	  char message[48];
-    
+  char selected_station[18];
+  char blank[] = "        ";
+  strcpy(Target_Call, new_decoded[index].field2);
+  Target_RSL = new_decoded[index].snr;
+
+  sprintf(selected_station, "%7s %3i", Target_Call, Target_RSL);
+  tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+  tft.setTextSize(2);
+  tft.setCursor(360, 20);
+  tft.print(blank);
+  tft.setCursor(360, 20);
+  tft.print(Target_Call);
+}
+
+
+void display_details(int decoded_messages) {
+
+  char message[48];
+
   // tft.fillRect(0, 100, 500, 320, RA8875_BLACK);
-    
-		for (int i = 0; i<decoded_messages && i<message_limit; i++ ){
-		sprintf(message,"%7s %7s %4s %4i %3i %4i",new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3,new_decoded[i].freq_hz, new_decoded[i].snr, new_decoded[i].distance );
+
+  for (int i = 0; i < decoded_messages && i < message_limit; i++) {
+    sprintf(message, "%7s %7s %4s %4i %3i %4i", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].freq_hz, new_decoded[i].snr, new_decoded[i].distance);
     /*
     tft.setFont(&FreeMono12pt7b);
     tft.setCursor(0, 120 + i *40 );
     tft.setTextColor(RA8875_WHITE);
     tft.print(message);
     */
-		}
-
+  }
 }
 
 int validate_locator(char locator[]) {
@@ -266,71 +268,68 @@ int validate_locator(char locator[]) {
   A1 = locator[0] - 65;
   A2 = locator[1] - 65;
   N1 = locator[2] - 48;
-  N2= locator [3] - 48;
+  N2 = locator[3] - 48;
 
   if (A1 >= 0 && A1 <= 17) test++;
-  if (A2 > 0 && A2 < 17) test++; //block RR73 Artic and Anartica
+  if (A2 > 0 && A2 < 17) test++;  //block RR73 Artic and Anartica
   if (N1 >= 0 && N1 <= 9) test++;
   if (N2 >= 0 && N2 <= 9) test++;
 
   if (test == 4) return 1;
   else
-  return 0;
+    return 0;
 }
 
 
 
 
-int strindex(char s[],char t[])
-{
-    int i,j,k, result;
+int strindex(char s[], char t[]) {
+  int i, j, k, result;
 
-    result = -1;
+  result = -1;
 
-    for(i=0;s[i]!='\0';i++)
-    {
-        for(j=i,k=0;t[k]!='\0' && s[j]==t[k];j++,k++)
-            ;
-        if(k>0 && t[k] == '\0')
-            result = i;
-    }
-    return result;
+  for (i = 0; s[i] != '\0'; i++) {
+    for (j = i, k = 0; t[k] != '\0' && s[j] == t[k]; j++, k++)
+      ;
+    if (k > 0 && t[k] == '\0')
+      result = i;
+  }
+  return result;
 }
 
 
 
-int Check_Calling_Stations(int num_decoded ) {
-      char big_gulp[60];
-      char message[kMax_message_length];
-      int  message_test = 0;
-      
-      for (int i = 0; i<num_decoded; i++ ){
-      if(strindex(new_decoded[i].field1, Station_Call)  >= 0 )  {
-      sprintf(message,"%s %s %s",new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
+int Check_Calling_Stations(int num_decoded) {
+  char big_gulp[60];
+  char message[kMax_message_length];
+  int message_test = 0;
+
+  for (int i = 0; i < num_decoded; i++) {
+    if (strindex(new_decoded[i].field1, Station_Call) >= 0) {
+      sprintf(message, "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
 
       getTeensy3Time();
-      sprintf(big_gulp,"%2i/%2i/%4i %s %s", day(),month(),year(), new_decoded[i].decode_time, message);
-      tft.setTextColor(HX8357_YELLOW , HX8357_BLACK);
+      sprintf(big_gulp, "%2i/%2i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
+      tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
       tft.setTextSize(2);
-      tft.setCursor(240, 100 + i *25 );
+      tft.setCursor(240, 100 + i * 25);
       tft.print(message);
 
       if (logging_on == 1) write_log_data(big_gulp);
-      
-      num_Calling_Stations ++;
-      message_test = i + 100;
-      }
 
-      if(num_Calling_Stations == max_Calling_Stations) {
+      num_Calling_Stations++;
+      message_test = i + 100;
+    }
+
+    if (num_Calling_Stations == max_Calling_Stations) {
       tft.fillRect(0, 100, 240, 190, HX8357_BLACK);
       num_Calling_Stations = 0;
-      }
-      }
+    }
+  }
 
-      if (message_test > 100) return message_test - 100;
-      else
-      return -1;
-
+  if (message_test > 100) return message_test - 100;
+  else
+    return -1;
 }
 
 
@@ -509,5 +508,3 @@ int strindex(char s[],char t[])
     return result;
 }
 */
-
-

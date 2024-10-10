@@ -362,6 +362,7 @@ void check_WF_Touch(void) {
 
     cursor_line = draw_x;
     cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
+    DPRINTF("button.cpp:  cursor_freq=%u\n",cursor_freq);
     set_Xmit_Freq();
   }
 }
@@ -372,6 +373,7 @@ void set_startup_freq(void) {
   start_up_offset_freq = EEPROMReadInt(10);
   cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
   offset_freq = start_up_offset_freq;
+  DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
 }
 
 

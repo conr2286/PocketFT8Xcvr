@@ -12,6 +12,7 @@
 #include <SI4735.h>
 #include "patch_full.h"  // SSB patch for whole SSBRX full download
 #include <TimeLib.h>
+#include <EEPROM.h>
 
 #include "Process_DSP.h"
 #include "decode_ft8.h"
@@ -94,75 +95,88 @@ void setup(void) {
   tft.setRotation(3);
   tft.setTextSize(2);
 
-  si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          //Charlie's correction was 2200 if that someday matters
-  si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  //KQ7B V1.00 uses cmos CLKIN, not a XTAL
-  si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  //All PLLs using CLKIN
-  si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
-  si5351.set_freq(3276800, SI5351_CLK2);  //Receiver
-  si5351.output_enable(SI5351_CLK2, 1);
-
-  // Gets and sets the Si47XX I2C bus address
-  int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
-  if (si4735Addr == 0) {
-    Serial.println("Si473X not found!");
-    Serial.flush();
-    while (1)
-      ;
-  } else {
-    Serial.print("The Si473X I2C address is 0x");
-    Serial.println(si4735Addr, HEX);
+//Initialize EEPROM when executed on a new Teensy
+#define EEPROMSIZE 4284  //Teensy 4.1
+  bool newChip = true;
+  for (int adr = 0; adr < EEPROMSIZE; adr++) {
+    if (EEPROM.read(adr) != 0xff) newChip = false;
+  }
+  newChip=true;
+  if (newChip) {
+    Serial.print("Initializing EEPROM for new chip\n");
+    EEPROMWriteInt(10, 0);  //Address 10 is offset but the encoding remains mysterious
   }
 
-  delay(10);
-  Serial.println("SSB patch is loading...");
-  et1 = millis();
-  loadSSB();
-  et2 = millis();
-  Serial.print("SSB patch was loaded in: ");
-  Serial.print((et2 - et1));
-  Serial.println("ms");
-  delay(10);
-  si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
-  delay(10);
-  //si4735.setSSB(18000, 18400, 18100, 1, USB);  //Sets the recv's band limits, initial freq, and mode
-  si4735.setSSB(7000, 7300, 7074, 1, USB);  //FT8 is always USB?
-  delay(10);
-  currentFrequency = si4735.getFrequency();
-  si4735.setVolume(50);
-  Serial.print("CurrentFrequency = ");
-  Serial.println(currentFrequency);
-  display_value(360, 40, (int)currentFrequency);
 
-  Serial.println(" ");
-  Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
-  Serial.println("Use keyboard u to raise, d to lower, & s to save ");
-  Serial.println(" ");
+si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          //Charlie's correction was 2200 if that someday matters
+si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  //KQ7B V1.00 uses cmos CLKIN, not a XTAL
+si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  //All PLLs using CLKIN
+si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
+si5351.set_freq(3276800, SI5351_CLK2);  //Receiver
+si5351.output_enable(SI5351_CLK2, 1);
 
-  //Turn off the transmitter
-  pinMode(PIN_PTT, OUTPUT);
-  digitalWrite(PIN_PTT, LOW);
+// Gets and sets the Si47XX I2C bus address
+int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
+if (si4735Addr == 0) {
+  Serial.println("Si473X not found!");
+  Serial.flush();
+  while (1)
+    ;
+} else {
+  Serial.print("The Si473X I2C address is 0x");
+  Serial.println(si4735Addr, HEX);
+}
 
-  //Turn on the receiver (Req'd for V2.0 boards)
-  pinMode(PIN_RCV, OUTPUT);
-  digitalWrite(PIN_RCV, HIGH);
+delay(10);
+Serial.println("SSB patch is loading...");
+et1 = millis();
+loadSSB();
+et2 = millis();
+Serial.print("SSB patch was loaded in: ");
+Serial.print((et2 - et1));
+Serial.println("ms");
+delay(10);
+si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
+delay(10);
+//si4735.setSSB(18000, 18400, 18100, 1, USB);  //Sets the recv's band limits, initial freq, and mode
+si4735.setSSB(7000, 7300, 7074, 1, USB);      //FT8 is always USB
+delay(10);
+currentFrequency = si4735.getFrequency();
+si4735.setVolume(50);
+Serial.print("CurrentFrequency = ");
+Serial.println(currentFrequency);
+display_value(360, 40, (int)currentFrequency);
 
-  init_DSP();
-  initalize_constants();
-  AudioMemory(20);
-  queue1.begin();
+Serial.println(" ");
+Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
+Serial.println("Use keyboard u to raise, d to lower, & s to save ");
+Serial.println(" ");
 
-  start_time = millis();
+//Turn off the transmitter
+pinMode(PIN_PTT, OUTPUT);
+digitalWrite(PIN_PTT, LOW);
 
-  set_startup_freq();
-  delay(10);
-  display_value(360, 40, (int)currentFrequency);
+//Turn on the receiver (Req'd for V2.0 boards)
+pinMode(PIN_RCV, OUTPUT);
+digitalWrite(PIN_RCV, HIGH);
 
-  receive_sequence();
+init_DSP();
+initalize_constants();
+AudioMemory(20);
+queue1.begin();
 
-  update_synchronization();
-  set_Station_Coordinates(Locator);
-  display_all_buttons();
-  open_log_file();
+start_time = millis();
+
+set_startup_freq();
+delay(10);
+display_value(360, 40, (int)currentFrequency);
+
+receive_sequence();
+
+update_synchronization();
+set_Station_Coordinates(Locator);
+display_all_buttons();
+open_log_file();
 }
 
 
@@ -174,7 +188,7 @@ void loop() {
   if (decode_flag == 0) process_data();
 
   if (DSP_Flag == 1) {
-    //DTRACE();
+    D1TRACE();
     process_FT8_FFT();
 
     if (xmit_flag == 1) {
