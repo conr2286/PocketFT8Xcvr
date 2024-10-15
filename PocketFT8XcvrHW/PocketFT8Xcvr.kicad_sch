@@ -15487,7 +15487,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "2.0K"
+		(property "Value" "2.2K"
 			(at 212.09 38.1 90)
 			(effects
 				(font
@@ -15514,7 +15514,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 2K OHM 5% 1/10W 0603"
+		(property "Description" "RES 2.2K OHM 5% 1/10W 0603"
 			(at 226.06 38.1 0)
 			(effects
 				(font
@@ -15523,7 +15523,7 @@
 				(hide yes)
 			)
 		)
-		(property "PROD_ID" "RES-08296"
+		(property "PROD_ID" ""
 			(at 221.488 38.1 0)
 			(effects
 				(font
@@ -15541,7 +15541,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mfg Part #" "RC0603JR-072KL"
+		(property "Mfg Part #" ""
 			(at 214.63 38.1 0)
 			(effects
 				(font
@@ -25458,7 +25458,7 @@
 				)
 			)
 		)
-		(property "Value" "2.2K"
+		(property "Value" "10k"
 			(at 212.09 27.94 0)
 			(effects
 				(font
@@ -25484,7 +25484,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "2.2K 5% 1/10W 0603"
 			(at 226.06 27.94 0)
 			(effects
 				(font

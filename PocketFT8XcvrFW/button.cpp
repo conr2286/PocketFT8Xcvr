@@ -322,8 +322,7 @@ void executeButton(uint16_t index) {
       }
       break;
   }
-  DTRACE();
-  DPRINTF("CQ_Flag=%u\n", CQ_Flag);
+
 } //execute_button()
 
 
@@ -355,7 +354,7 @@ void check_FT8_Touch(void) {
     FT_8_TouchIndex = y_test / 25;
     if (FT_8_TouchIndex < master_decoded) display_selected_call(FT_8_TouchIndex);
   }
-}
+} //check_FT8_Touch()
 
 void check_WF_Touch(void) {
   if (draw_x < 350 && draw_y < 90) {
@@ -365,7 +364,7 @@ void check_WF_Touch(void) {
     DPRINTF("button.cpp:  cursor_freq=%u\n",cursor_freq);
     set_Xmit_Freq();
   }
-}
+} //check_WF_Touch()
 
 
 void set_startup_freq(void) {
@@ -374,7 +373,7 @@ void set_startup_freq(void) {
   cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
   offset_freq = start_up_offset_freq;
   DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
-}
+} //set_startup_freq()
 
 
 void process_touch(void) {

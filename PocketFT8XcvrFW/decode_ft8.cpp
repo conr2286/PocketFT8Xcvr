@@ -41,7 +41,7 @@ const int kMax_candidates = 20;
 const int kMax_decoded_messages = 6;  //chhh 27 feb
 const int kMax_message_length = 20;
 
-const int kMin_score = 40;  // Minimum sync score threshold for candidates (40)
+const int kMin_score = 40;   // Minimum sync score threshold for candidates (40)
 
 int validate_locator(char locator[]);
 int strindex(char s[], char t[]);

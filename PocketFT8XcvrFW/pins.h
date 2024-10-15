@@ -43,4 +43,6 @@
 #define PIN_GPSTX 0             //TX data from GPS
 #define PIN_GPSRX 1             //RX data from GPS
 
+//Note:  The audio input pin is apparently hardwired by the Audio Library in input_adc.h to A2
+
 

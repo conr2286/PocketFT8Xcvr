@@ -28,8 +28,7 @@ ATTRIBUTION
 //SoftwareSerial SerialGPS = SoftwareSerial(10, 11);  // receive on pin 10
 TinyGPS gps;
 
-// To use a hardware serial port, which is far more efficient than
-// SoftwareSerial, uncomment this line and remove SoftwareSerial
+//Pocket FT8 connects to GPS via Serial Port 1
 #define SerialGPS Serial1
 
 // Offset hours from gps time (UTC)
@@ -60,6 +59,8 @@ void loop() {
   unsigned long age;
 
   while (SerialGPS.available()) {
+
+    //Wait for a message from GPS
     if (gps.encode(SerialGPS.read())) {  // process gps messages
       // when TinyGPS reports new data...
       unsigned long age;
@@ -67,13 +68,13 @@ void loop() {
       byte Month, Day, Hour, Minute, Second;
       gps.crack_datetime(&Year, &Month, &Day, &Hour, &Minute, &Second, NULL, &age);
       if (age < 500) {
-        // set the Time to the latest GPS reading
+        // set the MCU Time to the latest GPS reading
         setTime(Hour, Minute, Second, Day, Month, Year);
         adjustTime(offset * SECS_PER_HOUR);
       }
     }
     gps.f_get_position(&flat, &flon, &age);
-    printf("#satellites=%d, hdop=%d, flat=%f, flon=%f, age=%ul\n", gps.satellites(), gps.hdop(), flat, flon, age);
+    printf("#satellites=%d, hdop=%d, flat=%f, flon=%f, age=%ul ms\n", gps.satellites(), gps.hdop(), flat, flon, age);
   }
   if (timeStatus() != timeNotSet) {
     if (now() != prevDisplay) {  //update the display only if the time has changed
