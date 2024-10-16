@@ -1,0 +1,1 @@
+* AudioStream6400.h:  This file must be copied as "AudioStream.h" into the Teensy 4.1 audio library, .../Arduino15/packages/teensy/hardware/avr/1.59.0/cores/teensy4 on my macos machine, to enable the firmware to run the audio stream at 6400 samples/second.
