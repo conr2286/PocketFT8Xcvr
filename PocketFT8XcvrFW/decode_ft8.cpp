@@ -122,6 +122,7 @@ int ft8_decode(void) {
     uint8_t plain[N];
     int n_errors = 0;
     bp_decode(log174, kLDPC_iterations, plain, &n_errors);
+    DPRINTF("candidate %d n_errors=%d\n",idx,n_errors);
 
     if (n_errors > 0) continue;
 

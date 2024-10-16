@@ -39,11 +39,11 @@
 #define USB 2
 
 //For HW debugging, define an option to record received audio to an SD file, ft8.raw,
-//encoded as a single channel of 16-bit unsigned integers at 32000 samples/second.
-//The command, sox -r 32000 -c 1 -e unsigned -b 16 ft8.raw ft8.wav, will convert the
-//recording to a wav file.  Set the duration to 0 when finished debugging to eliminate
-//the file I/O overhead.
+//encoded as a single channel of 16-bit unsigned integers at 6400 samples/second.
+//The command, sox -r 6400 -c 1 -e unsigned -b 16 ft8.raw ft8.wav, will convert the
+//recording to a wav file.  Set the duration to 0 to eliminate file I/O overhead.
 #define AUDIO_RECORDING_FILENAME "ft8.raw"
+#define AUDIO_SAMPLE_RATE 6400
 
 //Configuration parameters read from SD file
 #define CONFIG_FILENAME "config.json"  //8.3 filename
@@ -60,7 +60,7 @@ struct Config {
 #define DEFAULT_LOCATION "****"               //Will later obtain the default maidenhead square from GPS if we get a lock
 #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  //Default of 0 seconds disables audio recording
 
-//Define lower/upper frequency limitations of the hardware implementation
+//Define lower/upper frequency limitations of the 40m hardware implementation
 #define MINIMUM_FREQUENCY 7000  //Low edge of band in kHz
 #define MAXIMUM_FREQUENCY 7300  //Upper edge of band in kHz
 
@@ -302,10 +302,11 @@ void loop() {
   if (tune_flag == 1) process_serial();
 
   //If we are recording audio, then stop after the requested seconds of raw audio data
-  //at 32000 samples/second.
-  if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * 32000L) {
+  //at 6400 samples/second.
+  if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned long) AUDIO_SAMPLE_RATE) {
     ft8Raw.close();
     ft8Raw = NULL;
+    DPRINTF("Audio recording file, %s, closed with %ul samples\n",AUDIO_RECORDING_FILENAME,recordSampleCount);
   }
 
 }  //loop()
@@ -365,11 +366,11 @@ static void copy_to_fft_buffer(void *destination, const void *source) {
     *dst++ = *src++;  // real sample plus a zero for imaginary
   }
 
-  //Configurable recording of raw 16-bit audio at 32000 samples/second to an SD file
+  //Configurable recording of raw 16-bit audio at 6400 samples/second to an SD file
   if (ft8Raw != NULL) {
     ft8Raw.write(source, AUDIO_BLOCK_SAMPLES * sizeof(uint16_t));
     recordSampleCount += AUDIO_BLOCK_SAMPLES;  //Increment count of recorded samples
-    if (recordSampleCount % 32000 == 0) {
+    if (recordSampleCount % AUDIO_SAMPLE_RATE == 0) {
       DPRINTF("Audio recording in progress...\n");  //One second progress indicator
     }
   }
