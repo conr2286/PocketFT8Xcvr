@@ -81,13 +81,14 @@ AudioConnection patchCord2(adc1, queue1);
 File ft8Raw = NULL;
 unsigned long recordSampleCount = 0;  //Number of 16-bit audio samples recorded so far
 
-
+//Audio pipeline buffers
 q15_t dsp_buffer[3 * input_gulp_size] __attribute__((aligned(4)));
 q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
-char Station_Call[] = "KQ7B";  //six character call sign + /0
-char Locator[] = "DN15";       // four character locator  + /0
+//ToDo:  Arrange for the various modules to access these directly from config structure
+char Station_Call[12];  //six character call sign + /0
+char Locator[5];        // four character locator  + /0
 
 uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
@@ -123,20 +124,18 @@ void setup(void) {
     delay(5000);
   }
 
+  //Use Teensy's battery-backed clock
+  setSyncProvider(getTeensy3Time);
+  delay(100);
+
   //Turn off the transmitter
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, LOW);
 
-  //Initialize the SD library if possible
+  //Initialize the SD library if the card is available
   if (!SD.begin(BUILTIN_SDCARD)) {
     Serial.println("Unable to access the SD card");
   }
-
-
-
-
-  setSyncProvider(getTeensy3Time);
-  delay(100);
 
   //Initialize the display
   tft.begin(HX8357D);
@@ -170,11 +169,9 @@ void setup(void) {
   if (si4735Addr == 0) {
     Serial.println("Si473X not found!");
     Serial.flush();
-    while (1)
-      ;
+    while (1) continue;
   } else {
-    Serial.print("The Si473X I2C address is 0x");
-    Serial.println(si4735Addr, HEX);
+    DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
   }
 
   //Read the JSON configuration file into the config structure
@@ -193,15 +190,19 @@ void setup(void) {
     config.frequency = DEFAULT_FREQUENCY;  //Override config file request with default
   }
 
+  //Argh... copy station callsign and location from config struct to C global variables (fix someday)
+  strncpy(Station_Call, config.callsign, sizeof(Station_Call));
+  strncpy(Locator, config.location, sizeof(Locator));
+
   //Initialize the SI4735 receiver
   delay(10);
-  Serial.println("SSB patch is loading...");
+  DPRINTF("SSB patch is loading...\n");
   et1 = millis();
   loadSSB();
   et2 = millis();
-  Serial.print("SSB patch was loaded in: ");
-  Serial.print((et2 - et1));
-  Serial.println("ms");
+  // Serial.print("SSB patch was loaded in: ");
+  // Serial.print((et2 - et1));
+  // Serial.println("ms");
   delay(10);
   si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
   delay(10);
@@ -210,8 +211,8 @@ void setup(void) {
   delay(10);
   currentFrequency = si4735.getFrequency();
   si4735.setVolume(50);
-  Serial.print("CurrentFrequency = ");
-  Serial.println(currentFrequency);
+  // Serial.print("CurrentFrequency = ");
+  // Serial.println(currentFrequency);
   display_value(360, 40, (int)currentFrequency);
 
   Serial.println(" ");
@@ -248,6 +249,8 @@ void setup(void) {
   set_Station_Coordinates(Locator);
   display_all_buttons();
   open_log_file();
+
+  auto_sync_FT8();
 
 }  //setup()
 
@@ -362,7 +365,7 @@ static void copy_to_fft_buffer(void *destination, const void *source) {
     *dst++ = *src++;  // real sample plus a zero for imaginary
   }
 
-//Configurable recording of raw 16-bit audio at 32000 samples/second to an SD file
+  //Configurable recording of raw 16-bit audio at 32000 samples/second to an SD file
   if (ft8Raw != NULL) {
     ft8Raw.write(source, AUDIO_BLOCK_SAMPLES * sizeof(uint16_t));
     recordSampleCount += AUDIO_BLOCK_SAMPLES;  //Increment count of recorded samples
@@ -412,4 +415,25 @@ void sync_FT8(void) {
   FT_8_counter = 0;
   ft8_marker = 1;
   WF_counter = 0;
+}
+
+
+
+void auto_sync_FT8(void) {
+  DTRACE();
+  // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+  // tft.setTextSize(2);
+  // tft.setCursor(0, 240);
+  // tft.print("Synchronzing With RTC");
+  DPRINTF("Synchronizing with RTC\n");
+
+  while ((second()) % 15 != 0) continue;
+
+  start_time = millis();
+  ft8_flag = 1;
+  FT_8_counter = 0;
+  ft8_marker = 1;
+  WF_counter = 0;
+  // tft.setCursor(0, 260);
+  // tft.print("FT8 Synched With World");
 }

@@ -2176,8 +2176,8 @@ void HX8357_t3n::begin(uint32_t spi_clock, uint32_t spi_clock_read) {
   _SPI_CLOCK = spi_clock;            // #define HX8357_SPICLOCK 30000000
   _SPI_CLOCK_READ = spi_clock_read;  //#define HX8357_SPICLOCK_READ 2000000
 
-  Serial.printf("_t3n::begin mosi:%d miso:%d SCLK:%d CS:%d DC:%d SPI clocks: %lu %lu\n", _mosi, _miso, _sclk, _cs, _dc, _SPI_CLOCK, _SPI_CLOCK_READ);
-  Serial.flush();
+  //Serial.printf("_t3n::begin mosi:%d miso:%d SCLK:%d CS:%d DC:%d SPI clocks: %lu %lu\n", _mosi, _miso, _sclk, _cs, _dc, _SPI_CLOCK, _SPI_CLOCK_READ);
+  //Serial.flush();
 
   if (SPI.pinIsMOSI(_mosi) && ((_miso == 0xff) || SPI.pinIsMISO(_miso)) && SPI.pinIsSCK(_sclk)) {
     _pspi = &SPI;
@@ -2253,8 +2253,8 @@ void HX8357_t3n::begin(uint32_t spi_clock, uint32_t spi_clock_read) {
     }
   }
 #elif defined(__IMXRT1052__) || defined(__IMXRT1062__)  // Teensy 4.x
-  Serial.println("   T4 setup CS/DC");
-  Serial.flush();
+  //Serial.println("   T4 setup CS/DC");
+  //Serial.flush();
   _csport = portOutputRegister(_cs);
   _cspinmask = digitalPinToBitMask(_cs);
   pinMode(_cs, OUTPUT);
@@ -2342,8 +2342,8 @@ void HX8357_t3n::begin(uint32_t spi_clock, uint32_t spi_clock_read) {
   pinMode(DEBUG_PIN_2, OUTPUT);
   pinMode(DEBUG_PIN_3, OUTPUT);
 #endif
-  Serial.println("_t3n::begin - completed");
-  Serial.flush();
+  //Serial.println("_t3n::begin - completed");
+  //Serial.flush();
 }
 
 
