@@ -46,12 +46,13 @@
 #define AUDIO_SAMPLE_RATE 6400
 
 //Configuration parameters read from SD file
-#define CONFIG_FILENAME "config.json"  //8.3 filename
+#define CONFIG_FILENAME "/config.json"  
 struct Config {
   char callsign[12];                     //11 chars and NUL
   char location[5];                      //4 char maidenhead locator and NUL
   unsigned frequency;                    //Operating frequency in kHz
   unsigned long audioRecordingDuration;  //Seconds or 0 to disable audio recording
+  unsigned enableAVC;                    //0=disable, 1=enable SI43xx AVC
 } config;
 
 //Default configuration
@@ -59,6 +60,7 @@ struct Config {
 #define DEFAULT_CALLSIGN "NOCALL"             //There's no realistic default callsign
 #define DEFAULT_LOCATION "****"               //Will later obtain the default maidenhead square from GPS if we get a lock
 #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  //Default of 0 seconds disables audio recording
+#define DEFAULT_ENABLE_AVC 1                  //AVC enabled by default
 
 //Define lower/upper frequency limitations of the 40m hardware implementation
 #define MINIMUM_FREQUENCY 7000  //Low edge of band in kHz
@@ -176,6 +178,7 @@ void setup(void) {
 
   //Read the JSON configuration file into the config structure
   File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
+  if (!configFile) Serial.printf("unable to open %s\n",CONFIG_FILENAME);
   JsonDocument doc;
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) Serial.printf("Unable to read SD config file, %s\n", CONFIG_FILENAME);
@@ -183,7 +186,15 @@ void setup(void) {
   config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
   strlcpy(config.location, doc["location"] | DEFAULT_LOCATION, sizeof(config.location));
   config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
+  config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
   configFile.close();
+
+  //When debugging, print the config file
+  DPRINTF("doc[callsign]=%s\n", doc["callsign"] | "?");
+  DPRINTF("doc[frequency]=%u\n", doc["frequency"] | 1234);
+  DPRINTF("doc[location]=%s\n", doc["location"] | "?");
+  DPRINTF("doc[audioRecordingDuration]=%ul\n", doc["audioRecordingDuration"] | 1234);
+  DPRINTF("doc[enableAVC]=%u\n", doc["enableAVC"] | 42);
 
   //Ensure configured frequency is within the hardware limitations
   if (config.frequency < MINIMUM_FREQUENCY || config.frequency > MAXIMUM_FREQUENCY) {
@@ -303,10 +314,10 @@ void loop() {
 
   //If we are recording audio, then stop after the requested seconds of raw audio data
   //at 6400 samples/second.
-  if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned long) AUDIO_SAMPLE_RATE) {
+  if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned long)AUDIO_SAMPLE_RATE) {
     ft8Raw.close();
     ft8Raw = NULL;
-    DPRINTF("Audio recording file, %s, closed with %ul samples\n",AUDIO_RECORDING_FILENAME,recordSampleCount);
+    DPRINTF("Audio recording file, %s, closed with %ul samples\n", AUDIO_RECORDING_FILENAME, recordSampleCount);
   }
 
 }  //loop()
@@ -332,7 +343,8 @@ void loadSSB() {
   // SMUTESEL - SSB Soft-mute Based on RSSI or SNR (0 or 1).
   // DSP_AFCDIS - DSP AFC Disable or enable; 0=SYNC MODE, AFC enable; 1=SSB MODE, AFC disable.
   //si4735.setSSBConfig(bandwidthIdx, 1, 0, 1, 0, 1);
-  si4735.setSSBConfig(2, 1, 0, 1, 0, 1);  //2 = 3 kc bandwidth
+  si4735.setSSBConfig(2, 1, 0, config.enableAVC, 0, 1);  //2 = 3 kc bandwidth
+  DPRINTF("SI4735 AVC = %u\n", config.enableAVC);
 }
 
 
