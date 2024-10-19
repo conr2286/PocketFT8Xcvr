@@ -5973,7 +5973,7 @@
 						)
 					)
 				)
-				(pin no_connect line
+				(pin unspecified line
 					(at -5.08 -16.51 90)
 					(length 3.81) hide
 					(name "NC"
@@ -5991,7 +5991,7 @@
 						)
 					)
 				)
-				(pin no_connect line
+				(pin unspecified line
 					(at 5.08 -16.51 90)
 					(length 3.81) hide
 					(name "NC"
@@ -11635,10 +11635,22 @@
 		(uuid "a19e452f-7539-439a-92b6-2d192b7ffa23")
 	)
 	(junction
+		(at 243.84 39.37)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a5188df6-d3d1-4747-9086-d354f0f4c00a")
+	)
+	(junction
 		(at 69.85 185.42)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a57703c2-3686-48c2-8c4b-6c139977c4ea")
+	)
+	(junction
+		(at 233.68 39.37)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a5ece0c4-81c4-4678-a1b0-c9c825c8c810")
 	)
 	(junction
 		(at 72.39 139.7)
@@ -12178,7 +12190,7 @@
 	)
 	(wire
 		(pts
-			(xy 250.19 39.37) (xy 241.3 39.37)
+			(xy 250.19 39.37) (xy 243.84 39.37)
 		)
 		(stroke
 			(width 0)
@@ -12265,6 +12277,16 @@
 			(type default)
 		)
 		(uuid "19381f29-94a3-4fe1-a450-b05eb48e2b86")
+	)
+	(wire
+		(pts
+			(xy 233.68 39.37) (xy 233.68 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1c251482-77c6-4214-84c2-066bcba96a7f")
 	)
 	(wire
 		(pts
@@ -12588,6 +12610,16 @@
 	)
 	(wire
 		(pts
+			(xy 243.84 39.37) (xy 243.84 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "47f488a4-3444-4b94-843b-ca8b9bb4dfb6")
+	)
+	(wire
+		(pts
 			(xy 43.18 21.59) (xy 43.18 80.01)
 		)
 		(stroke
@@ -12765,6 +12797,16 @@
 			(type default)
 		)
 		(uuid "58b512db-985d-4016-bb7b-32e030a29cf6")
+	)
+	(wire
+		(pts
+			(xy 233.68 39.37) (xy 236.22 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "59c31926-c2a7-4e6f-a3d7-381c73e34395")
 	)
 	(wire
 		(pts
@@ -13065,6 +13107,16 @@
 			(type default)
 		)
 		(uuid "8b0d991a-e29e-4d04-b8df-20acd128e3c9")
+	)
+	(wire
+		(pts
+			(xy 243.84 39.37) (xy 241.3 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8bd160b3-bbee-4cf2-91db-80b0d07d23fe")
 	)
 	(wire
 		(pts
@@ -13498,7 +13550,7 @@
 	)
 	(wire
 		(pts
-			(xy 220.98 39.37) (xy 236.22 39.37)
+			(xy 220.98 39.37) (xy 233.68 39.37)
 		)
 		(stroke
 			(width 0)
@@ -29082,7 +29134,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RF RX AM/FM 153KHZ-279KHZ 24SSOP"
+		(property "Description" "AM/FM/SW/LW Broadcast Radio Receiver with RDS/RBDS"
 			(at 238.76 59.69 0)
 			(effects
 				(font
