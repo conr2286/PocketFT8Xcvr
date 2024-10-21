@@ -140,13 +140,13 @@ void update_offset_waterfall(int offset) {
     WF_index[x] = bar;
   }
 
-  //tft.graphicsMode();
+//Draw waterfall pixels 
   for (int k = ft8_min_bin; k < ft8_buffer; k++) {
     tft.drawPixel(k - ft8_min_bin, WF_counter, WFPalette[WF_index[k]]);
     if (k - ft8_min_bin == cursor_line) tft.drawPixel(k - ft8_min_bin, WF_counter, HX8357_RED);
   }
 
-  //KQ7B:  At the end of a timeslot, display recvd messages, prepare to send CQ, or respond to calls
+  //At the end of a timeslot, display recvd messages, and prepare to send CQ or respond to calls
   //if (num_decoded_msg > 0 && WF_counter == 0) {
   if (WF_counter == 0) {
     display_messages(num_decoded_msg);

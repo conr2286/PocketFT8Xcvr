@@ -58,8 +58,10 @@ void receive_sequence(void) {
   //Turn on the receiver (Req'd for V2.0 boards implementing ~PTT in FW)
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, HIGH);
+
   si4735.setVolume(50);
   clear_FT8_message();
+
 }  //receive_sequence()
 
 
@@ -69,17 +71,32 @@ void tune_On_sequence(void) {
   si5351.set_freq(F_Long, SI5351_CLK0);
   si4735.setVolume(35);
   si5351.output_enable(SI5351_CLK0, 1);
-  pinMode(PIN_PTT, OUTPUT);                 //Hmm... should stop receiver for V2 boards
+
+  //Turn off the receiver (req'd for V2.0 boards implementing ~PTT in FW)
+  pinMode(PIN_RCV, OUTPUT);
+  digitalWrite(PIN_RCV, LOW);
+
+  //Turn on the transmitter
+  pinMode(PIN_PTT, OUTPUT);  
   digitalWrite(PIN_PTT, HIGH);
-}
+} //tune_On_sequence()
 
 //Turns the transmitter off
 void tune_Off_sequence(void) {
+
+  //Disable the SI5351 XCLK
   si5351.output_enable(SI5351_CLK0, 0);
+
+  //Turn off the transmitter
   pinMode(PIN_PTT, OUTPUT);
-  digitalWrite(PIN_PTT, LOW);               //Hmm... should enable receiver for V2 boards
+  digitalWrite(PIN_PTT, LOW);  
+
+    //Turn on the receiver (req'd for V2.0 boards implementing ~PTT in FW)
+  pinMode(PIN_RCV, OUTPUT);
+  digitalWrite(PIN_RCV, HIGH);
+
   si4735.setVolume(50);
-}
+} //tune_Off_sequence()
 
 
 //KQ7B:  Recalculates carrier frequency F_Long and programs SI5351 with new unmodulated carrier frequency
@@ -91,6 +108,7 @@ void set_Xmit_Freq() {
   DPRINTF("%s currentFrequency=%u, cursor_freq=%u, offset_freq=%u, F_Long=%llu\n", __FUNCTION__, currentFrequency, cursor_freq, offset_freq, F_Long);
   //F_Long = (uint64_t) ((currentFrequency * 1000 + cursor_freq ) * 100);
   si5351.set_freq(F_Long, SI5351_CLK0);
+
 }  //set_Xmit_Freq()
 
 
@@ -102,11 +120,11 @@ void set_FT8_Tone(uint8_t ft8_tone) {
 }
 
 
-//Immediately turns on the transmitted carrier at the current F_Long frequency.
+//Immediately turns on the transmitter's carrier at the current F_Long frequency.
 //Sets xmit_flag notifying loop() to modulate the carrier, apparently the only place
 //where this happens (i.e. if you want to have the carrier modulated, you must
 //call setup_to_transmit_on_next_DSP_Flag).  I think the outbound string
-//should reside in the global message[].
+//resides in the global message[].
 void setup_to_transmit_on_next_DSP_Flag(void) {
   DPRINTF("%x\n", __FUNCTION__);
   ft8_xmit_counter = 0;
@@ -116,7 +134,7 @@ void setup_to_transmit_on_next_DSP_Flag(void) {
 }
 
 
-//KQ7B:  Seems to be implementing a state machine for portions of an FT8 QSO???
+//Seems to be implementing a state machine for portions of an FT8 QSO???
 //  1. The GUI button toggles the CQ_Flag examined by loop().
 //  2. The main loop() invokes process_FT8_FFT() which invokes...
 //  3. update_offset_waterfall() invokes service_CQ() at the end of receive timeslot
@@ -170,4 +188,4 @@ void service_CQ(void) {
       break;
       */
   }
-}
+} //service_CQ()
