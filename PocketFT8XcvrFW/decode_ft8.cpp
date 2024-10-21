@@ -96,6 +96,7 @@ extern int Target_RSL;  // four character RSL  + /0
 extern time_t getTeensy3Time();
 extern int log_flag, logging_on;
 
+//Demodulate the received FT8 signals into the new_decoded[] of successfully demodulated messages (if any)
 int ft8_decode(void) {
 
   // Find top candidates by Costas sync score and localize them in time and frequency
@@ -203,7 +204,7 @@ int ft8_decode(void) {
   return num_decoded;
 }
 
-
+//Displays decoded received messages, if any
 void display_messages(int decoded_messages) {
 
   char message[kMax_message_length];
@@ -224,7 +225,7 @@ void display_messages(int decoded_messages) {
   }
 }
 
-
+//Displays specified decoded message's callsign and signal strength
 void display_selected_call(int index) {
 
   char selected_station[18];
@@ -297,7 +298,7 @@ int strindex(char s[], char t[]) {
 }
 
 
-
+//Apparently displays decoded messages received from stations calling my station, if any.
 int Check_Calling_Stations(int num_decoded) {
   char big_gulp[60];
   char message[kMax_message_length];
@@ -329,7 +330,8 @@ int Check_Calling_Stations(int num_decoded) {
   if (message_test > 100) return message_test - 100;
   else
     return -1;
-}
+
+} //Check_Calling_Stations()
 
 
 /*

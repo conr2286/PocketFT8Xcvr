@@ -107,10 +107,10 @@ void extract_power(int offset) {
 }
 
 
+//KQ7B:  Calculates received signal powers and updates the waterfall
 void process_FT8_FFT(void) {
 
   if (ft8_flag == 1) {
-
 
     master_offset = offset_step * FT_8_counter;
     extract_power(master_offset);
@@ -123,11 +123,12 @@ void process_FT8_FFT(void) {
       decode_flag = 1;
     }
   }
-}
+} //process_FT8_FFT()
 
 
 
-
+//Update the waterfall graphic with received signal powers and, at the end of a receive timeslot,
+//displays successfully decoded messages (if any).  Prepares to send CQ.
 void update_offset_waterfall(int offset) {
 
   for (int j = ft8_min_bin; j < ft8_buffer; j++) FFT_Buffer[j] = export_fft_power[j + offset];
@@ -139,21 +140,22 @@ void update_offset_waterfall(int offset) {
     WF_index[x] = bar;
   }
 
-  //DPRINTF("offset=%d, ft8_min_bin=%d, ft8_buffer=%d\n",offset,ft8_min_bin,ft8_buffer);
-
   //tft.graphicsMode();
   for (int k = ft8_min_bin; k < ft8_buffer; k++) {
     tft.drawPixel(k - ft8_min_bin, WF_counter, WFPalette[WF_index[k]]);
     if (k - ft8_min_bin == cursor_line) tft.drawPixel(k - ft8_min_bin, WF_counter, HX8357_RED);
   }
 
-  //DPRINTF("num_decoded_msg=%u, WF_counter=%u\n",num_decoded_msg,WF_counter);
-
-  if (num_decoded_msg > 0 && WF_counter == 0) {
+  //KQ7B:  At the end of a timeslot, display recvd messages, prepare to send CQ, or respond to calls
+  //if (num_decoded_msg > 0 && WF_counter == 0) {
+  if (WF_counter == 0) {
     display_messages(num_decoded_msg);
-    if (CQ_Flag == 1) service_CQ();
-    else
+    if (CQ_Flag == 1) {
+      service_CQ();                           //Setup the outbound CQ message and arm the transmitter
+      setup_to_transmit_on_next_DSP_Flag();   //Turn on the carrier and make it happen
+    } else {
       Check_Calling_Stations(num_decoded_msg);
+    }
 
     num_decoded_msg = 0;
   }

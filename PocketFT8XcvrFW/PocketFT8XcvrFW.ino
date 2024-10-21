@@ -43,10 +43,10 @@
 //The command, sox -r 6400 -c 1 -e unsigned -b 16 ft8.raw ft8.wav, will convert the
 //recording to a wav file.  Set the duration to 0 to eliminate file I/O overhead.
 #define AUDIO_RECORDING_FILENAME "ft8.raw"
-#define AUDIO_SAMPLE_RATE 6400
+//#define AUDIO_SAMPLE_RATE 6400
 
 //Configuration parameters read from SD file
-#define CONFIG_FILENAME "/config.json"  
+#define CONFIG_FILENAME "/config.json"
 struct Config {
   char callsign[12];                     //11 chars and NUL
   char location[5];                      //4 char maidenhead locator and NUL
@@ -99,11 +99,32 @@ uint32_t current_time, start_time, ft8_time;
 uint32_t days_fraction, hours_fraction, minute_fraction;
 
 uint8_t ft8_hours, ft8_minutes, ft8_seconds;
-int ft8_flag, FT_8_counter, ft8_marker, decode_flag;
+
+int FT_8_counter, ft8_marker;
+
+//Apparently set when there's received audio in the FFT buffers
+int DSP_Flag;
+
+//Apparently set when the received messages are ready to be decoded
+int decode_flag;
+
+//Apparently set when it's time for the FFT to compute the magnitudes of a received signal
+int ft8_flag;
+
+//Apparently set when CQ button pressed
+extern int CQ_Flag;
+
 int WF_counter;
 int num_decoded_msg;
-int xmit_flag, ft8_xmit_counter, Transmit_Armned;
-int DSP_Flag;
+
+//Apparently set when we are transmitting
+int xmit_flag;
+
+//Apparently set when a transmission is pending
+int Transmit_Armned;
+
+int ft8_xmit_counter;
+
 int master_decoded;
 
 uint16_t cursor_freq;
@@ -178,7 +199,7 @@ void setup(void) {
 
   //Read the JSON configuration file into the config structure
   File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
-  if (!configFile) Serial.printf("unable to open %s\n",CONFIG_FILENAME);
+  if (!configFile) Serial.printf("unable to open %s\n", CONFIG_FILENAME);
   JsonDocument doc;
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) Serial.printf("Unable to read SD config file, %s\n", CONFIG_FILENAME);
@@ -266,8 +287,16 @@ void setup(void) {
 }  //setup()
 
 
+unsigned oldFlags = 0;
 
 void loop() {
+
+  //Debugging aide for the flags
+  unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
+  if (newFlags != oldFlags) {
+    DPRINTF("newFlags = 0x%x\n", newFlags);
+    oldFlags = newFlags;
+  }
 
   if (decode_flag == 0) process_data();
 
@@ -275,21 +304,22 @@ void loop() {
 
     process_FT8_FFT();
 
+    //Is a transmission in-progress?
     if (xmit_flag == 1) {
-      //DTRACE();
       int offset_index = 5;
 
+      //KQ7B:  Is it time to modulate the SI5351 with the transmitter's next FSK tone?
       if (ft8_xmit_counter >= offset_index && ft8_xmit_counter < 79 + offset_index) {
-        set_FT8_Tone(tones[ft8_xmit_counter - offset_index]);
+        set_FT8_Tone(tones[ft8_xmit_counter - offset_index]);  //Program new FT8 tone into the SI5351
       }
 
-      ft8_xmit_counter++;
+      ft8_xmit_counter++;  //Apparently counting tones in the FSK transmission
 
+      //Is it time to switch from transmitting to receiving (i.e. all tones sent) at the end of our timeslot?
       if (ft8_xmit_counter == 80 + offset_index) {
-
-        xmit_flag = 0;
-        receive_sequence();
-        terminate_transmit_armed();
+        xmit_flag = 0;               //Indication that the transmission has ended
+        receive_sequence();          //Switch HW from transmitting to receiving
+        terminate_transmit_armed();  //Switch again then update GUI
       }
     }  //xmit_flag
 
@@ -299,12 +329,14 @@ void loop() {
   }  //DSP_Flag
 
   if (decode_flag == 1) {
-
     num_decoded_msg = ft8_decode();
     master_decoded = num_decoded_msg;
     decode_flag = 0;
-    if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
-  }  //decode_flag
+
+    //Following a receive timeslot, if a message is ready for transmission,
+    //turn-on the carrier and set the xmit_flag to modulate it.
+    if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();   
+  }
 
   update_synchronization();
   // rtc_synchronization();
@@ -314,7 +346,7 @@ void loop() {
 
   //If we are recording audio, then stop after the requested seconds of raw audio data
   //at 6400 samples/second.
-  if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned long)AUDIO_SAMPLE_RATE) {
+  if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned)AUDIO_SAMPLE_RATE) {
     ft8Raw.close();
     ft8Raw = NULL;
     DPRINTF("Audio recording file, %s, closed with %ul samples\n", AUDIO_RECORDING_FILENAME, recordSampleCount);
@@ -348,6 +380,7 @@ void loadSSB() {
 }
 
 
+//First step of processing received audio from queue1
 void process_data() {
 
   if (queue1.available() >= num_que_blocks) {
@@ -365,10 +398,8 @@ void process_data() {
     }
 
     DSP_Flag = 1;
-  } else {
-    D1PRINTF("No data available\n");
   }
-}
+}  //process_data()
 
 
 static void copy_to_fft_buffer(void *destination, const void *source) {
@@ -382,7 +413,7 @@ static void copy_to_fft_buffer(void *destination, const void *source) {
   if (ft8Raw != NULL) {
     ft8Raw.write(source, AUDIO_BLOCK_SAMPLES * sizeof(uint16_t));
     recordSampleCount += AUDIO_BLOCK_SAMPLES;  //Increment count of recorded samples
-    if (recordSampleCount % AUDIO_SAMPLE_RATE == 0) {
+    if (recordSampleCount % (unsigned)AUDIO_SAMPLE_RATE == 0) {
       DPRINTF("Audio recording in progress...\n");  //One second progress indicator
     }
   }

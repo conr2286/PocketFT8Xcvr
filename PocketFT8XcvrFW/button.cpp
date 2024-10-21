@@ -179,8 +179,8 @@ void checkButton(void) {
       executeButton(i);
     }
   }
-  DTRACE();
-  DPRINTF("CQ_Flag=%u\n", CQ_Flag);
+  //DTRACE();
+  //DPRINTF("CQ_Flag=%u\n", CQ_Flag);
 }
 
 int button_delay = 100;
@@ -190,7 +190,7 @@ void executeButton(uint16_t index) {
   DPRINTF("executeButton(%u)\n", index);
   switch (index) {
 
-    case 0:
+    case 0:  //CQ (e.g. CQ KQ7B DN15)
       DTRACE();
       if (sButtonData[0].state) {
         DTRACE();
@@ -204,7 +204,7 @@ void executeButton(uint16_t index) {
       }
       break;
 
-    case 1:
+    case 1:  //Lo --- Location Msg (e.g. KN0I KQ7B DN15)
       set_message(1);
       sButtonData[1].state = true;
       drawButton(1);
@@ -213,7 +213,7 @@ void executeButton(uint16_t index) {
       drawButton(1);
       break;
 
-    case 2:
+    case 2:  //Rs --- Received Signal Msg (e.g. KN0I KQ7B -3)
       set_message(2);
       sButtonData[2].state = true;
       drawButton(2);
@@ -222,7 +222,7 @@ void executeButton(uint16_t index) {
       drawButton(2);
       break;
 
-    case 3:
+    case 3:  //73 --- 73 Msg (e.g. KN0I KQ7B RR73)
       set_message(3);
       sButtonData[3].state = true;
       drawButton(3);
@@ -231,7 +231,7 @@ void executeButton(uint16_t index) {
       drawButton(3);
       break;
 
-    case 4:
+    case 4:  //Cl --- Clears the FT8 message buffer
       clear_FT8_message();
       sButtonData[4].state = true;
       drawButton(4);
@@ -240,7 +240,7 @@ void executeButton(uint16_t index) {
       drawButton(4);
       break;
 
-    case 5:
+    case 5:  //Tu --- Tune on/off
       if (sButtonData[5].state) {
         tune_On_sequence();
         tune_flag = 1;
@@ -252,7 +252,7 @@ void executeButton(uint16_t index) {
       }
       break;
 
-    case 6:
+    case 6:  //Tx
       if (sButtonData[6].state) {
         Transmit_Armned = 1;
         delay(button_delay);
@@ -262,7 +262,7 @@ void executeButton(uint16_t index) {
       }
       break;
 
-    case 7:
+    case 7:  //Lg
       if (log_flag == 1 && sButtonData[7].state) {
 
         logging_on = 1;
@@ -278,7 +278,7 @@ void executeButton(uint16_t index) {
       }
       break;
 
-    case 8:
+    case 8:  //SY
       sButtonData[8].state = true;
       drawButton(8);
       delay(button_delay);
@@ -323,7 +323,7 @@ void executeButton(uint16_t index) {
       break;
   }
 
-} //execute_button()
+}  //execute_button()
 
 
 void terminate_transmit_armed(void) {
@@ -354,17 +354,17 @@ void check_FT8_Touch(void) {
     FT_8_TouchIndex = y_test / 25;
     if (FT_8_TouchIndex < master_decoded) display_selected_call(FT_8_TouchIndex);
   }
-} //check_FT8_Touch()
+}  //check_FT8_Touch()
 
 void check_WF_Touch(void) {
   if (draw_x < 350 && draw_y < 90) {
 
     cursor_line = draw_x;
     cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-    DPRINTF("button.cpp:  cursor_freq=%u\n",cursor_freq);
+    //DPRINTF("button.cpp:  cursor_freq=%u\n",cursor_freq);
     set_Xmit_Freq();
   }
-} //check_WF_Touch()
+}  //check_WF_Touch()
 
 
 void set_startup_freq(void) {
@@ -373,7 +373,7 @@ void set_startup_freq(void) {
   cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
   offset_freq = start_up_offset_freq;
   DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
-} //set_startup_freq()
+}  //set_startup_freq()
 
 
 void process_touch(void) {
@@ -381,7 +381,7 @@ void process_touch(void) {
   pi = ts.getPoint();
 
   if (pi.z > MINPRESSURE) {
-    DTRACE();
+    //DTRACE();
     pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
     pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
     tft.fillCircle(pw.x, pw.y, PENRADIUS, HX8357_YELLOW);
@@ -393,7 +393,6 @@ void process_touch(void) {
     check_FT8_Touch();
     check_WF_Touch();
   }
-  
 }
 
 

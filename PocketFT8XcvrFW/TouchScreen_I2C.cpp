@@ -9,6 +9,8 @@
 #include <Wire.h>
 #include <MCP342x.h>
 
+#include "DEBUG.h"
+
 #ifdef __AVR
 #include <avr/pgmspace.h>
 #elif defined(ESP8266)
@@ -21,7 +23,6 @@
 // immediately returned 2 is double-sampling and we only return valid data if
 // both points are the same 3+ uses insert sort to get the median value. We
 // found 2 is precise yet not too slow so we suggest sticking with it!
-
 #define NUMSAMPLES 2
 
 uint8_t address = 0x69;  //Original I2C address was 0x68 but V1.01 chip reports 0x68
@@ -110,7 +111,6 @@ TSPoint TouchScreen::getPoint(void) {
     samples[i] = value1;
   }
 
-
 #if NUMSAMPLES == 2
   // Allow small amount of measurement noise, because capacitive
   // coupling to a TFT display's signals can induce some noise.
@@ -140,7 +140,6 @@ TSPoint TouchScreen::getPoint(void) {
     samples[i] = value2;
   }
 
-
 #if NUMSAMPLES == 2
   // Allow small amount of measurement noise, because capacitive
   // coupling to a TFT display's signals can induce some noise.
@@ -155,11 +154,11 @@ TSPoint TouchScreen::getPoint(void) {
 
 
 
-  if (!valid)
+  if (!valid) {
     z = 0;
-  else
+  } else {
     z = x + y;
-
+  }
   return TSPoint(x, y, z);
 }
 

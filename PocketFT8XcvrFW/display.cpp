@@ -62,7 +62,8 @@ void make_filename(void) {
   tft.print(log_filename);
 }
 
-
+//Opens the logfile, appends asterisk line, and closes the log file.
+//Displays name of the log file.
 bool open_log_file(void) {
 
   if (!SD.begin(BUILTIN_SDCARD)) {
@@ -89,7 +90,7 @@ bool open_log_file(void) {
   }
 }
 
-
+//Displays station callsign and maidenhead locator
 void display_station_data(int x, int y) {
   char string[13];  // print format stuff
   sprintf(string, "%7s %4s", Station_Call, Locator);
@@ -100,6 +101,7 @@ void display_station_data(int x, int y) {
 }
 
 
+//Opens the log file, appends the specified string to the logfile, and closes the file
 void write_log_data(char *data) {
   Log_File = SD.open("FT8_Log.txt", FILE_WRITE);
   Log_File.println(data);

@@ -26,13 +26,16 @@ extern int offset_freq;
 
 uint64_t F_Long, F_FT8, F_Offset;
 
+//KQ7B:  Turn-on the transmitter at the carrier frequency, F_Long
 void transmit_sequence(void) {
 
-  //Turn off the receiver (req'd for V2.0 boards)
+  DPRINTF("%s\n", __FUNCTION__);
+
+  //KQ7B:  Turn off the receiver (req'd for V2.0 boards implementing ~PTT in FW)
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, LOW);
 
-  //Turn on the transmitter
+  //KQ7B:  Turn on the transmitter at F_Long
   set_Xmit_Freq();
   si5351.set_freq(F_Long, SI5351_CLK0);
   si4735.setVolume(35);
@@ -42,71 +45,86 @@ void transmit_sequence(void) {
   digitalWrite(PIN_PTT, HIGH);
 }
 
+//KQ7B:  Switch hardware from transmitting to receiving
 void receive_sequence(void) {
+
+  DPRINTF("%s\n", __FUNCTION__);
 
   //Turn off the transmitter
   si5351.output_enable(SI5351_CLK0, 0);
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, LOW);
 
-  //Turn on the receiver (Req'd for V2.0 boards)
+  //Turn on the receiver (Req'd for V2.0 boards implementing ~PTT in FW)
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, HIGH);
   si4735.setVolume(50);
   clear_FT8_message();
-}
+}  //receive_sequence()
 
 
+//Programs SI5351 with F_Long carrier frequency and turns on transmitter
 void tune_On_sequence(void) {
   set_Xmit_Freq();
   si5351.set_freq(F_Long, SI5351_CLK0);
   si4735.setVolume(35);
   si5351.output_enable(SI5351_CLK0, 1);
-  pinMode(PIN_PTT, OUTPUT);
+  pinMode(PIN_PTT, OUTPUT);                 //Hmm... should stop receiver for V2 boards
   digitalWrite(PIN_PTT, HIGH);
 }
 
+//Turns the transmitter off
 void tune_Off_sequence(void) {
   si5351.output_enable(SI5351_CLK0, 0);
   pinMode(PIN_PTT, OUTPUT);
-  digitalWrite(PIN_PTT, LOW);
+  digitalWrite(PIN_PTT, LOW);               //Hmm... should enable receiver for V2 boards
   si4735.setVolume(50);
 }
 
 
+//KQ7B:  Recalculates carrier frequency F_Long and programs SI5351 with new unmodulated carrier frequency
 void set_Xmit_Freq() {
 
   // display_value(400, 320, ( int ) cursor_freq);
   // display_value(400, 360,  offset_freq);
   F_Long = (uint64_t)((currentFrequency * 1000 + cursor_freq + offset_freq) * 100);
-  DPRINTF("currentFrequency=%u, cursor_freq=%u, offset_freq=%u, F_Long=%llu\n", currentFrequency, cursor_freq, offset_freq, F_Long);
+  DPRINTF("%s currentFrequency=%u, cursor_freq=%u, offset_freq=%u, F_Long=%llu\n", __FUNCTION__, currentFrequency, cursor_freq, offset_freq, F_Long);
   //F_Long = (uint64_t) ((currentFrequency * 1000 + cursor_freq ) * 100);
   si5351.set_freq(F_Long, SI5351_CLK0);
-}
+}  //set_Xmit_Freq()
 
 
-
+//Programs the SI5351 for F_Long + the specified FT8 tone.  This appears to be the FSK modulator
+//as this function is repeatedly invoked to shift the carrier during transmission.
 void set_FT8_Tone(uint8_t ft8_tone) {
   F_FT8 = F_Long + uint64_t(ft8_tone) * FT8_TONE_SPACING;
   si5351.set_freq(F_FT8, SI5351_CLK0);
 }
 
 
+//Immediately turns on the transmitted carrier at the current F_Long frequency.
+//Sets xmit_flag notifying loop() to modulate the carrier, apparently the only place
+//where this happens (i.e. if you want to have the carrier modulated, you must
+//call setup_to_transmit_on_next_DSP_Flag).  I think the outbound string
+//should reside in the global message[].
 void setup_to_transmit_on_next_DSP_Flag(void) {
+  DPRINTF("%x\n", __FUNCTION__);
   ft8_xmit_counter = 0;
-  transmit_sequence();
-  set_Xmit_Freq();
-  xmit_flag = 1;
+  transmit_sequence();  //Turns-on the transmitter carrier at current F_Long ??
+  set_Xmit_Freq();      //Recalculates F_long and reprograms SI5351 ??
+  xmit_flag = 1;        //This flag appears to trigger loop() to modulate the carrier
 }
 
 
+//KQ7B:  Seems to be implementing a state machine for portions of an FT8 QSO???
+//  1. The GUI button toggles the CQ_Flag examined by loop().
+//  2. The main loop() invokes process_FT8_FFT() which invokes...
+//  3. update_offset_waterfall() invokes service_CQ() at the end of receive timeslot
 void service_CQ(void) {
 
-  DTRACE();
+  DPRINTF("%s, Beacon_state=%u\n", __FUNCTION__, Beacon_State);
 
   int receive_index;
-
-  DPRINTF("Beacon_State=%u\n", Beacon_State);
 
   switch (Beacon_State) {
 
@@ -119,9 +137,9 @@ void service_CQ(void) {
 
       if (receive_index >= 0) {
         display_selected_call(receive_index);
-        set_message(2);  // send RSL
+        set_message(2);  // Prepare the RSL message for transmission
       } else
-        set_message(0);  // send CQ
+        set_message(0);  // Prepare the CQ message for transmission
       Transmit_Armned = 1;
       Beacon_State = 2;
 
@@ -132,7 +150,7 @@ void service_CQ(void) {
 
       if (receive_index >= 0) {
         display_selected_call(receive_index);
-        set_message(3);  // send 73
+        set_message(3);  // Prepare the 73 message for transmission
         Transmit_Armned = 1;
       }
 
