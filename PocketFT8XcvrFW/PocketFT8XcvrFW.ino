@@ -7,7 +7,7 @@
 //#include <HX8357_t3.h>
 #include "HX8357_t3n.h"
 #include "TouchScreen_I2C.h"
-#include <MCP342x.h>
+#include "MCP342x.h"
 #include "si5351.h"
 #include <SI4735.h>
 #include "patch_full.h"  // SSB patch for whole SSBRX full download

@@ -7,7 +7,7 @@
 #include "Arduino.h"
 #include "pins_arduino.h"
 #include <Wire.h>
-#include <MCP342x.h>
+#include "MCP342x.h"
 
 #include "DEBUG.h"
 
