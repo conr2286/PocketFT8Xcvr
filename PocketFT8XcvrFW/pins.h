@@ -39,7 +39,7 @@
 #define PIN_YM 36               // can be a digital pin
 #define PIN_XP 39               // can be a digital pin
 
-//GPS pins
+//GPS pins (Teensy 4.1 Serial1)
 #define PIN_GPSTX 0             //TX data from GPS
 #define PIN_GPSRX 1             //RX data from GPS
 

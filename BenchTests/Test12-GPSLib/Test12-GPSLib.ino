@@ -3,7 +3,7 @@ NAME
   Test11 - GPS
 
 DESCRIPTION
-  Initializes GPS and prints info read from GPS
+  Initializes GPS and prints info read from GPS using TinyGPS library
 
 EXERCISED
 
@@ -50,7 +50,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial)
     ;  // Needed for Leonardo only
-  SerialGPS.begin(4800);
+  SerialGPS.begin(9600);
   Serial.println("Waiting for GPS time ... ");
 }
 

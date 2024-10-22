@@ -13,6 +13,7 @@
 #include "patch_full.h"  // SSB patch for whole SSBRX full download
 #include <TimeLib.h>
 #include <EEPROM.h>
+#include <TinyGPS.h>
 
 
 #include "Process_DSP.h"
@@ -28,8 +29,13 @@
 #include "Arduino.h"
 #include "AudioStream.h"
 #include "arm_math.h"
-
 #include "constants.h"
+
+//GPS Stuff
+TinyGPS gps;
+#define SerialGPS Serial1   //Teensy 4.1 Serial Port 1, pins 0 and 1
+#define GPS_BAUD_RATE 9600  //Adafruit Ultimate GPS baud rate
+float flat, flon;           //GPS-derived lattitude and longitude
 
 //Enable comments in the JSON configuration file
 #define ARDUINOJSON_ENABLE_COMMENTS 1
@@ -147,7 +153,11 @@ void setup(void) {
     delay(5000);
   }
 
+
+
+
   //Use Teensy's battery-backed clock
+  //initGPS();
   setSyncProvider(getTeensy3Time);
   delay(100);
 
@@ -238,19 +248,17 @@ void setup(void) {
   delay(10);
   si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
   delay(10);
-  //si4735.setSSB(18000, 18400, 18100, 1, USB);  //Sets the recv's band limits, initial freq, and mode
   si4735.setSSB(MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, config.frequency, 1, USB);  //FT8 is *always* USB
   delay(10);
   currentFrequency = si4735.getFrequency();
   si4735.setVolume(50);
-  // Serial.print("CurrentFrequency = ");
-  // Serial.println(currentFrequency);
   display_value(360, 40, (int)currentFrequency);
 
   Serial.println(" ");
   Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
   Serial.println("Use keyboard u to raise, d to lower, & s to save ");
   Serial.println(" ");
+
 
   //Turn on the receiver (Req'd for V2.0 boards)
   pinMode(PIN_RCV, OUTPUT);
@@ -335,7 +343,7 @@ void loop() {
 
     //Following a receive timeslot, if a message is ready for transmission,
     //turn-on the carrier and set the xmit_flag to modulate it.
-    if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();   
+    if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
   }
 
   update_synchronization();
@@ -481,3 +489,59 @@ void auto_sync_FT8(void) {
   // tft.setCursor(0, 260);
   // tft.print("FT8 Synched With World");
 }
+
+
+// void initGPS() {
+//   //Initialize the GPS, if any
+//   SerialGPS.begin(GPS_BAUD_RATE);  //Init the GPS serial connection
+
+//   //Try to obtain time/location from GPS
+//   unsigned long age;
+//   int Year;
+//   byte Month, Day, Hour, Minute, Second;
+//   bool gpsActive = false;
+//   for (unsigned long gpsStart = millis(); millis() < gpsStart + 5000;) {
+//     while (SerialGPS.available()) {
+
+//       char c = SerialGPS.read();
+//       //Serial.write(c);
+
+//       //Wait for a message from GPS
+//       if (gps.encode(c)) {  // process gps messages
+//         // when TinyGPS reports new data...
+//         gpsActive = true;
+
+//         gps.crack_datetime(&Year, &Month, &Day, &Hour, &Minute, &Second, NULL, &age);
+//         gps.f_get_position(&flat, &flon, &age);
+//       }
+
+//       unsigned long gpsWaitMillis = millis() - gpsStart;
+//       //if (gpsWaitMillis > 15000UL) break;  //Give-up on GPS time/location
+
+//     }  //while
+//   }
+
+//   if (gpsActive) {
+//     if (age < 500) {
+//       // set the MCU Time to the latest GPS reading
+//       tmElements_t rtc;
+//       rtc.Second = Second;
+//       rtc.Minute = Minute;
+//       rtc.Hour = Hour;
+//       rtc.Year = Year;
+//       rtc.Month = Month;
+//       rtc.Day = Day;
+//       uint32_t unixTime = makeTime(rtc);
+//       Teensy3Clock.set(unixTime);
+//       setTime(Hour,Minute,Second,Day,Month,Year);
+//       DPRINTF("Teensy3Clock set\n");
+//       //adjustTime(offset * SECS_PER_HOUR);
+//     }
+
+//     DPRINTF("#satellites=%d, hdop=%d, flat=%f, flon=%f, age=%ul ms\n", gps.satellites(), gps.hdop(), flat, flon, age);
+//     DPRINTF("GPS Date/Time:  %u/%u/%u %u:%u:%u\n", Month, Day, Year, Hour, Minute, Second);
+//   } else {
+//     DPRINTF("GPS not active\n");
+//   }
+
+// }  //initGPS()
