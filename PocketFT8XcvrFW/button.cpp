@@ -202,6 +202,7 @@ void executeButton(uint16_t index) {
         CQ_Flag = 0;
         sButtonData[6].active_state = true;
       }
+      delay(button_delay);
       break;
 
     case 1:  //Lo --- Location Msg (e.g. KN0I KQ7B DN15)

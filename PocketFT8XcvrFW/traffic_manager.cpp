@@ -129,7 +129,7 @@ void set_FT8_Tone(uint8_t ft8_tone) {
 //call setup_to_transmit_on_next_DSP_Flag).  I think the outbound string
 //resides in the global message[].
 void setup_to_transmit_on_next_DSP_Flag(void) {
-  DPRINTF("%x\n", __FUNCTION__);
+  DPRINTF("%s\n", __FUNCTION__);
   ft8_xmit_counter = 0;
   transmit_sequence();  //Turns-on the transmitter carrier at current F_Long ??
   set_Xmit_Freq();      //Recalculates F_long and reprograms SI5351 ??

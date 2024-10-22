@@ -152,7 +152,6 @@ void update_offset_waterfall(int offset) {
     display_messages(num_decoded_msg);
     if (CQ_Flag == 1) {
       service_CQ();                           //Setup the outbound CQ message and arm the transmitter
-      setup_to_transmit_on_next_DSP_Flag();   //Turn on the carrier and make it happen
     } else {
       Check_Calling_Stations(num_decoded_msg);
     }

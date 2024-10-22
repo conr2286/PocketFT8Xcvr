@@ -9,6 +9,9 @@
 #include <Wire.h>
 #include "MCP342x.h"
 
+//Define which I2C bus hosts the MCP342x
+#define MCP342X_WIRE Wire
+
 #include "DEBUG.h"
 
 #ifdef __AVR
@@ -171,7 +174,7 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
   _rxplate = rxplate;
 
 
-  Wire.begin();
+  MCP342X_WIRE.begin();
   MCP342x::generalCallReset();
   delay(1);  // MC342x needs 300us to settle, wait 1ms
 
