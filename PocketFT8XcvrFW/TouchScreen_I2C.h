@@ -7,14 +7,11 @@
 #define _ADAFRUIT_TOUCHSCREEN_H_
 #include <stdint.h>
 
-#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__) ||              \
-    defined(TEENSYDUINO) || defined(__AVR_ATmega2560__) ||                     \
-    defined(__AVR_ATmega4809__)
+#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__) || defined(TEENSYDUINO) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega4809__)
 typedef volatile uint8_t RwReg;
 #elif defined(ARDUINO_STM32_FEATHER)
 typedef volatile uint32 RwReg;
-#elif defined(NRF52_SERIES) || defined(ESP32) || defined(ESP8266) ||           \
-    defined(ARDUINO_ARCH_STM32)
+#elif defined(NRF52_SERIES) || defined(ESP32) || defined(ESP8266) || defined(ARDUINO_ARCH_STM32)
 typedef volatile uint32_t RwReg;
 #else
 typedef volatile uint32_t RwReg;
@@ -34,9 +31,9 @@ public:
   bool operator==(TSPoint);
   bool operator!=(TSPoint);
 
-  int16_t x, ///< state variable for the x value
-      y,     ///< state variable for the y value
-      z;     ///< state variable for the z value
+  int16_t x,  ///< state variable for the x value
+    y,        ///< state variable for the y value
+    z;        ///< state variable for the z value
 };
 /** Object that controls and keeps state for a touch screen. */
 
@@ -64,7 +61,7 @@ public:
   int readTouchY();
   int readTouchX();
   TSPoint getPoint();
-  int16_t pressureThreshhold; ///< Pressure threshold for `isTouching`
+  int16_t pressureThreshhold;  ///< Pressure threshold for `isTouching`
 
 private:
   uint8_t _yp, _ym, _xm, _xp;

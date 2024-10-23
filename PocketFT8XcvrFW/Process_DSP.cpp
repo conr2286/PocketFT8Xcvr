@@ -123,7 +123,7 @@ void process_FT8_FFT(void) {
       decode_flag = 1;
     }
   }
-} //process_FT8_FFT()
+}  //process_FT8_FFT()
 
 
 
@@ -140,7 +140,7 @@ void update_offset_waterfall(int offset) {
     WF_index[x] = bar;
   }
 
-//Draw waterfall pixels 
+  //Draw waterfall pixels
   for (int k = ft8_min_bin; k < ft8_buffer; k++) {
     tft.drawPixel(k - ft8_min_bin, WF_counter, WFPalette[WF_index[k]]);
     if (k - ft8_min_bin == cursor_line) tft.drawPixel(k - ft8_min_bin, WF_counter, HX8357_RED);
@@ -151,7 +151,7 @@ void update_offset_waterfall(int offset) {
   if (WF_counter == 0) {
     display_messages(num_decoded_msg);
     if (CQ_Flag == 1) {
-      service_CQ();                           //Setup the outbound CQ message and arm the transmitter
+      service_CQ();  //Setup the outbound CQ message and arm the transmitter
     } else {
       Check_Calling_Stations(num_decoded_msg);
     }

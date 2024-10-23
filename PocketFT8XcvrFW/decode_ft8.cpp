@@ -110,7 +110,7 @@ int ft8_decode(void) {
   // Go over candidates and attempt to decode messages
   int num_decoded = 0;
 
-  DPRINTF("num_candidates=%u\n", num_candidates);
+  //DPRINTF("num_candidates=%u\n", num_candidates);
 
   for (int idx = 0; idx < num_candidates; ++idx) {
     Candidate cand = candidate_list[idx];
@@ -123,7 +123,7 @@ int ft8_decode(void) {
     uint8_t plain[N];
     int n_errors = 0;
     bp_decode(log174, kLDPC_iterations, plain, &n_errors);
-    DPRINTF("candidate %d n_errors=%d\n", idx, n_errors);
+    //DPRINTF("candidate %d n_errors=%d\n", idx, n_errors);
 
     if (n_errors > 0) continue;
 
@@ -137,7 +137,7 @@ int ft8_decode(void) {
     a91[10] = 0;
     a91[11] = 0;
     uint16_t chksum2 = crc(a91, 96 - 14);
-    DPRINTF("chksum=%u chksum2=%u\n", chksum, chksum2);
+    //DPRINTF("chksum=%u chksum2=%u\n", chksum, chksum2);
     if (chksum != chksum2) continue;
 
     char message[kMax_message_length];

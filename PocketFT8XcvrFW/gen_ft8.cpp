@@ -49,8 +49,8 @@ char CQ_Target_Call[7];
 char reply_message[18];
 char reply_message_list[18][8];
 int reply_message_count;
-char message[18];       //FT8 message text pending transmission.
-int message_state;      //Non-zero => message[] is valid/ready.
+char message[18];   //FT8 message text pending transmission.
+int message_state;  //Non-zero => message[] is valid/ready.
 
 extern int log_flag, logging_on;
 extern time_t getTeensy3Time();
@@ -70,7 +70,7 @@ int max_displayed_messages = 8;
 //actually turn-on the transmitter.
 void set_message(uint16_t index) {
 
-  DPRINTF("set_message(%u)\n",index);
+  DPRINTF("set_message(%u)\n", index);
 
   char big_gulp[60];
   uint8_t packed[K_BYTES];

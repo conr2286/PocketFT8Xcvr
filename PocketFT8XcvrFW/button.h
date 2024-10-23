@@ -3,7 +3,7 @@ int testButton(uint8_t index);
 
 void drawButton(uint16_t i);
 void checkButton(void);
-void executeButton (uint16_t index);
+void executeButton(uint16_t index);
 
 void display_all_buttons(void);
 

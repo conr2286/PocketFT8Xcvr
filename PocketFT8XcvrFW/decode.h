@@ -11,11 +11,11 @@
 #include <stdint.h>
 
 typedef struct Candidate {
-    int16_t      score;
-    int16_t      time_offset;
-    int16_t      freq_offset;
-    uint8_t      time_sub;
-    uint8_t      freq_sub;
+  int16_t score;
+  int16_t time_offset;
+  int16_t freq_offset;
+  uint8_t time_sub;
+  uint8_t freq_sub;
 } Candidate;
 
 
@@ -32,7 +32,7 @@ int find_sync(const uint8_t *power, int num_blocks, int num_bins, const uint8_t 
 // for later use in soft-decision LDPC decoding
 //chhvoid extract_likelihood(const uint8_t *power, int num_bins, const Candidate & cand, const uint8_t *code_map, float *log174);
 
-void extract_likelihood(const uint8_t *power, int num_bins,  Candidate  cand, const uint8_t *code_map, float *log174);
+void extract_likelihood(const uint8_t *power, int num_bins, Candidate cand, const uint8_t *code_map, float *log174);
 
 
 

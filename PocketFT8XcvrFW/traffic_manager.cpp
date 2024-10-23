@@ -80,9 +80,9 @@ void tune_On_sequence(void) {
   digitalWrite(PIN_RCV, LOW);
 
   //Turn on the transmitter
-  pinMode(PIN_PTT, OUTPUT);  
+  pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
-} //tune_On_sequence()
+}  //tune_On_sequence()
 
 //Turns the transmitter off
 void tune_Off_sequence(void) {
@@ -92,14 +92,14 @@ void tune_Off_sequence(void) {
 
   //Turn off the transmitter
   pinMode(PIN_PTT, OUTPUT);
-  digitalWrite(PIN_PTT, LOW);  
+  digitalWrite(PIN_PTT, LOW);
 
-    //Turn on the receiver (req'd for V2.0 boards implementing ~PTT in FW)
+  //Turn on the receiver (req'd for V2.0 boards implementing ~PTT in FW)
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, HIGH);
 
   si4735.setVolume(50);
-} //tune_Off_sequence()
+}  //tune_Off_sequence()
 
 
 //KQ7B:  Recalculates carrier frequency F_Long and programs SI5351 with new unmodulated carrier frequency
@@ -108,7 +108,7 @@ void set_Xmit_Freq() {
   // display_value(400, 320, ( int ) cursor_freq);
   // display_value(400, 360,  offset_freq);
   F_Long = (uint64_t)((currentFrequency * 1000 + cursor_freq + offset_freq) * 100);
-  DPRINTF("%s currentFrequency=%u, cursor_freq=%u, offset_freq=%u, F_Long=%llu\n", __FUNCTION__, currentFrequency, cursor_freq, offset_freq, F_Long);
+  //DPRINTF("%s currentFrequency=%u, cursor_freq=%u, offset_freq=%u, F_Long=%llu\n", __FUNCTION__, currentFrequency, cursor_freq, offset_freq, F_Long);
   //F_Long = (uint64_t) ((currentFrequency * 1000 + cursor_freq ) * 100);
   si5351.set_freq(F_Long, SI5351_CLK0);
 
@@ -191,4 +191,4 @@ void service_CQ(void) {
       break;
       */
   }
-} //service_CQ()
+}  //service_CQ()

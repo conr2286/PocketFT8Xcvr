@@ -13,7 +13,7 @@ public:
   class Mode;
   class Resolution;
   class Gain;
-  
+
   static const Channel channel1;
   static const Channel channel2;
   static const Channel channel3;
@@ -23,13 +23,13 @@ public:
   static const Mode continuous;
 
   /// @deprecated Use continuous
-  static const Mode& continous;
-  
+  static const Mode &continous;
+
   static const Resolution resolution12;
   static const Resolution resolution14;
   static const Resolution resolution16;
   static const Resolution resolution18;
-  
+
   static const Gain gain1;
   static const Gain gain2;
   static const Gain gain4;
@@ -62,7 +62,7 @@ public:
   MCP342x(uint8_t address);
 
   bool autoprobe(const uint8_t *addressList, uint8_t len);
-  
+
   /** Return the I2C address used for communicating with this device.
    */
   uint8_t getAddress(void) const {
@@ -73,7 +73,7 @@ public:
    */
   error_t configure(const Config &config) const;
 
-  
+
   /** Instruct the MCP342x device to begin a conversion.
    * @param channel The ADC channel, one of channel0, channel1,
    * channel2 or channel3. Not all supported devices have 4
@@ -85,17 +85,18 @@ public:
    * one of gain1, gain2, gain4 or gain8.
    * @return Value indicating error (if any).
    */
-  error_t convert(Channel channel, Mode mode, Resolution resolution, Gain gain);  error_t convert(const Config &config) const;
-  
+  error_t convert(Channel channel, Mode mode, Resolution resolution, Gain gain);
+  error_t convert(const Config &config) const;
 
-  
+
+
   /** Read the sample value from the MCP342x device.
    * @param result The signed result.
    * @param config The contents of the configuration register.
    * @return Value indicating error (if any).
    */
-  error_t read(long &result, uint8_t& config) const;
-  error_t read(long &result, Config& config) const;
+  error_t read(long &result, uint8_t &config) const;
+  error_t read(long &result, Config &config) const;
 
   /** Instruct the MCP342x device to begin a conversion and block
    * until read completes or timed out.
@@ -130,9 +131,9 @@ public:
   }
 
 private:
-  inline Channel(uint8_t v) : val(v & 0x60) {
-  };
-  
+  inline Channel(uint8_t v)
+    : val(v & 0x60){};
+
   uint8_t val;
 };
 
@@ -145,8 +146,8 @@ public:
   //return (val >> 1) + 12;
   //}
 private:
-  inline Mode(uint8_t v) : val(v & 0x10) {
-  };
+  inline Mode(uint8_t v)
+    : val(v & 0x10){};
 
   uint8_t val;
 };
@@ -159,10 +160,10 @@ public:
     return (val >> 1) + 12;
   }
   unsigned long getConversionTime(void) const;
-  
+
 private:
-  inline Resolution(uint8_t v) : val(v & 0x0c) {
-  };
+  inline Resolution(uint8_t v)
+    : val(v & 0x0c){};
 
   uint8_t val;
 };
@@ -172,15 +173,15 @@ class MCP342x::Gain {
   friend class MCP342x;
   friend class MCP342x::Config;
 public:
-    inline operator int(void) const {
-      return (1 << val);
-    }
+  inline operator int(void) const {
+    return (1 << val);
+  }
   inline uint8_t log2(void) const {
     return val;
   }
 private:
-  inline Gain(uint8_t v) : val(v & 0x03) {
-  };
+  inline Gain(uint8_t v)
+    : val(v & 0x03){};
 
   uint8_t val;
 };
@@ -189,33 +190,32 @@ private:
 class MCP342x::Config {
   friend class MCP342x;
 public:
-  inline Config(void) : val(0) {
-  };
+  inline Config(void)
+    : val(0){};
 
-  inline Config(uint8_t v) : val(v) {
-  };
+  inline Config(uint8_t v)
+    : val(v){};
 
-  inline Config(Channel c, Mode m, Resolution r, Gain g) :
-    val(c.val | m.val | r.val | g.val) {
-  };
-  
-  inline Config(uint8_t c, bool continuous, uint8_t r, uint8_t g) :
-    val((((c-1) & 3) << 5)
-	| (uint8_t)(continuous ? 0x10 : 0)
-	| ((((r-12) & 0x1e) << 1) & 0xc)) {
-    switch(g) {
-    case 2:
-      val |= 0x01;
-      break;
-    case 4:
-      val |= 0x02;
-      break;
-    case 8:
-      val |= 0x03;
-      break;
+  inline Config(Channel c, Mode m, Resolution r, Gain g)
+    : val(c.val | m.val | r.val | g.val){};
+
+  inline Config(uint8_t c, bool continuous, uint8_t r, uint8_t g)
+    : val((((c - 1) & 3) << 5)
+          | (uint8_t)(continuous ? 0x10 : 0)
+          | ((((r - 12) & 0x1e) << 1) & 0xc)) {
+    switch (g) {
+      case 2:
+        val |= 0x01;
+        break;
+      case 4:
+        val |= 0x02;
+        break;
+      case 8:
+        val |= 0x03;
+        break;
     };
   }
-  
+
   inline operator int(void) const {
     return val;
   }
@@ -230,12 +230,12 @@ public:
     return Gain(val);
   }
   inline bool isReady(void) const {
-    return !(val & notReadyMask); 
+    return !(val & notReadyMask);
   }
 
   unsigned long getConversionTime(void) const;
 
-  
+
 private:
   uint8_t val;
 };

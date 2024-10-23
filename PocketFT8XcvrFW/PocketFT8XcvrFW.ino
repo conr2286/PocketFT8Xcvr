@@ -1,5 +1,47 @@
-#include "DEBUG.h"
+/*
+** NAME
+**  PocketFT8XcvrFW -- Firmware for the KQ7B edition of the Pocket FT8 transceiver
+**
+** DESCRIPTION
+**  This is a mostly faithful implementation of the original Pocket FT8 transceiver,
+**  in a compact, self-contained, package.  Notable features include:
+**    + FT8 transmit/receiver
+**    + Teensy 4.1 processor
+**    + Small, 4.0x2.8", 4-Layer PCB mates with the Adafruit display
+**    + Adafruit 320x480 3.5" resistive touchscreen display
+**    + TCXO
+**    + Powered by 0.37 Amps from a single +5V USB power source 
+**    + SD Card logging to txt file
+**    + Station configuration JSON file
+**  The overall goal is to construct a single band, self-contained, HF FT8 transceiver for
+**  POTA/SOTA work where light weight and power requirements accept compromises.
+**
+** FUTURE
+**    + Support for GPS sourced grid square
+**    + Standard log file format
+**    + Bug fixes (see https://github.com/conr2286/PocketFT8Xcvr Issues)
+**
+** KQ7B
+**  Retired engineer living in north central Idaho (USA)
+**
+**  VERSIONS
+**  1.00 Never built due to unobtanium componentry
+**  1.01 PCB requires several patches to correct known issues
+**  1.10 Working firmware and transmitter but SI4735 suffers from I2C noise issues
+**  2.00 (In Progress) Revised board/firmware to overcome I2C noise problem
+**  
+** ATTRIBUTION
+**  https://github.com/Rotron/Pocket-FT8  Charley Hill's original Pocket FT8
+**  https://github.com/WB2CBA/W5BAA-FT8-POCKET-TERMINAL  Barb's FT8 Pocket Terminal
+**  https://github.com/kgoba/ft8_lib  Karlis Goba's FT8 Library for microprocessors
+**  https://github.com/conr2286/PocketFT8Xcvr  The KQ7B HW and FW edition
+**  Many others' contributions to the various libraries
+**
+** LICENSES
+**  Various open source licenses widely cited throughout
+*/
 
+#include "DEBUG.h"
 #include <Audio.h>
 #include <Wire.h>
 #include <SD.h>
@@ -57,7 +99,7 @@ struct Config {
   char location[5];                      //4 char maidenhead locator and NUL
   unsigned frequency;                    //Operating frequency in kHz
   unsigned long audioRecordingDuration;  //Seconds or 0 to disable audio recording
-  unsigned enableAVC;                    //0=disable, 1=enable SI43xx AVC
+  unsigned enableAVC;                    //0=disable, 1=enable SI47xx AVC
 } config;
 
 //Default configuration
@@ -65,7 +107,7 @@ struct Config {
 #define DEFAULT_CALLSIGN "NOCALL"             //There's no realistic default callsign
 #define DEFAULT_LOCATION "****"               //Will later obtain the default maidenhead square from GPS if we get a lock
 #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  //Default of 0 seconds disables audio recording
-#define DEFAULT_ENABLE_AVC 1                  //AVC enabled by default
+#define DEFAULT_ENABLE_AVC 1                  //SI4735 AVC enabled by default
 
 //Define lower/upper frequency limitations of the 40m hardware implementation
 #define MINIMUM_FREQUENCY 7000  //Low edge of band in kHz
@@ -122,7 +164,7 @@ extern int CQ_Flag;
 int WF_counter;
 int num_decoded_msg;
 
-//Apparently set when we are transmitting
+//Apparently set when the transmitted carrier is on
 int xmit_flag;
 
 //Apparently set when a transmission is pending
@@ -152,10 +194,7 @@ void setup(void) {
     delay(5000);
   }
 
-
-
-
-  //Use Teensy's battery-backed clock
+  //Use Teensy's battery-backed clock 
   //initGPS();
   setSyncProvider(getTeensy3Time);
   delay(100);
@@ -203,7 +242,7 @@ void setup(void) {
     Serial.flush();
     while (1) continue;
   } else {
-    DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
+    //DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
   }
 
   //Read the JSON configuration file into the config structure
@@ -237,7 +276,7 @@ void setup(void) {
 
   //Initialize the SI4735 receiver
   delay(10);
-  DPRINTF("SSB patch is loading...\n");
+  //DPRINTF("SSB patch is loading...\n");
   et1 = millis();
   loadSSB();
   et2 = millis();
@@ -301,7 +340,7 @@ void loop() {
   //Debugging aide for the flags
   unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
   if (newFlags != oldFlags) {
-    DPRINTF("newFlags = 0x%x\n", newFlags);
+    //DPRINTF("newFlags = 0x%x\n", newFlags);
     oldFlags = newFlags;
   }
 
@@ -476,7 +515,7 @@ void auto_sync_FT8(void) {
   // tft.setTextSize(2);
   // tft.setCursor(0, 240);
   // tft.print("Synchronzing With RTC");
-  DPRINTF("Synchronizing with RTC\n");
+  //DPRINTF("Synchronizing with RTC\n");
 
   while ((second()) % 15 != 0) continue;
 
@@ -485,8 +524,8 @@ void auto_sync_FT8(void) {
   FT_8_counter = 0;
   ft8_marker = 1;
   WF_counter = 0;
-  // tft.setCursor(0, 260);
-  // tft.print("FT8 Synched With World");
+  tft.setCursor(0, 260);
+  tft.print("FT8 Synched With World");
 }
 
 
