@@ -10584,6 +10584,12 @@
 		(uuid "4e8f153b-fdfa-4254-a922-015797b7da68")
 	)
 	(junction
+		(at 69.85 149.86)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "532a9f6f-7b65-4296-b9d6-36f462f2a6e2")
+	)
+	(junction
 		(at 264.16 142.24)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10614,16 +10620,16 @@
 		(uuid "6c203454-6997-43a5-b9df-d18746b527e5")
 	)
 	(junction
+		(at 90.17 80.01)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6d204435-4c24-4883-b6eb-88d430b7f3e7")
+	)
+	(junction
 		(at 97.79 187.96)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "762bfd05-9739-4b42-afa3-a0df937a0d4c")
-	)
-	(junction
-		(at 97.79 80.01)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "7ad67f91-127f-4374-97f0-9e67a9e0f12c")
 	)
 	(junction
 		(at 238.76 93.98)
@@ -10816,10 +10822,6 @@
 	(no_connect
 		(at 160.02 54.61)
 		(uuid "19a3e738-b794-4354-a1c0-62b4b029386d")
-	)
-	(no_connect
-		(at 104.14 85.09)
-		(uuid "1a06c6b5-5e67-4e70-89b5-df4472093bbb")
 	)
 	(no_connect
 		(at 143.51 195.58)
@@ -11076,10 +11078,6 @@
 	(no_connect
 		(at 20.32 80.01)
 		(uuid "df01be25-4f2d-4b6b-a573-63063abbd0bc")
-	)
-	(no_connect
-		(at 104.14 82.55)
-		(uuid "e3cbd8fe-f13f-468c-989b-68da97c1a782")
 	)
 	(no_connect
 		(at 104.14 97.79)
@@ -11737,6 +11735,16 @@
 	)
 	(wire
 		(pts
+			(xy 63.5 139.7) (xy 63.5 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "54d3d293-b875-44bf-9735-0f3327d9e4f0")
+	)
+	(wire
+		(pts
 			(xy 251.46 54.61) (xy 254 54.61)
 		)
 		(stroke
@@ -12137,6 +12145,16 @@
 	)
 	(wire
 		(pts
+			(xy 74.93 139.7) (xy 74.93 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "940ed740-a0cb-4dc7-b33c-9ac3d060b6af")
+	)
+	(wire
+		(pts
 			(xy 223.52 67.31) (xy 212.09 67.31)
 		)
 		(stroke
@@ -12194,6 +12212,16 @@
 			(type default)
 		)
 		(uuid "9ac1a4b0-871f-407f-8faf-6d29361397bb")
+	)
+	(wire
+		(pts
+			(xy 69.85 149.86) (xy 74.93 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9f1594c2-eb09-41db-88ad-8dbd8385be49")
 	)
 	(wire
 		(pts
@@ -12297,6 +12325,16 @@
 	)
 	(wire
 		(pts
+			(xy 74.93 148.59) (xy 74.93 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "acb7f323-ee8e-4ef9-8803-674e8b77ebb9")
+	)
+	(wire
+		(pts
 			(xy 232.41 81.28) (xy 236.22 81.28)
 		)
 		(stroke
@@ -12354,16 +12392,6 @@
 			(type default)
 		)
 		(uuid "b26be5c0-a232-4388-880b-7d601fc07174")
-	)
-	(wire
-		(pts
-			(xy 90.17 80.01) (xy 97.79 80.01)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b27a6caa-d446-4579-89c6-e348b1d9a816")
 	)
 	(wire
 		(pts
@@ -12487,13 +12515,13 @@
 	)
 	(wire
 		(pts
-			(xy 97.79 80.01) (xy 104.14 80.01)
+			(xy 63.5 149.86) (xy 63.5 148.59)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "c8f66ab8-6dd7-4e52-9d0c-250d512e798b")
+		(uuid "ca96bfaa-ac6e-4679-aaaa-6fc17b441ba6")
 	)
 	(wire
 		(pts
@@ -12727,16 +12755,6 @@
 	)
 	(wire
 		(pts
-			(xy 97.79 182.88) (xy 102.87 182.88)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dfde878d-cf9e-4a6a-b51b-1686099b8d28")
-	)
-	(wire
-		(pts
 			(xy 254 62.23) (xy 265.43 62.23)
 		)
 		(stroke
@@ -12794,6 +12812,16 @@
 			(type default)
 		)
 		(uuid "e7452fc1-5735-4a17-bf97-2bbe78c69adf")
+	)
+	(wire
+		(pts
+			(xy 90.17 80.01) (xy 104.14 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e88dee8f-24a3-4df9-9a16-a483302ae1de")
 	)
 	(wire
 		(pts
@@ -12917,16 +12945,6 @@
 	)
 	(wire
 		(pts
-			(xy 97.79 180.34) (xy 102.87 180.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f9c9ae80-c94b-4968-bf4e-fd6650a54645")
-	)
-	(wire
-		(pts
 			(xy 34.29 82.55) (xy 38.1 82.55)
 		)
 		(stroke
@@ -12954,6 +12972,16 @@
 			(type default)
 		)
 		(uuid "fc2ca406-10aa-4f38-8034-938a86130ce9")
+	)
+	(wire
+		(pts
+			(xy 63.5 149.86) (xy 69.85 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fd98a4a1-8c75-4283-a0fd-5256c89df263")
 	)
 	(wire
 		(pts
@@ -12995,7 +13023,7 @@
 		)
 		(uuid "843bd358-614a-43c1-a441-60a55639e0fd")
 	)
-	(text_box "J1:  Adafruit 3.5\" SPI display connections\nJ2:  Antenna\nJ3:  5V GPS\nJ4:  Xmit PA Hi/Lo Power\nJ5:  Mechanical support for Adafruit 3.5\" display"
+	(text_box "J1:  Adafruit 3.5\" SPI display connections\nJ2:  Antenna\nJ3:  GPS\nJ4:  Xmit PA Hi/Lo Power\nJ5:  Mechanical support for Adafruit 3.5\" display"
 		(exclude_from_sim no)
 		(at 45.72 24.13 0)
 		(size 50.8 11.43)
@@ -13057,6 +13085,17 @@
 		)
 		(uuid "0214085a-af4b-4ac5-b0f5-f7f9f5ff895e")
 	)
+	(label "RRST"
+		(at 215.9 72.39 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "024e5a69-7053-418a-8401-e53e4aff1d7f")
+	)
 	(label "Y+"
 		(at 160.02 90.17 0)
 		(fields_autoplaced yes)
@@ -13079,7 +13118,18 @@
 		)
 		(uuid "0b0d64e4-33fa-4b2a-a040-14500f5f2bf0")
 	)
-	(label "SDA"
+	(label "AF"
+		(at 160.02 69.85 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0caa08e5-ecdc-475d-a544-58b87b05d21e")
+	)
+	(label "SDA2"
 		(at 87.63 109.22 0)
 		(fields_autoplaced yes)
 		(effects
@@ -13178,6 +13228,17 @@
 		)
 		(uuid "3efdb273-e1de-4e11-8371-43668fd8ca02")
 	)
+	(label "SCL2"
+		(at 74.93 139.7 90)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3fb39656-aca0-4960-996d-54bbb2754f62")
+	)
 	(label "RCLK"
 		(at 171.45 171.45 0)
 		(fields_autoplaced yes)
@@ -13188,6 +13249,17 @@
 			(justify left bottom)
 		)
 		(uuid "461c2515-87f1-4ab0-b86a-dbaf06b1db32")
+	)
+	(label "SDA2"
+		(at 63.5 139.7 90)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "47d50cab-9f99-45b2-a5a9-1e6d4a3edb41")
 	)
 	(label "XCLK"
 		(at 156.21 135.89 180)
@@ -13233,7 +13305,7 @@
 		)
 		(uuid "58042b35-878d-4056-b3d8-e4ebaa9db4d0")
 	)
-	(label "XOUT"
+	(label "XDRV"
 		(at 191.77 138.43 0)
 		(fields_autoplaced yes)
 		(effects
@@ -13243,6 +13315,17 @@
 			(justify left bottom)
 		)
 		(uuid "5d6fc5b4-23c4-482f-9565-383aab477622")
+	)
+	(label "DRST"
+		(at 60.96 67.31 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6630ee66-6fae-4f13-9565-c05c7d0f7988")
 	)
 	(label "RCLK"
 		(at 215.9 59.69 0)
@@ -13321,8 +13404,19 @@
 		)
 		(uuid "7a7cf68c-06ce-4c71-a33e-fea22e175a31")
 	)
-	(label "SCL"
-		(at 102.87 180.34 180)
+	(label "D{slash}C"
+		(at 60.96 69.85 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7ca63b8b-1678-4e7c-99c1-1411928bdec0")
+	)
+	(label "SDA2"
+		(at 104.14 85.09 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -13330,9 +13424,9 @@
 			)
 			(justify right bottom)
 		)
-		(uuid "8a9c35e6-e6b5-4d52-ac3d-9c07b2401ef9")
+		(uuid "87a1b939-ccf1-472a-936c-9e13da118339")
 	)
-	(label "XCLK"
+	(label "XDRV"
 		(at 191.77 156.21 0)
 		(fields_autoplaced yes)
 		(effects
@@ -13354,7 +13448,7 @@
 		)
 		(uuid "8d36ed94-addc-47e2-b80b-483efd9af763")
 	)
-	(label "XCLK"
+	(label "XDRV"
 		(at 156.21 146.05 180)
 		(fields_autoplaced yes)
 		(effects
@@ -13387,7 +13481,7 @@
 		)
 		(uuid "9a18a149-7f51-430f-a858-59ee820a90d9")
 	)
-	(label "XCLK"
+	(label "XDRV"
 		(at 191.77 140.97 0)
 		(fields_autoplaced yes)
 		(effects
@@ -13409,7 +13503,7 @@
 		)
 		(uuid "9e1caba1-4ed0-4767-895e-cef4e29284d2")
 	)
-	(label "XCLK"
+	(label "XDRV"
 		(at 156.21 140.97 180)
 		(fields_autoplaced yes)
 		(effects
@@ -13420,7 +13514,7 @@
 		)
 		(uuid "a5021ca0-560c-4bdf-81a2-a562b08c0e70")
 	)
-	(label "XCLK"
+	(label "XDRV"
 		(at 191.77 146.05 0)
 		(fields_autoplaced yes)
 		(effects
@@ -13442,7 +13536,7 @@
 		)
 		(uuid "ab63e4d3-2dc0-4eec-8e60-cdb6a8f7d09f")
 	)
-	(label "XCLK"
+	(label "XDRV"
 		(at 191.77 151.13 0)
 		(fields_autoplaced yes)
 		(effects
@@ -13487,17 +13581,6 @@
 		(uuid "bd007295-27a3-4458-b767-09872a72b4a4")
 	)
 	(label "SDA"
-		(at 102.87 182.88 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "cc5d4cb8-9bab-44c3-9396-2711965dac69")
-	)
-	(label "SDA"
 		(at 215.9 64.77 0)
 		(fields_autoplaced yes)
 		(effects
@@ -13519,7 +13602,7 @@
 		)
 		(uuid "d0eb6f35-d3a9-4132-adce-991f89c4430a")
 	)
-	(label "SCL"
+	(label "SCL2"
 		(at 87.63 106.68 0)
 		(fields_autoplaced yes)
 		(effects
@@ -13540,6 +13623,28 @@
 			(justify right bottom)
 		)
 		(uuid "d37eb52a-4b69-46a9-a7c9-f19fcb428688")
+	)
+	(label "SCL2"
+		(at 97.79 180.34 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "d7391f5f-e1a4-4589-a3e7-c9864b4c76c2")
+	)
+	(label "CS"
+		(at 60.96 72.39 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d882124e-ba46-4011-baca-77b6ba4f1450")
 	)
 	(label "RCV"
 		(at 191.77 135.89 0)
@@ -13563,7 +13668,7 @@
 		)
 		(uuid "ea2f765d-d7c5-42c1-b1cb-6945c018ea6f")
 	)
-	(label "XCLK"
+	(label "XDRV"
 		(at 156.21 151.13 180)
 		(fields_autoplaced yes)
 		(effects
@@ -13596,6 +13701,17 @@
 		)
 		(uuid "ed693b21-885c-4ac6-a526-8a4e160b964b")
 	)
+	(label "SDA2"
+		(at 97.79 182.88 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "edaa6457-8a60-4eba-a18d-75a702fa631d")
+	)
 	(label "XMT"
 		(at 19.05 152.4 0)
 		(fields_autoplaced yes)
@@ -13606,6 +13722,17 @@
 			(justify left bottom)
 		)
 		(uuid "ee77f857-f687-4c3a-b0bb-18eda6100dba")
+	)
+	(label "SCL2"
+		(at 104.14 82.55 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "f225d0f1-f643-4984-8957-562b9548ff2d")
 	)
 	(label "GPSRX"
 		(at 96.52 49.53 0)
@@ -13631,7 +13758,7 @@
 	)
 	(symbol
 		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
-		(at 97.79 80.01 90)
+		(at 90.17 80.01 90)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -13640,7 +13767,7 @@
 		(dnp no)
 		(uuid "00115c6d-f28c-40a5-a85f-06e033305bbd")
 		(property "Reference" "C25"
-			(at 93.98 83.82 0)
+			(at 86.36 83.82 0)
 			(effects
 				(font
 					(size 1.143 1.143)
@@ -13649,7 +13776,7 @@
 			)
 		)
 		(property "Value" "0.1UF"
-			(at 101.092 83.82 0)
+			(at 93.472 83.82 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13657,7 +13784,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 102.87 81.28 0)
+			(at 95.25 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13667,7 +13794,7 @@
 			)
 		)
 		(property "Datasheet" "C0603C104K4RACTU"
-			(at 105.156 81.788 0)
+			(at 97.536 81.788 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13677,7 +13804,7 @@
 			)
 		)
 		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
-			(at 100.838 82.042 0)
+			(at 93.218 82.042 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13686,7 +13813,7 @@
 			)
 		)
 		(property "Field4" ""
-			(at 99.06 83.82 0)
+			(at 91.44 83.82 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13696,7 +13823,7 @@
 			)
 		)
 		(property "Field5" "CAP-08604"
-			(at 90.17 80.01 0)
+			(at 82.55 80.01 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -13705,7 +13832,7 @@
 			)
 		)
 		(property "PROD_ID" "CAP-00810"
-			(at 114.3 80.01 0)
+			(at 106.68 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13714,7 +13841,7 @@
 			)
 		)
 		(property "Voltage" "16V"
-			(at 109.728 81.534 0)
+			(at 102.108 81.534 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13723,7 +13850,7 @@
 			)
 		)
 		(property "Tolerance" "10%"
-			(at 109.728 86.106 0)
+			(at 102.108 86.106 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13732,7 +13859,7 @@
 			)
 		)
 		(property "Manufacturer" "Kemet"
-			(at 92.71 78.74 0)
+			(at 85.09 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13741,7 +13868,7 @@
 			)
 		)
 		(property "Mfg Part #" "C0603C104K4RAC7867"
-			(at 107.188 83.312 0)
+			(at 99.568 83.312 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13750,7 +13877,7 @@
 			)
 		)
 		(property "Notes" "Substitutions OK"
-			(at 97.79 80.01 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13759,7 +13886,7 @@
 			)
 		)
 		(property "Type" "SMD"
-			(at 97.79 80.01 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13768,7 +13895,7 @@
 			)
 		)
 		(property "Manufacturer_Name" ""
-			(at 97.79 80.01 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13777,7 +13904,7 @@
 			)
 		)
 		(property "MANUFACTURER" ""
-			(at 97.79 80.01 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13786,7 +13913,7 @@
 			)
 		)
 		(property "Height" ""
-			(at 97.79 80.01 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13795,7 +13922,7 @@
 			)
 		)
 		(property "Manufacturer_Part_Number" ""
-			(at 97.79 80.01 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13804,7 +13931,7 @@
 			)
 		)
 		(property "Mouser Part Number" ""
-			(at 97.79 80.01 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13813,7 +13940,7 @@
 			)
 		)
 		(property "Mouser Price/Stock" ""
-			(at 97.79 80.01 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13822,7 +13949,7 @@
 			)
 		)
 		(property "Field8" ""
-			(at 97.79 80.01 0)
+			(at 90.17 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14262,7 +14389,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 97.79 87.63 0)
+		(at 90.17 87.63 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14271,7 +14398,7 @@
 		(fields_autoplaced yes)
 		(uuid "05aa62f1-474b-497f-bcd9-2b965af30b83")
 		(property "Reference" "#PWR027"
-			(at 97.79 93.98 0)
+			(at 90.17 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14280,7 +14407,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 97.79 92.71 0)
+			(at 90.17 92.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14288,7 +14415,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 97.79 87.63 0)
+			(at 90.17 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14297,7 +14424,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 97.79 87.63 0)
+			(at 90.17 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14306,7 +14433,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 97.79 87.63 0)
+			(at 90.17 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15551,6 +15678,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 185.42 31.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "1ff75433-5e0b-44bf-9b7a-5e66c3ade766")
+		(property "Reference" "#PWR034"
+			(at 185.42 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 185.42 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "40a4f27c-f15e-4a16-882a-8e73644b5603")
+		)
+		(instances
+			(project "PocketFT8Xcvr"
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#PWR034")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Kemet2024-08-02_22-05-35:C0603C104K4RACTU")
 		(at 38.1 95.25 90)
 		(unit 1)
@@ -15760,6 +15953,72 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "C15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+5V")
+		(at 185.42 24.13 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "23a5c63f-7905-46ca-905c-7ef4ae457084")
+		(property "Reference" "#PWR035"
+			(at 185.42 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+5V"
+			(at 185.42 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 185.42 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 185.42 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+5V\""
+			(at 185.42 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b37f555b-c984-4e73-b023-798ebd0e56e9")
+		)
+		(instances
+			(project "PocketFT8Xcvr"
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#PWR035")
 					(unit 1)
 				)
 			)
@@ -16107,6 +16366,72 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "#PWR011")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 69.85 149.86 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "2fc85c57-ef8a-4f99-bf9b-91431f74ad9d")
+		(property "Reference" "#PWR042"
+			(at 69.85 146.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3.3V"
+			(at 69.85 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 69.85 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 69.85 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
+			(at 69.85 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "392290b4-5e79-4a4e-b378-7e890f7c7674")
+		)
+		(instances
+			(project "PocketFT8Xcvr"
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "#PWR042")
 					(unit 1)
 				)
 			)
@@ -18431,6 +18756,184 @@
 		)
 	)
 	(symbol
+		(lib_id "SparkFun-Resistor:2.0k_0603")
+		(at 74.93 144.78 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "653dc59a-4544-4ecb-ab05-f77ddea35afc")
+		(property "Reference" "R9"
+			(at 77.47 143.5099 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "2.0K"
+			(at 77.47 146.0499 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 79.248 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+			(at 83.82 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "RES 2K OHM 5% 1/10W 0603"
+			(at 86.36 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "PROD_ID" "RES-08296"
+			(at 81.788 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-072KL"
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Height" ""
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Part_Number" ""
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" ""
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Price/Stock" ""
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Field8" ""
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "c4939d8a-68fe-4794-beff-510ce8498a76")
+		)
+		(pin "1"
+			(uuid "6d8e2a8e-43c2-49af-ab08-7f004281f673")
+		)
+		(instances
+			(project "PocketFT8Xcvr"
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "R9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "SparkFun-Resistor:47k_0603")
 		(at 219.71 27.94 270)
 		(unit 1)
@@ -20348,6 +20851,175 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "C8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "SparkFun-Resistor:2.0k_0603")
+		(at 63.5 144.78 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "789a8f11-7172-46ba-a9e4-8d6ca130f911")
+		(property "Reference" "R8"
+			(at 66.04 143.5099 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "2.0K"
+			(at 66.04 146.0499 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 67.818 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+			(at 72.39 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "RES 2K OHM 5% 1/10W 0603"
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 63.5 144.78 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "RC0603JR-072KL"
+			(at 63.5 144.78 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 63.5 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 63.5 144.78 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 63.5 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 63.5 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Height" ""
+			(at 63.5 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Part_Number" ""
+			(at 63.5 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" ""
+			(at 63.5 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Price/Stock" ""
+			(at 63.5 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Field8" ""
+			(at 63.5 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "770cc63c-00b1-4fc4-be0e-1e9f4c9b38c5")
+		)
+		(pin "1"
+			(uuid "c692901a-fa66-400c-ad87-24ca81041085")
+		)
+		(instances
+			(project "PocketFT8Xcvr"
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "R8")
 					(unit 1)
 				)
 			)
@@ -26412,6 +27084,205 @@
 			(project "PocketFT8Xcvr"
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
 					(reference "#PWR057")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_name "C0805C334K4RAC7800_4")
+		(lib_id "Kemet2024-08-02_22-55-33:C0805C334K4RAC7800")
+		(at 185.42 31.75 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f7991e01-58ec-4ced-8766-a81453861ac2")
+		(property "Reference" "C16"
+			(at 183.388 32.004 0)
+			(effects
+				(font
+					(size 1.143 1.143)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10UF"
+			(at 189.23 27.94 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "C0805C334K4RAC7800"
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "CAP CER 10UF 16V X5R 0805"
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "PROD_ID" "CAP-11015"
+			(at 199.39 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Voltage" "6.3V"
+			(at 186.6899 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Tolerance" "20%"
+			(at 189.2299 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Kemet"
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mfg Part #" "C0805C106K4PAC7800"
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes" "Substitutions OK"
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Type" "SMD"
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Height" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Part_Number" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Price/Stock" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Field8" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ae9618e0-4a27-43dd-b1b8-e3b691a9799d")
+		)
+		(pin "2"
+			(uuid "e6910499-5065-4d0a-95c8-4d5be93f148a")
+		)
+		(instances
+			(project "PocketFT8Xcvr"
+				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
+					(reference "C16")
 					(unit 1)
 				)
 			)
