@@ -4,7 +4,6 @@
 #include <Wire.h>
 #include <SD.h>
 #include <SPI.h>
-//#include <HX8357_t3.h>
 #include "HX8357_t3n.h"
 #include "TouchScreen_I2C.h"
 #include "MCP342x.h"

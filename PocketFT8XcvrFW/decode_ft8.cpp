@@ -41,7 +41,7 @@ const int kMax_candidates = 20;
 const int kMax_decoded_messages = 6;  //chhh 27 feb
 const int kMax_message_length = 20;
 
-const int kMin_score = 40;   // Minimum sync score threshold for candidates (40)
+const int kMin_score = 40;  // Minimum sync score threshold for candidates (40)
 
 int validate_locator(char locator[]);
 int strindex(char s[], char t[]);
@@ -110,7 +110,7 @@ int ft8_decode(void) {
   // Go over candidates and attempt to decode messages
   int num_decoded = 0;
 
-  DPRINTF("num_candidates=%u\n",num_candidates);
+  DPRINTF("num_candidates=%u\n", num_candidates);
 
   for (int idx = 0; idx < num_candidates; ++idx) {
     Candidate cand = candidate_list[idx];
@@ -123,7 +123,7 @@ int ft8_decode(void) {
     uint8_t plain[N];
     int n_errors = 0;
     bp_decode(log174, kLDPC_iterations, plain, &n_errors);
-    DPRINTF("candidate %d n_errors=%d\n",idx,n_errors);
+    DPRINTF("candidate %d n_errors=%d\n", idx, n_errors);
 
     if (n_errors > 0) continue;
 
@@ -137,7 +137,7 @@ int ft8_decode(void) {
     a91[10] = 0;
     a91[11] = 0;
     uint16_t chksum2 = crc(a91, 96 - 14);
-    DPRINTF("chksum=%u chksum2=%u\n",chksum, chksum2);
+    DPRINTF("chksum=%u chksum2=%u\n", chksum, chksum2);
     if (chksum != chksum2) continue;
 
     char message[kMax_message_length];
@@ -149,7 +149,7 @@ int ft8_decode(void) {
     if (rc < 0) continue;
 
     sprintf(message, "%s %s %s ", field1, field2, field3);
-    DPRINTF("message='%s %s %s' \n", field1, field2, field3);
+    //DPRINTF("message='%s %s %s' \n", field1, field2, field3);
 
 
     // Check for duplicate messages (TODO: use hashing)
@@ -184,6 +184,8 @@ int ft8_decode(void) {
         if (raw_RSL > 160) raw_RSL = 160;
         display_RSL = (raw_RSL - 160) / 6;
         new_decoded[num_decoded].snr = display_RSL;
+        //DPRINTF("%s snr=%d\n",new_decoded[num_decoded].field2,display_RSL);
+        DPRINTF("message='%s %s %s' snr=%d \n", field1, field2, field3, display_RSL);
 
         char Target_Locator[] = "    ";
 
@@ -331,7 +333,7 @@ int Check_Calling_Stations(int num_decoded) {
   else
     return -1;
 
-} //Check_Calling_Stations()
+}  //Check_Calling_Stations()
 
 
 /*

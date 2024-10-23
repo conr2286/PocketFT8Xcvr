@@ -88,6 +88,7 @@ static void insert_sort(int array[], uint8_t size) {
  * @return TSPoint The measured X, Y, and Z/pressure values
  */
 TSPoint TouchScreen::getPoint(void) {
+  //return(TSPoint(0,0,0));     //Uncomment to debug I2C/SI4735 noise issues
   int x, y, z;
   int samples[NUMSAMPLES];
   uint8_t i, valid;
@@ -113,6 +114,7 @@ TSPoint TouchScreen::getPoint(void) {
     err = adc.convertAndRead(MCP342x::channel1, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value1, status);
     samples[i] = value1;
   }
+
 
 #if NUMSAMPLES == 2
   // Allow small amount of measurement noise, because capacitive

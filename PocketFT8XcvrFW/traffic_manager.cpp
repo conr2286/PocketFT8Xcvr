@@ -34,11 +34,11 @@ void transmit_sequence(void) {
 
   DPRINTF("%s\n", __FUNCTION__);
 
-  //KQ7B:  Turn off the receiver (req'd for V2.0 boards implementing ~PTT in FW)
+  //Turn off the receiver (req'd for V2.0 boards implementing ~PTT in FW)
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, LOW);
 
-  //KQ7B:  Turn on the transmitter at F_Long
+  //Turn on the transmitter at F_Long
   set_Xmit_Freq();
   si5351.set_freq(F_Long, SI5351_CLK0);
   si4735.setVolume(35);

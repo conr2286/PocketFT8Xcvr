@@ -53,8 +53,8 @@ ATTRIBUTION
 
 
 // Touchpad calibrarion as investigated on V1.01 hardware
-#define TS_MINX 132
-#define TS_MINY 146
+#define TS_MINX 123
+#define TS_MINY 104
 #define TS_MAXX 1715
 #define TS_MAXY 1130
 
@@ -108,22 +108,22 @@ void loop() {
   if (p.z > MINPRESSURE) {
 
     //Report the raw position from getPoint()
-    // Serial.print("X=");
-    // Serial.print(p.x);
-    // Serial.print("\tY=");
-    // Serial.print(p.y);
-    // Serial.print("\tPressure=");
-    // Serial.print(p.z);
-    // Serial.print(", readTouchX()=");
-    // Serial.print(tx);
+    Serial.print("X=");
+    Serial.print(p.x);
+    Serial.print(", Y=");
+    Serial.print(p.y);
+    Serial.print(", Pressure=");
+    Serial.print(p.z);
+    Serial.print(", readTouchX()=");
+    Serial.print(tx);
 
     //Report the mapped position a la button.cpp in PocketFT8XcvrFW
     unsigned mappedX = map(p.x, TS_MINX, TS_MAXX, 0, 480);
     unsigned mappedY = map(p.y, TS_MINY, TS_MAXY, 0, 320);
-    // Serial.print("\tMappedX=");
-    // Serial.print(mappedX);
-    // Serial.print("\tmappedY=");
-    // Serial.println(mappedY);
+    Serial.print("; MappedX=");
+    Serial.print(mappedX);
+    Serial.print(", mappedY=");
+    Serial.println(mappedY);
 
     tft.fillCircle(mappedX, mappedY, PENRADIUS, HX8357_RED);
 

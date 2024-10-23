@@ -15,8 +15,8 @@
 
 // This is calibration data for the raw touch data to the screen coordinates
 // using 510 Ohm resistors to reduce the driven voltage to Y+ and X-
-#define TS_MINX 132
-#define TS_MINY 146
+#define TS_MINX 123
+#define TS_MINY 104
 #define TS_MAXX 1715
 #define TS_MAXY 1130
 
