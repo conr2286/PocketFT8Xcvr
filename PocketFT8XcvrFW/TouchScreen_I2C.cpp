@@ -10,7 +10,7 @@
 #include "MCP342x.h"
 
 //Define which I2C bus hosts the MCP342x
-#define MCP342X_WIRE Wire
+#define MCP342X_WIRE Wire2
 
 #include "DEBUG.h"
 

@@ -15,16 +15,18 @@
 **/
 
 //The Adafruit 480x320 display pins
-#define PIN_CS 10
-#define PIN_DC 9
-#define PIN_RST 8
+#define PIN_CS   10
+#define PIN_DC    9
+#define PIN_RST   8
 #define PIN_MOSI 11
 #define PIN_DCLK 13  //Teensy 4.1
 #define PIN_MISO 12
 
 //I2C pins
-#define PIN_SCL 19
-#define PIN_SDA 18
+#define PIN_SCL  19   //Wire
+#define PIN_SDA  18   //Wire
+#define PIN_SCL2 24   //Wire2
+#define PIN_SDA2 25   //Wire2
 
 //SI4735 pins
 #define PIN_RESET 20

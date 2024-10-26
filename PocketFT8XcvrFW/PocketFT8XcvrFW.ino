@@ -3,22 +3,24 @@
 **  PocketFT8XcvrFW -- Firmware for the KQ7B edition of the Pocket FT8 transceiver
 **
 ** DESCRIPTION
-**  This is a mostly faithful implementation of the original Pocket FT8 transceiver,
+**  This is a mostly faithful implementation of the original Pocket FT8 transceiver
 **  in a compact, self-contained, package.  Notable features include:
+**    + 4-Layer PCB
 **    + FT8 transmit/receiver
 **    + Teensy 4.1 processor
-**    + Small, 4.0x2.8", 4-Layer PCB mates with the Adafruit display
+**    + Small, 4.0x2.8" PCB mates with the Adafruit display
 **    + Adafruit 320x480 3.5" resistive touchscreen display
 **    + TCXO
 **    + Powered by 0.37 Amps from a single +5V USB power source 
 **    + SD Card logging to txt file
 **    + Station configuration JSON file
 **  The overall goal is to construct a single band, self-contained, HF FT8 transceiver for
-**  POTA/SOTA work where light weight and power requirements accept compromises.
+**  POTA/SOTA work where light weight and power requirements dominate other requirements.
 **
 ** FUTURE
-**    + Support for GPS sourced grid square
+**    + Support for GPS-sourced grid square
 **    + Standard log file format
+**    + Wouldn't it be nice if the SD card were accessible via USB from a computer host
 **    + Bug fixes (see https://github.com/conr2286/PocketFT8Xcvr Issues)
 **
 ** KQ7B
