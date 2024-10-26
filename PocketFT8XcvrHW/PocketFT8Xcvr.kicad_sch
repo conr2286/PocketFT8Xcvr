@@ -13359,6 +13359,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 90.17 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "08c9827e-7a4f-4cda-b6de-6a59bca086d8")
 		)
@@ -13708,6 +13717,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 77.47 194.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "60713bfe-0197-40cd-8b29-a30949146103")
 		)
@@ -13986,6 +14004,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 19.05 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "94ac11dd-273b-41fe-a86c-ec02d2b26aac")
 		)
@@ -14017,7 +14044,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "2.2K OHM"
+		(property "Value" "2.2K"
 			(at 212.09 38.1 90)
 			(effects
 				(font
@@ -14044,7 +14071,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 2.2K OHM 5% 1/10W 0603"
+		(property "Description" "RES 2.2K 5% 1/10W 0603"
 			(at 226.06 38.1 0)
 			(effects
 				(font
@@ -14082,6 +14109,15 @@
 		)
 		(property "Mfg Part #" "RES 2.2K OHM 5% 1/10W 0603"
 			(at 214.63 38.1 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
+			(at 214.63 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14168,6 +14204,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 157.48 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "e8bf36f4-0245-4532-9abf-2518f4f074c8")
 		)
@@ -14236,6 +14281,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 86.36 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 86.36 185.42 0)
 			(effects
 				(font
@@ -14453,6 +14507,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 104.14 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "9a1151e7-4853-4a2d-820e-4f81a6e8f345")
 		)
@@ -14622,7 +14685,16 @@
 				(hide yes)
 			)
 		)
-		(property "Notes:" "Do not substitute"
+		(property "Notes" "Do not substitute"
+			(at 233.68 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 233.68 109.22 0)
 			(effects
 				(font
@@ -14858,6 +14930,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 200.66 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "831f0f81-ea2c-4b78-aaea-5a2f5a8b15e9")
 		)
@@ -15023,6 +15104,15 @@
 			)
 		)
 		(property "Type" "SMD"
+			(at 156.21 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 156.21 133.35 0)
 			(effects
 				(font
@@ -15222,6 +15312,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 31.75 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 31.75 157.48 0)
 			(effects
 				(font
@@ -15434,6 +15533,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 38.1 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 38.1 95.25 0)
 			(effects
 				(font
@@ -15715,6 +15823,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 111.76 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 111.76 144.78 0)
 			(effects
 				(font
@@ -16398,6 +16515,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 214.63 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "705a6ff2-a582-4e23-a3b6-194ab6f7cb59")
 		)
@@ -16818,6 +16944,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 189.23 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "d0d23167-7fdc-485f-a9fc-ebe173466bc5")
 		)
@@ -16879,6 +17014,15 @@
 		)
 		(property "Description" "Two Port Plugin Filter"
 			(at 250.19 138.176 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
+			(at 250.19 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17308,6 +17452,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 107.95 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "6cdfb48c-83ef-4081-885b-0c4028bb7ee8")
 		)
@@ -17515,6 +17668,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 245.11 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 245.11 81.28 0)
 			(effects
 				(font
@@ -17768,6 +17930,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 200.66 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "03da216a-3efd-43f0-9b76-1b5ec92ff404")
 		)
@@ -17983,6 +18154,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 66.04 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "1a0f0529-653a-4f9c-a1c7-6d93743f4128")
 		)
@@ -18180,6 +18360,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 224.79 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f1d77a70-468d-4d9b-b134-0bbd262482db")
 		)
@@ -18350,6 +18539,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 74.93 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 74.93 144.78 0)
 			(effects
 				(font
@@ -18529,6 +18727,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 219.71 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 219.71 27.94 0)
 			(effects
 				(font
@@ -18981,6 +19188,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 251.46 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "815f89e3-90c2-49aa-854a-517bb35462d3")
 		)
@@ -19052,6 +19268,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 265.43 29.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 265.43 29.21 0)
 			(effects
 				(font
@@ -19250,6 +19475,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 265.43 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 265.43 43.18 0)
 			(effects
 				(font
@@ -19672,6 +19906,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 179.07 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f402565d-2b0d-4494-bdd7-1ab87343f79b")
 		)
@@ -20019,6 +20262,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 224.79 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5fb143e1-4e62-4268-be52-52caab98325c")
 		)
@@ -20180,6 +20432,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 63.5 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 63.5 144.78 0)
 			(effects
 				(font
@@ -20403,6 +20664,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 125.73 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d55748b2-5d52-40af-8afd-66b0f672fcbc")
 		)
@@ -20612,6 +20882,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 261.62 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 261.62 115.57 0)
 			(effects
 				(font
@@ -20858,6 +21137,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 81.28 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "bb93b1c2-5224-486a-9a43-4ba451b33b8d")
 		)
@@ -21036,6 +21324,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 189.23 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "cddd6430-2c35-4057-80b1-ba3e33bc9460")
 		)
@@ -21201,7 +21498,7 @@
 				)
 			)
 		)
-		(property "Value" "510 OHMS"
+		(property "Value" "510"
 			(at 64.516 52.324 0)
 			(effects
 				(font
@@ -21265,6 +21562,15 @@
 		)
 		(property "Type" "SMD"
 			(at 63.5 54.61 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
+			(at 63.5 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21528,6 +21834,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 19.05 181.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 19.05 181.61 0)
 			(effects
 				(font
@@ -21819,6 +22134,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 87.63 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "67cb058c-ea7e-4e22-95ff-673811c39d48")
 		)
@@ -22034,6 +22358,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 200.66 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5eabf131-ffd7-4de0-a326-3232e64fb4c0")
 		)
@@ -22157,6 +22490,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 29.21 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 29.21 62.23 0)
 			(effects
 				(font
@@ -22631,6 +22973,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 171.45 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "673215dd-db56-45c9-aa83-6474da77dd48")
 		)
@@ -22761,6 +23112,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 15.24 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 15.24 62.23 0)
 			(effects
 				(font
@@ -22922,7 +23282,7 @@
 				)
 			)
 		)
-		(property "Value" "10k OHM"
+		(property "Value" "10k"
 			(at 212.09 27.94 0)
 			(effects
 				(font
@@ -22948,7 +23308,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "10K 5% 1/10W 0603"
+		(property "Description" "RES 10K 5% 1/10W 0603"
 			(at 226.06 27.94 0)
 			(effects
 				(font
@@ -22985,6 +23345,15 @@
 			)
 		)
 		(property "Mfg Part #" "10K 5% 1/10W 0603"
+			(at 214.63 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 214.63 27.94 0)
 			(effects
 				(font
@@ -23324,6 +23693,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 199.39 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d4efd231-2f3a-425e-afb6-26a0050a3243")
 		)
@@ -23530,6 +23908,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 148.59 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 148.59 27.94 0)
 			(effects
 				(font
@@ -23775,6 +24162,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 72.39 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "8"
 			(uuid "1ead9d1c-9640-445b-bee5-ef5cbbb1e0e4")
 		)
@@ -23961,6 +24357,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 270.51 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 270.51 119.38 0)
 			(effects
 				(font
@@ -24251,6 +24656,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 226.06 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "77e80ec2-a6d1-431c-b1da-4fa1b608f67f")
 		)
@@ -24283,7 +24697,7 @@
 				)
 			)
 		)
-		(property "Value" "510 OHMS"
+		(property "Value" "510"
 			(at 64.516 60.198 0)
 			(effects
 				(font
@@ -24346,6 +24760,15 @@
 			)
 		)
 		(property "Mfg Part #" "RC0603JR-07510RL"
+			(at 63.5 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 63.5 62.23 0)
 			(effects
 				(font
@@ -24496,6 +24919,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 97.79 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 97.79 172.72 0)
 			(effects
 				(font
@@ -24776,6 +25208,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 115.57 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "985405d1-9fd1-459e-97c1-730926915867")
 		)
@@ -24966,6 +25407,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 132.08 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 132.08 99.06 0)
 			(effects
 				(font
@@ -25523,6 +25973,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 49.53 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "6b7ef8e8-dfff-4281-a96a-58fdef133658")
 		)
@@ -25727,6 +26186,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 274.32 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d41731b8-77aa-49eb-8513-64a6bcbd8f9b")
 		)
@@ -25926,6 +26394,15 @@
 				(hide yes)
 			)
 		)
+		(property "Notes:" ""
+			(at 185.42 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "ae9618e0-4a27-43dd-b1b8-e3b691a9799d")
 		)
@@ -26095,6 +26572,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 19.05 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 19.05 166.37 0)
 			(effects
 				(font
@@ -26389,7 +26875,7 @@
 				(hide yes)
 			)
 		)
-		(property "Notes" ""
+		(property "Notes" "Do not substitute"
 			(at 238.76 59.69 0)
 			(effects
 				(font
@@ -26462,6 +26948,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 238.76 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 238.76 59.69 0)
 			(effects
 				(font
@@ -26724,6 +27219,15 @@
 			)
 		)
 		(property "Field8" ""
+			(at 240.03 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Notes:" ""
 			(at 240.03 20.32 0)
 			(effects
 				(font
