@@ -13026,6 +13026,17 @@
 		)
 		(uuid "d37eb52a-4b69-46a9-a7c9-f19fcb428688")
 	)
+	(label "ANT"
+		(at 262.89 142.24 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d3967925-1e90-4561-b33c-abde9b293afc")
+	)
 	(label "SCL2"
 		(at 97.79 180.34 180)
 		(fields_autoplaced yes)
@@ -13146,6 +13157,17 @@
 			(justify left bottom)
 		)
 		(uuid "f2f95899-452d-4aad-a8fb-333315e1b3cf")
+	)
+	(label "RF"
+		(at 236.22 142.24 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f57c5822-2d1f-44a1-8884-e8b965210140")
 	)
 	(label "X-"
 		(at 160.02 92.71 0)
