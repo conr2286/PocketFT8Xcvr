@@ -12927,6 +12927,17 @@
 		)
 		(uuid "ad54ac45-57bd-43fc-980a-759b7272bc14")
 	)
+	(label "CLK"
+		(at 69.85 185.42 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "b5895766-0218-4831-b5db-ee0778275f2b")
+	)
 	(label "XOUT"
 		(at 200.66 129.54 180)
 		(fields_autoplaced yes)
