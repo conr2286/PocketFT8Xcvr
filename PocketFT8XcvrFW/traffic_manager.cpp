@@ -34,16 +34,22 @@ void transmit_sequence(void) {
 
   DPRINTF("%s\n", __FUNCTION__);
 
-  //Turn off the receiver (req'd for V2.0 boards implementing ~PTT in FW)
+  //Disconnect receiver from antenna
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, LOW);
 
-  //Turn on the transmitter at F_Long
+  //Program the transmitter clock at F_Long
   set_Xmit_Freq();
   si5351.set_freq(F_Long, SI5351_CLK0);
+
+  //Set receiver's volume
   si4735.setVolume(35);
+
+  //Enable the transmitter clock
   si5351.drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);  // Set for max power if desired
   si5351.output_enable(SI5351_CLK0, 1);
+
+  //Connect transmitter to antenna
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
 }
@@ -53,15 +59,18 @@ void receive_sequence(void) {
 
   DPRINTF("%s\n", __FUNCTION__);
 
-  //Turn off the transmitter
+  //Turn off the transmitter's clock
   si5351.output_enable(SI5351_CLK0, 0);
+
+  //Disconnect the PA from antenna
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, LOW);
 
-  //Turn on the receiver (Req'd for V2.0 boards implementing ~PTT in FW)
+  //Connect receiver to antenna and disable the SN74ACT244 PA
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, HIGH);
 
+  //Receive
   si4735.setVolume(50);
   clear_FT8_message();
 
