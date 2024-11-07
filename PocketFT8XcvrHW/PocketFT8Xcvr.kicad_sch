@@ -7,7 +7,7 @@
 	(title_block
 		(title "KQ7B Edition of the Pocket FT8 Transceiver")
 		(date "2024-10-25")
-		(rev "2.00")
+		(rev "2.01")
 		(company "KQ7B")
 		(comment 1 "Original design by Charles Hill, Barb Asuroglu, Ricardo Caritti, Karlis Goba, et al")
 		(comment 2 "https://github.com/conr2286/PocketFT8Xcvr.git")
@@ -16795,7 +16795,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10nF"
+		(property "Value" "0.1uF"
 			(at 193.04 109.22 0)
 			(effects
 				(font
@@ -16813,7 +16813,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "C0603C104K4RACTU"
+		(property "Datasheet" ""
 			(at 196.596 111.252 0)
 			(effects
 				(font
@@ -16825,34 +16825,6 @@
 		)
 		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
 			(at 192.278 110.998 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field4" ""
-			(at 190.5 109.22 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Field5" "CAP-07885"
-			(at 181.61 113.03 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "PROD_ID" "CAP-00810"
-			(at 205.74 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16887,7 +16859,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mfg Part #" "C0603C104K4RAC7867"
+		(property "Mfg Part #" "C0603C104K4RACTU"
 			(at 198.628 109.728 0)
 			(effects
 				(font
@@ -22209,7 +22181,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10nF"
+		(property "Value" "0.1uF"
 			(at 204.47 109.22 0)
 			(effects
 				(font
@@ -22227,7 +22199,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "C0603C104K4RACTU"
+		(property "Datasheet" ""
 			(at 208.026 111.252 0)
 			(effects
 				(font
@@ -22239,34 +22211,6 @@
 		)
 		(property "Description" "CAP CER 0.1UF 16V X7R 0603"
 			(at 203.708 110.998 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field4" ""
-			(at 201.93 109.22 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Field5" "CAP-07885"
-			(at 193.04 113.03 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "PROD_ID" "CAP-00810"
-			(at 217.17 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22301,7 +22245,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mfg Part #" "C0603C104K4RAC7867"
+		(property "Mfg Part #" "C0603C104K4RACTU"
 			(at 210.058 109.728 0)
 			(effects
 				(font
@@ -24281,7 +24225,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 51 OHM 5% 1/2W 1210"
+		(property "Description" "RES 51 OHM 5% 1/10W 0603"
 			(at 270.51 130.81 0)
 			(effects
 				(font
@@ -24308,7 +24252,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mfg Part #" "RC1210JR-0751RL"
+		(property "Mfg Part #" "RC0603JR-0751RL"
 			(at 270.51 119.38 0)
 			(effects
 				(font
