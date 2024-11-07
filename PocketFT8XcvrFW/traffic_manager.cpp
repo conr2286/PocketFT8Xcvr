@@ -34,13 +34,13 @@ void transmit_sequence(void) {
 
   DPRINTF("%s\n", __FUNCTION__);
 
-  //Disconnect receiver from antenna
-  pinMode(PIN_RCV, OUTPUT);
-  digitalWrite(PIN_RCV, LOW);
-
   //Program the transmitter clock at F_Long
   set_Xmit_Freq();
   si5351.set_freq(F_Long, SI5351_CLK0);
+
+  //Disconnect receiver from antenna and enable the SN74ACT244 PA
+  pinMode(PIN_RCV, OUTPUT);
+  digitalWrite(PIN_RCV, LOW);
 
   //Set receiver's volume
   si4735.setVolume(35);
@@ -62,7 +62,7 @@ void receive_sequence(void) {
   //Turn off the transmitter's clock
   si5351.output_enable(SI5351_CLK0, 0);
 
-  //Disconnect the PA from antenna
+  //Disconnect the SN74ACT244 PA from antenna
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, LOW);
 
@@ -79,16 +79,22 @@ void receive_sequence(void) {
 
 //Programs SI5351 with F_Long carrier frequency and turns on transmitter
 void tune_On_sequence(void) {
+
+  //Program the transmitter clock to F_Long
   set_Xmit_Freq();
   si5351.set_freq(F_Long, SI5351_CLK0);
+
+  //Drop the receiver's volume
   si4735.setVolume(35);
+
+  //Turn-on the transmitter clock
   si5351.output_enable(SI5351_CLK0, 1);
 
-  //Turn off the receiver (req'd for V2.0 boards implementing ~PTT in FW)
+  //Disconnect receiver from antenna and enable the SN74ACT244 PA
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, LOW);
 
-  //Turn on the transmitter
+  //Connect transmitter to antenna
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
 }  //tune_On_sequence()
@@ -96,17 +102,18 @@ void tune_On_sequence(void) {
 //Turns the transmitter off
 void tune_Off_sequence(void) {
 
-  //Disable the SI5351 XCLK
+  //Disable the transmitter clock
   si5351.output_enable(SI5351_CLK0, 0);
 
-  //Turn off the transmitter
+  //Disconnect transmitter from antenna
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, LOW);
 
-  //Turn on the receiver (req'd for V2.0 boards implementing ~PTT in FW)
+  //Connect receiver to antenna and disable SN74ACT244 PA
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, HIGH);
 
+  //Crank-up the receiver volume
   si4735.setVolume(50);
 }  //tune_Off_sequence()
 
