@@ -13,6 +13,8 @@ EXERCISED,
   + Si5351 connectivity
   + TCXO and Si5351 operation
   + PTT and transmitter's RF chain
+  + V2.00 hardware implements the complementary XMIT and RECV signals in firmware
+  + V2.00 hardware moved the SI5351 from the Wire to Wire1 bus
 
 NOTE
   + This is the first use of the TCXO whose 25.000 mHz signal
@@ -32,10 +34,11 @@ ATTRIBUTION
 #include <Wire.h>
 
 // Set I2C bus to use: Wire, Wire1, etc.
-#define WIRE Wire
+#define WIRE Wire1
 
 //Exercise the Push-to-Talk Pin
-#define PTT_Pin 13
+#define PIN_PTT 14
+#define PIN_RCV 15
 
 Si5351 si5351;
 
@@ -67,8 +70,10 @@ void setup() {
 
 
   //Turn on the transmitter's RF chain
-  pinMode(PTT_Pin, OUTPUT);
-  digitalWrite(PTT_Pin, HIGH);  //Transmit
+  pinMode(PIN_RCV, OUTPUT);
+  pinMode(PIN_PTT, OUTPUT);
+  pinMode(PIN_RCV, LOW);
+  digitalWrite(PIN_PTT, HIGH);  //Transmit
 
 }
 

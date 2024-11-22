@@ -19,6 +19,8 @@ NOTE
   + The CLK0 XCLK signal appears on Si5351 pin 13, C20 and U3 pin 1
   + The CLK2 RCLK signal appears on Si5351 pin 9 and Si4735 pin 19
   + The PTT signal is not exercised and consequently not the RF chain
+  + V2.00 hardware moved the SI5351 chip to the Wire1 bus from Wire
+
 
 REFERENCES
 
@@ -32,7 +34,7 @@ ATTRIBUTION
 #include <Wire.h>
 
 // Set I2C bus to use: Wire, Wire1, etc.
-#define WIRE Wire
+#define WIRE Wire1
 
 Si5351 si5351;
 

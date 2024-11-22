@@ -19,8 +19,10 @@ ATTRIBUTION
 
 */
 
-//Exercise the Push-to-Talk Pin
-#define PTT_Pin 14
+
+//Transmit/Receive pins
+#define PIN_PTT 14  //Teensy 4.1
+#define PIN_RCV 15  //FW implementation of ~PTT (i.e. RECV) in V2.0 boards
 
 
 // the setup function runs once when you press reset or power the board
@@ -30,9 +32,11 @@ void setup() {
   Serial.println("Starting...");
   delay(100);
 
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(PTT_Pin, OUTPUT);
-  digitalWrite(PTT_Pin, LOW);
+  //V2.00 hardware uses firmware to derive the XMIT and RECV complementary signals
+  pinMode(PIN_PTT, OUTPUT);
+  pinMode(PIN_RCV, OUTPUT);
+  digitalWrite(PIN_PTT, LOW);
+  digitalWrite(PIN_RCV, HIGH);
 
   delay(5000);
 
@@ -41,8 +45,11 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
   Serial.println("Looping...");
-  digitalWrite(PTT_Pin, HIGH);  // turn the LED on (HIGH is the voltage level)
+  digitalWrite(PIN_RCV, LOW);
+  digitalWrite(PIN_PTT, HIGH);  // turn the LED on (HIGH is the voltage level)
+
   delay(5000);                  // wait for a second
-  digitalWrite(PTT_Pin, LOW);   // turn the LED off by making the voltage LOW
+  digitalWrite(PIN_PTT, LOW);   // turn the LED off by making the voltage LOW
+  digitalWrite(PIN_RCV,HIGH);
   delay(5000);                  // wait for a while
 }

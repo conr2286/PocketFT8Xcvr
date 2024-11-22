@@ -5,10 +5,11 @@ NAME
 DESCRIPTION
   Prints a table of all responding I2C device addresses.  If it works, you should 
   see table entries for the MCP3422 (0x68), SI4735 (0x11 or 0x63)  and  the
-  SI5351 (0x60).
+  SI5351 (0x60).  The code has been revised to scan both Wire and Wire1 I2C busses.
 
 EXERCISED
-  + I2C bus
+  + I2C bus accessed through Wire
+  + I2C bus accessed through Wire1
   + MCP3422 connectivity
   + SI4735 connectivity
   + SI5351 connectivity
@@ -40,13 +41,15 @@ ATTRIBUTION
 
 // Set I2C bus to use: Wire, Wire1, etc.
 #define WIRE Wire
+#define WIRE1 Wire1
 
 void setup() {
   WIRE.begin();
+  WIRE1.begin();
 
   Serial.begin(9600);
   while (!Serial)
-     delay(10);
+    delay(10);
   Serial.println("\nI2C Scanner");
 }
 
@@ -58,36 +61,55 @@ void loop() {
   Serial.println("Scanning...");
 
   nDevices = 0;
-  for(address = 1; address < 127; address++ )
-  {
-    // The i2c_scanner uses the return value of
-    // the Write.endTransmisstion to see if
-    // a device did acknowledge to the address.
+
+  // The i2c_scanner uses the return value of
+  // the Write.endTransmisstion to see if
+  // a device acknowledged an address.
+  for (address = 1; address < 127; address++) {
+
+    //Scan the Wire bus
+    printf("Scanning the Wire bus\n");
     WIRE.beginTransmission(address);
     error = WIRE.endTransmission();
 
-    if (error == 0)
-    {
-      Serial.print("I2C device found at address 0x");
-      if (address<16)
+    if (error == 0) {
+      Serial.print("Wire device found at address 0x");
+      if (address < 16)
         Serial.print("0");
-      Serial.print(address,HEX);
+      Serial.print(address, HEX);
       Serial.println("  !");
 
       nDevices++;
-    }
-    else if (error==4)
-    {
-      Serial.print("Unknown error at address 0x");
-      if (address<16)
+    } else if (error == 4) {
+      Serial.print("Unknown error at Wire address 0x");
+      if (address < 16)
         Serial.print("0");
-      Serial.println(address,HEX);
+      Serial.println(address, HEX);
+    }
+    delay(1000);
+
+    //Scan the Wire1 bus
+    printf("Scanning the Wire1 bus\n");
+    WIRE1.beginTransmission(address);
+    error = WIRE1.endTransmission();
+
+    if (error == 0) {
+      Serial.print("Wire1 device found at Wire1 address 0x");
+      if (address < 16)
+        Serial.print("0");
+      Serial.print(address, HEX);
+      Serial.println("  !");
+
+      nDevices++;
+    } else if (error == 4) {
+      Serial.print("Unknown error at Wire1 address 0x");
+      if (address < 16)
+        Serial.print("0");
+      Serial.println(address, HEX);
     }
   }
-  if (nDevices == 0)
-    Serial.println("No I2C devices found\n");
-  else
-    Serial.println("done\n");
 
-  delay(5000);           // wait 5 seconds for next scan
+  printf("Found %d devices\n",nDevices);
+ 
+  delay(5000);  // wait 5 seconds for next scan
 }
