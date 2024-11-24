@@ -4,20 +4,12 @@ NAME
 
 DESCRIPTION
   Investigates properties/behaviors of the Adafruit 320x480 resistive touchscreen,
-  especially those helpful to understanding erratic (bouncing, dropout, noise...)
-  coordinate readings, and whether these arise from circuit board crosstalk or
-  from inherent characteristics of the touchscreen.
-
-USAGE
-  The sketch accepts one-letter commands entered on the USB Serial port:
-    (R)esistance:  Calculates the X-Plate resistance from X- to X+
-    (N)oise:       Measures noise on the floating Y-Plate
-    (T)ouch Event: Samples the Y-Plate voltage before/during/after touch event
-    (S)ave         Saves the buffered samples to an SD file
+  especially behaviors helpful to understanding erratic (bouncing, dropout, noise...)
+  coordinate readings.
 
 EXERCISED
-  + X-plate resistance
-  + Idle (no touch) noise on Y-plate
+  + X plate resistance
+  + Idle (no touch) noise on X plate
   + Touch event noise (dropouts, erratic coordinates, etc)
   + Duration of a touch event
 
@@ -29,7 +21,7 @@ NOTE
   range of possible readings from the ADC should be 0..2047.
   + We consider a touch event to begin when the ADC returns a value greater
   than or equal to the so-called MINPRESSURE.
-  + We note when a touch event begins, and record samples into a FIFO
+  + We note a touch event begins, and continue recording samples into a FIFO
   ring buffer for 1.9 seconds
 
 REFERENCES
@@ -42,7 +34,6 @@ ATTRIBUTION
 
 
 #include <Wire.h>
-#include <SD.h>
 #include "HX8357_t3n.h"
 #include "MCP342x.h"
 
@@ -85,18 +76,6 @@ MCP342x adc = MCP342x(address);
 
 //Build an array for storing ADC samples
 float samples[NSAMPLES];  //About one seconds
-
-//State variable tracks when we've detected the beginning of a touch event
-bool touchEventInProgress = false;
-
-
-
-class RingBfrState {
-public:
-  int nextIn;   //Index of where next added value will be placed
-  int nextOut;  //Index of where next removed value will be found
-  int count;    //Number of values in the buffer
-};
 
 /*
 ** RingBfr -- A FIFO ring buffer of long integers
@@ -272,36 +251,7 @@ public:
   }
 
 
-  /**
-  *
-  * Save the ring buffer's state
-  *
-  * Saves the ring buffer's indices and count so that the buffer can be
-  * iterated multiple times.  Does not save the actual data nor the bfrSize.
-  *
-  **/
-  void saveState(RingBfrState &savedState) {
-    savedState.nextIn = nextIn;
-    savedState.nextOut = nextOut;
-    savedState.count = count;
-  }  //saveState()
-
-
-
-
-  /**
-  *
-  * Restore ring buffer's state
-  *
-  **/
-  void restoreState(RingBfrState savedState) {
-    nextIn = savedState.nextIn;
-    nextOut = savedState.nextOut;
-    count = savedState.count;
-  }  //restoreState()
-
-
-  //Private members
+//Private members
 private:
   int nextIn;                      //Index of where next added value will be placed
   int nextOut;                     //Index of where next removed value will be found
@@ -314,23 +264,16 @@ private:
 
 
 
-/**
- * Function to erase the Adafruit display
- *
-**/
-void eraseDisplay() {
-  tft.fillScreen(HX8357_BLACK);
-}
-
-
 
 //Build the ring buffer object
 RingBfr bfr;
 
-//Initialization
+//Initialization and one-time touchscreen discovery
 void setup() {
 
-
+  MCP342x::Config status;
+  long value;
+  float sum, v2, rXplate;
 
   //Initialize the Arduino world and let console know we're starting
   Serial.begin(9600);
@@ -339,11 +282,50 @@ void setup() {
 
   //Initialize the display
   tft.begin(HX8357D);
-  eraseDisplay();
+  tft.fillScreen(HX8357_BLACK);
   tft.setTextColor(HX8357_YELLOW);
   tft.setRotation(3);  //PocketFT8FW uses 3
   tft.setTextSize(2);
+  delay(100);
 
+
+  //Setup to measure the X-Plate resistance
+  Serial.println("Measuring X-Plate resistance");
+  pinMode(XM, OUTPUT);
+  pinMode(XP, OUTPUT);
+  pinMode(YM, INPUT);      //Float Y plate connections
+  pinMode(YP, INPUT);      //Float Y plate connections
+  digitalWrite(XM, HIGH);  //Connect XM to Vcc through RXM
+  digitalWrite(XP, LOW);   //Ground XP side of the plate
+
+  //Acquire ~1 second of samples of the voltage appearing on the touchpad's X- pin for the resistance calculation
+  //Note:  The connections are, GND---XP---XPlate---XM---RXM---VCC, so by measuring V(XM) we are instrumenting
+  //a voltage divider consisting of the XPlate and RXM from which we can calculate the unknown XPlate resistance.
+  int i;
+  for (i = 0; i < NSAMPLES; i++) {
+    adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 100000, value, status);
+    samples[i] = value;
+  }
+
+  //Calculate the average value of the voltage on touchpad's X- pin (Note:  it may be noisy)
+  sum = 0.0;
+  for (i = 0; i < NSAMPLES; i++) sum += samples[i];
+  v2 = (sum / NSAMPLES) * maxADCreading;  //Average value of voltage appearing on touchpad's X- pin
+
+  //Now we can calculate the resistance of the X-Plate
+  rXplate = (RXM * v2) / (VCC - v2);
+  printf("X-Plate resistance = %f Ohms\n", rXplate);
+
+  //Calculate the stdev (noise) of the X-Plate voltage measurements.  Note:  We are trying to learn whether
+  //erratic touch event coordinates arise from noise on the PCB or from a noisy connection between the
+  //X and Y resistive plates during a touch event.  Here we see the PCB noise without a touch event.
+  float sumDevSquared = 0.0;
+  for (i = 0; i < NSAMPLES; i++) {
+    float deviation = samples[i] - v2;
+    sumDevSquared += (deviation * deviation);
+  }
+  float stdev = sqrt(sumDevSquared / NSAMPLES);
+  printf("X-Plate stdev (noise) = %f volts\n", stdev);
 
   //Setup to instrument a touch event
   printf("Tap (touch) the screen");
@@ -353,254 +335,24 @@ void setup() {
 
 
 
-//Define the various activities commanded by the user
-enum ACTIVITY { IDLE,           //Awaiting user's command
-                RESISTANCE,     //Measuring X-Plate resistance
-                NOISE,          //Measuring noise on Y-Plate
-                TOUCH,          //Instrumenting a touch event
-                SAVE };         //Saving data to an SD file
-enum ACTIVITY activity = IDLE;  //Current activity state variable
 
-//Define vars that must be retained between calls to loop()
+
 int eventStart;    //Records index of where touch event begins in ring buffer
 int plotStart;     //Records index of where plot begins in ring buffer
 int nSamples = 0;  //Number of samples acquired during touch event
 
-//Loop executes user's commands
+// loop() runs over and over again forever, recording touchscreen samples in a ring buffer.
+// When a touch event begins, loop() records the starting ring buffer index and 480
+// (2 seconds) more samples from the touchscreen, and finally plots the touchscreen voltage
+// samples to illustrate noise/dropouts/etc.
 void loop() {
 
-  //What activity is in-progress?
-  switch (activity) {
-
-    case IDLE:
-      //Nothing --- Poll the Serial port for the user's next command
-      switch (Serial.read()) {
-        case 'R':
-        case 'r':
-          resetResistance();
-          activity = RESISTANCE;  //Cmd to measure X-Plate resistance
-          break;
-        case 'N':
-        case 'n':
-          resetNoise();
-          activity = NOISE;  //Cmd to measure noise on Y-Plate
-          break;
-        case 'T':
-        case 't':
-          resetTouch();
-          activity = TOUCH;  //Cmd to instrument a touch event
-          break;
-        case 'S':
-        case 's':
-          activity = SAVE;  //Cmd to save sample buffer to SD file
-          break;
-        default:
-          break;  //Await a valid user command
-      }           //Serial.read
-      break;
-
-    case RESISTANCE:
-      measureResistance();  //Measuring X-Plate resistance
-      break;
-    case NOISE:
-      measureNoise();  //Measuring Y-Plate noise
-      break;
-    case TOUCH:
-      instrumentTouchEvent();  //Instrumenting touch event
-      break;
-    case SAVE:
-      saveData();  //Save the captured data to SD file
-      break;
-    default:
-      activity = IDLE;  //Attempt recovery from unknown wreck
-      break;
-  }  //activity
-}  //loop()
-
-
-
-
-/**
- * Measure the resistance of the X-Plate
- *
- *
- **/
-void resetResistance() {
-  eraseDisplay();
-  printf("Avoid touching the screen during resistance measuement\n");
-}
-void measureResistance() {
-
-  MCP342x::Config status;
-  long value;
-  float sum, v2, rXplate;
-
-  //Setup to measure the X-Plate resistance between XP and XM.
-  //Note:  The connections are, GND---XPlate---RXM---VCC, so by measuring V(XM) we have created
-  //a voltage divider consisting of the XPlate and RXM, and knowing VCC, we can calculate the unknown
-  //XPlate resistance.
-  Serial.println("Measuring X-Plate resistance...");
-  pinMode(XM, OUTPUT);     //The X-Plate connections are XM...
-  pinMode(XP, OUTPUT);     //and XP.
-  pinMode(YM, INPUT);      //Float Y plate connections
-  pinMode(YP, INPUT);      //Float Y plate connections
-  digitalWrite(XM, HIGH);  //Connect Vcc through RXM to XM side of plate
-  digitalWrite(XP, LOW);   //Ground XP side of the plate
-
-  //Acquire ~1 second of samples of the voltage appearing on the touchpad's X- pin for the resistance calculation
-  int i;
-  for (i = 0; i < NSAMPLES; i++) {
-    adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 100000, value, status);
-    samples[i] = value;
-  }
-
-  //Calculate the average value of the voltage on touchpad's XM pin (Note:  it may be noisy)
-  sum = 0.0;
-  for (i = 0; i < NSAMPLES; i++) sum += samples[i];
-  v2 = (sum / NSAMPLES) * maxADCreading;  //Average value of voltage appearing on touchpad's XM pin
-
-  //Now we can calculate the resistance of the X-Plate
-  rXplate = (RXM * v2) / (VCC - v2);
-  printf("X-Plate resistance = %f Ohms\n", rXplate);
-
-  //Calculate the stdev (noise) of the X-Plate voltage measurements.  Note:  We are trying to learn whether
-  //erratic touch event coordinates arise from noise on the PCB or from a noisy connection between the
-  //X and Y resistive plates during a touch event.  Here we see the PCB noise with ~1 mV sensitivity on
-  //the biased Xm without a touch event.
-  float sumDevSquared = 0.0;
-  for (i = 0; i < NSAMPLES; i++) {
-    float deviation = samples[i] - v2;
-    sumDevSquared += (deviation * deviation);
-  }
-  float stdev = sqrt(sumDevSquared / NSAMPLES);
-  printf("X-Plate noise measured at XM = %f volts\n", stdev);
-
-}  //measureResistance()
-
-
-
-
-
-/**
- * Measure noise
- *
- * This activity instruments the noise on the floating Y-Plate, akin to what the ADC samples
- * prior to and following a touch event.  Because the Y-Plate floats during this measurement,
- * this noise may exceed that seen during a touch event when the two plates are connected at a
- * touchpoint.  The samples are taken with about ~1 mV sensitivity.  Unlike many other
- * measurements made in this sketch, these *might* include negative values.  Since there is
- * no source applied to the floating plate, we seemingly can assume the observed noise
- * arose through crosstalk in the display, the PCB, or the ADC itself.
- **/
-void resetNoise() {
-  eraseDisplay();
-  bfr.reset();  //Clear the bfr of old data
-  nSamples = 0;
-  printf("Avoid touching the screen during noise measurement\n");
-}
-void measureNoise() {
-
   long value;
   MCP342x::Config status;
+  bool touchEventInProgress = false;
 
   //Get the next value (0..2047) from the ADC
   adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 100000, value, status);
-
-  //Add the ADC value to the ring buffer, overwriting the oldest entry when the buffer eventually fills
-  bfr.overwrite(value);  //Always record the sampled value in the ring buffer
-
-  //Tally this sample
-  nSamples++;
-
-  //Was this the final sample?
-  if (nSamples == 480) {  //We want to acquire 2 seconds of noise data
-
-    //Plot the buffered noise data
-    plotBufferedData();
-  }
-}
-
-
-
-
-/**
-  * Save buffered data to SD file
-  *
-  * Saves the entire contents of the ring buffer to a single column CSV file.  The ring 
-  * buffer's state remains unchanged.  Files are named, FILE01.CSV, FILE02.CSV, etc.  
-  * Existing files by the same name, if any, are overwritten.
-  *
-  **/
-unsigned filenameIndex = 0;
-void saveData() {
-  char filename[256];
-  RingBfrState savedState;
-  char s[256];
-  long value;
-
-  //Build the filename
-  sprintf(filename, "/FILE%2d.CSV", filenameIndex);
-
-  //Initialize the Teensy SD library if the card is available
-  if (!SD.begin(BUILTIN_SDCARD)) {
-    Serial.println("Error:  Unable to access the SD card");
-    activity = IDLE;
-    return;
-  }
-
-  //Create the file
-  File dataFile = SD.open(filename, FILE_WRITE);
-  if (!dataFile) {
-    Serial.printf("Error:  Unable to create %s\n", filename);
-    activity = IDLE;
-    return;
-  }
-
-  //Write the contents of the ring buffer to dataFile
-  bfr.saveState(savedState);  //Save ring buffer state
-  for (int i = 0; i < bfr.getCount(); i++) {
-    bfr.getNext(value);
-    sprintf(s, "%d\n", value);
-    dataFile.write(s);
-  }
-  bfr.restoreState(savedState);
-  dataFile.close();
-  activity = IDLE;
-}
-
-
-
-/**
- * Instrumenting a touch event
- *
- * The idea here is to capture the voltage on the Y-Plate before, during, and after a touch event
- * to observe the noise (dropouts, varying contact resistance between the plates, crosstalk, etc)
- * underlying the touchscreen's erratic behavior.  The 12-bit ADC has a resolution of about 1 mV
- * and negative readings seem unlikely while the plates are touching.
- *
- * Note:  nSamples counts the number of samples made after the user pressed the (T)ouch command
- * while bfr.count tracks the number of recorded samples starting about 0.1 second before the
- * touch event begins.  We expect to record a total of about 2 seconds of data prior to, during
- * and following the touch event.
- *
- **/
-bool negativeReadingObserved;
-void resetTouch() {
-  eraseDisplay();
-  bfr.reset();                      //Clear the bfr of old data
-  nSamples = 0;                     //At this point, we have acquired no samples
-  negativeReadingObserved = false;  //These are unexpected, at least during an event
-  touchEventInProgress = false;     //Reset to capture a new event
-  printf("Tap the touchscreen\n");  //Prompt the user
-}
-void instrumentTouchEvent() {
-
-  long value;
-  MCP342x::Config status;
-
-  //Get the next value (0..2047) from the ADC
-  adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 100000, value, status);
-  if (value < 0) negativeReadingObserved = true;  //Unexpected
 
   //Add the ADC value to the ring buffer, overwriting the oldest entry when the buffer eventually fills
   bfr.overwrite(value);  //Always record the sampled value in the ring buffer
@@ -624,54 +376,19 @@ void instrumentTouchEvent() {
   if (touchEventInProgress)
     nSamples++;  //Yes, this sample is part of a touch event
 
-  //Was this the final sample in the touch event?
+  //Was this the final sample in this touch event?
   if (nSamples == (480 - 24)) {  //We want to acquire 1.9 seconds of data after the event starts
 
     //Yes, stop acquiring samples.  We have 0.1 second of data prior to event and 1.9 during the event
     touchEventInProgress = false;  //Setup for next touch event
     nSamples = 0;                  //Reset tally for next event
 
-    //Plot the buffered data from the touch event
-    if (negativeReadingObserved) {
-      printf("A negative reading was observed, will not be plotted, but can be (S)aved\n");
+    //Plot the acquired raw ADC voltage samples of the touch event
+    for (int i = 0; i < bfr.getCount(); i++) {
+      bfr.getNext(value);                              //Retrieve value from FIFO ring buffer
+      value = 319.0 * float(value) / 2047.0;           //Scale value to fit on the 320x480 display's Y axis
+      tft.drawPixel(i, (int16_t)value, HX8357_WHITE);  //Plot this point
     }
-    plotBufferedData();
   }
 
-}  //instrumentTouchEvent()
-
-
-
-
-/**
- * Plot the buffered data on the display
- *
- * Plots the data from the ring buffer, leaving the buffer's state unchanged so it can
- * be accessed again.  Assumes that the buffered values were obtained from the 12-bit
- * ADC and range within 0..2047.  Assumes a 320x480 display.
- *
- * Negative readings plotted as 0.
- *
- **/
-void plotBufferedData() {
-
-  long value;
-
-  RingBfrState savedState;
-
-  //Save the ring buffer's state
-  bfr.saveState(savedState);
-
-  //Plot the acquired data from the ring buffer
-  for (int i = 0; i < bfr.getCount(); i++) {
-    bfr.getNext(value);                              //Retrieve value from FIFO ring buffer
-    if (value < 0) value = 0;                        //Truncate negative readings
-    value = 319.0 * float(value) / 2047.0;           //Scale value to fit on the 320x480 display's Y axis
-    tft.drawPixel(i, (int16_t)value, HX8357_WHITE);  //Plot this point
-  }
-
-  //Restore the ring buffer's state
-  bfr.restoreState(savedState);
-  printf("You can save the plot data with the (S)ave command\n");
-
-}  //plotBufferedData()
+}  //loop()
