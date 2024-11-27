@@ -17,4 +17,5 @@ ATTRIBUTION
 */
 
 #define DPRINTF(...) 
-#define DTRACE()     
+#define DTRACE()   
+#define ASSERT(...)  

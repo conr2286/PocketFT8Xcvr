@@ -3,10 +3,10 @@
 **  PocketFT8XcvrFW -- Firmware for the KQ7B edition of the Pocket FT8 transceiver
 **
 ** DESCRIPTION
-**  This is a mostly faithful implementation of the original Pocket FT8 transceiver
+**  This is a somewhat faithful implementation of the original Pocket FT8 transceiver
 **  in a compact, self-contained, package.  Notable features include:
 **    + 4-Layer PCB
-**    + FT8 transmit/receiver
+**    + Single band FT8 transmit/receiver
 **    + Teensy 4.1 processor
 **    + Small, 4.0x2.8" PCB mates with the Adafruit display
 **    + Adafruit 320x480 3.5" resistive touchscreen display
@@ -14,13 +14,23 @@
 **    + Powered by 0.37 Amps from a single +5V USB power source 
 **    + SD Card logging to txt file
 **    + Station configuration JSON file
+**    + Plugable filters
 **  The overall goal is to construct a single band, self-contained, HF FT8 transceiver for
-**  POTA/SOTA work where light weight and power requirements dominate other requirements.
+**  POTA/SOTA work where light weight and power demand dominate other requirements.
+**
+** RATIONAL
+**  + Single-band operation is not a serious limitation for SOTA/POTA work where the available
+**  antenna defines the available band.
+**  + QRPP == battery life for SOTA/POTA
+**  + While the SI4735 receiver's performance lags that available from a Tayloe detector,
+**  it offers considerable simplicity and effectiveness for SOTA/POTA FT8 operation.  If it
+**  proves an issue, then the solution is well understood.
 **
 ** FUTURE
-**    + Support for GPS-sourced grid square
+**    + Finish support for GPS-sourced grid square and UTC time
 **    + Standard log file format
 **    + Wouldn't it be nice if the SD card were accessible via USB from a computer host
+**    + Consider using a real touchscreen controller to replace the MCP342X ADC
 **    + Bug fixes (see https://github.com/conr2286/PocketFT8Xcvr Issues)
 **
 ** KQ7B
@@ -29,7 +39,7 @@
 **  VERSIONS
 **  1.00 Never built due to unobtanium componentry
 **  1.01 PCB requires several patches to correct known issues
-**  1.10 Working firmware and transmitter but SI4735 suffers from I2C noise issues
+**  1.10 Working firmware and transmitter but SI4735 suffers from serious I2C noise issues
 **  2.00 (In Progress) Revised board/firmware to overcome I2C noise problem
 **  
 ** ATTRIBUTION
@@ -37,7 +47,7 @@
 **  https://github.com/WB2CBA/W5BAA-FT8-POCKET-TERMINAL  Barb's FT8 Pocket Terminal
 **  https://github.com/kgoba/ft8_lib  Karlis Goba's FT8 Library for microprocessors
 **  https://github.com/conr2286/PocketFT8Xcvr  The KQ7B HW and FW edition
-**  Many others' contributions to the various libraries
+**  Many other contributions to the various libraries
 **
 ** LICENSES
 **  Various open source licenses widely cited throughout
@@ -73,12 +83,20 @@
 #include "AudioStream.h"
 #include "arm_math.h"
 #include "constants.h"
+#include "maidenhead.h"
+
 
 //GPS Stuff
 TinyGPS gps;
-#define SerialGPS Serial1   //Teensy 4.1 Serial Port 1, pins 0 and 1
 #define GPS_BAUD_RATE 9600  //Adafruit Ultimate GPS baud rate
 float flat, flon;           //GPS-derived lattitude and longitude
+int32_t gps_latitude;
+int32_t gps_longitude;
+int8_t gps_hour;
+int8_t gps_minute;
+int8_t gps_second;
+int8_t gps_hundred;
+int8_t gps_offset = 2;
 
 //Enable comments in the JSON configuration file
 #define ARDUINOJSON_ENABLE_COMMENTS 1
@@ -139,7 +157,7 @@ q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
 //ToDo:  Arrange for the various modules to access these directly from config structure
 char Station_Call[12];  //six character call sign + /0
-char Locator[5];        // four character locator  + /0
+char Locator[11];        // four character locator  + /0
 
 uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
@@ -196,18 +214,19 @@ void setup(void) {
     delay(5000);
   }
 
-  //Use Teensy's battery-backed clock 
-  //initGPS();
+  //Sync clock with battery-backed RTC
   setSyncProvider(getTeensy3Time);
   delay(100);
 
-  //Turn off the transmitter
+  //Turn the transmitter off and the receiver on (they are independent in V2 boards)
   pinMode(PIN_PTT, OUTPUT);
+  pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_PTT, LOW);
+  digitalWrite(PIN_RCV, HIGH);
 
   //Initialize the SD library if the card is available
   if (!SD.begin(BUILTIN_SDCARD)) {
-    Serial.println("Unable to access the SD card");
+    Serial.println("Unable to access the SD card");  //Someday move this message to display
   }
 
   //Initialize the display
@@ -229,30 +248,30 @@ void setup(void) {
     EEPROMWriteInt(10, 0);  //Address 10 is offset but the encoding remains mysterious
   }
 
-  //Initialize the SI5351 clock generator.  Idaho Edition of Pocket FT8 board uses CLKIN input.
+  //Initialize the SI5351 clock generator.  Pocket FT8 Revisited boards use CLKIN input.
   si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          //Charlie's correction was 2200 if that someday matters
   si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  //KQ7B V1.00 uses cmos CLKIN, not a XTAL
   si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  //All PLLs using CLKIN
   si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
-  si5351.set_freq(3276800, SI5351_CLK2);  //Receiver
+  si5351.set_freq(3276800, SI5351_CLK2);  //Receiver's PLL clock (so sad)
   si5351.output_enable(SI5351_CLK2, 1);
 
   // Gets and sets the Si47XX I2C bus address
   int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
   if (si4735Addr == 0) {
-    Serial.println("Si473X not found!");
+    Serial.println("Error:  Si473X not found!");
     Serial.flush();
-    while (1) continue;
+    while (1) continue;  //Fatal
   } else {
     //DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
   }
 
   //Read the JSON configuration file into the config structure
   File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
-  if (!configFile) Serial.printf("unable to open %s\n", CONFIG_FILENAME);
+  if (!configFile) Serial.printf("Error:  Unable to open SD config file, %s\n", CONFIG_FILENAME);
   JsonDocument doc;
   DeserializationError error = deserializeJson(doc, configFile);
-  if (error) Serial.printf("Unable to read SD config file, %s\n", CONFIG_FILENAME);
+  if (error) Serial.printf("Error:  Unable to read SD config file, %s\n", CONFIG_FILENAME);
   strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  //Station callsign
   config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
   strlcpy(config.location, doc["location"] | DEFAULT_LOCATION, sizeof(config.location));
@@ -299,11 +318,7 @@ void setup(void) {
   Serial.println("Use keyboard u to raise, d to lower, & s to save ");
   Serial.println(" ");
 
-
-  //Turn on the receiver (Req'd for V2.0 boards)
-  pinMode(PIN_RCV, OUTPUT);
-  digitalWrite(PIN_RCV, HIGH);
-
+  //Initialize the receiver's processing
   init_DSP();
   initalize_constants();
   AudioMemory(20);
@@ -339,7 +354,7 @@ unsigned oldFlags = 0;
 
 void loop() {
 
-  //Debugging aide for the flags
+  //Debugging aide for the multitude of flags
   unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
   if (newFlags != oldFlags) {
     //DPRINTF("newFlags = 0x%x\n", newFlags);
@@ -391,6 +406,11 @@ void loop() {
 
   process_touch();
   if (tune_flag == 1) process_serial();
+
+  //ToDo:  Sync time/location with GPS when available
+  // if (Serial1.available()) {
+  //   parse_NEMA();
+  // }
 
   //If we are recording audio, then stop after the requested seconds of raw audio data
   //at 6400 samples/second.
@@ -511,6 +531,7 @@ void sync_FT8(void) {
 
 
 
+
 void auto_sync_FT8(void) {
   DTRACE();
   // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
@@ -531,57 +552,42 @@ void auto_sync_FT8(void) {
 }
 
 
-// void initGPS() {
-//   //Initialize the GPS, if any
-//   SerialGPS.begin(GPS_BAUD_RATE);  //Init the GPS serial connection
 
-//   //Try to obtain time/location from GPS
-//   unsigned long age;
-//   int Year;
-//   byte Month, Day, Hour, Minute, Second;
-//   bool gpsActive = false;
-//   for (unsigned long gpsStart = millis(); millis() < gpsStart + 5000;) {
-//     while (SerialGPS.available()) {
+/*
+** @brief Get UTC time and location from GPS when available
+**
+** parse_NEMA() is a NOOP if data is not available from GPS.  When GPS is available,
+** it's used to set Teensy time to UTC and update the grid square locator.
+**
+** ToDo:  Should parse_NEMA() be invoked from loop(), or just once from setup()???
+**
+*/
+void parse_NEMA(void) {
+  while (Serial1.available()) {
+    if (gps.encode(Serial1.read())) {  // process gps messages
+      // when TinyGPS reports new data...
+      unsigned long age;
+      int Year;
+      byte Month, Day, Hour, Minute, Second, Hundred;
+      gps.crack_datetime(&Year, &Month, &Day, &Hour, &Minute, &Second, &Hundred, &age);
+      gps.f_get_position(&flat, &flon, &age);
 
-//       char c = SerialGPS.read();
-//       //Serial.write(c);
+      //Second = Second + gps_offset;
 
-//       //Wait for a message from GPS
-//       if (gps.encode(c)) {  // process gps messages
-//         // when TinyGPS reports new data...
-//         gpsActive = true;
+      setTime(Hour, Minute, Second, Day, Month, Year);
+      Teensy3Clock.set(now());  // set the RTC
+      gps_hour = Hour;
+      gps_minute = Minute;
+      gps_second = Second;
+      gps_hundred = Hundred;
+      char *locator = get_mh(flat, flon, 4);
+      for (int i = 0; i < 11; i++) Locator[i] = locator[i];
 
-//         gps.crack_datetime(&Year, &Month, &Day, &Hour, &Minute, &Second, NULL, &age);
-//         gps.f_get_position(&flat, &flon, &age);
-//       }
+      //ToDo:  Allow config to overide GPS location
+      set_Station_Coordinates(Locator);
+    }
+  }
+}
 
-//       unsigned long gpsWaitMillis = millis() - gpsStart;
-//       //if (gpsWaitMillis > 15000UL) break;  //Give-up on GPS time/location
 
-//     }  //while
-//   }
 
-//   if (gpsActive) {
-//     if (age < 500) {
-//       // set the MCU Time to the latest GPS reading
-//       tmElements_t rtc;
-//       rtc.Second = Second;
-//       rtc.Minute = Minute;
-//       rtc.Hour = Hour;
-//       rtc.Year = Year;
-//       rtc.Month = Month;
-//       rtc.Day = Day;
-//       uint32_t unixTime = makeTime(rtc);
-//       Teensy3Clock.set(unixTime);
-//       setTime(Hour,Minute,Second,Day,Month,Year);
-//       DPRINTF("Teensy3Clock set\n");
-//       //adjustTime(offset * SECS_PER_HOUR);
-//     }
-
-//     DPRINTF("#satellites=%d, hdop=%d, flat=%f, flon=%f, age=%ul ms\n", gps.satellites(), gps.hdop(), flat, flon, age);
-//     DPRINTF("GPS Date/Time:  %u/%u/%u %u:%u:%u\n", Month, Day, Year, Hour, Minute, Second);
-//   } else {
-//     DPRINTF("GPS not active\n");
-//   }
-
-// }  //initGPS()
