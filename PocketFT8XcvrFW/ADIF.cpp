@@ -42,19 +42,25 @@ ADIF::ADIF(char* logFile, char* myCall, char* myGridsquare, char* logMode, char*
 
 
 /**
-** Logs a QSO to the SD disk file
+** Logs a QSO entry to the SD disk file
 **
-** @param theirCall Worked station's callsign (required)
-** @param theirGridsquare Worked station's gridsquare (optional, may be NULL)
+** @param workedCall Worked station's callsign (required)
+** @param qsoDate UTC starting date for QSO (required)
+** @param qsoTime UTC starting time for QSO (required)
+** @param workedGridsquare Worked station's gridsquare (optional)
 **
 ** @return 0==success, -1==error
 **
-** 
+** Our station's call and the QSO mode (e.g. DATA or FT8) are obtained from ADIF's member
+** variables and recorded in the log file.
 **
-** The logfile is opened and closed with each call to logQSO to "ensure" the data is actually flushed
-** to the SD media.
+** The logfile is opened and closed with each call to logQSO() ensuring the data is actually
+** flushed to the SD media (so that it may be removed).
+**
+** Optional parameters passed to logQSO() as NULL pointers will not appear in the
+** log file; empty (i.e. zero-length) parameters appear as white space in the log.
 **/
-int ADIF::logQSO(char* theirCall, char* theirGridsquare, char* qsoDate, char* qsoTime) {
+int ADIF::logQSO(char* workedCall, char* qsoDate, char* qsoTime, char* workedGridsquare) {
 
   //Open the log file
   File logFile = SD.open(this->logFile, FILE_WRITE);
@@ -63,10 +69,21 @@ int ADIF::logQSO(char* theirCall, char* theirGridsquare, char* qsoDate, char* qs
     return -1;
   }
 
-  //Assemble the required log entries
+  //Assemble the required log items
   char entry[256];
-  snprintf(entry,sizeof(entry), 
-  "<mode:4>%4s<qso_date:8>%8s<time_on:6>%6s<station_callsign:7>%7s<call:7>%7s", this->qsoMode, qsoDate, qsoTime, this->myCall, theirCall);
+  snprintf(entry, sizeof(entry),
+           "<mode:4>%4s<qso_date:8>%8s<time_on:6>%6s<station_callsign:7>%7s<call:7>%7s", this->qsoMode, qsoDate, qsoTime, this->myCall, workedCall);
 
-  //Append the optional log entries one-by-one
+  //Append optional worked grid square to the log entry string
+  if (workedGridsquare!=NULL) {
+    strlcat(entry,"<gridsquare:4>",sizeof(entry));
+    strlcat(entry,workedGridsquare,sizeof(entry));
+  }
+
+  //Write the assembled entry to the log file
+  logFile.write(entry,strlen(entry));
+
+  //Flush log entry to the SD disk
+  logFile.close();    //Flush
+  return 0;           //Return success
 }
