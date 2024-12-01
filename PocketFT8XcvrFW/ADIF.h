@@ -19,6 +19,6 @@ class ADIF {
 
   public:
   ADIF(char* logFile, char* myCall, char* myGridsquare, char* qsoMode, char* mySOTARef, char* mySIGinfo);
-  int logQSO(char* theirCall, char* theirGridsquare, char* date, char* time);
+  int logQSO(char* theirCall, char* theirGridsquare, char* date, char* time, char* myRSL, char* theirRSL);
 
 };
