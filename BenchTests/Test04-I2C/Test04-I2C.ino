@@ -80,11 +80,8 @@ void loop() {
       Serial.println("  !");
 
       nDevices++;
-    } else if (error == 4) {
-      Serial.print("Unknown error at Wire address 0x");
-      if (address < 16)
-        Serial.print("0");
-      Serial.println(address, HEX);
+    } else {
+      Serial.printf("WIRE.endTransmission() on addr 0x%2x error %d\n",address,error);
     }
     delay(1000);
 
@@ -111,5 +108,5 @@ void loop() {
 
   printf("Found %d devices\n",nDevices);
  
-  delay(5000);  // wait 5 seconds for next scan
+  delay(500);  // wait 5 seconds for next scan
 }
