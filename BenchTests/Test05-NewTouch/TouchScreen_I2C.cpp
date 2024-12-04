@@ -215,7 +215,7 @@ TSPoint TouchScreen::getPoint(void) {
       //Have we acquired sufficient samples to deduce the X-Coordinate's value?
       if (_nSamplesAcquired >= NUMSAMPLES) {
         result.x = _samples[NUMSAMPLES / 2];  //Record the median X-Coordinate sample value from sorted samples[]
-        DPRINTF("result.x=%ld\n",result.x);
+        //DPRINTF("result.x=%ld\n",result.x);
         _state = GETY;                        //Config state machine to acquire Y-Coordinate samples
         setupToSampleYCoordinate();           //Set the DIO ports to sample resistive touchscreen Y-Coordinates
         startConversion(MCP342x::channel1);   //Start ADC to acquire first sample of a Y-Coordinate

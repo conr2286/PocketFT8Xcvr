@@ -171,27 +171,28 @@ MCP342x::error_t MCP342x::read(long &result, Config &status) const {
 
 MCP342x::error_t MCP342x::convertAndRead(Channel channel, Mode mode, Resolution resolution, Gain gain, unsigned long timeout, long &result, Config &status) {
   error_t err = convert(channel, mode, resolution, gain);
-  DPRINTF("err=%d\n",err);
+  ASSERT(err == 0);
   if (err != errorNone)
     return err;
   unsigned long t = micros() + timeout;
   unsigned long convTime = resolution.getConversionTime();
-  DPRINTF("convTime=%ld us\n",convTime);
+  //DPRINTF("convTime=%ld us\n", convTime);
   if (convTime > 16383) {
     // Unreliable (see arduino reference), use delay() instead
     convTime /= 1000;
-    DPRINTF("delay(%ld)\n",convTime);
+    //DPRINTF("delay(%ld)\n", convTime);
     delay(convTime);
   } else {
-    DPRINTF("delayMicroseconds(%ld)\n",convTime);
+    //DPRINTF("delayMicroseconds(%ld)\n", convTime);
     delayMicroseconds(convTime);
   }
 
   do {
     err = read(result, status);
-    if (!err && status.isReady())
-      DPRINTF("err=%d, isReady()=%u, micros()-t=%ld\n",err,status.isReady(),long(micros)-t);
+    if (!err && status.isReady()) {
+      //DPRINTF("err=%d, isReady()=%u, micros()-t=%ld\n", err, status.isReady(), long(micros) - t);
       return err;
+    }
   } while (long(micros() - t) < 0);
   DTRACE();
   return errorReadTimeout;

@@ -116,7 +116,7 @@ void loop() {
     //Report the mapped position a la button.cpp in PocketFT8XcvrFW
     unsigned mappedX = map(p.x, TS_MINX, TS_MAXX, 0, 480);
     unsigned mappedY = map(p.y, TS_MINY, TS_MAXY, 0, 320);
-    Serial.print("; MappedX=");
+    Serial.print(" ---  MappedX=");
     Serial.print(mappedX);
     Serial.print(", mappedY=");
     Serial.println(mappedY);

@@ -73,7 +73,7 @@ ATTRIBUTION
 #define PENRADIUS 3
 
 //Number of samples taken during one phase of the investigation
-#define NSAMPLES 24  //About one seconds worth of samples
+#define NSAMPLES 240  //About one seconds worth of samples
 
 //Define the maximum possible ADC sampled voltage
 #define maxADCreading 2047  //Largest signed 18 bit value returned from ADC
@@ -331,7 +331,6 @@ void eraseDisplay() {
  * Wait for conversion to finish
  */
 void waitForADC() {
-  int err;
   long value;
   MCP342x::Config status;
   MCP342x::error_t err;
@@ -496,8 +495,10 @@ void measureResistance() {
   int i;
   uint8_t err;
   for (i = 0; i < NSAMPLES; i++) {
-    err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value, status);
-need out own convertandread
+    err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000L, value, status);
+    if (err!=0) {
+      DPRINTF("err=%d\n",err);
+    }
     bfr.addNext(value);  //Add ADC value to the end of FIFO ring buffer
   }
 
@@ -511,11 +512,11 @@ need out own convertandread
   }
   v2 = (sum / float(NSAMPLES));  //Average value read from on touchpad's XM pin
   v2 = v2 / maxADCreading;
-  DPRINTF("sum=%f, NSAMPLES=%d, maxADCreading=%ld, v2=%f\n", sum, NSAMPLES, maxADCreading, v2);
+  //DPRINTF("sum=%f, NSAMPLES=%d, maxADCreading=%ld, v2=%f\n", sum, NSAMPLES, maxADCreading, v2);
   bfr.restoreState(savedState);  //Restore ring buffer's state
 
   //Now we can calculate the resistance of the X-Plate
-  DPRINTF("RXM=%d, VCC=%f\n", RXM, VCC);
+  //DPRINTF("RXM=%d, VCC=%f\n", RXM, VCC);
   rXplate = (RXM * v2) / (VCC - v2);
   printf("X-Plate resistance = %f Ohms\n", rXplate);
 
@@ -528,7 +529,7 @@ need out own convertandread
 
   for (i = 0; i < NSAMPLES; i++) {
     bfr.getNext(value);                        //Retrieve next value from FIFO ring buffer
-    float deviation = value - v2;              //Deviation of this value from average
+    float deviation = float(value)/maxADCreading - v2;              //Deviation of this value from average
     sumDevSquared += (deviation * deviation);  //Deviation squared
   }
   float stdev = sqrt(sumDevSquared / NSAMPLES);  //Standard deviation
@@ -667,7 +668,7 @@ void resetTouch() {
   nSamples = 0;                     //At this point, we have acquired no samples
   negativeReadingObserved = false;  //These are unexpected, at least during an event
   touchEventInProgress = false;     //Reset to capture a new event
-  printf("Tap the touchscreen\n");  //Prompt the user
+  printf("\nTap the touchscreen\n");  //Prompt the user
 }
 void instrumentTouchEvent() {
 
