@@ -60,7 +60,7 @@ ATTRIBUTION
 #define RXM 510  //Ohms
 
 //Define Vcc
-#define VCC 3.6  //Volts
+#define VCC 3.3  //Volts
 
 // // Touchpad calibrarion as investigated on V1.01 hardware
 // #define TS_MINX 123
@@ -469,7 +469,8 @@ void prompt() {
 void resetResistance() {
   eraseDisplay();
   bfr.reset();  //Reset the ring buffer
-  printf("Avoid touching the screen during X-Plate resistance measuement\n");
+  printf("\nAvoid touching the screen during X-Plate resistance measuement\n");
+  Serial.println("Measuring X-Plate resistance...");
 }
 void measureResistance() {
 
@@ -483,7 +484,6 @@ void measureResistance() {
   //Note:  The connections are, GND---XPlate---RXM---VCC, so by measuring V(XM) we have created
   //a voltage divider consisting of the XPlate and RXM, and knowing VCC, we can calculate the unknown
   //XPlate resistance.
-  Serial.println("Measuring X-Plate resistance...");
   pinMode(XM, OUTPUT);     //The X-Plate pins are XM and XP, and...
   pinMode(XP, OUTPUT);     //XM connects to RXM and then to X- on plate
   pinMode(YM, INPUT);      //Float Y plate connections
@@ -496,8 +496,8 @@ void measureResistance() {
   uint8_t err;
   for (i = 0; i < NSAMPLES; i++) {
     err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000L, value, status);
-    if (err!=0) {
-      DPRINTF("err=%d\n",err);
+    if (err != 0) {
+      DPRINTF("err=%d\n", err);
     }
     bfr.addNext(value);  //Add ADC value to the end of FIFO ring buffer
   }
@@ -516,7 +516,7 @@ void measureResistance() {
   bfr.restoreState(savedState);  //Restore ring buffer's state
 
   //Now we can calculate the resistance of the X-Plate
-  //DPRINTF("RXM=%d, VCC=%f\n", RXM, VCC);
+  DPRINTF("RXM=%d, VCC=%f, v2=%f\n", RXM, VCC, v2);
   rXplate = (RXM * v2) / (VCC - v2);
   printf("X-Plate resistance = %f Ohms\n", rXplate);
 
@@ -528,9 +528,9 @@ void measureResistance() {
   bfr.saveState(savedState);  //Save ring buffer's state yet again
 
   for (i = 0; i < NSAMPLES; i++) {
-    bfr.getNext(value);                        //Retrieve next value from FIFO ring buffer
-    float deviation = float(value)/maxADCreading - v2;              //Deviation of this value from average
-    sumDevSquared += (deviation * deviation);  //Deviation squared
+    bfr.getNext(value);                                   //Retrieve next value from FIFO ring buffer
+    float deviation = float(value) / maxADCreading - v2;  //Deviation of this value from average
+    sumDevSquared += (deviation * deviation);             //Deviation squared
   }
   float stdev = sqrt(sumDevSquared / NSAMPLES);  //Standard deviation
   printf("X-Plate noise (stdev) measured at XM = %f volts\n", stdev);
@@ -556,40 +556,59 @@ void measureResistance() {
  * no source applied to the floating plate, we seemingly can assume the observed noise
  * arose through crosstalk in the display, the PCB, or the ADC itself.
  **/
+float noise;
+float avg;
+unsigned long maxReading;
 void resetNoise() {
   eraseDisplay();
   bfr.reset();  //Clear the bfr of old data
   nSamples = 0;
-
+  maxReading=0;
+  noise = 0.0;
+  avg = 0.0;
   //Setup the X+/X- pins just like we would to capture a touch event just in case the X-Plate
   //is the source of any noise coupled to the Y-Plate
   pinMode(XM, OUTPUT);     //The X-Plate pins are XM and XP, where...
   pinMode(XP, OUTPUT);     //XM connects throuh RXM to X- on plate
   digitalWrite(XM, HIGH);  //Connect Vcc through RXM to X- side of plate
   digitalWrite(XP, LOW);   //Ground X+ side of the plate
-
   //Float (high impedance) the Y-Plate connections so the ADC measures the unloaded Y-Plate voltage
   pinMode(YM, INPUT);
   pinMode(YP, INPUT);
-
-  printf("Avoid touching the screen during the noise measurement\n");
+  printf("\nAvoid touching the screen during the noise measurement\n");
 }
 void measureNoise() {
-
+  RingBfrState savedState;
+  uint8_t err;
   long value;
   MCP342x::Config status;
 
+
   //Get the next value (0..2047) from the ADC
-  adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 100000, value, status);
+  err = adc.convertAndRead(MCP342x::channel1, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 100000, value, status);
+  if (err != 0) {
+    DPRINTF("adc.convertAndRead err=%d\n", err);
+    return;
+  }
+
+  if (abs(value)>maxReading) maxReading=abs(value);
 
   //Add the ADC value to the ring buffer, overwriting the oldest entry when the buffer fills
   bfr.overwrite(value);  //Always record the sampled value in the ring buffer
+
+  avg += value;  //Sum values to later compute average
 
   //Tally this sample
   nSamples++;
 
   //Was this the final sample?
   if (nSamples == 480) {  //We want to acquire 2 seconds of noise data
+    DPRINTF("sum=%f\n", avg);
+
+    avg = avg / 480;                      //average raw value
+    avg = (avg / maxADCreading) * 2.048;  //Avg volts
+    printf("Average voltage on floating YP=%f volts\n", avg);
+    printf("Max ADC reading=%lu\n",maxReading);
 
     //Plot the buffered noise data
     plotBufferedData();  //Generate the plot
@@ -668,6 +687,14 @@ void resetTouch() {
   nSamples = 0;                     //At this point, we have acquired no samples
   negativeReadingObserved = false;  //These are unexpected, at least during an event
   touchEventInProgress = false;     //Reset to capture a new event
+    //Setup the X+/X- pins to capture a touch event's x coordinate on the Y-Plate
+  pinMode(XM, OUTPUT);     //The X-Plate pins are XM and XP, where...
+  pinMode(XP, OUTPUT);     //XM connects throuh RXM to X- on plate
+  digitalWrite(XM, HIGH);  //Connect Vcc through RXM to X- side of plate
+  digitalWrite(XP, LOW);   //Ground X+ side of the plate
+  //Float (high impedance) the Y-Plate connections so the ADC measures the unloaded Y-Plate voltage
+  pinMode(YM, INPUT);
+  pinMode(YP, INPUT);
   printf("\nTap the touchscreen\n");  //Prompt the user
 }
 void instrumentTouchEvent() {
@@ -684,6 +711,7 @@ void instrumentTouchEvent() {
 
   //Did we receive the first valid sample of a new touch event?
   if (touchEventInProgress == false && value >= MINPRESSURE) {
+    DPRINTF("value=%ld\n",value);
 
     //Yes, a touch event has begun
     eventStart = bfr.retard(bfr.getNextIn());  //Record index of where touch event starts in ring buffer
@@ -698,11 +726,14 @@ void instrumentTouchEvent() {
   }
 
   //Should we tally this sample as part of a touch event?
-  if (touchEventInProgress)
+  if (touchEventInProgress) {
+    //DTRACE();
     nSamples++;  //Yes, this sample is part of a touch event
+  }
 
   //Was this the final sample in the touch event?
   if (nSamples == (480 - 24)) {  //We want to acquire 1.9 seconds of data after the event starts
+    DTRACE();
 
     //Yes, stop acquiring samples.  We have 0.1 second of data prior to event and 1.9 during the event
     touchEventInProgress = false;  //Setup for next touch event
@@ -730,7 +761,7 @@ void conversionTiming() {
   MCP342x::error_t err;
   unsigned nSamples = 0;
 
-  printf("Measuring conversion timing\n");
+  printf("\nMeasuring conversion timing\n");
 
   for (int i = 0; i < 1000; i++) {
     t0 = micros();
@@ -743,9 +774,9 @@ void conversionTiming() {
       return;
     }
 
-    delay(4);  //Should require at least 4167 uS
+    delay(4);  //Wait for at least 4167 uS before polling
 
-    //Wait for adc to finish
+    //Poll ADC for completion
     do {
       err = adc.read(value, status);
       if (!err && status.isReady()) break;
