@@ -44,7 +44,7 @@
 #define NUMSAMPLES 5
 
 //Build an instance of the MCP342x A/D Converter
-uint8_t address = 0x69;  //Original I2C address was 0x68 but MCP342X V1.01 chip reports 0x68
+uint8_t address = 0x69;  //Original I2C address was 0x68 but MCP342X V1.01 chip reports 0x69
 MCP342x adc = MCP342x(address);
 
 //Build the resulting object returned by getPoint()
@@ -179,7 +179,7 @@ TSPoint TouchScreen::getPoint(void) {
   long conversionResult;
 
   //The common result of most repeated calls to getPoint() is no touch data available
-  result.x = result.y = result.z = 0;  //Pressure==0 implies no touch event data available
+  result.z = 0;  //Pressure==0 implies no touch event data available
 
   //Repeated calls to getPoint() from loop() drive the state machine to configure the
   //resistive touchscreen pins, acquire/interpret X and Y coordinate data, ignore erratic
@@ -204,6 +204,7 @@ TSPoint TouchScreen::getPoint(void) {
 
       //If a touch event occurred, then insert conversionResult into sorted samples[]
       if (conversionResult >= _minimumSample) {
+        //DPRINTF("X=%ld\n", conversionResult);
         insertionSort(conversionResult, _samples, _nSamplesAcquired++);
       } else {
         _state = IDLE;          //This sample appears to be erratic noise
@@ -214,6 +215,7 @@ TSPoint TouchScreen::getPoint(void) {
       //Have we acquired sufficient samples to deduce the X-Coordinate's value?
       if (_nSamplesAcquired >= NUMSAMPLES) {
         result.x = _samples[NUMSAMPLES / 2];  //Record the median X-Coordinate sample value from sorted samples[]
+        DPRINTF("result.x=%ld\n",result.x);
         _state = GETY;                        //Config state machine to acquire Y-Coordinate samples
         setupToSampleYCoordinate();           //Set the DIO ports to sample resistive touchscreen Y-Coordinates
         startConversion(MCP342x::channel1);   //Start ADC to acquire first sample of a Y-Coordinate
@@ -246,6 +248,7 @@ TSPoint TouchScreen::getPoint(void) {
         result.y = _samples[NUMSAMPLES / 2];  //Record the median Y-Coordinate sample value from sorted samples[]
         _state = IDLE;                        //We have completed a touch event and return to IDLE
         result.z = result.x + result.y;       //This is how Adafruit calculated the so-called "pressure"
+        //DPRINTF("result.x=%ld, result.y=%ld, result.z=%ld\n",result.x, result.y, result.z);
         return result;                        //Return a valid result
       } else {
         startConversion(MCP342x::channel1);  //Start another Y-Coordinate sample
@@ -258,7 +261,7 @@ TSPoint TouchScreen::getPoint(void) {
     default:
       _state = IDLE;  //Attempt repair by faking IDLE
       _nSamplesAcquired = 0;
-      delay(100);     //Let the ADC finish whatever it's doing
+      delay(100);  //Let the ADC finish whatever it's doing
 
   }  //switch(_state)
   return incomplete;
@@ -311,7 +314,8 @@ void TouchScreen::setupToSampleXCoordinate() {
  * Note that the conversion resolution is coordinated with conversionIsFinished()
 **/
 void TouchScreen::startConversion(MCP342x::Channel channel) {
-  int err = adc.convert(channel, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1);
+  MCP342x::error_t err = adc.convert(channel, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1);
+  ASSERT(err == 0);
   _adcStartTime = micros();
 }  //startConversion()
 
@@ -347,7 +351,7 @@ long TouchScreen::getConversionResult() {
 
   //Retrieve the result
   MCP342x::error_t err = adc.read(adcResult, adcStatus);
-  ASSERT(!err);
+  ASSERT(err == 0);
   return adcResult;
 
 }  //getConversionResult()
@@ -381,9 +385,9 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
   delay(1);  // MC342x needs 300us to settle, wait 1ms
 
   //Record the duration of a 12-bit conversion
-  _allowedDuration = adc.resolution12.getConversionTime() + 100;  //microseconds
+  _allowedDuration = adc.resolution12.getConversionTime() + 200;  //microseconds
 
-  pressureThreshhold = 10;
+  pressureThreshhold = 100;
   _minimumSample = pressureThreshhold;
 }
 

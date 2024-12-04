@@ -63,7 +63,6 @@ ATTRIBUTION
 #define MINPRESSURE 120
 #define PENRADIUS 3
 
-
 //Build the display object using pin numbers from Charlie's Pocket FT8 code
 HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);  //Teensy 4.1 moved SCK to dig pin 13
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 313);  //The 313 ohms is a guess for the touchpad resistance
@@ -92,6 +91,7 @@ void setup() {
 
   //And also the opposite corner in white
   tft.fillCircle(tft.width(), tft.height(), PENRADIUS, HX8357_WHITE);
+
 }
 
 // the loop function runs over and over again forever

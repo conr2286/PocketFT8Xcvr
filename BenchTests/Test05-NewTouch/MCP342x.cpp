@@ -1,3 +1,4 @@
+#include "DEBUG.h"
 #include "Wire.h"
 #include "Arduino.h"
 #include "MCP342x.h"
@@ -113,8 +114,10 @@ MCP342x::error_t MCP342x::read(long &result, Config &status) const {
   const uint8_t len = 4;
   uint8_t buffer[len] = {};
   MCP342X_WIRE.requestFrom(address, len);
-  if (MCP342X_WIRE.available() != len)
+  if (MCP342X_WIRE.available() != len) {
+    DTRACE();
     return errorReadFailed;
+  }
 
   for (uint8_t i = 0; i < len; ++i)
     buffer[i] = MCP342X_WIRE.read();
@@ -128,8 +131,10 @@ MCP342x::error_t MCP342x::read(long &result, Config &status) const {
     dataBytes = 2;
   }
 
-  if ((status & notReadyMask) != 0)
+  if ((status & notReadyMask) != 0) {
+    DPRINTF("MCP342x status = %02x\n",status);
     return errorConversionNotReady;
+  }
 
   long signBit = 0;     // Location of sign bit
   long signExtend = 0;  // Bits to be set if sign is set

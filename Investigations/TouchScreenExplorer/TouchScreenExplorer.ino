@@ -14,6 +14,7 @@ USAGE
     (N)oise:       Measures noise on the floating Y-Plate
     (T)ouch Event: Samples the Y-Plate voltage before/during/after touch event
     (S)ave         Saves the buffered samples to an SD file
+    (C)onversion   Measure the average/stdev conversion time
 
 EXERCISED
   + X-plate resistance
@@ -40,7 +41,7 @@ ATTRIBUTION
 
 */
 
-
+#include "DEBUG.h"
 
 #include <Wire.h>
 #include <SD.h>
@@ -72,10 +73,10 @@ ATTRIBUTION
 #define PENRADIUS 3
 
 //Number of samples taken during one phase of the investigation
-#define NSAMPLES 240  //About one seconds worth of samples
+#define NSAMPLES 24  //About one seconds worth of samples
 
 //Define the maximum possible ADC sampled voltage
-#define maxADCreading 2.047  //"She can't do no more, Jim"
+#define maxADCreading 2047  //Largest signed 18 bit value returned from ADC
 
 //Build the display object using pin numbers from Charlie's Pocket FT8 code
 HX8357_t3n tft = HX8357_t3n(10, 9, 8, 11, 13, 12);  //Teensy 4.1 moved SCK to dig pin 13
@@ -325,6 +326,22 @@ void eraseDisplay() {
 
 
 
+
+/**
+ * Wait for conversion to finish
+ */
+void waitForADC() {
+  int err;
+  long value;
+  MCP342x::Config status;
+  MCP342x::error_t err;
+  //Wait for adc to finish
+  do {
+    err = adc.read(value, status);
+    if (!err && status.isReady()) break;
+  } while (true);
+}
+
 //Build the ring buffer object
 RingBfr bfr;
 
@@ -338,6 +355,12 @@ void setup() {
   delay(100);
   Serial.println("Starting...");
 
+  //Initialize communication with MCP342X ADC
+  MCP342X_WIRE.begin();
+  MCP342x::generalCallReset();
+  delay(1);  // MC342x needs 300us to settle, wait 1ms
+
+
   //Initialize the display
   tft.begin(HX8357D);
   eraseDisplay();
@@ -347,19 +370,21 @@ void setup() {
 
 
   //Setup to instrument a touch event
-  printf("Tap (touch) the screen");
+  Serial.printf("Keyboard cmds:  (R)esistance, (N)oise, (T)ouchEvent, (S)ave, (C)onversion Timing\n");
+  DTRACE();
   bfr.reset();  //Reset the ring buffer
 
 }  //setup()
 
 
-
 //Define the various activities commanded by the user
-enum ACTIVITY { IDLE,           //Awaiting user's command
-                RESISTANCE,     //Measuring X-Plate resistance
-                NOISE,          //Measuring noise on Y-Plate
-                TOUCH,          //Instrumenting a touch event
-                SAVE };         //Saving data to an SD file
+enum ACTIVITY { IDLE,        //Awaiting user's command
+                RESISTANCE,  //Measuring X-Plate resistance
+                NOISE,       //Measuring noise on Y-Plate
+                TOUCH,       //Instrumenting a touch eventr
+                SAVE,        //Saving data to an SD file
+                CONVERSION   //Measure conversion time
+};
 enum ACTIVITY activity = IDLE;  //Current activity state variable
 
 //Define vars that must be retained between calls to loop()
@@ -395,6 +420,10 @@ void loop() {
         case 's':
           activity = SAVE;  //Cmd to save sample buffer to SD file
           break;
+        case 'C':
+        case 'c':
+          activity = CONVERSION;
+          break;
         default:
           break;  //Await a valid user command
       }           //Serial.read
@@ -412,11 +441,23 @@ void loop() {
     case SAVE:
       saveData();  //Save the captured data to SD file
       break;
+    case CONVERSION:
+      conversionTiming();  //Measure the average conversion timing
+      break;
     default:
       activity = IDLE;  //Attempt recovery from unknown wreck
       break;
   }  //activity
 }  //loop()
+
+
+
+/**
+* Print prompt message
+**/
+void prompt() {
+  Serial.printf("Keyboard cmds:  (R)esistance, (N)oise, (T)ouchEvent, (S)ave\n");
+}
 
 
 
@@ -453,8 +494,10 @@ void measureResistance() {
 
   //Acquire ~1 second of samples of the voltage appearing on the touchpad's X- pin for the resistance calculation
   int i;
+  uint8_t err;
   for (i = 0; i < NSAMPLES; i++) {
-    adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 100000, value, status);
+    err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value, status);
+need out own convertandread
     bfr.addNext(value);  //Add ADC value to the end of FIFO ring buffer
   }
 
@@ -464,12 +507,15 @@ void measureResistance() {
   bfr.saveState(savedState);  //Save ring buffer's state
   for (i = 0; i < NSAMPLES; i++) {
     bfr.getNext(value);  //Retrieve next value from FIFO ring buffer
-    sum += value;        //Sum all the values from the ring buffer
+    sum += value;        //Sum all the readings from the ring buffer
   }
-  v2 = (sum / float(NSAMPLES)) * maxADCreading;  //Average value of voltage appearing on touchpad's XM pin
-  bfr.restoreState(savedState);                  //Restore ring buffer's state
+  v2 = (sum / float(NSAMPLES));  //Average value read from on touchpad's XM pin
+  v2 = v2 / maxADCreading;
+  DPRINTF("sum=%f, NSAMPLES=%d, maxADCreading=%ld, v2=%f\n", sum, NSAMPLES, maxADCreading, v2);
+  bfr.restoreState(savedState);  //Restore ring buffer's state
 
   //Now we can calculate the resistance of the X-Plate
+  DPRINTF("RXM=%d, VCC=%f\n", RXM, VCC);
   rXplate = (RXM * v2) / (VCC - v2);
   printf("X-Plate resistance = %f Ohms\n", rXplate);
 
@@ -670,6 +716,65 @@ void instrumentTouchEvent() {
   }
 
 }  //instrumentTouchEvent()
+
+
+/**
+** conversionTiming()
+*/
+void conversionTiming() {
+  int errCount = 0;
+  unsigned long t0, t1, sum = 0;
+  long value;
+  MCP342x::Config status;
+  MCP342x::error_t err;
+  unsigned nSamples = 0;
+
+  printf("Measuring conversion timing\n");
+
+  for (int i = 0; i < 1000; i++) {
+    t0 = micros();
+    err = adc.convert(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1);
+
+    //Check for adc failure
+    if (err != 0) {
+      printf("adc.convert() failed err=%d\n", err);
+      activity = IDLE;
+      return;
+    }
+
+    delay(4);  //Should require at least 4167 uS
+
+    //Wait for adc to finish
+    do {
+      err = adc.read(value, status);
+      if (!err && status.isReady()) break;
+    } while (true);
+    t1 = micros();
+
+    // //Count errors
+    // if (err != 0) {
+    //   printf("Conversion err=%d\n", err);
+    //   errCount++;
+    // }
+
+    //Check for micros() wrap-around
+    long dt = t1 - t0;
+    //DPRINTF("t0=%lu, t1=%lu, dt=%lu uS\n",t0,t1,dt);
+    if (dt < 0) continue;
+
+    //Sum up conversion times
+    sum += dt;
+    nSamples++;  //Number of successful conversions
+  }
+
+  //Compute average
+  unsigned long average = sum / nSamples;
+  DPRINTF("sum=%lu, nSamples=%d\n", sum, nSamples);
+  printf("Average conversion time = %lu uS\n", average);
+  //printf("errCount=%d\n", errCount);
+
+  activity = IDLE;
+}
 
 
 
