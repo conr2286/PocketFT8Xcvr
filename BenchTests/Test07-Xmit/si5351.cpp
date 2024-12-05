@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include "DEBUG.h"
 #include <stdint.h>
 
 #include "Arduino.h"
@@ -61,12 +61,12 @@ Si5351::Si5351(uint8_t i2c_addr)
  */
 bool Si5351::init(uint8_t xtal_load_c, uint32_t xo_freq, int32_t corr) {
   // Start I2C comms
-  Wire1.begin();
+  SI5351_WIRE.begin();
 
   // Check for a device on the bus, bail out if it is not there
-  Wire1.beginTransmission(i2c_bus_addr);
+  SI5351_WIRE.beginTransmission(i2c_bus_addr);
   uint8_t reg_val;
-  reg_val = Wire1.endTransmission();
+  reg_val = SI5351_WIRE.endTransmission();
 
   if (reg_val == 0) {
     // Wait for SYS_INIT flag to be clear, indicating that device is ready
@@ -78,15 +78,18 @@ bool Si5351::init(uint8_t xtal_load_c, uint32_t xo_freq, int32_t corr) {
     // Set crystal load capacitance
     si5351_write(SI5351_CRYSTAL_LOAD, (xtal_load_c & SI5351_CRYSTAL_LOAD_MASK) | 0b00010010);
 
-    // Set up the XO reference frequency
+    // Set up the XO and CLKIN reference frequencies
     if (xo_freq != 0) {
       set_ref_freq(xo_freq, SI5351_PLL_INPUT_XO);
+      set_ref_freq(xo_freq, SI5351_PLL_INPUT_CLKIN);  //Also CLKIN
     } else {
       set_ref_freq(SI5351_XTAL_FREQ, SI5351_PLL_INPUT_XO);
+      set_ref_freq(SI5351_XTAL_FREQ, SI5351_PLL_INPUT_CLKIN);  //Also CLKIN
     }
 
-    // Set the frequency calibration for the XO
+    // Set the frequency calibrations for the XO and CLKIN
     set_correction(corr, SI5351_PLL_INPUT_XO);
+    set_correction(corr, SI5351_PLL_INPUT_CLKIN);
 
     reset();
 
@@ -171,9 +174,8 @@ void Si5351::reset(void) {
  * Sets the clock frequency of the specified CLK output.
  * Frequency range of 8 kHz to 150 MHz
  *
- * freq - Output frequency in Hz
- * clk - Clock output
- *   (use the si5351_clock enum)
+ * freq - Output frequency in tenths of a Hz
+ * clk - Clock output (use the si5351_clock enum)
  */
 uint8_t Si5351::set_freq(uint64_t freq, enum si5351_clock clk) {
   struct Si5351RegSet ms_reg;
@@ -181,6 +183,8 @@ uint8_t Si5351::set_freq(uint64_t freq, enum si5351_clock clk) {
   uint8_t int_mode = 0;
   uint8_t div_by_4 = 0;
   uint8_t r_div = 0;
+
+  DPRINTF("set_freq(%llu,%d)\n",freq,clk);
 
   // Check which Multisynth is being set
   if ((uint8_t)clk <= (uint8_t)SI5351_CLK5) {
@@ -236,6 +240,7 @@ uint8_t Si5351::set_freq(uint64_t freq, enum si5351_clock clk) {
             // Select the proper R div value
             temp_freq = clk_freq[i];
             r_div = select_r_div(&temp_freq);
+            DPRINTF("r_div=%d\n", r_div);
 
             multisynth_calc(temp_freq, pll_freq, &temp_reg);
 
@@ -249,6 +254,8 @@ uint8_t Si5351::set_freq(uint64_t freq, enum si5351_clock clk) {
             }
 
             // Set multisynth registers
+            DPRINTF("r_div=%d\n", r_div);
+
             set_ms((enum si5351_clock)i, temp_reg, int_mode, r_div, div_by_4);
           }
         }
@@ -267,6 +274,8 @@ uint8_t Si5351::set_freq(uint64_t freq, enum si5351_clock clk) {
 
       // Select the proper R div value
       r_div = select_r_div(&freq);
+      DPRINTF("r_div=%d\n", r_div);
+
 
       // Calculate the synth parameters
       if (pll_assignment[clk] == SI5351_PLLA) {
@@ -276,6 +285,8 @@ uint8_t Si5351::set_freq(uint64_t freq, enum si5351_clock clk) {
       }
 
       // Set multisynth registers
+      DPRINTF("r_div=%d\n", r_div);
+
       set_ms(clk, ms_reg, int_mode, r_div, div_by_4);
 
       // Reset the PLL
@@ -1161,32 +1172,32 @@ void Si5351::set_ref_freq(uint32_t ref_freq, enum si5351_pll_input ref_osc) {
 }
 
 uint8_t Si5351::si5351_write_bulk(uint8_t addr, uint8_t bytes, uint8_t *data) {
-  Wire1.beginTransmission(i2c_bus_addr);
-  Wire1.write(addr);
+  SI5351_WIRE.beginTransmission(i2c_bus_addr);
+  SI5351_WIRE.write(addr);
   for (int i = 0; i < bytes; i++) {
-    Wire1.write(data[i]);
+    SI5351_WIRE.write(data[i]);
   }
-  return Wire1.endTransmission();
+  return SI5351_WIRE.endTransmission();
 }
 
 uint8_t Si5351::si5351_write(uint8_t addr, uint8_t data) {
-  Wire1.beginTransmission(i2c_bus_addr);
-  Wire1.write(addr);
-  Wire1.write(data);
-  return Wire1.endTransmission();
+  SI5351_WIRE.beginTransmission(i2c_bus_addr);
+  SI5351_WIRE.write(addr);
+  SI5351_WIRE.write(data);
+  return SI5351_WIRE.endTransmission();
 }
 
 uint8_t Si5351::si5351_read(uint8_t addr) {
   uint8_t reg_val = 0;
 
-  Wire1.beginTransmission(i2c_bus_addr);
-  Wire1.write(addr);
-  Wire1.endTransmission();
+  SI5351_WIRE.beginTransmission(i2c_bus_addr);
+  SI5351_WIRE.write(addr);
+  SI5351_WIRE.endTransmission();
 
-  Wire1.requestFrom(i2c_bus_addr, (uint8_t)1, (uint8_t) false);
+  SI5351_WIRE.requestFrom(i2c_bus_addr, (uint8_t)1);
 
-  while (Wire1.available()) {
-    reg_val = Wire1.read();
+  while (SI5351_WIRE.available()) {
+    reg_val = SI5351_WIRE.read();
   }
 
   return reg_val;

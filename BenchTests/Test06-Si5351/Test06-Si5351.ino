@@ -81,6 +81,8 @@ void setup() {
       ;
   }
 
+  Serial.printf("Test complete\n");
+
 }
 
 
