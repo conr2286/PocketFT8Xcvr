@@ -34,6 +34,9 @@ ATTRIBUTION
 #define RESET_PIN 20
 #define USB 2
 
+//Exercise the Push-to-Talk Pin
+#define PIN_PTT 14
+#define PIN_RCV 15
 
 SI4735 si4735;
 
@@ -49,6 +52,13 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Starting...");
   delay(100);
+
+
+  //Turn off the transmitter, enable the receiver
+  pinMode(PIN_RCV, OUTPUT);
+  pinMode(PIN_PTT, OUTPUT);
+  digitalWrite(PIN_RCV, HIGH);  //RCV
+  digitalWrite(PIN_PTT, LOW);   //XMT
 
   // Gets and sets the Si47XX I2C bus address
   int16_t si4735Addr = si4735.getDeviceI2CAddress(RESET_PIN);
@@ -79,7 +89,8 @@ void setup() {
   delay(10);
   currentFrequency = si4735.getFrequency();
   si4735.setVolume(50);
-  Serial.print("CurrentFrequency = "); Serial.println(currentFrequency);
+  Serial.print("Recv Frequency = ");
+  Serial.println(currentFrequency);
 }
 
 // the loop function runs over and over again forever

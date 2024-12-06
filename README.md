@@ -11,6 +11,7 @@ An SMD implementation of Charles Hill's Palm-Sized Pocket FT8 Transceiver update
 
 # MIT License
 * Copyright (c) 2018 Kārlis Goba
+* Copyright (C) 2019 Ricardo Lima Caratti
 * Copyright (C) 2021, Charles Hill (W5BAA)
 * Copyright (C) 2024, Jim Conrad (KQ7B)
 

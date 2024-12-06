@@ -61,24 +61,24 @@ void setup() {
   si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  //KQ7B V1.00 uses cmos CLKIN, not a XTAL
   si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  //All PLLs using CLKIN
   si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
-  si5351.set_freq(3276800ULL, SI5351_CLK2);                      //Receiver's PLL clock (so sad)
-  si5351.output_enable(SI5351_CLK2, 1);                       //Enable receiver clk (TP3 on PCB)
+  si5351.set_freq(3276800ULL, SI5351_CLK2);  //Receiver's PLL clock (so sad)
+  si5351.output_enable(SI5351_CLK2, 1);      //Enable receiver clk (TP3 on PCB)
 
-  //Configure xmit CLK0 for 10 mHz
-  err = si5351.set_freq(1000000000ULL, SI5351_CLK0);
+  //Configure xmit CLK0 for 14.1 mHz
+  err = si5351.set_freq(1410000000ULL, SI5351_CLK0);
   if (err) {
     printf("Error:  set_freq(...,CLK0\n");
     while (1)
       ;
   }
-  si5351.output_enable(SI5351_CLK0, 1);                       //Enable transmitter clk (TP2 on PCB)
+  si5351.output_enable(SI5351_CLK0, 1);  //Enable transmitter clk (TP2 on PCB)
 
 
   //Turn on the transmitter's RF chain
   pinMode(PIN_RCV, OUTPUT);
   pinMode(PIN_PTT, OUTPUT);
-  pinMode(PIN_RCV, LOW);
-  digitalWrite(PIN_PTT, HIGH);  //Transmit
+  digitalWrite(PIN_RCV, LOW);   //~RCV
+  digitalWrite(PIN_PTT, HIGH);  //XMT
 }
 
 

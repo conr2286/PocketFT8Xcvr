@@ -7,7 +7,7 @@
 #include "Arduino.h"
 #include "pins_arduino.h"
 #include <Wire.h>
-#include <MCP342x.h>
+#include "MCP342x.h"
 
 #ifdef __AVR
 #include <avr/pgmspace.h>
@@ -170,7 +170,7 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
   _rxplate = rxplate;
 
 
-  Wire.begin();
+  MCP342X_WIRE.begin();
   MCP342x::generalCallReset();
   delay(1); // MC342x needs 300us to settle, wait 1ms
 

@@ -44,7 +44,7 @@ ATTRIBUTION
 //#include <HX8357_t3.h>
 #include "HX8357_t3n.h"
 #include "TouchScreen_I2C.h"
-#include <MCP342x.h>
+#include "MCP342x.h"
 #include "button.h"
 
 // These are the four touchscreen analog pins
