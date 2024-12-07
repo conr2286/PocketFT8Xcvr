@@ -110,7 +110,7 @@ int ft8_decode(void) {
   // Go over candidates and attempt to decode messages
   int num_decoded = 0;
 
-  //DPRINTF("num_candidates=%u\n", num_candidates);
+  DPRINTF("num_candidates=%u\n", num_candidates);
 
   for (int idx = 0; idx < num_candidates; ++idx) {
     Candidate cand = candidate_list[idx];

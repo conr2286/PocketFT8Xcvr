@@ -14898,7 +14898,7 @@
 		(at 185.92 115.6 180)
 		(descr "L_Toroid, Vertical series, Radial, pin pitch=5.08mm, , length*width=10*5mm^2")
 		(tags "L_Toroid Vertical series Radial pin pitch 5.08mm  length 10mm width 5mm")
-		(property "Reference" "L1"
+		(property "Reference" "T1"
 			(at -0.52 7.5 0)
 			(layer "F.SilkS")
 			(uuid "190ff09c-627f-44f8-a112-ba042a3f58fc")
@@ -26556,7 +26556,7 @@
 			(xy 106.42 54.42) (xy 106.42 115.38)
 		)
 		(height 7)
-		(gr_text "2400.0000 mils"
+		(gr_text "60.9600 mm"
 			(at 98.27 84.9 90)
 			(layer "Cmts.User")
 			(uuid "1e4e7dad-0d59-4006-8ae5-afded539b941")
@@ -26589,7 +26589,7 @@
 			(xy 106.42 54.42) (xy 197.86 54.31)
 		)
 		(height -8.21)
-		(gr_text "3600.0026 mils"
+		(gr_text "91.4401 mm"
 			(at 152.608 43.846 0.06892533581)
 			(layer "Cmts.User")
 			(uuid "9f751800-9a8d-44e6-9012-2fe8b5d32c9c")

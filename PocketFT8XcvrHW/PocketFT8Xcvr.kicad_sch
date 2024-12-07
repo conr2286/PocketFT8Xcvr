@@ -12372,8 +12372,8 @@
 	)
 	(text_box "         TEST POINTS\n\nTP1:  TCXO output\nTP2:  XCLK (Transmitter clock)\nTP3:  RCLK (Receiver clock)\nTP4:  Received audio signal\nTP5:  XMT (I.E. PTT)\nTP6:  RCV "
 		(exclude_from_sim no)
-		(at 200.66 184.15 0)
-		(size 33.02 17.78)
+		(at 187.96 173.99 0)
+		(size 45.72 26.67)
 		(stroke
 			(width 0)
 			(type default)
@@ -12384,7 +12384,7 @@
 		)
 		(effects
 			(font
-				(size 1.27 1.27)
+				(size 1.778 1.778)
 			)
 			(justify left top)
 		)
@@ -16493,7 +16493,7 @@
 		(on_board yes)
 		(dnp yes)
 		(uuid "42608325-fa08-4db0-be26-5c0ee232fc35")
-		(property "Reference" "L1"
+		(property "Reference" "T1"
 			(at 213.36 145.034 90)
 			(effects
 				(font
@@ -16572,7 +16572,7 @@
 		(instances
 			(project ""
 				(path "/9b703ee0-e32d-4836-8d5c-bb1a7416ca3c"
-					(reference "L1")
+					(reference "T1")
 					(unit 1)
 				)
 			)
