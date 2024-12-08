@@ -215,6 +215,7 @@ void setup(void) {
 
   //Sync clock with battery-backed RTC
   setSyncProvider(getTeensy3Time);
+  adjustTime(1);          //Teensy 4.1 loader initializes RTC ~1 sec tardy
   delay(100);
 
   //Turn the transmitter off and the receiver on (they are independent in V2 boards)
