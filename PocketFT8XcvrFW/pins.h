@@ -30,7 +30,7 @@
 
 //I2C bus definitions for the Wire objects
 #define WIRE_RCV Wire   //The SI4735's private bus
-#define WIRE_ETC Wire2  //Everything (SI5351, MCP342x) else
+#define WIRE_ETC Wire  //Everything (SI5351, MCP342x) else
 
 //SI4735 pins
 #define PIN_RESET 20
