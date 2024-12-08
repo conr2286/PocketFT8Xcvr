@@ -30,11 +30,9 @@
 #define SI5351_H_
 
 #include "Arduino.h"
-#include "Wire.h"
+#include <Wire.h>
 #include <stdint.h>
 
-//Define which I2C Bus (e.g. Wire, Wire1, Wire2...) hosts the SI5351
-#define SI5351_WIRE Wire2
 
 /* Define definitions */
 

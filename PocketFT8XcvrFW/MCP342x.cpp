@@ -1,6 +1,11 @@
-#include "Wire.h"
+#include "WireIMXRT.h"
+#include <Wire.h>
+#include "pins.h"
 #include "Arduino.h"
 #include "MCP342x.h"
+
+//Define which I2C bus we are using
+#define WIRE WIRE_ETC
 
 // Assuming a 100kHz clock the address and config byte take 18 clock
 // cycles, or 180 microseconds. Use a timeout of 250us to be safe.
@@ -26,21 +31,21 @@ const MCP342x::Gain MCP342x::gain4 = Gain(0x02);
 const MCP342x::Gain MCP342x::gain8 = Gain(0x03);
 
 uint8_t MCP342x::generalCallReset(void) {
-  MCP342X_WIRE.beginTransmission(0x00);
-  MCP342X_WIRE.write(0x06);
-  return MCP342X_WIRE.endTransmission();
+  WIRE.beginTransmission(0x00);
+  WIRE.write(0x06);
+  return WIRE.endTransmission();
 }
 
 uint8_t MCP342x::generalCallLatch(void) {
-  MCP342X_WIRE.beginTransmission(0x00);
-  MCP342X_WIRE.write(0x04);
-  return MCP342X_WIRE.endTransmission();
+  WIRE.beginTransmission(0x00);
+  WIRE.write(0x04);
+  return WIRE.endTransmission();
 }
 
 uint8_t MCP342x::generalCallConversion(void) {
-  MCP342X_WIRE.beginTransmission(0x00);
-  MCP342X_WIRE.write(0x08);
-  return MCP342X_WIRE.endTransmission();
+  WIRE.beginTransmission(0x00);
+  WIRE.write(0x08);
+  return WIRE.endTransmission();
 }
 
 void MCP342x::normalise(long &result, Config config) {
@@ -72,8 +77,8 @@ MCP342x::MCP342x(uint8_t add)
 
 bool MCP342x::autoprobe(const uint8_t *addressList, uint8_t len) {
   for (uint8_t i = 0; i < len; ++i) {
-    MCP342X_WIRE.requestFrom(addressList[i], (uint8_t)1);
-    if (MCP342X_WIRE.available()) {
+    WIRE.requestFrom(addressList[i], (uint8_t)1);
+    if (WIRE.available()) {
       address = addressList[i];
       return true;
     }
@@ -89,18 +94,18 @@ MCP342x::error_t MCP342x::convert(Channel channel, Mode mode, Resolution resolut
 }
 
 MCP342x::error_t MCP342x::configure(const Config &config) const {
-  MCP342X_WIRE.beginTransmission(address);
-  MCP342X_WIRE.write(config.val);
-  if (MCP342X_WIRE.endTransmission())
+  WIRE.beginTransmission(address);
+  WIRE.write(config.val);
+  if (WIRE.endTransmission())
     return errorConfigureFailed;
   else
     return errorNone;
 }
 
 MCP342x::error_t MCP342x::convert(const Config &config) const {
-  MCP342X_WIRE.beginTransmission(address);
-  MCP342X_WIRE.write(config.val | newConversionMask);
-  if (MCP342X_WIRE.endTransmission())
+  WIRE.beginTransmission(address);
+  WIRE.write(config.val | newConversionMask);
+  if (WIRE.endTransmission())
     return errorConvertFailed;
   else
     return errorNone;
@@ -112,12 +117,12 @@ MCP342x::error_t MCP342x::read(long &result, Config &status) const {
   // most appropriate configuration value (ready may have changed).
   const uint8_t len = 4;
   uint8_t buffer[len] = {};
-  MCP342X_WIRE.requestFrom(address, len);
-  if (MCP342X_WIRE.available() != len)
+  WIRE.requestFrom(address, len);
+  if (WIRE.available() != len)
     return errorReadFailed;
 
   for (uint8_t i = 0; i < len; ++i)
-    buffer[i] = MCP342X_WIRE.read();
+    buffer[i] = WIRE.read();
 
   uint8_t dataBytes;
   if ((buffer[3] & 0x0c) == 0x0c) {

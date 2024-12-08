@@ -55,7 +55,6 @@
 
 #include "DEBUG.h"
 #include <Audio.h>
-#include <Wire.h>
 #include <SD.h>
 #include <SPI.h>
 #include "HX8357_t3n.h"
@@ -286,10 +285,16 @@ void setup(void) {
   DPRINTF("doc[audioRecordingDuration]=%ul\n", doc["audioRecordingDuration"] | 1234);
   DPRINTF("doc[enableAVC]=%u\n", doc["enableAVC"] | 42);
 
+
   //Ensure configured frequency is within the hardware limitations
   if (config.frequency < MINIMUM_FREQUENCY || config.frequency > MAXIMUM_FREQUENCY) {
     config.frequency = DEFAULT_FREQUENCY;  //Override config file request with default
   }
+
+  //config.frequency=14074;
+  DPRINTF("config.frequency=%u\n",config.frequency);
+
+
 
   //Argh... copy station callsign and location from config struct to C global variables (fix someday)
   strncpy(Station_Call, config.callsign, sizeof(Station_Call));
@@ -347,6 +352,7 @@ void setup(void) {
 
   auto_sync_FT8();
 
+  DPRINTF("config.frequency=%u\n",config.frequency);
 }  //setup()
 
 

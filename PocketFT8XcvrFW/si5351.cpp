@@ -23,10 +23,13 @@
  */
 
 #include <stdint.h>
-
+#include "pins.h"
 #include "Arduino.h"
 #include "Wire.h"
 #include "si5351.h"
+
+//Define which I2C bus we are using
+#define WIRE WIRE_ETC
 
 
 /********************/
@@ -61,12 +64,12 @@ Si5351::Si5351(uint8_t i2c_addr)
  */
 bool Si5351::init(uint8_t xtal_load_c, uint32_t xo_freq, int32_t corr) {
   // Start I2C comms
-  SI5351_WIRE.begin();
+  WIRE.begin();
 
   // Check for a device on the bus, bail out if it is not there
-  SI5351_WIRE.beginTransmission(i2c_bus_addr);
+  WIRE.beginTransmission(i2c_bus_addr);
   uint8_t reg_val;
-  reg_val = SI5351_WIRE.endTransmission();
+  reg_val = WIRE.endTransmission();
 
   if (reg_val == 0) {
     // Wait for SYS_INIT flag to be clear, indicating that device is ready
@@ -1163,32 +1166,32 @@ void Si5351::set_ref_freq(uint32_t ref_freq, enum si5351_pll_input ref_osc) {
 }
 
 uint8_t Si5351::si5351_write_bulk(uint8_t addr, uint8_t bytes, uint8_t *data) {
-  SI5351_WIRE.beginTransmission(i2c_bus_addr);
-  SI5351_WIRE.write(addr);
+  WIRE.beginTransmission(i2c_bus_addr);
+  WIRE.write(addr);
   for (int i = 0; i < bytes; i++) {
-    SI5351_WIRE.write(data[i]);
+    WIRE.write(data[i]);
   }
-  return SI5351_WIRE.endTransmission();
+  return WIRE.endTransmission();
 }
 
 uint8_t Si5351::si5351_write(uint8_t addr, uint8_t data) {
-  SI5351_WIRE.beginTransmission(i2c_bus_addr);
-  SI5351_WIRE.write(addr);
-  SI5351_WIRE.write(data);
-  return SI5351_WIRE.endTransmission();
+  WIRE.beginTransmission(i2c_bus_addr);
+  WIRE.write(addr);
+  WIRE.write(data);
+  return WIRE.endTransmission();
 }
 
 uint8_t Si5351::si5351_read(uint8_t addr) {
   uint8_t reg_val = 0;
 
-  SI5351_WIRE.beginTransmission(i2c_bus_addr);
-  SI5351_WIRE.write(addr);
-  SI5351_WIRE.endTransmission();
+  WIRE.beginTransmission(i2c_bus_addr);
+  WIRE.write(addr);
+  WIRE.endTransmission();
 
-  SI5351_WIRE.requestFrom(i2c_bus_addr, (uint8_t)1);
+  WIRE.requestFrom(i2c_bus_addr, (uint8_t)1);
 
-  while (SI5351_WIRE.available()) {
-    reg_val = SI5351_WIRE.read();
+  while (WIRE.available()) {
+    reg_val = WIRE.read();
   }
 
   return reg_val;

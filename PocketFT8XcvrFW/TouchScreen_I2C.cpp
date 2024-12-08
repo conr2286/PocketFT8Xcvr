@@ -5,12 +5,13 @@
 // Code under MIT License
 
 #include "Arduino.h"
-#include "pins_arduino.h"
+//#include "pins_arduino.h"
+#include "pins.h"
 #include <Wire.h>
 #include "MCP342x.h"
 
 //Define which I2C bus hosts the MCP342x
-#define MCP342X_WIRE Wire2
+#define WIRE WIRE_ETC
 
 #include "DEBUG.h"
 
@@ -176,7 +177,7 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
   _rxplate = rxplate;
 
 
-  MCP342X_WIRE.begin();
+  WIRE.begin();
   MCP342x::generalCallReset();
   delay(1);  // MC342x needs 300us to settle, wait 1ms
 

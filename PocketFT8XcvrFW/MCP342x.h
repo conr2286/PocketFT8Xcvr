@@ -3,9 +3,6 @@
 
 #define MCP342X_VERSION "1.0.4"
 
-//Define which I2C bus (e.g. Wire, Wire1, Wire2) is hosting the MCP342X
-#define MCP342X_WIRE Wire2
-
 class MCP342x {
 public:
   class Config;

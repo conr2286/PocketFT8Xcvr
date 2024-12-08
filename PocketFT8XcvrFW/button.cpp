@@ -12,6 +12,10 @@
 #include "TouchScreen_I2C.h"
 #include <SI4735.h>
 #include <Wire.h>
+#include "pins.h"
+
+//Define which I2C bus we are using
+#define WIRE WIRE_ETC
 
 // This is calibration data for the raw touch data to the screen coordinates
 // using 510 Ohm resistors to reduce the driven voltage to Y+ and X-
@@ -447,11 +451,11 @@ int EEPROMReadInt(int address) {
 #define IOEXP16_ADDR 0x24
 
 void LPF_SendRegister(uint8_t reg, uint8_t val) {
-  Wire.begin();
-  Wire.beginTransmission(IOEXP16_ADDR);
-  Wire.write(reg);
-  Wire.write(val);
-  Wire.endTransmission();
+  WIRE.begin();
+  WIRE.beginTransmission(IOEXP16_ADDR);
+  WIRE.write(reg);
+  WIRE.write(val);
+  WIRE.endTransmission();
 }
 
 void LPF_init() {
