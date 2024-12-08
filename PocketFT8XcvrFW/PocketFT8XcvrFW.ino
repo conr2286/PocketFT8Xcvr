@@ -410,7 +410,7 @@ void loop() {
   update_synchronization();
   // rtc_synchronization();
 
-  process_touch();
+  //process_touch();
   if (tune_flag == 1) process_serial();
 
   //ToDo:  Sync time/location with GPS when available

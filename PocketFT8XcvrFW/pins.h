@@ -22,11 +22,13 @@
 #define PIN_DCLK 13  //Teensy 4.1
 #define PIN_MISO 12
 
-//I2C pins (and the Wire objects they use)
-#define PIN_SCL 19      //Wire
-#define PIN_SDA 18      //Wire
-#define PIN_SCL2 24     //Wire2
-#define PIN_SDA2 25     //Wire2
+//I2C pins
+#define PIN_SCL 19   //Wire
+#define PIN_SDA 18   //Wire
+#define PIN_SCL2 24  //Wire2
+#define PIN_SDA2 25  //Wire2
+
+//I2C bus definitions for the Wire objects
 #define WIRE_RCV Wire   //The SI4735's private bus
 #define WIRE_ETC Wire2  //Everything (SI5351, MCP342x) else
 
