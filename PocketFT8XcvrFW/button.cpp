@@ -378,6 +378,7 @@ void set_startup_freq(void) {
 
 
 void process_touch(void) {
+  DTRACE();
 
   pi = ts.getPoint();
 

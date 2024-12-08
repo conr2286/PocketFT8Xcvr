@@ -158,6 +158,7 @@ void setup(void) {
   //Use Teensy's battery-backed clock
   //initGPS();
   setSyncProvider(getTeensy3Time);
+  adjustTime(+1);   //Teensy loader initializes RTC 1 second late
   delay(100);
 
   //Turn off the transmitter
@@ -252,6 +253,7 @@ void setup(void) {
   currentFrequency = si4735.getFrequency();
   si4735.setVolume(50);
   display_value(360, 40, (int)currentFrequency);
+  DPRINTF("currentFrequency=%u\n",currentFrequency);
 
   Serial.println(" ");
   Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
@@ -348,7 +350,7 @@ void loop() {
   update_synchronization();
   // rtc_synchronization();
 
-  process_touch();
+  //process_touch();
   if (tune_flag == 1) process_serial();
 
   //If we are recording audio, then stop after the requested seconds of raw audio data
