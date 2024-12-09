@@ -70,6 +70,9 @@ bool syncGPSTime() {
 
           //Now set the Teensy RTC to the GPS-derived time in the MCU
           Teensy3Clock.set(now());
+
+          //Calculate time required to obtain a fix
+          DPRINTF("GPS time to fix:  %lu ms\n", millis()-t0);
           return true;  //Success!
         }               //if age ok
 

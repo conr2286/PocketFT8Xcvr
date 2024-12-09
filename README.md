@@ -24,6 +24,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 
 # Features
 * Single band, FT8 Tranceiver
+* Supports 160-15 meters (tested on 40m and 20m)
 * Small Size, 4.0 X 2.8"
 * Powered by a single 5V USB source (e.g. portable USB power block) delivering ~375 mA
 * TCXO
@@ -53,6 +54,7 @@ Charley and Barb have also progressed beyond the original Pocket FT8 with a mult
 * Investigations:  Code and simulations exploring technologies for this project
 * PocketFT8XcvrFW:  Arduino sketch for the Pocket FT8 Revisited transceiver
 * PocketFT8XcvrHW:  KiCad 8 files for the PCB
+* Extras:  Contains Teensy AudioStream.h modified for 6400 samples/second
 
 # Versions
 * V1.00 PCB gerbers and pos files submitted to PCBWay.
@@ -72,7 +74,36 @@ Charley and Barb have also progressed beyond the original Pocket FT8 with a mult
 * The touchscreen circuitry is proving troublesome.  While it walmost always works, its occasional erratic performance is annoying.  One of the project's long-term goals is to better understand and resolve the issue with hardware, firmware or both.
 
 # Boards and Parts Availability
-Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out QRP Labs, the uSDX follow-ons, or the DX FT8 kit as Pocket FT8 construction demands some engineering skills.  That said, I sometimes have a *very* limited quantity of excess 4-layer boards with most SMD components in-place if you'd like to experiment.  Alternatively, the KiCad files are available as a starting point for your innovations.
+Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out QRP Labs, the uSDX follow-ons, or the DX FT8 kit as Pocket FT8 construction demands some engineering skills.  That said, I sometimes have a *very* limited supply of excess 4-layer boards with most SMD components in-place if you'd like to experiment.  Alternatively, the KiCad files are available as a starting point for your innovations.
+
+# Building the Firmware
+1. Install Arduino 2.X IDE
+2. Using Arduino 2.X, install support for the Teensy 4.1 board
+3. Also install support for libraries:  TinyGPS, MCP342x, SD, Adafruit GFX, and PU2CLR SI4735
+4. Copy Extras/AudioStream6400.h into
+ .../Library/Arduino15/packages/teensy/hardware/avr/1.59.0/cores/teens4 asArduinoStream.h --- This file redefines AUDIO_SAMPLE_RATE_EXACT enabling Teensy 4.1 to operate the audio stream at 6400 samples/second (required).
+5. Build with Arduino 2.X IDE
+
+# Modifying the Hardware
+Pocket FT8 Revisited was designed with KiCAD V8, and the PCBs were fabbed and assembled by PCBWay
+
+# Building the Hardware
+1. Attach the Teensy 4.1 MPU to the board using low profile headers.
+2. Attach the Adafruit resistive 320x480 touchscreen with high profile headers.
+3. Construct a suitable filter (e.g. 5-pole Chebyshev) for your chosen band of operation and solder it into the FL1 spot
+4. Solder SMD CR2032 battery holder to reverse side of PCB and install battery
+5. Solder THT red XMIT LED
+6. Wind THT T1 (10T bifilar #26 on FT37-43 core) and install
+7. Install right angle header for GPS
+8. Install SMD SMA antenna socket
+9. Smoke test with wall wart USB supply (not your computer;)
+10. Execute each of the BenchTests in order to check-out the circuit subsystems
+
+# Putting Pocket FT8 Revisited On-the-Air
+1. Create an SD file, config.json, to configure the Pocket FT8 for your station.  The required parameters are, callsign and frequency.  Install the SD file in Teensy (not the Adafruit display).
+2. If you are using a GPS, connect it now.
+3. Connect an antenna 
+4. Connect your host computer and load your firmware
 
 
 
