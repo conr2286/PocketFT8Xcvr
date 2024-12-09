@@ -90,6 +90,9 @@
 #define ARDUINOJSON_ENABLE_COMMENTS 1
 #include <ArduinoJson.h>
 
+//We include .../teensy4/AudioStream.h only so we can confirm AUDIO_SAMPLE_RATE_EXACT is 6400.0f
+#include <AudioStream.h>
+
 #define AM_FUNCTION 1
 #define USB 2
 
@@ -192,7 +195,6 @@ int log_flag, logging_on;
 
 
 
-
 void setup(void) {
 
   //Get the USB serial port running before something else goes wrong
@@ -204,7 +206,14 @@ void setup(void) {
     delay(5000);
   }
 
+  //Confirm the installation of the modified teensy4 AudioStream.h library file
+  if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
+    Serial.println("Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0\n");
+    Serial.println("You must copy the supplied AudioStream.h file into .../teensy/hardware/avr/1.59.0/cores/teensy4\n");
+  }
+
   //Sync MCU and RTC time with GPS if it's working and can get a timely fix
+  setSyncProvider(getTeensy3Time);
   if (syncGPSTime()) {  //If it gets a fix, we'll have UTC time
     DPRINTF("MCU/RTC using GPS time\n");
   } else {

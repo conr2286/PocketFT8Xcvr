@@ -9,7 +9,7 @@
 TinyGPS gps;
 bool gpsInitialized = false;
 
-#define TIMELYMANNER 60000  //Milliseconds to await GPS getting a fix
+#define TIMELYMANNER 60000  //Milliscs to await GPS getting a fix
 
 /**
  *  Sync MCU and RTC time with GPS if the GPS is available with a fix
@@ -38,27 +38,40 @@ bool syncGPSTime() {
     while (Serial1.available()) {
 
       //Read and encode the received GPS message
-      if (gps.encode(Serial1.read())) {  //Process the gps message
+      char c = Serial1.read();
+      //Serial.write(c);
+      if (gps.encode(c)) {  //Process the gps message
 
         unsigned long age;
-        int Year;
-        byte Month, Day, Hour, Minute, Second;
+        int yr;
+        byte mo, dy, hr, mi, sc, hu;
 
         //Extract date/time and location from GPS message
-        gps.crack_datetime(&Year, &Month, &Day, &Hour, &Minute, &Second, NULL, &age);   //UTC
+        gps.crack_datetime(&yr, &mo, &dy, &hr, &mi, &sc, &hu, &age);  //UTC
+        DPRINTF("GPS reports %2d/%2d/%2d %2d:%2d:%2d:%2d age=%u\n", mo, dy, yr, hr, mi, sc, hu, age);
         gps.f_get_position(&flat, &flon, &age);
 
         //Only use recent GPS results
         if (age < 500) {
 
+          //DPRINTF("year()=%u\n",year());
+
+          //Repair the date if GPS didn't supply it
+          if (yr == 2000) {
+            yr = year();  //Use whatever Teensy reports
+            mo = month();
+            dy = day();
+          }
+
           // set the MCU Time to the GPS reading
-          setTime(Hour, Minute, Second, Day, Month, Year);
-          DPRINTF("GPS reports %2d/%2d/%2d %2d:%2d:%2d age=%u\n", Month, Day, Year, Hour, Minute, Second, age);
+          setTime(hr, mi, sc, dy, mo, yr);
+          DPRINTF("setTime %2d/%2d/%2d %2d:%2d:%2d:%2d\n", mo, dy, yr, hr, mi, sc, hu);
+
 
           //Now set the Teensy RTC to the GPS-derived time in the MCU
-          Teensy3Clock.set(now());  
-          return true;              //Success!
-        }                           //if age ok
+          Teensy3Clock.set(now());
+          return true;  //Success!
+        }               //if age ok
 
       }  //if gps.encode()
 
