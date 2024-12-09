@@ -65,7 +65,7 @@
 #include "patch_full.h"  // SSB patch for whole SSBRX full download
 #include <TimeLib.h>
 #include <EEPROM.h>
-#include <TinyGPS.h>
+
 
 
 #include "Process_DSP.h"
@@ -83,19 +83,8 @@
 #include "arm_math.h"
 #include "constants.h"
 #include "maidenhead.h"
+#include "gpsHelper.h"
 
-
-//GPS Stuff
-TinyGPS gps;
-#define GPS_BAUD_RATE 9600  //Adafruit Ultimate GPS baud rate
-float flat, flon;           //GPS-derived lattitude and longitude
-int32_t gps_latitude;
-int32_t gps_longitude;
-int8_t gps_hour;
-int8_t gps_minute;
-int8_t gps_second;
-int8_t gps_hundred;
-int8_t gps_offset = 2;
 
 //Enable comments in the JSON configuration file
 #define ARDUINOJSON_ENABLE_COMMENTS 1
@@ -156,7 +145,7 @@ q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
 //ToDo:  Arrange for the various modules to access these directly from config structure
 char Station_Call[12];  //six character call sign + /0
-char Locator[11];        // four character locator  + /0
+char Locator[11];       // four character locator  + /0
 
 uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
@@ -202,6 +191,8 @@ int log_flag, logging_on;
 
 
 
+
+
 void setup(void) {
 
   //Get the USB serial port running before something else goes wrong
@@ -213,9 +204,16 @@ void setup(void) {
     delay(5000);
   }
 
-  //Sync clock with battery-backed RTC
+  //Sync MCU and RTC time with GPS if it's working and can get a timely fix
+  if (syncGPSTime()) {  //If it gets a fix, we'll have UTC time
+    DPRINTF("MCU/RTC using GPS time\n");
+  } else {
+    DPRINTF("MCU/RTC using Teensy Loader time from host computer\n");
+  }
+  DPRINTF("Now is %2d/%2d/%2d %2d:%2d:%2d\n", month(), day(), year(), hour(), minute(), second());
+
+  //Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
   setSyncProvider(getTeensy3Time);
-  adjustTime(1);          //Teensy 4.1 loader initializes RTC ~1 sec tardy
   delay(100);
 
   //Turn the transmitter off and the receiver on (they are independent in V2 boards)
@@ -293,7 +291,7 @@ void setup(void) {
   }
 
   //config.frequency=14074;
-  DPRINTF("config.frequency=%u\n",config.frequency);
+  DPRINTF("config.frequency=%u\n", config.frequency);
 
 
 
@@ -353,7 +351,7 @@ void setup(void) {
 
   auto_sync_FT8();
 
-  DPRINTF("config.frequency=%u\n",config.frequency);
+  DPRINTF("config.frequency=%u\n", config.frequency);
 }  //setup()
 
 
@@ -413,11 +411,6 @@ void loop() {
 
   //process_touch();
   if (tune_flag == 1) process_serial();
-
-  //ToDo:  Sync time/location with GPS when available
-  // if (Serial1.available()) {
-  //   parse_NEMA();
-  // }
 
   //If we are recording audio, then stop after the requested seconds of raw audio data
   //at 6400 samples/second.
@@ -560,41 +553,38 @@ void auto_sync_FT8(void) {
 
 
 
-/*
-** @brief Get UTC time and location from GPS when available
-**
-** parse_NEMA() is a NOOP if data is not available from GPS.  When GPS is available,
-** it's used to set Teensy time to UTC and update the grid square locator.
-**
-** ToDo:  Should parse_NEMA() be invoked from loop(), or just once from setup()???
-**
-*/
-void parse_NEMA(void) {
-  while (Serial1.available()) {
-    if (gps.encode(Serial1.read())) {  // process gps messages
-      // when TinyGPS reports new data...
-      unsigned long age;
-      int Year;
-      byte Month, Day, Hour, Minute, Second, Hundred;
-      gps.crack_datetime(&Year, &Month, &Day, &Hour, &Minute, &Second, &Hundred, &age);
-      gps.f_get_position(&flat, &flon, &age);
+// /*
+// ** @brief Get UTC time and location from GPS when available
+// **
+// ** parse_NEMA() is a NOOP if data is not available from GPS.  When GPS is available,
+// ** it's used to set Teensy time to UTC and update the grid square locator.
+// **
+// ** ToDo:  Should parse_NEMA() be invoked from loop(), or just once from setup()???
+// **
+// */
+// void parse_NEMA(void) {
+//   while (Serial1.available()) {
+//     if (gps.encode(Serial1.read())) {  // process gps messages
+//       // when TinyGPS reports new data...
+//       unsigned long age;
+//       int Year;
+//       byte Month, Day, Hour, Minute, Second, Hundred;
+//       gps.crack_datetime(&Year, &Month, &Day, &Hour, &Minute, &Second, &Hundred, &age);
+//       gps.f_get_position(&flat, &flon, &age);
 
-      //Second = Second + gps_offset;
+//       //Second = Second + gps_offset;
 
-      setTime(Hour, Minute, Second, Day, Month, Year);
-      Teensy3Clock.set(now());  // set the RTC
-      gps_hour = Hour;
-      gps_minute = Minute;
-      gps_second = Second;
-      gps_hundred = Hundred;
-      char *locator = get_mh(flat, flon, 4);
-      for (int i = 0; i < 11; i++) Locator[i] = locator[i];
+//       setTime(Hour, Minute, Second, Day, Month, Year);
+//       Teensy3Clock.set(now());  // set the RTC
+//       gps_hour = Hour;
+//       gps_minute = Minute;
+//       gps_second = Second;
+//       gps_hundred = Hundred;
+//       char *locator = get_mh(flat, flon, 4);
+//       for (int i = 0; i < 11; i++) Locator[i] = locator[i];
 
-      //ToDo:  Allow config to overide GPS location
-      set_Station_Coordinates(Locator);
-    }
-  }
-}
-
-
-
+//       //ToDo:  Allow config to overide GPS location
+//       set_Station_Coordinates(Locator);
+//     }
+//   }
+// }

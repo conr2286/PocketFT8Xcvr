@@ -32,6 +32,9 @@
 #define WIRE_RCV Wire   //The SI4735's private bus
 #define WIRE_ETC Wire  //Everything (SI5351, MCP342x) else
 
+//Serial bus definitions for optional GPS
+//#define SerialGPS Serial1
+
 //SI4735 pins
 #define PIN_RESET 20
 

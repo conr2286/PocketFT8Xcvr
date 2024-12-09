@@ -62,6 +62,7 @@ void loop() {
 
     //Wait for a message from GPS
     if (gps.encode(SerialGPS.read())) {  // process gps messages
+
       // when TinyGPS reports new data...
       unsigned long age;
       int Year;
@@ -70,11 +71,12 @@ void loop() {
       if (age < 500) {
         // set the MCU Time to the latest GPS reading
         setTime(Hour, Minute, Second, Day, Month, Year);
-        adjustTime(offset * SECS_PER_HOUR);
+        //adjustTime(offset * SECS_PER_HOUR);
+        Teensy3Clock.set(now()); // set the RTC
       }
     }
     gps.f_get_position(&flat, &flon, &age);
-    printf("#satellites=%d, hdop=%d, flat=%f, flon=%f, age=%ul ms\n", gps.satellites(), gps.hdop(), flat, flon, age);
+    //printf("#satellites=%d, hdop=%d, flat=%f, flon=%f, age=%lu ms\n", gps.satellites(), gps.hdop(), flat, flon, age);
   }
   if (timeStatus() != timeNotSet) {
     if (now() != prevDisplay) {  //update the display only if the time has changed
