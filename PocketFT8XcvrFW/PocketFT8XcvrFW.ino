@@ -418,7 +418,7 @@ void loop() {
   update_synchronization();
   // rtc_synchronization();
 
-  //process_touch();
+  process_touch();
   if (tune_flag == 1) process_serial();
 
   //If we are recording audio, then stop after the requested seconds of raw audio data
