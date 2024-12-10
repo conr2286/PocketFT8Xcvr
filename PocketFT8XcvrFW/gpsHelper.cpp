@@ -5,6 +5,7 @@
 #include "gpsHelper.h"
 #include "DEBUG.h"
 
+
 //Optional GPS connection
 TinyGPS gps;
 bool gpsInitialized = false;
@@ -23,7 +24,7 @@ bool syncGPSTime() {
 
   //Initialize serial port connection if not yet accessed
   if (!gpsInitialized) {
-    Serial1.begin(9600);
+    SerialGPS.begin(9600);
     gpsInitialized = true;
   }
 
@@ -34,27 +35,24 @@ bool syncGPSTime() {
   //This is the GPS time-out loop
   while ((millis() - t0) <= TIMELYMANNER) {
 
-    //This loop processes the data from a GPS message (if any)
-    while (Serial1.available()) {
+    //This loop processes incoming message bytes from the GPS
+    while (SerialGPS.available()) {
 
-      //Read and encode the received GPS message
-      char c = Serial1.read();
-      //Serial.write(c);
-      if (gps.encode(c)) {  //Process the gps message
+      //Read and process a received GPS message byte
+      if (gps.encode(SerialGPS.read())) {     //Returns true if we've received a complete message
 
         unsigned long age;
         int yr;
-        byte mo, dy, hr, mi, sc, hu;
+        byte mo, dy;
+        byte hr, mi, sc;
 
         //Extract date/time and location from GPS message
-        gps.crack_datetime(&yr, &mo, &dy, &hr, &mi, &sc, &hu, &age);  //UTC
-        DPRINTF("GPS reports %2d/%2d/%2d %2d:%2d:%2d:%2d age=%u\n", mo, dy, yr, hr, mi, sc, hu, age);
+        gps.crack_datetime(&yr, &mo, &dy, &hr, &mi, &sc, NULL, &age);  //UTC
+        DPRINTF("GPS reports %2d/%2d/%2d %2d:%2d:%2d age=%u\n", mo, dy, yr, hr, mi, sc, age);
         gps.f_get_position(&flat, &flon, &age);
 
         //Only use recent GPS results
         if (age < 500) {
-
-          //DPRINTF("year()=%u\n",year());
 
           //Repair the date if GPS didn't supply it
           if (yr == 2000) {
@@ -65,7 +63,7 @@ bool syncGPSTime() {
 
           // set the MCU Time to the GPS reading
           setTime(hr, mi, sc, dy, mo, yr);
-          DPRINTF("setTime %2d/%2d/%2d %2d:%2d:%2d:%2d\n", mo, dy, yr, hr, mi, sc, hu);
+          DPRINTF("setTime %2d/%2d/%2d %2d:%2d:%2d\n", mo, dy, yr, hr, mi, sc);
 
 
           //Now set the Teensy RTC to the GPS-derived time in the MCU

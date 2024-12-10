@@ -33,7 +33,7 @@
 #define WIRE_ETC Wire2  //Everything (SI5351, MCP342x) else
 
 //Serial bus definitions for optional GPS
-//#define SerialGPS Serial1
+#define SerialGPS Serial1
 
 //SI4735 pins
 #define PIN_RESET 20
