@@ -1,5 +1,5 @@
 #include <TimeLib.h>
-#include <TinyGPS.h>
+#include <TinyGPSPlus.h>
 
 #include "pins.h"
 #include "gpsHelper.h"
@@ -7,10 +7,10 @@
 
 
 //Optional GPS connection
-TinyGPS gps;
+TinyGPSPlus gps;
 bool gpsInitialized = false;
 
-#define TIMELYMANNER 60000  //Milliscs to await GPS getting a fix
+#define TIMELYMANNER 10000  //Milliscs to await GPS getting a fix
 
 /**
  *  Sync MCU and RTC time with GPS if the GPS is available with a fix
@@ -21,6 +21,12 @@ bool gpsInitialized = false;
  *
 **/
 bool syncGPSTime() {
+
+
+  DTRACE();
+  bool gotDate = false;
+  bool gotTime = false;
+  bool gotLoc = false;
 
   //Initialize serial port connection if not yet accessed
   if (!gpsInitialized) {
@@ -34,51 +40,71 @@ bool syncGPSTime() {
 
   //This is the GPS time-out loop
   while ((millis() - t0) <= TIMELYMANNER) {
+    //DTRACE();
 
     //This loop processes incoming message bytes from the GPS
     while (SerialGPS.available()) {
+      //DTRACE();
 
       //Read and process a received GPS message byte
-      if (gps.encode(SerialGPS.read())) {     //Returns true if we've received a complete message
+      if (gps.encode(SerialGPS.read())) {  //Returns true if we've received a complete message
+        DTRACE();
 
         unsigned long age;
         int yr;
         byte mo, dy;
         byte hr, mi, sc;
 
-        //Extract date/time and location from GPS message
-        gps.crack_datetime(&yr, &mo, &dy, &hr, &mi, &sc, NULL, &age);  //UTC
-        DPRINTF("GPS reports %2d/%2d/%2d %2d:%2d:%2d age=%u\n", mo, dy, yr, hr, mi, sc, age);
-        gps.f_get_position(&flat, &flon, &age);
+        //Retrieve GPS supplied date if valid
+        if (!gotDate && gps.date.isValid()) {
 
-        //Only use recent GPS results
-        if (age < 500) {
+          yr = gps.date.year();
+          mo = gps.date.month();
+          dy = gps.date.day();
 
-          //Repair the date if GPS didn't supply it
-          if (yr == 2000) {
-            yr = year();  //Use whatever Teensy reports
-            mo = month();
-            dy = day();
-          }
+          DPRINTF("GPS reports date = %02d/%02d/%02d\n", mo, dy, yr);
+          gotDate = true;
+        }
 
-          // set the MCU Time to the GPS reading
+        //Retrieve GPS supplied time if valid
+        if (!gotTime && gps.time.isValid()) {
+          hr = gps.time.hour();
+          mi = gps.time.minute();
+          sc = gps.time.second();
+          DPRINTF("GPS reports time = %02d:%02d:%02d\n", hr, mi, sc);
+          gotTime = true;
+        }
+
+        //Retrieve GPS supplied location if valid
+        if (!gotLoc && gps.location.isValid()) {
+          flat = gps.location.lat();
+          flon = gps.location.lng();
+          DPRINTF("GPS reports lat/lon = %f %f\n", flat, flon);
+          gotLoc = true;
+        }
+
+        //Update MCU and RTC date and time if GPS has supplied both
+        if (gotDate && gotTime) {
+
+          //First, set the MCU Time to the GPS reading
           setTime(hr, mi, sc, dy, mo, yr);
           DPRINTF("setTime %2d/%2d/%2d %2d:%2d:%2d\n", mo, dy, yr, hr, mi, sc);
 
-
           //Now set the Teensy RTC to the GPS-derived time in the MCU
           Teensy3Clock.set(now());
+        }
 
-          //Calculate time required to obtain a fix
-          DPRINTF("GPS time to fix:  %lu ms\n", millis()-t0);
-          return true;  //Success!
-        }               //if age ok
+        //We are finished if we've acquired date, time and loc
+        if (gotDate && gotTime && gotLoc) {
+          DTRACE();
+          return true;  //Success
+        }
 
       }  //if gps.encode()
 
     }  //SerialGPS.available()
 
-  }  //Timeout
+  }  //Timeout loop
 
   return false;  //Failure
 }

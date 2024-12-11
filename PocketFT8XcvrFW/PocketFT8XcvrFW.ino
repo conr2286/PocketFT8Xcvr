@@ -192,6 +192,9 @@ int tune_flag;
 
 int log_flag, logging_on;
 
+//GPS-derived location if we know it
+float flat, flon;     //These get initialized by gpsHelper.cpp
+
 
 
 
@@ -213,9 +216,13 @@ void setup(void) {
   }
 
   //Sync MCU and RTC time with GPS if it's working and can get a timely fix
-  setSyncProvider(getTeensy3Time);
   if (syncGPSTime()) {  //If it gets a fix, we'll have UTC time
     DPRINTF("MCU/RTC using GPS time\n");
+
+    //Use the GPS-derived locator unless later overriden by config.json
+    strlcpy(Locator, get_mh(flat, flon, 4), sizeof(Locator));
+    DPRINTF("GPS Locator='%s'\n", Locator);
+
   } else {
     DPRINTF("MCU/RTC using Teensy Loader time from host computer\n");
   }
@@ -287,9 +294,9 @@ void setup(void) {
   configFile.close();
 
   //When debugging, print the config file
-  DPRINTF("doc[callsign]=%s\n", doc["callsign"] | "?");
-  DPRINTF("doc[frequency]=%u\n", doc["frequency"] | 1234);
-  DPRINTF("doc[location]=%s\n", doc["location"] | "?");
+  DPRINTF("doc[callsign]=%s\n", doc["callsign"] | "????");
+  DPRINTF("doc[frequency]=%u\n", doc["frequency"] | DEFAULT_FREQUENCY);
+  DPRINTF("doc[location]=%s\n", doc["location"] | "");
   DPRINTF("doc[audioRecordingDuration]=%ul\n", doc["audioRecordingDuration"] | 1234);
   DPRINTF("doc[enableAVC]=%u\n", doc["enableAVC"] | 42);
 
@@ -299,14 +306,14 @@ void setup(void) {
     config.frequency = DEFAULT_FREQUENCY;  //Override config file request with default
   }
 
-  //config.frequency=14074;
   DPRINTF("config.frequency=%u\n", config.frequency);
 
-
-
-  //Argh... copy station callsign and location from config struct to C global variables (fix someday)
+  //Argh... copy station callsign config struct to C global variables (fix someday)
   strncpy(Station_Call, config.callsign, sizeof(Station_Call));
-  strncpy(Locator, config.location, sizeof(Locator));
+
+  //Argh... Locator is also duplicated all over the place :()
+  if (strlen(config.location)>0) strlcpy(Locator, config.location, sizeof(Locator));
+  DPRINTF("Locator='%s'\n",Locator);
 
   //Initialize the SI4735 receiver
   delay(10);
@@ -562,33 +569,7 @@ void auto_sync_FT8(void) {
 
 
 
-// /*
-// ** @brief Get UTC time and location from GPS when available
-// **
-// ** parse_NEMA() is a NOOP if data is not available from GPS.  When GPS is available,
-// ** it's used to set Teensy time to UTC and update the grid square locator.
-// **
-// ** ToDo:  Should parse_NEMA() be invoked from loop(), or just once from setup()???
-// **
-// */
-// void parse_NEMA(void) {
-//   while (Serial1.available()) {
-//     if (gps.encode(Serial1.read())) {  // process gps messages
-//       // when TinyGPS reports new data...
-//       unsigned long age;
-//       int Year;
-//       byte Month, Day, Hour, Minute, Second, Hundred;
-//       gps.crack_datetime(&Year, &Month, &Day, &Hour, &Minute, &Second, &Hundred, &age);
-//       gps.f_get_position(&flat, &flon, &age);
 
-//       //Second = Second + gps_offset;
-
-//       setTime(Hour, Minute, Second, Day, Month, Year);
-//       Teensy3Clock.set(now());  // set the RTC
-//       gps_hour = Hour;
-//       gps_minute = Minute;
-//       gps_second = Second;
-//       gps_hundred = Hundred;
 //       char *locator = get_mh(flat, flon, 4);
 //       for (int i = 0; i < 11; i++) Locator[i] = locator[i];
 
