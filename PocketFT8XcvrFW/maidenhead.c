@@ -11,6 +11,15 @@ char letterize(int x) {
     return (char) x + 65;
 }
 
+/**
+ * @brief Get the maidenhead square locator string
+ *
+ * @param lat Lattitude
+ * @param lon Longitude
+ * @param size Length of the desired locator string
+ *
+ * @return Pointer to NUL-terminated locator string
+**/
 char* get_mh(double lat, double lon, int size) {
     static char locator[11];
     double LON_F[]={20,2.0,0.083333,0.008333,0.0003472083333333333};

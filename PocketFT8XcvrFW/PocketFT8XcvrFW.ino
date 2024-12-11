@@ -83,7 +83,7 @@
 #include "arm_math.h"
 #include "constants.h"
 #include "maidenhead.h"
-#include "gpsHelper.h"
+#include "GPShelper.h"
 
 
 //Enable comments in the JSON configuration file
@@ -192,9 +192,8 @@ int tune_flag;
 
 int log_flag, logging_on;
 
-//GPS-derived location if we know it
-float flat, flon;     //These get initialized by gpsHelper.cpp
-
+//GPSHelper ensures that all gps member variables are valid
+GPShelper gps(9600);
 
 
 
@@ -209,28 +208,33 @@ void setup(void) {
     delay(5000);
   }
 
-  //Confirm the installation of the modified teensy4 AudioStream.h library file
+  //Confirm installation of the modified teensy4 AudioStream.h library file in the Arduino IDE
   if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
-    Serial.println("Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0\n");
-    Serial.println("You must copy the supplied AudioStream.h file into .../teensy/hardware/avr/1.59.0/cores/teensy4\n");
+    Serial.println("Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
+    Serial.println("You must copy the modified AudioStream.h file into .../teensy/hardware/avr/1.59.0/cores/teensy4\n");
   }
 
   //Sync MCU and RTC time with GPS if it's working and can get a timely fix
-  if (syncGPSTime()) {  //If it gets a fix, we'll have UTC time
-    DPRINTF("MCU/RTC using GPS time\n");
+  if (gps.obtainGPSfix()) {
 
-    //Use the GPS-derived locator unless later overriden by config.json
-    strlcpy(Locator, get_mh(flat, flon, 4), sizeof(Locator));
-    DPRINTF("GPS Locator='%s'\n", Locator);
+    //Set the MCU time to the GPS result
+    setTime(gps.hour, gps.minute, gps.second, gps.day, gps.month, gps.year);
+    DPRINTF("GPS time = %2d/%2d/%2d %2d:%2d:%2d\n", gps.month, gps.day, gps.year, gps.hour, gps.minute, gps.second);
 
+    //Now set the Teensy RTC to the GPS-derived time in the MCU
+    Teensy3Clock.set(now());
+
+    //Use the GPS-derived locator (this may be overriden by config.json processing below)
+    strlcpy(Locator, get_mh(gps.flat, gps.flng, 4), sizeof(Locator));
   } else {
     DPRINTF("MCU/RTC using Teensy Loader time from host computer\n");
   }
-  DPRINTF("Now is %2d/%2d/%2d %2d:%2d:%2d\n", month(), day(), year(), hour(), minute(), second());
 
   //Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
   setSyncProvider(getTeensy3Time);
   delay(100);
+  DPRINTF("Date/Time are %2d/%2d/%2d %2d:%2d:%2d\n", month(), day(), year(), hour(), minute(), second());
+  DPRINTF("Locator = '%s'\n", Locator);
 
   //Turn the transmitter off and the receiver on (they are independent in V2 boards)
   pinMode(PIN_PTT, OUTPUT);
@@ -312,8 +316,8 @@ void setup(void) {
   strncpy(Station_Call, config.callsign, sizeof(Station_Call));
 
   //Argh... Locator is also duplicated all over the place :()
-  if (strlen(config.location)>0) strlcpy(Locator, config.location, sizeof(Locator));
-  DPRINTF("Locator='%s'\n",Locator);
+  if (strlen(config.location) > 0) strlcpy(Locator, config.location, sizeof(Locator));
+  DPRINTF("Locator='%s'\n", Locator);
 
   //Initialize the SI4735 receiver
   delay(10);
