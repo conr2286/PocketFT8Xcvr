@@ -287,11 +287,11 @@ void setup(void) {
   config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
   configFile.close();
 
-  //When debugging, print the config file
+  //When debugging, print contents of the config file
   DPRINTF("config[callsign]=%s\n", config.callsign);
   DPRINTF("config[frequency]=%u\n", config.frequency);
   DPRINTF("config[locator]=%s\n", config.locator);
-  DPRINTF("config[audioRecordingDuration]=%ul\n", config.audioRecordingDuration);
+  DPRINTF("config[audioRecordingDuration]=%lu\n", config.audioRecordingDuration);
   DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
   DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
 
@@ -321,7 +321,7 @@ void setup(void) {
   //Argh... copy station callsign config struct to C global variables (fix someday)
   strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
 
-  //When debugging, print out the final configuration that's actually in use
+  //We have finalized the configuration to use
   DPRINTF("Date/Time in use are %2d/%2d/%2d %2d:%2d:%2d\n", month(), day(), year(), hour(), minute(), second());
   DPRINTF("Station callsign in use is '%s'\n", Station_Call);
   DPRINTF("Locator in use is '%s'\n", Locator);

@@ -80,30 +80,30 @@ void set_message(uint16_t index) {
 
   getTeensy3Time();
   char rtc_string[10];  // print format stuff
-  sprintf(rtc_string, "%2i:%2i:%2i", hour(), minute(), second());
+  snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
 
-  strcpy(message, blank);
+  strlcpy(message, blank,sizeof(message));
   clear_FT8_message();
 
   switch (index) {
 
-    case 0:
-      sprintf(message, "%s %s %s", "CQ", Station_Call, Locator);
+    case 0:  //We are calling CQ from our Locator, e.g. CQ KQ7B DN15
+      snprintf(message, sizeof(message), "%s %s %s", "CQ", Station_Call, Locator);
 
       break;
 
-    case 1:
-      sprintf(message, "%s %s %s", Target_Call, Station_Call, Locator);
+    case 1:  //We are calling target from our Locator, e.g. AG0E KQ7B DN15
+      snprintf(message, sizeof(message), "%s %s %s", Target_Call, Station_Call, Locator);
 
       break;
 
-    case 2:
-      sprintf(message, "%s %s %3i", Target_Call, Station_Call, Target_RSL);
+    case 2:  //We are responding to target with their signal report, e.g. AG0E KQ7B -12
+      snprintf(message, sizeof(message), "%s %s %3i", Target_Call, Station_Call, Target_RSL);
 
       break;
 
-    case 3:
-      sprintf(message, "%s %s %3s", Target_Call, Station_Call, seventy_three);
+    case 3:  //We are responding to target with 73, e.g. AG0E KQ7B RR73
+      snprintf(message, sizeof(message), "%s %s %3s", Target_Call, Station_Call, seventy_three);
 
       break;
   }

@@ -175,21 +175,21 @@ int ft8_decode(void) {
 
         new_decoded[num_decoded].sync_score = cand.score;
         new_decoded[num_decoded].freq_hz = (int)freq_hz;
-        strlcpy(new_decoded[num_decoded].field1, field1, 14); //Destination station
-        strlcpy(new_decoded[num_decoded].field2, field2,14); //Source station
-        strlcpy(new_decoded[num_decoded].field3, field3,7); //Extra info passed to destination from source
-        strlcpy(new_decoded[num_decoded].decode_time, rtc_string,10);
+        strlcpy(new_decoded[num_decoded].field1, field1, 14);  //Destination station
+        strlcpy(new_decoded[num_decoded].field2, field2, 14);  //Source station
+        strlcpy(new_decoded[num_decoded].field3, field3, 7);   //Extra info passed to destination from source
+        strlcpy(new_decoded[num_decoded].decode_time, rtc_string, 10);
 
         raw_RSL = new_decoded[num_decoded].sync_score;
         if (raw_RSL > 160) raw_RSL = 160;
         display_RSL = (raw_RSL - 160) / 6;
-        new_decoded[num_decoded].snr = display_RSL;       //Received signal level at our station
+        new_decoded[num_decoded].snr = display_RSL;  //Received signal level at our station
         //DPRINTF("%s snr=%d\n",new_decoded[num_decoded].field2,display_RSL);
         DPRINTF("message='%s %s %s' snr=%d \n", field1, field2, field3, display_RSL);
 
         char Target_Locator[] = "    ";
 
-        strlcpy(Target_Locator, new_decoded[num_decoded].field3,sizeof(Target_Locator));
+        strlcpy(Target_Locator, new_decoded[num_decoded].field3, sizeof(Target_Locator));
 
         if (validate_locator(Target_Locator) == 1) {
           distance = Target_Distance(Target_Locator);
@@ -215,11 +215,8 @@ void display_messages(int decoded_messages) {
   tft.fillRect(0, 100, 240, 140, HX8357_BLACK);
 
   for (int i = 0; i < decoded_messages && i < message_limit; i++) {
-    //sprintf(message, "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);  //TFT displayed text
     snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);  //TFT displayed text
-
-    //sprintf(big_gulp, "%s %s", new_decoded[i].decode_time, message);                                    //Logged text
-    snprintf(big_gulp, sizeof(big_gulp), "%s %s", new_decoded[i].decode_time, message);  //Logged text includes timestamp
+    snprintf(big_gulp, sizeof(big_gulp), "%s %s", new_decoded[i].decode_time, message);                                   //Logged text includes timestamp
 
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
     tft.setTextSize(2);
@@ -310,7 +307,11 @@ int Check_Calling_Stations(int num_decoded) {
   int message_test = 0;
 
   for (int i = 0; i < num_decoded; i++) {
+
+    //Was this transmission sent to our station's callsign?
     if (strindex(new_decoded[i].field1, Station_Call) >= 0) {
+
+      //Yes, assemble details (their callsign, our callsign, extra_info) into message buffer
       snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
 
       getTeensy3Time();
@@ -320,7 +321,8 @@ int Check_Calling_Stations(int num_decoded) {
       tft.setCursor(240, 100 + i * 25);
       tft.print(message);
 
-      if (logging_on == 1) write_log_data(big_gulp);    //Is this logged before the contact is complete?
+      if (logging_on == 1) write_log_data(big_gulp);    //Why are we logging every message sent to us???  
+      DPRINTF("decode_ft8() invoking write_log_data:  %s\n", big_gulp);
 
       num_Calling_Stations++;
       message_test = i + 100;

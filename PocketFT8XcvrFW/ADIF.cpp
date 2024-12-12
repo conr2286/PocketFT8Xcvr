@@ -15,9 +15,9 @@
 ** @param logFile Name of the logfile on the SD disk
 ** @param myCall My station's call sign
 ** @param myGridsquare My station's gridsquare (optional)
-** @param logMode How to log FT8 QSO mode (e.g. DATA or FT8)
-** @param mySOTARef My SOTA Reference (optional)
-** @param mySIGinfo My (POTA) Special Interest Group info (optional)
+** @param logMode How to log the QSO's mode (e.g. DATA or FT8)
+** @param mySOTARef My SOTA Reference or NULL (optional)
+** @param mySIGinfo My (POTA) Special Interest Group info or NULL (optional)
 **
 ** Optional parameters may be NULL.
 **
@@ -47,16 +47,16 @@ ADIF::ADIF(char* logFile, char* myCall, char* myGridsquare, char* logMode, char*
 ** @param workedCall Worked station's callsign (required)
 ** @param qsoDate UTC start date for QSO (required)
 ** @param qsoTime UTC start time for QSO (required)
-** @param workedGridsquare Worked station's gridsquare (optional)
-** @param myRSL My signal report (optional)
-** @Param workedRSL Worked station's signal report (optional)
+** @param workedGridsquare Worked station's gridsquare or NULL (optional)
+** @param myRSL My signal report or NULL(optional)
+** @param workedRSL Worked station's signal report or NULL (optional)
 **
 ** @return 0==success, -1==error
 **
 ** My station's call and the QSO mode (e.g. DATA or FT8) are obtained from ADIF's member
 ** variables and recorded in the log file.
 **
-** The logfile is opened and closed with each call to logQSO() ensuring the data is actually
+** The logfile is opened and closed with each call to logQSO() ensuring the data gets
 ** flushed to the SD media (so that it may be removed).
 **
 ** Entries for optional parameters passed to logQSO() as NULL pointers do not appear in the
@@ -96,7 +96,10 @@ int ADIF::logQSO(char* workedCall, char* qsoDate, char* qsoTime, char* workedGri
     strlcat(entry, workedRSL, sizeof(entry));
   }
 
-  //Write the assembled entry to the log file
+  //Append a NL terminator
+  strlcat(entry, "\n", sizeof(entry));
+
+  //Write the completed entry to the log file
   logFile.write(entry, strlen(entry));
 
   //Flush log entry to the SD disk
