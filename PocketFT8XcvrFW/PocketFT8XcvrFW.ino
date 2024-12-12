@@ -107,37 +107,38 @@
 #define CONFIG_FILENAME "/config.json"
 struct Config {
   char callsign[12];                     //11 chars and NUL
-  char location[5];                      //4 char maidenhead locator and NUL
+  char locator[5];                       //4 char maidenhead locator and NUL
   unsigned frequency;                    //Operating frequency in kHz
   unsigned long audioRecordingDuration;  //Seconds or 0 to disable audio recording
   unsigned enableAVC;                    //0=disable, 1=enable SI47xx AVC
+  unsigned gpsTimeout;                   //GPS timeout (seconds) to obtain a fix
 } config;
 
 //Default configuration
 #define DEFAULT_FREQUENCY 7074                //kHz
-#define DEFAULT_CALLSIGN "NOCALL"             //There's no realistic default callsign
-#define DEFAULT_LOCATION "****"               //Will later obtain the default maidenhead square from GPS if we get a lock
+#define DEFAULT_CALLSIGN "****"               //There's no realistic default callsign
 #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  //Default of 0 seconds disables audio recording
 #define DEFAULT_ENABLE_AVC 1                  //SI4735 AVC enabled by default
-
-//Define lower/upper frequency limitations of the 40m hardware implementation
-#define MINIMUM_FREQUENCY 7000  //Low edge of band in kHz
-#define MAXIMUM_FREQUENCY 7300  //Upper edge of band in kHz
+#define DEFAULT_GPS_TIMEOUT 10                //Number of seconds before GPS fix time-out
 
 //Adafruit 480x320 touchscreen configuration
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  //Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   //The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 
-///Build the VFO and receiver objects
+///Build the VFO clock
 Si5351 si5351;
+
+//Build the receiver
+#define MINIMUM_FREQUENCY 7000  //The Si4735 sadly wants to know these :(
+#define MAXIMUM_FREQUENCY 7300
 SI4735 si4735;
 
-//Teensy Audio Library setup (don't forget to install AudioStream32k.h! in the library folder)
+//Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
 AudioInputAnalog adc1;  //xy=132,104
 AudioRecordQueue queue1;
 AudioConnection patchCord2(adc1, queue1);
 
-//Optional (see config file) raw audio recording file written to SD card
+//Optional raw audio recording file written to SD card for debugging nasty receiver problems
 File ft8Raw = NULL;
 unsigned long recordSampleCount = 0;  //Number of 16-bit audio samples recorded so far
 
@@ -148,7 +149,7 @@ q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
 //ToDo:  Arrange for the various modules to access these directly from config structure
 char Station_Call[12];  //six character call sign + /0
-char Locator[11];       // four character locator  + /0
+char Locator[11] = "";  // four character locator  + /0
 
 uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
@@ -192,62 +193,47 @@ int tune_flag;
 
 int log_flag, logging_on;
 
-//GPSHelper ensures that all gps member variables are valid
+//Build the GPSHelper that ensures valid gps member variables
 GPShelper gps(9600);
 
 
 
+/**
+ ** @brief Sketch initialization
+**/
 void setup(void) {
 
   //Get the USB serial port running before something else goes wrong
   Serial.begin(9600);
   while (!Serial) continue;
   DTRACE();
+
+  //Is Teensy recovering from a crash?
   if (CrashReport) {
     Serial.print(CrashReport);
     delay(5000);
   }
 
-  //Confirm installation of the modified teensy4 AudioStream.h library file in the Arduino IDE
+  //Confirm installation of the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
+  //won't run at the standard sample rate.
   if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
     Serial.println("Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
     Serial.println("You must copy the modified AudioStream.h file into .../teensy/hardware/avr/1.59.0/cores/teensy4\n");
+    while (true) continue;  //Fatal
   }
 
-  //Sync MCU and RTC time with GPS if it's working and can get a timely fix
-  if (gps.obtainGPSfix()) {
-
-    //Set the MCU time to the GPS result
-    setTime(gps.hour, gps.minute, gps.second, gps.day, gps.month, gps.year);
-    DPRINTF("GPS time = %2d/%2d/%2d %2d:%2d:%2d\n", gps.month, gps.day, gps.year, gps.hour, gps.minute, gps.second);
-
-    //Now set the Teensy RTC to the GPS-derived time in the MCU
-    Teensy3Clock.set(now());
-
-    //Use the GPS-derived locator (this may be overriden by config.json processing below)
-    strlcpy(Locator, get_mh(gps.flat, gps.flng, 4), sizeof(Locator));
-  } else {
-    DPRINTF("MCU/RTC using Teensy Loader time from host computer\n");
-  }
-
-  //Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
-  setSyncProvider(getTeensy3Time);
-  delay(100);
-  DPRINTF("Date/Time are %2d/%2d/%2d %2d:%2d:%2d\n", month(), day(), year(), hour(), minute(), second());
-  DPRINTF("Locator = '%s'\n", Locator);
-
-  //Turn the transmitter off and the receiver on (they are independent in V2 boards)
+  //Turn the transmitter off and the receiver on
   pinMode(PIN_PTT, OUTPUT);
   pinMode(PIN_RCV, OUTPUT);
-  digitalWrite(PIN_PTT, LOW);
-  digitalWrite(PIN_RCV, HIGH);
+  digitalWrite(PIN_RCV, HIGH);  //Disable the PA and disconnect receiver's RF input from antenna
+  digitalWrite(PIN_PTT, LOW);   //Unground the receiver's RF input
 
   //Initialize the SD library if the card is available
   if (!SD.begin(BUILTIN_SDCARD)) {
     Serial.println("Unable to access the SD card");  //Someday move this message to display
   }
 
-  //Initialize the display
+  //Initialize the Adafruit 480x320 TFT display
   tft.begin(HX8357D);
   tft.fillScreen(HX8357_BLACK);
   tft.setTextColor(HX8357_YELLOW);
@@ -255,7 +241,7 @@ void setup(void) {
   tft.setTextSize(2);
 
 //Zero-out EEPROM when executed on a new Teensy (whose memory is filled with 0xff).  This prevents
-//calcuation of weird transmit offset from 0xffff filled EEPROM.
+//calcuation of crazy transmit offset from 0xffff filled EEPROM.
 #define EEPROMSIZE 4284  //Teensy 4.1
   bool newChip = true;
   for (int adr = 0; adr < EEPROMSIZE; adr++) {
@@ -271,8 +257,8 @@ void setup(void) {
   si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  //KQ7B V1.00 uses cmos CLKIN, not a XTAL
   si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  //All PLLs using CLKIN
   si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
-  si5351.set_freq(3276800, SI5351_CLK2);  //Receiver's PLL clock (so sad)
-  si5351.output_enable(SI5351_CLK2, 1);
+  si5351.set_freq(3276800, SI5351_CLK2);  //Receiver's PLL clock for Si4735
+  si5351.output_enable(SI5351_CLK2, 1);   //Receiver's clock is always on
 
   // Gets and sets the Si47XX I2C bus address
   int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
@@ -284,50 +270,68 @@ void setup(void) {
     //DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
   }
 
-  //Read the JSON configuration file into the config structure
+  //Read the JSON configuration file into the config structure.  We allow the firmware to continue even
+  //if the configuration file is unreadable or useless because the receiver is still operable.
+  JsonDocument doc;  //Key-Value pair doc
   File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
-  if (!configFile) Serial.printf("Error:  Unable to open SD config file, %s\n", CONFIG_FILENAME);
-  JsonDocument doc;
+  if (!configFile) Serial.printf("Error:  Unable to open Teensy SD config file, %s\n", CONFIG_FILENAME);
   DeserializationError error = deserializeJson(doc, configFile);
-  if (error) Serial.printf("Error:  Unable to read SD config file, %s\n", CONFIG_FILENAME);
+  if (error) Serial.printf("Error:  Unable to read Teensy SD config file, %s\n", CONFIG_FILENAME);
+
+  //Extract the configuration parameters from doc or assign their defaults to the config struct
   strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  //Station callsign
   config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
-  strlcpy(config.location, doc["location"] | DEFAULT_LOCATION, sizeof(config.location));
+  strlcpy(config.locator, doc["Locator"] | "", sizeof(config.locator));
   config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
   config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
+  config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
   configFile.close();
 
   //When debugging, print the config file
-  DPRINTF("doc[callsign]=%s\n", doc["callsign"] | "????");
-  DPRINTF("doc[frequency]=%u\n", doc["frequency"] | DEFAULT_FREQUENCY);
-  DPRINTF("doc[location]=%s\n", doc["location"] | "");
-  DPRINTF("doc[audioRecordingDuration]=%ul\n", doc["audioRecordingDuration"] | 1234);
-  DPRINTF("doc[enableAVC]=%u\n", doc["enableAVC"] | 42);
+  DPRINTF("config[callsign]=%s\n", config.callsign);
+  DPRINTF("config[frequency]=%u\n", config.frequency);
+  DPRINTF("config[locator]=%s\n", config.locator);
+  DPRINTF("config[audioRecordingDuration]=%ul\n", config.audioRecordingDuration);
+  DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
+  DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
 
+  //Sync MCU and RTC time with GPS if it's working and can get a timely fix
+  if (gps.obtainGPSfix(config.gpsTimeout)) {
 
-  //Ensure configured frequency is within the hardware limitations
-  if (config.frequency < MINIMUM_FREQUENCY || config.frequency > MAXIMUM_FREQUENCY) {
-    config.frequency = DEFAULT_FREQUENCY;  //Override config file request with default
+    //Set the MCU time to the GPS result
+    setTime(gps.hour, gps.minute, gps.second, gps.day, gps.month, gps.year);
+    DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gps.month, gps.day, gps.year, gps.hour, gps.minute, gps.second);
+
+    //Now set the Teensy RTC to the GPS-derived time in the MCU
+    Teensy3Clock.set(now());
+
+    //Use the GPS-derived locator unless config.json hardwired it to something
+    if (strlen(config.locator) == 0) {
+      strlcpy(Locator, get_mh(gps.flat, gps.flng, 4), sizeof(Locator));
+      DPRINTF("GPS derived Locator = %s\n", Locator);
+    }
+  } else {
+    DPRINTF("MCU/RTC using Teensy Loader time from host computer\n");
   }
 
-  DPRINTF("config.frequency=%u\n", config.frequency);
+  //Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
+  setSyncProvider(getTeensy3Time);
+  delay(100);
 
   //Argh... copy station callsign config struct to C global variables (fix someday)
-  strncpy(Station_Call, config.callsign, sizeof(Station_Call));
+  strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
 
-  //Argh... Locator is also duplicated all over the place :()
-  if (strlen(config.location) > 0) strlcpy(Locator, config.location, sizeof(Locator));
-  DPRINTF("Locator='%s'\n", Locator);
+  //When debugging, print out the final configuration that's actually in use
+  DPRINTF("Date/Time in use are %2d/%2d/%2d %2d:%2d:%2d\n", month(), day(), year(), hour(), minute(), second());
+  DPRINTF("Station callsign in use is '%s'\n", Station_Call);
+  DPRINTF("Locator in use is '%s'\n", Locator);
+  DPRINTF("Frequency in use is %u kHz\n", config.frequency);
 
   //Initialize the SI4735 receiver
   delay(10);
-  //DPRINTF("SSB patch is loading...\n");
   et1 = millis();
   loadSSB();
   et2 = millis();
-  // Serial.print("SSB patch was loaded in: ");
-  // Serial.print((et2 - et1));
-  // Serial.println("ms");
   delay(10);
   si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
   delay(10);
@@ -337,12 +341,16 @@ void setup(void) {
   si4735.setVolume(50);
   display_value(360, 40, (int)currentFrequency);
 
+//Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
+//frequency which is *not* determined by the Si5351.  The Si5351 does, however, supply the
+//onboard PLL with its clock.  The apparent result of all this is the transmit and receive
+//frequencies may not be obviously aligned (need to understand this better).
   Serial.println(" ");
   Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
   Serial.println("Use keyboard u to raise, d to lower, & s to save ");
   Serial.println(" ");
 
-  //Initialize the receiver's processing
+  //Initialize the receiver's DSP chain
   init_DSP();
   initalize_constants();
   AudioMemory(20);
@@ -371,15 +379,17 @@ void setup(void) {
 
   auto_sync_FT8();
 
-  DPRINTF("config.frequency=%u\n", config.frequency);
 }  //setup()
+
+
+
 
 
 unsigned oldFlags = 0;
 
 void loop() {
 
-  //Debugging aide for the multitude of flags
+  //Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
   unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
   if (newFlags != oldFlags) {
     //DPRINTF("newFlags = 0x%x\n", newFlags);
@@ -447,6 +457,9 @@ void loop() {
 time_t getTeensy3Time() {
   return Teensy3Clock.get();
 }
+
+
+
 
 void loadSSB() {
   si4735.queryLibraryId();  // Is it really necessary here? I will check it.

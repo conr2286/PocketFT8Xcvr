@@ -1,9 +1,6 @@
 #include <TinyGPSPlus.h>
 #include "pins.h"
 
-//Define the default timeout (seconds)
-#define GPS_TIMEOUT 60      
-
 class GPShelper {
 
 public:
@@ -22,7 +19,7 @@ public:
   double flng;
 
   //Publicly accessible methods
-  bool obtainGPSfix();  //Returns true and initializes member vars if it obtains a GPS fix
+  bool obtainGPSfix(unsigned timeoutSeconds);  //Returns true and assigns member var values if it obtains a GPS fix
 
   /**
   ** GPShelper Constructor
@@ -31,12 +28,12 @@ public:
   **
   **/
   GPShelper(unsigned baudRate) {
-    timeoutSeconds = GPS_TIMEOUT;
     SerialGPS.begin(baudRate);
   }
 
   //Our private implementation variables
 private:
-  unsigned timeoutSeconds;  //Maximum number of seconds we  wait for GPS to obtain a fix
   TinyGPSPlus gps;          //Our chosen interface to the GPS
+
+
 };

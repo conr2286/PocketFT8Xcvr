@@ -11,28 +11,29 @@
  *  @return true if a GPS fix and all member variables are valid, false if timeout
  *
  * The purpose of the obtainGPSfix() is to loop processing GPS messages until we've
- * obtained valid UTC date, time and our location.  Not all GPS messages contain
- * all the data we seek, so the contribution here is to ensure we get it all.
+ * obtained valid UTC date, time *and* our location.  Not all GPS messages contain
+ * all the data we seek, so the contribution here is to ensure we get all three.
  *
  * If we return success (true), then date, time and location have all been updated
- * with the most recent GPS result.
+ * with the current GPS result.
  *
 **/
-bool GPShelper::obtainGPSfix() {
+bool GPShelper::obtainGPSfix(unsigned timeoutSeconds) {
 
-  //A successful result requires all three of these flags to become true
-  bool gotDate = false;  
-  bool gotTime = false;   
+  //A successful result requires all three flags to become true
+  bool gotDate = false;
+  bool gotTime = false;
   bool gotLoc = false;
 
-  //Starting time
+  //Starting time for timeout loop
   unsigned long t0 = millis();
 
   //This is the GPS time-out loop
-  while ((millis() - t0) <= timeoutSeconds) {
+  while ((millis() - t0) <= timeoutSeconds * 1000) {
 
     //This inner loop processes incoming message bytes from the GPS
     while (SerialGPS.available()) {
+      //DTRACE();
 
       //Read and process a received GPS message byte
       if (gps.encode(SerialGPS.read())) {  //Returns true if we've received a complete message
@@ -65,18 +66,7 @@ bool GPShelper::obtainGPSfix() {
           gotLoc = true;
         }
 
-        // //Update MCU and RTC date and time if GPS has supplied both
-        // if (gotDate && gotTime) {
-
-        //   //First, set the MCU Time to the GPS reading
-        //   setTime(hr, mi, sc, dy, mo, yr);
-        //   DPRINTF("setTime %2d/%2d/%2d %2d:%2d:%2d\n", mo, dy, yr, hr, mi, sc);
-
-        //   //Now set the Teensy RTC to the GPS-derived time in the MCU
-        //   Teensy3Clock.set(now());
-        // }
-
-        //We are finished if we've acquired date, time and loc
+        //We are finished when/if we've acquired date, time and loc
         if (gotDate && gotTime && gotLoc) {
           return true;  //Success
         }
