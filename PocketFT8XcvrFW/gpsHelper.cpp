@@ -3,7 +3,7 @@
 
 #include "pins.h"
 #include "GPShelper.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  *  @brief Loops to obtain date, time and location from GPS 
