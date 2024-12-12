@@ -206,6 +206,9 @@ int ft8_decode(void) {
   return num_decoded;
 }
 
+
+
+
 //Displays decoded received messages, if any
 void display_messages(int decoded_messages) {
 
