@@ -148,7 +148,7 @@ int ft8_decode(void) {
     int rc = unpack77_fields(a91, field1, field2, field3);
     if (rc < 0) continue;
 
-    sprintf(message, "%s %s %s ", field1, field2, field3);
+    snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);
     //DPRINTF("message='%s %s %s' \n", field1, field2, field3);
 
 
@@ -167,7 +167,7 @@ int ft8_decode(void) {
 
     getTeensy3Time();
     char rtc_string[10];  // print format stuff
-    sprintf(rtc_string, "%2i:%2i:%2i", hour(), minute(), second());
+    snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
 
     if (!found && num_decoded < kMax_decoded_messages) {
       if (strlen(message) < kMax_message_length) {
@@ -215,9 +215,12 @@ void display_messages(int decoded_messages) {
   tft.fillRect(0, 100, 240, 140, HX8357_BLACK);
 
   for (int i = 0; i < decoded_messages && i < message_limit; i++) {
-    sprintf(message, "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
+    //sprintf(message, "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);  //TFT displayed text
+    snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);  //TFT displayed text
 
-    sprintf(big_gulp, "%s %s", new_decoded[i].decode_time, message);
+    //sprintf(big_gulp, "%s %s", new_decoded[i].decode_time, message);                                    //Logged text
+    snprintf(big_gulp, sizeof(big_gulp), "%s %s", new_decoded[i].decode_time, message);  //Logged text
+
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
     tft.setTextSize(2);
     tft.setCursor(0, 100 + i * 25);
@@ -232,10 +235,10 @@ void display_selected_call(int index) {
 
   char selected_station[18];
   char blank[] = "        ";
-  strcpy(Target_Call, new_decoded[index].field2);
+  strlcpy(Target_Call, new_decoded[index].field2, sizeof(Target_Call));
   Target_RSL = new_decoded[index].snr;
 
-  sprintf(selected_station, "%7s %3i", Target_Call, Target_RSL);
+  snprintf(selected_station, sizeof(selected_station), "%7s %3i", Target_Call, Target_RSL);
   tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
   tft.setTextSize(2);
   tft.setCursor(360, 20);
@@ -252,7 +255,7 @@ void display_details(int decoded_messages) {
   // tft.fillRect(0, 100, 500, 320, RA8875_BLACK);
 
   for (int i = 0; i < decoded_messages && i < message_limit; i++) {
-    sprintf(message, "%7s %7s %4s %4i %3i %4i", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].freq_hz, new_decoded[i].snr, new_decoded[i].distance);
+    snprintf(message, sizeof(message), "%7s %7s %4s %4i %3i %4i", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].freq_hz, new_decoded[i].snr, new_decoded[i].distance);
     /*
     tft.setFont(&FreeMono12pt7b);
     tft.setCursor(0, 120 + i *40 );
@@ -308,10 +311,10 @@ int Check_Calling_Stations(int num_decoded) {
 
   for (int i = 0; i < num_decoded; i++) {
     if (strindex(new_decoded[i].field1, Station_Call) >= 0) {
-      sprintf(message, "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
+      snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
 
       getTeensy3Time();
-      sprintf(big_gulp, "%2i/%2i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
+      snprintf(big_gulp, sizeof(message), "%2i/%2i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
       tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
       tft.setTextSize(2);
       tft.setCursor(240, 100 + i * 25);
