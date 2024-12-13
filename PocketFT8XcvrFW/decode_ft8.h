@@ -16,6 +16,7 @@ typedef struct
   char field1[14];
   char field2[14];
   char field3[7];
+  char locator[7];
   int freq_hz;
   char decode_time[10];
   int sync_score;

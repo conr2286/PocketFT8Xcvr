@@ -151,7 +151,6 @@ int ft8_decode(void) {
     snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);
     //DPRINTF("message='%s %s %s' \n", field1, field2, field3);
 
-
     // Check for duplicate messages (TODO: use hashing)
     bool found = false;
     for (int i = 0; i < num_decoded; ++i) {
@@ -184,18 +183,26 @@ int ft8_decode(void) {
         if (raw_RSL > 160) raw_RSL = 160;
         display_RSL = (raw_RSL - 160) / 6;
         new_decoded[num_decoded].snr = display_RSL;  //Received signal level at our station
-        //DPRINTF("%s snr=%d\n",new_decoded[num_decoded].field2,display_RSL);
-        DPRINTF("message='%s %s %s' snr=%d \n", field1, field2, field3, display_RSL);
 
         char Target_Locator[] = "    ";
 
+        //Bug:  field3 does not always contain a locator... and watch what happens below with RR73 :(
         strlcpy(Target_Locator, new_decoded[num_decoded].field3, sizeof(Target_Locator));
 
+        //Bug?  RR73 is a valid locator (somewhere in the Atlantic ocean)
         if (validate_locator(Target_Locator) == 1) {
           distance = Target_Distance(Target_Locator);
           new_decoded[num_decoded].distance = (int)distance;
-        } else
-          new_decoded[num_decoded].distance = 0;
+          strlcpy(new_decoded[num_decoded].locator, Target_Locator, 7);  //Bug:  Save their perhaps-this-is-a-locator for logging
+        } else {
+          new_decoded[num_decoded].distance = 0;    //We don't know distance to target
+          new_decoded[num_decoded].locator[0] = 0;  //We don't have a valid locator for target
+        }
+
+        //When debugging, print info about the decoded received message
+        DPRINTF("decoded:  field1='%s' field2='%s' field3='%s' snr=%d Target_Locator='%s'\n",
+                new_decoded[num_decoded].field1, new_decoded[num_decoded].field2, new_decoded[num_decoded].field3,
+                new_decoded[num_decoded].snr, new_decoded[num_decoded].locator);
 
         ++num_decoded;
       }
@@ -311,7 +318,7 @@ int Check_Calling_Stations(int num_decoded) {
 
   for (int i = 0; i < num_decoded; i++) {
 
-    //Was this transmission sent to our station's callsign?
+    //Was this received message sent to our station?
     if (strindex(new_decoded[i].field1, Station_Call) >= 0) {
 
       //Yes, assemble details (their callsign, our callsign, extra_info) into message buffer
@@ -324,8 +331,9 @@ int Check_Calling_Stations(int num_decoded) {
       tft.setCursor(240, 100 + i * 25);
       tft.print(message);
 
-      if (logging_on == 1) write_log_data(big_gulp);    //Why are we logging every message sent to us???  
+      if (logging_on == 1) write_log_data(big_gulp);  //Why would we log every message sent to us???
       DPRINTF("decode_ft8() invoking write_log_data:  %s\n", big_gulp);
+      DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
 
       num_Calling_Stations++;
       message_test = i + 100;  //???
@@ -343,7 +351,7 @@ int Check_Calling_Stations(int num_decoded) {
     return -1;
   }
 
-  DPRINTF("Check_Calling_Stations returns %d\n",message_test);
+  DPRINTF("Check_Calling_Stations returns %d\n", message_test);
 }  //Check_Calling_Stations()
 
 
