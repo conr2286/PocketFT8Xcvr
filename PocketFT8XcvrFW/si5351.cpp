@@ -171,16 +171,18 @@ void Si5351::reset(void) {
   }
 }
 
-/*
- * set_freq(uint64_t freq, enum si5351_clock clk)
+/**
  *
  * Sets the clock frequency of the specified CLK output.
- * Frequency range of 8 kHz to 150 MHz
  *
- * freq - Output frequency in 0.01 Hz
- * clk - Clock output
- *   (use the si5351_clock enum)
- */
+ * The frequency range is 8 kHz to 150 MHz
+ *
+ * @param freq  Output frequency in 0.01 Hz
+ * @param clk   Clock output (use the si5351_clock enum)
+ *
+ * Warning:  Note that the frequency is specified in hundreths of a Hz!!!
+ *
+**/
 uint8_t Si5351::set_freq(uint64_t freq, enum si5351_clock clk) {
   struct Si5351RegSet ms_reg;
   uint64_t pll_freq;

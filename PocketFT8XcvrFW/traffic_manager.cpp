@@ -29,10 +29,15 @@ extern int offset_freq;
 
 uint64_t F_Long, F_FT8, F_Offset;
 
-//KQ7B:  Turn-on the transmitter at the carrier frequency, F_Long
+
+
+/**
+ * Turn-on the transmitter at the carrier frequency, F_Long
+ *
+**/
 void transmit_sequence(void) {
 
-  DPRINTF("%s\n", __FUNCTION__);
+  DTRACE();
 
   //Program the transmitter clock at F_Long
   set_Xmit_Freq();
@@ -42,27 +47,33 @@ void transmit_sequence(void) {
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, LOW);
 
-  //Set receiver's volume
+  //Set receiver's volume down low
   si4735.setVolume(35);
 
   //Enable the transmitter clock
   si5351.drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);  // Set for max power if desired
   si5351.output_enable(SI5351_CLK0, 1);
 
-  //Connect transmitter to antenna
+  //Connect transmitter to antenna and short the receiver RF input to ground
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
 }
 
-//KQ7B:  Switch hardware from transmitting to receiving
+
+
+
+/**
+ *  Switch hardware from transmitting to receiving, and clears the outbound FT8 message
+ *
+**/
 void receive_sequence(void) {
 
-  DPRINTF("%s\n", __FUNCTION__);
+  DTRACE();
 
-  //Turn off the transmitter's clock
+  //Turn off the transmitter's clock -- this should stop the xmit RF chain
   si5351.output_enable(SI5351_CLK0, 0);
 
-  //Disconnect the SN74ACT244 PA from antenna
+  //Disconnect the SN74ACT244 PA from antenna and float the receiver's RF input
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, LOW);
 
@@ -77,7 +88,12 @@ void receive_sequence(void) {
 }  //receive_sequence()
 
 
-//Programs SI5351 with F_Long carrier frequency and turns on transmitter
+
+
+/**
+ * Turn-on the transmitter at F_Long for tuning
+ *
+**/
 void tune_On_sequence(void) {
 
   //Program the transmitter clock to F_Long
@@ -94,18 +110,24 @@ void tune_On_sequence(void) {
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, LOW);
 
-  //Connect transmitter to antenna
+  //Short receiver's RF input to ground
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
 }  //tune_On_sequence()
 
-//Turns the transmitter off
+
+
+
+
+/**
+ * Turn-off transmitter w/o affecting outbound message[]
+**/
 void tune_Off_sequence(void) {
 
-  //Disable the transmitter clock
+  //Turn-off the transmitter's clock
   si5351.output_enable(SI5351_CLK0, 0);
 
-  //Disconnect transmitter from antenna
+  //Float the receiver's RF input
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, LOW);
 
@@ -116,6 +138,9 @@ void tune_Off_sequence(void) {
   //Crank-up the receiver volume
   si4735.setVolume(50);
 }  //tune_Off_sequence()
+
+
+
 
 
 //KQ7B:  Recalculates carrier frequency F_Long and programs SI5351 with new unmodulated carrier frequency
@@ -131,8 +156,16 @@ void set_Xmit_Freq() {
 }  //set_Xmit_Freq()
 
 
-//Programs the SI5351 for F_Long + the specified FT8 tone.  This appears to be the FSK modulator
-//as this function is repeatedly invoked to shift the carrier during transmission.
+/**
+ * Transmitter's FSK modulator
+ *
+ * Programs the SI5351 for F_Long + the specified FT8 tone.  This  function is repeatedly
+ * invoked to shift the carrier during transmission.  Note that we are using direct FSK,
+ * not AFSK.
+ *
+ * @param ft8_tone FT8 tone frequency
+ *
+**/
 void set_FT8_Tone(uint8_t ft8_tone) {
   F_FT8 = F_Long + uint64_t(ft8_tone) * FT8_TONE_SPACING;
   si5351.set_freq(F_FT8, SI5351_CLK0);

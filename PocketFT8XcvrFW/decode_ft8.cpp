@@ -328,7 +328,7 @@ int Check_Calling_Stations(int num_decoded) {
       DPRINTF("decode_ft8() invoking write_log_data:  %s\n", big_gulp);
 
       num_Calling_Stations++;
-      message_test = i + 100;
+      message_test = i + 100;  //???
     }
 
     if (num_Calling_Stations == max_Calling_Stations) {
@@ -338,9 +338,12 @@ int Check_Calling_Stations(int num_decoded) {
   }
 
   if (message_test > 100) return message_test - 100;
-  else
+  else {
+    DPRINTF("Check_Calling_Stations returns -1\n");
     return -1;
+  }
 
+  DPRINTF("Check_Calling_Stations returns %d\n",message_test);
 }  //Check_Calling_Stations()
 
 

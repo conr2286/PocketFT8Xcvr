@@ -90,7 +90,7 @@ bool open_log_file(void) {
   }
 }
 
-//Displays station callsign and maidenhead locator
+//Displays our station callsign and our maidenhead locator
 void display_station_data(int x, int y) {
   char string[13];  // print format stuff
   sprintf(string, "%7s %4s", Station_Call, Locator);

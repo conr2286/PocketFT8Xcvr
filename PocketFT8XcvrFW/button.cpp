@@ -209,7 +209,7 @@ void executeButton(uint16_t index) {
       delay(button_delay);
       break;
 
-    case 1:  //Lo --- Location Msg (e.g. KN0I KQ7B DN15)
+    case 1:  //Lo --- Location Msg (e.g. AG0E KQ7B DN15)
       set_message(1);
       sButtonData[1].state = true;
       drawButton(1);
@@ -218,7 +218,7 @@ void executeButton(uint16_t index) {
       drawButton(1);
       break;
 
-    case 2:  //Rs --- Received Signal Msg (e.g. KN0I KQ7B -3)
+    case 2:  //Rs --- Received Signal Msg (e.g. AG0E KQ7B -3)
       set_message(2);
       sButtonData[2].state = true;
       drawButton(2);
@@ -227,7 +227,7 @@ void executeButton(uint16_t index) {
       drawButton(2);
       break;
 
-    case 3:  //73 --- 73 Msg (e.g. KN0I KQ7B RR73)
+    case 3:  //73 --- 73 Msg (e.g. AG0E KQ7B RR73)
       set_message(3);
       sButtonData[3].state = true;
       drawButton(3);
@@ -245,7 +245,7 @@ void executeButton(uint16_t index) {
       drawButton(4);
       break;
 
-    case 5:  //Tu --- Tune on/off
+    case 5:  //Tu --- Toggle tune on/off
       if (sButtonData[5].state) {
         tune_On_sequence();
         tune_flag = 1;

@@ -14,14 +14,10 @@
 #include "pack.h"
 #include "encode.h"
 #include "constants.h"
-
 #include "gen_ft8.h"
-
-#include <stdio.h>
 
 #include "DEBUG.h"
 
-//#include <HX8357_t3.h>
 #include "HX8357_t3n.h"
 extern HX8357_t3n tft;
 
@@ -61,15 +57,28 @@ char ft8_time_string[] = "15:44:15";
 
 int max_displayed_messages = 8;
 
-
-
-
-
-//Constructs and displays the requested FT8 outbound message and sets the
-//message_state flag indicating that message[] is valid.  Does not
-//actually turn-on the transmitter.
+/**
+ *  Builds an outbound FT8 message[] for later transmission
+ *  
+ *  Constructs and displays the specified FT8 outbound message and sets the
+ *  message_state flag indicating message[] is valid.  Does not actually
+ *  start the transmitter.
+ *
+ *  Global variable usage includes:
+ *    Station_Call[] -- Our station's callsign
+ *    Locator[] --      Our station's maidenhead gridsquare
+ *    TargetCall --     Worked station's callsign
+ *    TargetRSL --      Worked station's Received Signal Level
+ *    message[] --      The outbound message is constructed here
+ *    message_state --  Status of message[]: 0==Invalid, 1==Valid
+ *
+ *  @param index Specifies the outbound FT8 message type, e.g.
+ *              0 -- CQ:  CQ KQ7B DN15
+ *              1 -- Lo:  AG0E KQ7B DN15
+ *              2 -- Rs:  AG0E KQ7B -12
+ *              3 -- 73:  AG0E KQ7B RR73
+**/
 void set_message(uint16_t index) {
-
   DPRINTF("set_message(%u)\n", index);
 
   char big_gulp[60];
@@ -123,6 +132,8 @@ void set_message(uint16_t index) {
 }  //set_message()
 
 
+
+
 void clear_FT8_message(void) {
 
   char blank[] = "                      ";
@@ -134,6 +145,8 @@ void clear_FT8_message(void) {
 
   message_state = 0;
 }
+
+
 
 void clear_reply_message_box(void) {
 
