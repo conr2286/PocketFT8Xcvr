@@ -205,7 +205,7 @@ void setup(void) {
 
   //Get the USB serial port running before something else goes wrong
   Serial.begin(9600);
-  while (!Serial) continue;
+  delay(100);
   DTRACE();
 
   //Is Teensy recovering from a crash?
