@@ -23,6 +23,8 @@ ATTRIBUTION
 
 */
 
+#include <Arduino.h>
+
 #define __SOURCEFILE__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 #define DEBUG_STREAM Serial

@@ -84,6 +84,7 @@
 #include "constants.h"
 #include "maidenhead.h"
 #include "GPShelper.h"
+#include "LogFactory.h"
 
 
 //Enable comments in the JSON configuration file
