@@ -7,7 +7,7 @@
 **  There are a number of different classes in play here.  The idea is to
 **  separate the responsibilities for assembling details (e.g. callsigns,
 **  signal reports, etc) about a contact from the log file's encoding 
-**  (e.g. ADIF, CSV, TXT, XLSX, whatever).  Furthermore, we may someday
+**  (e.g. ADIF, CSV, TXT, XLSX, whatever).  Furthermore, we may someday 
 **  support multiple encodings, so we've constructed a factory that
 **  someday could build different types of logs.  The various classes are:
 **
