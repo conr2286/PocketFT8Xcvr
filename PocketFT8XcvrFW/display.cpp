@@ -55,7 +55,7 @@ void display_date(int x, int y) {
 
 void make_filename(void) {
   getTeensy3Time();
-  sprintf((char *)log_filename, "%2i%2i%4i%2i%2i", day(), month(), year(), hour(), minute());
+  snprintf((char *)log_filename,sizeof(log_filename), "%2i%2i%4i%2i%2i", day(), month(), year(), hour(), minute());
   tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
   tft.setTextSize(2);
   tft.setCursor(0, 200);
