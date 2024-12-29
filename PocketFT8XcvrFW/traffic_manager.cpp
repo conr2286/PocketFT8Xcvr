@@ -186,23 +186,37 @@ void setup_to_transmit_on_next_DSP_Flag(void) {
 }
 
 
-//Seems to be implementing a state machine for portions of an FT8 QSO???
-//  1. The GUI button toggles the CQ_Flag examined by loop().
-//  2. The main loop() invokes process_FT8_FFT() which invokes...
-//  3. update_offset_waterfall() invokes service_CQ() at the end of receive timeslot
+
+
+/**
+ * Seems to implement a state machine for a QSO initiated by our CQ???
+ *
+ * Sequence:  The CQ button toggles the CQ_Flag examined by loop() which eventually
+ * invokes process_FT8_FFT() which invokes update_offset_waterfall() which invokes
+ * service_CQ() at the end of a receive timeslot.
+ *
+ * @var Beacon_State The state variable with states:
+ *    0:  CQ button sets CQ_Flag for loop(), and has initialized Beacon_State to 0
+ *    1:  Listening for callers.  Responds to caller with RSL, or repeats the CQ if none???
+ *    2:  Concludes QSO by sending 73 to calling station if they're still there.  Resets Beacon_State to 0.
+ *  @var num_decoded_msg:  Number of successfully decoded messages in new_decoded[]
+ *
+**/
 void service_CQ(void) {
 
-  DPRINTF("%s, Beacon_state=%u\n", __FUNCTION__, Beacon_State);
+  DPRINTF("Enter service_CQ() with Beacon_state=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
 
   int receive_index;
 
   switch (Beacon_State) {
 
     case 0:
+      DTRACE();
       Beacon_State = 1;  //Listen
       break;
 
     case 1:
+      DTRACE();
       receive_index = Check_Calling_Stations(num_decoded_msg);
 
       if (receive_index >= 0) {
@@ -216,6 +230,7 @@ void service_CQ(void) {
       break;
 
     case 2:
+      DTRACE();
       receive_index = Check_Calling_Stations(num_decoded_msg);
 
       if (receive_index >= 0) {
@@ -240,4 +255,5 @@ void service_CQ(void) {
       break;
       */
   }
+  DPRINTF("Exit service_CQ) with Beacon_State=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
 }  //service_CQ()

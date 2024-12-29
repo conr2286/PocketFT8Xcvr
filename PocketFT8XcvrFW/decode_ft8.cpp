@@ -176,7 +176,7 @@ int ft8_decode(void) {
 
     if (!found && num_decoded < kMax_decoded_messages) {
       if (strlen(message) < kMax_message_length) {
-        strcpy(decoded[num_decoded], message);
+        strlcpy(decoded[num_decoded], message, kMax_message_length);
 
         new_decoded[num_decoded].sync_score = cand.score;
         new_decoded[num_decoded].freq_hz = (int)freq_hz;
@@ -258,9 +258,9 @@ void display_messages(int decoded_messages) {
     DPRINTF("display_message %u = '%s' snr=%d, loc='%s'\n", i, big_gulp, new_decoded[i].snr, new_decoded[i].locator);
 
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    tft.setTextSize(2);                 //10X16 pixels per AdaFruit
+    tft.setTextSize(2);  //10X16 pixels per AdaFruit
     //tft.setCursor(0, 100 + i * 25);   //Charlie's 6-row leading required 25 pixel high rows
-    tft.setCursor(0, 100 + i * 20);     //Kq7B leading allows 7 rows, each 20 pixels tall
+    tft.setCursor(0, 100 + i * 20);  //Kq7B leading allows 7 rows, each 20 pixels tall
 
     tft.print(message);
 
@@ -359,9 +359,13 @@ int strindex(char s[], char t[]) {
  *
  * @param num_decoded Number of entries in new_decoded[]
  *
- * @return -1 if nothing found.  Else, undocumented.
+ * @return -1 if no callers, else the index of last caller in new_decoded[]???
  *
- * R
+ * This function checks every message addressed to our station, including messages that
+ * address our station but are not "in" a QSO with us.  We display all messages addressed
+ * to us, but the logging package must determine which QSOs to log.
+ *
+ * @var new_decoded[] Array of successfully decoded messages (may or may not be addressed to us)
  *
 **/
 int Check_Calling_Stations(int num_decoded) {
@@ -386,13 +390,13 @@ int Check_Calling_Stations(int num_decoded) {
       tft.setCursor(240, 100 + i * 25);
       tft.print(message);
 
-      //This is where we may wish to record a qso in the log, but why would we record every message sent to us???
+      //We arrive here with every message addressed to our station, from which we must gleen all the info to be logged.
       if (logging_on == 1) write_log_data(big_gulp);
       DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
       DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
 
       num_Calling_Stations++;
-      message_test = i + 100;  //100+index of this calling station
+      message_test = i + 100;  //100+index of this calling station.  Why the 100 bias???
     }
 
     if (num_Calling_Stations == max_Calling_Stations) {
