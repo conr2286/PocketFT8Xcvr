@@ -96,7 +96,13 @@ extern int Target_RSL;  // four character RSL  + /0
 extern time_t getTeensy3Time();
 extern int log_flag, logging_on;
 
-//Demodulate the received FT8 signals into the new_decoded[] of successfully demodulated messages (if any)
+/**
+ * Demodulate received FT8 signals into new_decoded[] of successfully demodulated messages (if any)
+ *
+ * @return Number of successfully demodulated messages placed in new_decoded[]
+ *
+ * new_decoded[] can hold a hard-wired maximum of 20 messages.
+**/
 int ft8_decode(void) {
 
   // Find top candidates by Costas sync score and localize them in time and frequency
@@ -110,7 +116,7 @@ int ft8_decode(void) {
   // Go over candidates and attempt to decode messages
   int num_decoded = 0;
 
-  DPRINTF("num_candidates=%u\n", num_candidates);
+  //DPRINTF("num_candidates=%u\n", num_candidates);
 
   for (int idx = 0; idx < num_candidates; ++idx) {
     Candidate cand = candidate_list[idx];
@@ -166,11 +172,11 @@ int ft8_decode(void) {
 
     getTeensy3Time();
     char rtc_string[10];  // print format stuff
-    snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
+    snprintf(rtc_string, sizeof(rtc_string), "%02i:%02i:%02i", hour(), minute(), second());
 
     if (!found && num_decoded < kMax_decoded_messages) {
       if (strlen(message) < kMax_message_length) {
-        strcpy(decoded[num_decoded], message);
+        strlcpy(decoded[num_decoded], message, kMax_message_length);
 
         new_decoded[num_decoded].sync_score = cand.score;
         new_decoded[num_decoded].freq_hz = (int)freq_hz;
@@ -182,14 +188,14 @@ int ft8_decode(void) {
         raw_RSL = new_decoded[num_decoded].sync_score;
         if (raw_RSL > 160) raw_RSL = 160;
         display_RSL = (raw_RSL - 160) / 6;
-        new_decoded[num_decoded].snr = display_RSL;  //Received signal level at our station
+        new_decoded[num_decoded].snr = display_RSL;  //Their received signal level at our station
 
         char Target_Locator[] = "    ";
 
         //Bug:  field3 does not always contain a locator... and watch what happens below with RR73 :(
         strlcpy(Target_Locator, new_decoded[num_decoded].field3, sizeof(Target_Locator));
 
-        //Bug?  RR73 is a valid locator (somewhere in the Atlantic ocean)
+        //Bug?  RR73 from field3 is a valid locator (somewhere in the Atlantic ocean)
         if (validate_locator(Target_Locator) == 1) {
           distance = Target_Distance(Target_Locator);
           new_decoded[num_decoded].distance = (int)distance;
@@ -216,23 +222,49 @@ int ft8_decode(void) {
 
 
 
-//Displays decoded received messages, if any
+
+/**
+ * Display decoded received messages, if any, on the LCD
+ *
+ * @param decoded_messages Number of successfully decoded messages in new_decoded[] array
+ *
+ * The size of the LCD's message display region limits the maximum number of displayed
+ * messages to message_limit=6.  When the number of decoded messages exceeds what can
+ * be displayed, only the first message_limit messages appear.
+ *
+ * The LCD display region is rectangular, 240 pixels wide and 140 pixels high
+**/
 void display_messages(int decoded_messages) {
 
   char message[kMax_message_length];
   char big_gulp[60];
 
+  //Erase the message display region on the LCD.  Using text size 2, each char should be 10 pixels wide
+  //so 240 pixels has room for 20 chars with 2 pixels for escapement.  Similarly, each char should be
+  //16 pixels tall so 140 pixels should have room for 7 rows of text if rows have 4 leading pixels between.
+  //See:  https://learn.adafruit.com/adafruit-gfx-graphics-library/graphics-primitives
   tft.fillRect(0, 100, 240, 140, HX8357_BLACK);
 
-  for (int i = 0; i < decoded_messages && i < message_limit; i++) {
-    snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);  //TFT displayed text
-    snprintf(big_gulp, sizeof(big_gulp), "%s %s", new_decoded[i].decode_time, message);                                   //Logged text includes timestamp
+  //Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
+  //field3 is an RSL or locator or ???.
+  //for (int i = 0; i < decoded_messages && i < message_limit; i++) {   //Charlie's leading handled 6 rows of text
+  for (int i = 0; i < decoded_messages && i <= message_limit; i++) {
+
+    //snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);  //TFT displayed text
+    snprintf(message, sizeof(message), "%s %s %4s %d", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].snr);  //TFT displayed text
+
+    snprintf(big_gulp, sizeof(big_gulp), "%s %s", new_decoded[i].decode_time, message);  //Logged text includes timestamp
+
+    DPRINTF("display_message %u = '%s' snr=%d, loc='%s'\n", i, big_gulp, new_decoded[i].snr, new_decoded[i].locator);
 
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    tft.setTextSize(2);
-    tft.setCursor(0, 100 + i * 25);
+    tft.setTextSize(2);  //10X16 pixels per AdaFruit
+    //tft.setCursor(0, 100 + i * 25);   //Charlie's 6-row leading required 25 pixel high rows
+    tft.setCursor(0, 100 + i * 20);  //Kq7B leading allows 7 rows, each 20 pixels tall
+
     tft.print(message);
 
+    //Don't we really want to log inside Check_Calling_Stations()?  This QSO may have nothing to do with us.
     //if (logging_on == 1) write_log_data(big_gulp);
   }
 }
@@ -272,6 +304,18 @@ void display_details(int decoded_messages) {
   }
 }
 
+
+/**
+ * Determine if a char[] appears to be a valid maidenhead locator
+ *
+ * @param locator[] The four character locator (e.g. DN15)
+ *
+ * @return 0==invalid, 1==valid
+ *
+ * Limitiation:  The code classifies the maritime location RR73, the Arctic
+ * and Antarctica as invalid
+ *
+**/
 int validate_locator(char locator[]) {
 
   uint8_t A1, A2, N1, N2;
@@ -310,12 +354,28 @@ int strindex(char s[], char t[]) {
 }
 
 
-//Apparently displays decoded messages received from stations calling my station, if any.
+/**
+ * Displays decoded messages received from stations calling my station, if any.
+ *
+ * @param num_decoded Number of entries in new_decoded[]
+ *
+ * @return -1 if no callers, else the index of last caller in new_decoded[]???
+ *
+ * This function checks every message addressed to our station, including messages that
+ * address our station but are not "in" a QSO with us.  We display all messages addressed
+ * to us, but the logging package must determine which QSOs to log.
+ *
+ * @var new_decoded[] Array of successfully decoded messages (may or may not be addressed to us)
+ *
+**/
 int Check_Calling_Stations(int num_decoded) {
   char big_gulp[60];
   char message[kMax_message_length];
   int message_test = 0;
 
+  DPRINTF("%s(%d)\n",__FUNCTION__,num_decoded);
+
+  //Loop executed once for each entry in new_decoded[] of received messages
   for (int i = 0; i < num_decoded; i++) {
 
     //Was this received message sent to our station?
@@ -324,19 +384,21 @@ int Check_Calling_Stations(int num_decoded) {
       //Yes, assemble details (their callsign, our callsign, extra_info) into message buffer
       snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
 
+      //Display details of received message addressed to our station
       getTeensy3Time();
-      snprintf(big_gulp, sizeof(message), "%2i/%2i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
+      snprintf(big_gulp, sizeof(message), "%02i/%02i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
       tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
       tft.setTextSize(2);
       tft.setCursor(240, 100 + i * 25);
       tft.print(message);
 
-      if (logging_on == 1) write_log_data(big_gulp);  //Why would we log every message sent to us???
-      DPRINTF("decode_ft8() invoking write_log_data:  %s\n", big_gulp);
+      //Log details from this message to us
+      if (logging_on == 1) write_log_data(big_gulp);
+      DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
       DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
 
       num_Calling_Stations++;
-      message_test = i + 100;  //???
+      message_test = i + 100;  //100+index of this calling station.  Why the 100 bias???
     }
 
     if (num_Calling_Stations == max_Calling_Stations) {
@@ -345,6 +407,7 @@ int Check_Calling_Stations(int num_decoded) {
     }
   }
 
+  //Return index of final calling station in new_decoded[] or -1 if none????????????????????????
   if (message_test > 100) return message_test - 100;
   else {
     DPRINTF("Check_Calling_Stations returns -1\n");

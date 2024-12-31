@@ -149,11 +149,11 @@ void update_offset_waterfall(int offset) {
   //At the end of a timeslot, display recvd messages, and prepare to send CQ or respond to calls
   //if (num_decoded_msg > 0 && WF_counter == 0) {
   if (WF_counter == 0) {
-    display_messages(num_decoded_msg);
+    display_messages(num_decoded_msg);    //Displays received messages
     if (CQ_Flag == 1) {
       service_CQ();  //Setup the outbound CQ message and arm the transmitter
     } else {
-      Check_Calling_Stations(num_decoded_msg);
+      Check_Calling_Stations(num_decoded_msg);  //Displays messages sent to us
     }
 
     num_decoded_msg = 0;

@@ -312,7 +312,7 @@ void setup(void) {
       DPRINTF("GPS derived Locator = %s\n", Locator);
     }
   } else {
-    DPRINTF("MCU/RTC using Teensy Loader time from host computer\n");
+    DPRINTF("MCU/RTC using old Teensy time\n");
   }
 
   //Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
