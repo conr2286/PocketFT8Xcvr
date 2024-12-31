@@ -37,8 +37,6 @@ uint64_t F_Long, F_FT8, F_Offset;
 **/
 void transmit_sequence(void) {
 
-  DTRACE();
-
   //Program the transmitter clock at F_Long
   set_Xmit_Freq();
   si5351.set_freq(F_Long, SI5351_CLK0);
@@ -57,6 +55,8 @@ void transmit_sequence(void) {
   //Connect transmitter to antenna and short the receiver RF input to ground
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
+
+  DPRINTF("XMIT\n");
 }
 
 
@@ -67,8 +67,6 @@ void transmit_sequence(void) {
  *
 **/
 void receive_sequence(void) {
-
-  DTRACE();
 
   //Turn off the transmitter's clock -- this should stop the xmit RF chain
   si5351.output_enable(SI5351_CLK0, 0);
@@ -84,6 +82,8 @@ void receive_sequence(void) {
   //Receive
   si4735.setVolume(50);
   clear_FT8_message();
+
+  DPRINTF("RECV\n");
 
 }  //receive_sequence()
 
@@ -113,6 +113,9 @@ void tune_On_sequence(void) {
   //Short receiver's RF input to ground
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
+
+  DPRINTF("TUNE\n");
+
 }  //tune_On_sequence()
 
 
@@ -137,6 +140,9 @@ void tune_Off_sequence(void) {
 
   //Crank-up the receiver volume
   si4735.setVolume(50);
+
+  DPRINTF("TUNE OFF\n");
+
 }  //tune_Off_sequence()
 
 
@@ -204,7 +210,7 @@ void setup_to_transmit_on_next_DSP_Flag(void) {
 **/
 void service_CQ(void) {
 
-  DPRINTF("Enter service_CQ() with Beacon_state=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
+  DPRINTF("service_CQ(), Beacon_state=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
 
   int receive_index;
 

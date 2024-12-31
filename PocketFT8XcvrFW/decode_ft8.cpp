@@ -116,7 +116,7 @@ int ft8_decode(void) {
   // Go over candidates and attempt to decode messages
   int num_decoded = 0;
 
-  DPRINTF("num_candidates=%u\n", num_candidates);
+  //DPRINTF("num_candidates=%u\n", num_candidates);
 
   for (int idx = 0; idx < num_candidates; ++idx) {
     Candidate cand = candidate_list[idx];
@@ -373,8 +373,9 @@ int Check_Calling_Stations(int num_decoded) {
   char message[kMax_message_length];
   int message_test = 0;
 
-  DTRACE();
+  DPRINTF("%s(%d)\n",__FUNCTION__,num_decoded);
 
+  //Loop executed once for each entry in new_decoded[] of received messages
   for (int i = 0; i < num_decoded; i++) {
 
     //Was this received message sent to our station?
@@ -383,6 +384,7 @@ int Check_Calling_Stations(int num_decoded) {
       //Yes, assemble details (their callsign, our callsign, extra_info) into message buffer
       snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
 
+      //Display details of received message addressed to our station
       getTeensy3Time();
       snprintf(big_gulp, sizeof(message), "%02i/%02i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
       tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
@@ -390,7 +392,7 @@ int Check_Calling_Stations(int num_decoded) {
       tft.setCursor(240, 100 + i * 25);
       tft.print(message);
 
-      //We arrive here with every message addressed to our station, from which we must gleen all the info to be logged.
+      //Log details from this message to us
       if (logging_on == 1) write_log_data(big_gulp);
       DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
       DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
