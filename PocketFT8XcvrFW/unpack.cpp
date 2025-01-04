@@ -325,7 +325,8 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
  *  + Telemetry:  Unpacked into field1[]
  *  + Standard Message:   field1 <- Destination callsign or CQ ???
  *  +                     field2 <- Source callsign???
- *  +                     field3 <- 
+ *  +                     field3 <- 4-char locator or RRR, RR73, 73 or blank (See Reference)
+ *
  * Reference:  https://wsjt.sourceforge.io/FT4_FT8_QEX.pdf 
  *
 **/

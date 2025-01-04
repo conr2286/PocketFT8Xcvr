@@ -110,6 +110,7 @@ void extract_power(int offset) {
 //KQ7B:  Calculates received signal powers and updates the waterfall
 void process_FT8_FFT(void) {
 
+  //Apparent check to ensure we are actively receiving data at this time???
   if (ft8_flag == 1) {
 
     master_offset = offset_step * FT_8_counter;

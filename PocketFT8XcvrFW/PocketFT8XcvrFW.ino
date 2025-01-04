@@ -168,7 +168,8 @@ int DSP_Flag;
 //Apparently set when the timeslot's received messages are ready to be decoded
 int decode_flag;
 
-//Unknown
+//Initialized to 1 by setup() and the multitude of synchronization functions.  Set to 0 by
+//process_FT8_FFT() apparently at the end of a receive timeslot???
 int ft8_flag;
 
 //Apparently set when CQ button pressed, cleared when beacon mode ends???
@@ -402,7 +403,7 @@ void loop() {
   //Apparently... if it's not time to decode incoming messages, then it's time to grab the recv'd sigs from A/D
   if (decode_flag == 0) process_data();
 
-  //Is there buffered time-domain work for the DSP logic?
+  //Is there buffered time-domain data for the DSP logic to work with?
   if (DSP_Flag == 1) {
 
     //Yes, transform recv'd time-domain audio to frequency domain (to see the FT8 channels)
@@ -492,7 +493,22 @@ void loadSSB() {
 }
 
 
-//First step of processing received audio from queue1
+
+/**
+ * Apparently copies queued blocks of received audio into the FFT buffer
+ *
+ * Does nothing if there's not enough (8 blocks) audio data available.
+ *
+ * Does ??? with dsp_buffer[]
+ *
+ * Sets DSP_Flag when there's work for the DSP logic
+ *
+ * There's likely a dependency that block_size==AUDIO_BLOCK_SIZE???
+ *
+ * Note:  If we sample for 12.64 seconds at 6400 samples/second, then we
+ * anticipate acquiring 80896 samples during a complete timeslot.
+ *
+**/
 void process_data() {
 
   if (queue1.available() >= num_que_blocks) {
@@ -515,6 +531,15 @@ void process_data() {
 }  //process_data()
 
 
+/**
+ * Copies one audio block of 16-bit words from source to destination
+ *
+ * @param destination Destination buffer
+ * @param source Source buffer
+ *
+ * The AUDIO_BLOCK_SIZE appears to be cast-in-brass at 128 in AudioStream6400.h
+ *
+**/
 static void copy_to_fft_buffer(void *destination, const void *source) {
   const uint16_t *src = (const uint16_t *)source;
   uint16_t *dst = (uint16_t *)destination;
@@ -589,7 +614,7 @@ void auto_sync_FT8(void) {
   // tft.setTextSize(2);
   // tft.setCursor(0, 240);
   // tft.print("Synchronzing With RTC");
-  //DPRINTF("Synchronizing with RTC\n");
+  DPRINTF("Synchronizing with RTC\n");
 
   //Wait for the end of a 15 second interval
   while ((second()) % 15 != 0) continue;

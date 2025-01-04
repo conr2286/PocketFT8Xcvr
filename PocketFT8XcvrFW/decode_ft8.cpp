@@ -134,16 +134,16 @@ int ft8_decode(void) {
     if (n_errors > 0) continue;
 
     // Extract payload + CRC (first K bits)
-    uint8_t a91[K_BYTES];       //Bfr for the received message's packed bits
-    pack_bits(plain, K, a91);   //Pack K bits into a91[] from K bool bytes in plain[]
+    uint8_t a91[K_BYTES];      //Bfr for the received message's packed bits
+    pack_bits(plain, K, a91);  //Pack K bits into a91[] from K bool bytes in plain[]
 
     // Extract CRC and verify it with the computed CRC
     uint16_t chksum = ((a91[9] & 0x07) << 11) | (a91[10] << 3) | (a91[11] >> 5);  //Extracted CRC from transmitted message
     a91[9] &= 0xF8;
     a91[10] = 0;
     a91[11] = 0;
-    uint16_t chksum2 = crc(a91, 96 - 14);   //Computed CRC for message as actually received
-    if (chksum != chksum2) continue;        //Skip decoding if CRCs don't match
+    uint16_t chksum2 = crc(a91, 96 - 14);  //Computed CRC for message as actually received
+    if (chksum != chksum2) continue;       //Skip decoding if CRCs don't match
 
     //Unpack the verified FT8 message bits into human-readable fields
     char message[kMax_message_length];
@@ -151,7 +151,7 @@ int ft8_decode(void) {
     char field2[14];
     char field3[7];
     int rc = unpack77_fields(a91, field1, field2, field3);
-    if (rc < 0) continue;
+    if (rc < 0) continue;  //Unpack failure???
 
     snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);
     //DPRINTF("message='%s %s %s' \n", field1, field2, field3);
@@ -223,7 +223,7 @@ int ft8_decode(void) {
 
 
 /**
- * Display decoded received messages, if any, on the LCD
+ * Display decoded received messages, if any, on the LCD (left side)
  *
  * @param decoded_messages Number of successfully decoded messages in new_decoded[] array
  *
@@ -247,7 +247,7 @@ void display_messages(int decoded_messages) {
   //Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
   //field3 is an RSL or locator or ???.
   //for (int i = 0; i < decoded_messages && i < message_limit; i++) {   //Charlie's leading handled 6 rows of text
-  for (int i = 0; i < decoded_messages && i <= message_limit; i++) {
+  for (int i = 0; i < decoded_messages && i <= message_limit; i++) {  //KQ7B thinks we can handle 7 rows of text???
 
     //snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);  //TFT displayed text
     snprintf(message, sizeof(message), "%s %s %4s %d", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].snr);  //TFT displayed text
@@ -266,7 +266,10 @@ void display_messages(int decoded_messages) {
     //Don't we really want to log inside Check_Calling_Stations()?  This QSO may have nothing to do with us.
     //if (logging_on == 1) write_log_data(big_gulp);
   }
-}
+}  //display_messages()
+
+
+
 
 //Displays specified decoded message's callsign and signal strength
 void display_selected_call(int index) {
@@ -286,6 +289,13 @@ void display_selected_call(int index) {
 }
 
 
+
+
+/**
+ * This appears to be dead code???
+ *
+ *
+**/
 void display_details(int decoded_messages) {
 
   char message[48];
@@ -354,7 +364,7 @@ int strindex(char s[], char t[]) {
 
 
 /**
- * Displays decoded messages received from stations calling my station, if any.
+ * Displays decoded messages received from stations calling my station, if any, in right-side window
  *
  * @param num_decoded Number of entries in new_decoded[]
  *
@@ -362,7 +372,7 @@ int strindex(char s[], char t[]) {
  *
  * This function checks every message addressed to our station, including messages that
  * address our station but are not "in" a QSO with us.  We display all messages addressed
- * to us, but the logging package must determine which QSOs to log.
+ * to us (e.g. multiple replies to our CQ), but the logging package must determine what to log.
  *
  * @var new_decoded[] Array of successfully decoded messages (may or may not be addressed to us)
  *
@@ -372,7 +382,7 @@ int Check_Calling_Stations(int num_decoded) {
   char message[kMax_message_length];
   int message_test = 0;
 
-  DPRINTF("%s(%d)\n",__FUNCTION__,num_decoded);
+  DPRINTF("%s(%d)\n", __FUNCTION__, num_decoded);
 
   //Loop executed once for each entry in new_decoded[] of received messages
   for (int i = 0; i < num_decoded; i++) {
@@ -400,6 +410,7 @@ int Check_Calling_Stations(int num_decoded) {
       message_test = i + 100;  //100+index of this calling station.  Why the 100 bias???
     }
 
+    //???Why didn't we erase before displaying anything rather than if there are many???
     if (num_Calling_Stations == max_Calling_Stations) {
       tft.fillRect(0, 100, 240, 190, HX8357_BLACK);
       num_Calling_Stations = 0;
@@ -413,7 +424,8 @@ int Check_Calling_Stations(int num_decoded) {
     return -1;
   }
 
-  DPRINTF("Check_Calling_Stations returns %d\n", message_test);
+  //DPRINTF("Check_Calling_Stations returns %d\n", message_test);
+
 }  //Check_Calling_Stations()
 
 
