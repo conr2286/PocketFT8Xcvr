@@ -203,7 +203,7 @@ void setup_to_transmit_on_next_DSP_Flag(void) {
  *
  * @var Beacon_State The state variable with states:
  *    0:  CQ button sets CQ_Flag for loop(), and has initialized Beacon_State to 0
- *    1:  Listening for callers.  Responds to caller with RSL, or repeats the CQ if none???
+ *    1:  Listening for callers.  Responds to a caller with RSL, or repeats the CQ if none???
  *    2:  Concludes QSO by sending 73 to calling station if they're still there.  Resets Beacon_State to 0.
  *  @var num_decoded_msg:  Number of successfully decoded messages in new_decoded[]
  *
@@ -261,5 +261,5 @@ void service_CQ(void) {
       break;
       */
   }
-  DPRINTF("Exit service_CQ) with Beacon_State=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
+  DPRINTF("Exit service_CQ()) with Beacon_State=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
 }  //service_CQ()

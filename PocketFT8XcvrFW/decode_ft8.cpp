@@ -134,20 +134,19 @@ int ft8_decode(void) {
     if (n_errors > 0) continue;
 
     // Extract payload + CRC (first K bits)
-    uint8_t a91[K_BYTES];
-    pack_bits(plain, K, a91);
+    uint8_t a91[K_BYTES];       //Bfr for the received message's packed bits
+    pack_bits(plain, K, a91);   //Pack K bits into a91[] from K bool bytes in plain[]
 
-    // Extract CRC and check it
-    uint16_t chksum = ((a91[9] & 0x07) << 11) | (a91[10] << 3) | (a91[11] >> 5);
+    // Extract CRC and verify it with the computed CRC
+    uint16_t chksum = ((a91[9] & 0x07) << 11) | (a91[10] << 3) | (a91[11] >> 5);  //Extracted CRC from transmitted message
     a91[9] &= 0xF8;
     a91[10] = 0;
     a91[11] = 0;
-    uint16_t chksum2 = crc(a91, 96 - 14);
-    //DPRINTF("chksum=%u chksum2=%u\n", chksum, chksum2);
-    if (chksum != chksum2) continue;
+    uint16_t chksum2 = crc(a91, 96 - 14);   //Computed CRC for message as actually received
+    if (chksum != chksum2) continue;        //Skip decoding if CRCs don't match
 
+    //Unpack the verified FT8 message bits into human-readable fields
     char message[kMax_message_length];
-
     char field1[14];
     char field2[14];
     char field3[7];
@@ -410,7 +409,7 @@ int Check_Calling_Stations(int num_decoded) {
   //Return index of final calling station in new_decoded[] or -1 if none????????????????????????
   if (message_test > 100) return message_test - 100;
   else {
-    DPRINTF("Check_Calling_Stations returns -1\n");
+    //DPRINTF("Check_Calling_Stations returns -1\n");
     return -1;
   }
 

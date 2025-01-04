@@ -195,14 +195,14 @@ void executeButton(uint16_t index) {
   switch (index) {
 
     case 0:  //CQ (e.g. CQ KQ7B DN15)
-      DTRACE();
+      //DTRACE();
       if (sButtonData[0].state) {
-        DTRACE();
+        //DTRACE();
         CQ_Flag = 1;
         sButtonData[6].active_state = false;
         Beacon_State = 0;
       } else {
-        DTRACE();
+        //DTRACE();
         CQ_Flag = 0;
         sButtonData[6].active_state = true;
       }

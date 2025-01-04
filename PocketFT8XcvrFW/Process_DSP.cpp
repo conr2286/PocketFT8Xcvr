@@ -118,6 +118,8 @@ void process_FT8_FFT(void) {
     update_offset_waterfall(master_offset);
 
     FT_8_counter++;
+
+    //Apparently:  Have we processed the entire receive timeslot?
     if (FT_8_counter == ft8_msg_samples) {
       ft8_flag = 0;
       decode_flag = 1;
@@ -151,7 +153,7 @@ void update_offset_waterfall(int offset) {
   if (WF_counter == 0) {
     display_messages(num_decoded_msg);    //Displays received messages
     if (CQ_Flag == 1) {
-      service_CQ();  //Setup the outbound CQ message and arm the transmitter
+      service_CQ();           //Drives the so-called beacon-mode state machine
     } else {
       Check_Calling_Stations(num_decoded_msg);  //Displays messages sent to us
     }
@@ -159,6 +161,6 @@ void update_offset_waterfall(int offset) {
     num_decoded_msg = 0;
   }
 
-
   WF_counter++;
-}
+  
+} //update_offset_waterfall()

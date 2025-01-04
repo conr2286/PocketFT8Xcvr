@@ -96,6 +96,13 @@ int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
 }
 
 
+/**
+ * Unpack the FT8 "Standard Message"
+ *
+ * Reference:  https://wsjt.sourceforge.io/FT4_FT8_QEX.pdf
+ *
+ *
+**/
 int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, char *field3) {
   uint32_t n28a, n28b;
   uint16_t igrid4;
@@ -135,6 +142,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
   //     save_hash_call(field2)
   // }
 
+  //Does igrid4 (G15?) contain a 4-char locator or RRR, RR73, 73 or blank????????  See Reference Table-2.
   if (igrid4 <= MAXGRID4) {
     // Extract 4 symbol grid locator
     char *dst = field3;
@@ -144,6 +152,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
       dst = stpcpy(dst, "R ");
     }
 
+    //Code the maidenhead locator gridsquare in dst[]
     dst[4] = '\0';
     dst[3] = '0' + (n % 10);
     n /= 10;
@@ -155,8 +164,8 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
     // if(msg(1:3).eq.'CQ ' .and. ir.eq.1) unpk77_success=.false.
     // if (ir > 0 && strncmp(field1, "CQ", 2) == 0) return -1;
   } else {
-    // Extract report
-    int irpt = igrid4 - MAXGRID4;
+    // Decode igrid4 when it's not a locator
+    int irpt = igrid4 - MAXGRID4;     //See Reference Appendix A discussion of g15
 
     // Check special cases first
     if (irpt == 1) field3[0] = '\0';
@@ -300,6 +309,26 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
   return 0;
 }
 
+/**
+ * Unpack a 77-bit received FT8 message
+ *
+ * @param a77[] The packed 77-bit FT8 message
+ * @param field1 Unpacked field1, See Reference
+ * @param field2 Unpacked field2, See Reference
+ * @param field3 Unpacked field3, See Reference
+ *
+ * Note:  FT8 encodes a message into a tightly packed 77-bit string.  The i3.n3 variables
+ * extracted from the message define the message types (See Reference Table-1).  The
+ * meaning of the three unpacked fields depends upon the message type:
+ *
+ *  + Free Text:  Unpacked into field1[]
+ *  + Telemetry:  Unpacked into field1[]
+ *  + Standard Message:   field1 <- Destination callsign or CQ ???
+ *  +                     field2 <- Source callsign???
+ *  +                     field3 <- 
+ * Reference:  https://wsjt.sourceforge.io/FT4_FT8_QEX.pdf 
+ *
+**/
 int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3) {
   uint8_t n3, i3;
 
@@ -309,9 +338,10 @@ int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3
 
   field1[0] = field2[0] = field3[0] = '\0';
 
+  //See Reference Table-1 for explanation of i3 and n3 values
   if (i3 == 0 && n3 == 0) {
     // 0.0  Free text
-    return unpack_text(a77, field1);
+    return unpack_text(a77, field1);    //13-character "Free Text" ???
   }
   // else if (i3 == 0 && n3 == 1) {
   //     // 0.1  K1ABC RR73; W9XYZ <KH1/KH7Z> -11   28 28 10 5       71   DXpedition Mode
@@ -328,7 +358,7 @@ int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3
     return unpack_telemetry(a77, field1);
   } else if (i3 == 1 || i3 == 2) {
     // Type 1 (standard message) or Type 2 ("/P" form for EU VHF contest)
-    return unpack_type1(a77, i3, field1, field2, field3);
+    return unpack_type1(a77, i3, field1, field2, field3);   //Most messages likely unpack here
   }
   // else if (i3 == 3) {
   //     // Type 3: ARRL RTTY Contest

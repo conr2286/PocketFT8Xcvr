@@ -162,16 +162,16 @@ uint8_t ft8_hours, ft8_minutes, ft8_seconds;
 
 int FT_8_counter, ft8_marker;
 
-//Apparently set when there's received audio in the FFT buffers
+//Apparently set when it's time to do an FFT (When is that?  At the end of a received symbol?????)
 int DSP_Flag;
 
-//Apparently set when the received messages are ready to be decoded
+//Apparently set when the timeslot's received messages are ready to be decoded
 int decode_flag;
 
-//Apparently set when it's time for the FFT to compute the magnitudes of a received signal
+//Unknown
 int ft8_flag;
 
-//Apparently set when CQ button pressed
+//Apparently set when CQ button pressed, cleared when beacon mode ends???
 extern int CQ_Flag;
 
 int WF_counter;
@@ -218,8 +218,9 @@ void setup(void) {
   //Confirm installation of the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
   //won't run at the standard sample rate.
   if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
-    Serial.println("Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
+    Serial.println("Build Firmware Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
     Serial.println("You must copy the modified AudioStream.h file into .../teensy/hardware/avr/1.59.0/cores/teensy4\n");
+    Serial.println("...before building the Pocket FT8 firmware.\n");
     while (true) continue;  //Fatal
   }
 
@@ -251,8 +252,9 @@ void setup(void) {
   if (newChip) {
     Serial.print("Initializing EEPROM for new chip\n");
     EEPROMWriteInt(10, 0);  //Address 10 is offset but the encoding remains mysterious
-  }
-
+  } 
+  DPRINTF("Offset = %d\n",EEPROM.read(10));
+  
   //Initialize the SI5351 clock generator.  Pocket FT8 Revisited boards use CLKIN input.
   si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          //Charlie's correction was 2200 if that someday matters
   si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  //KQ7B V1.00 uses cmos CLKIN, not a XTAL
@@ -283,7 +285,7 @@ void setup(void) {
   strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  //Station callsign
   config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
   strlcpy(config.locator, doc["Locator"] | "", sizeof(config.locator));
-  config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
+  // config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
   config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
   config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
   configFile.close();
@@ -292,7 +294,7 @@ void setup(void) {
   DPRINTF("config[callsign]=%s\n", config.callsign);
   DPRINTF("config[frequency]=%u\n", config.frequency);
   DPRINTF("config[locator]=%s\n", config.locator);
-  DPRINTF("config[audioRecordingDuration]=%lu\n", config.audioRecordingDuration);
+  // DPRINTF("config[audioRecordingDuration]=%lu\n", config.audioRecordingDuration);
   DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
   DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
 
@@ -343,8 +345,8 @@ void setup(void) {
   display_value(360, 40, (int)currentFrequency);
 
 //Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
-//frequency which is *not* determined by the Si5351.  The Si5351 does, however, supply the
-//onboard PLL with its clock.  The apparent result of all this is the transmit and receive
+//frequency which is stabilized but *not* determined by the Si5351.  
+//The apparent result of all this is the transmit and receive
 //frequencies may not be obviously aligned (need to understand this better).
   Serial.println(" ");
   Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
@@ -356,12 +358,12 @@ void setup(void) {
   initalize_constants();
   AudioMemory(20);
 
-  //If we are recording raw audio to SD, then create/open the SD file for writing
-  if (config.audioRecordingDuration > 0) {
-    if ((ft8Raw = SD.open(AUDIO_RECORDING_FILENAME, FILE_WRITE)) == 0) {
-      Serial.printf("Unable to open %s\n", AUDIO_RECORDING_FILENAME);
-    }
-  }
+  // //If we are recording raw audio to SD, then create/open the SD file for writing
+  // if (config.audioRecordingDuration > 0) {
+  //   if ((ft8Raw = SD.open(AUDIO_RECORDING_FILENAME, FILE_WRITE)) == 0) {
+  //     Serial.printf("Unable to open %s\n", AUDIO_RECORDING_FILENAME);
+  //   }
+  // }
 
   //Start the audio pipeline
   queue1.begin();
@@ -397,18 +399,23 @@ void loop() {
     oldFlags = newFlags;
   }
 
+  //Apparently... if it's not time to decode incoming messages, then it's time to grab the recv'd sigs from A/D
   if (decode_flag == 0) process_data();
 
+  //Is there buffered time-domain work for the DSP logic?
   if (DSP_Flag == 1) {
 
+    //Yes, transform recv'd time-domain audio to frequency domain (to see the FT8 channels)
     process_FT8_FFT();
 
-    //Is a transmission in-progress?
+    //Is a transmission in-progress?  Why is this guarded by DSP_Flag???????
     if (xmit_flag == 1) {
-      int offset_index = 5;
 
-      //KQ7B:  Is it time to modulate the SI5351 with the transmitter's next FSK tone?
+      int offset_index = 5;   //???
+
+      //Is it time to modulate the SI5351 with the transmitter's next FSK tone?
       if (ft8_xmit_counter >= offset_index && ft8_xmit_counter < 79 + offset_index) {
+        //Each tone transmits 3 bits of message
         set_FT8_Tone(tones[ft8_xmit_counter - offset_index]);  //Program new FT8 tone into the SI5351
       }
 
@@ -416,6 +423,7 @@ void loop() {
 
       //Is it time to switch from transmitting to receiving (i.e. all tones sent) at the end of our timeslot?
       if (ft8_xmit_counter == 80 + offset_index) {
+        DPRINTF("End of transmit timeslot\n");
         xmit_flag = 0;               //Indication that the transmission has ended
         receive_sequence();          //Switch HW from transmitting to receiving
         terminate_transmit_armed();  //Switch again then update GUI
@@ -427,13 +435,15 @@ void loop() {
     display_date(360, 60);
   }  //DSP_Flag
 
+  //Apparently:  Have we acquired all of the receive timeslot's data?
   if (decode_flag == 1) {
-    num_decoded_msg = ft8_decode();
+    DPRINTF("End of receive timeslot\n");
+    num_decoded_msg = ft8_decode();         //Decode the received messages
     master_decoded = num_decoded_msg;
     decode_flag = 0;
 
-    //Following a receive timeslot, if a message is ready for transmission,
-    //turn-on the carrier and set the xmit_flag to modulate it.
+    //Following a receive timeslot, if a message is waiting for transmission,
+    //turn-on the carrier and set xmit_flag to modulate it. 
     if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
   }
 
@@ -499,6 +509,7 @@ void process_data() {
       dsp_buffer[i + 2 * input_gulp_size] = input_gulp[i];
     }
 
+    //There is apparently work to do for the DSP logic
     DSP_Flag = 1;
   }
 }  //process_data()
@@ -511,14 +522,14 @@ static void copy_to_fft_buffer(void *destination, const void *source) {
     *dst++ = *src++;  // real sample plus a zero for imaginary
   }
 
-  //Configurable recording of raw 16-bit audio at 6400 samples/second to an SD file
-  if (ft8Raw != NULL) {
-    ft8Raw.write(source, AUDIO_BLOCK_SAMPLES * sizeof(uint16_t));
-    recordSampleCount += AUDIO_BLOCK_SAMPLES;  //Increment count of recorded samples
-    if (recordSampleCount % (unsigned)AUDIO_SAMPLE_RATE == 0) {
-      DPRINTF("Audio recording in progress...\n");  //One second progress indicator
-    }
-  }
+  // //Configurable recording of raw 16-bit audio at 6400 samples/second to an SD file
+  // if (ft8Raw != NULL) {
+  //   ft8Raw.write(source, AUDIO_BLOCK_SAMPLES * sizeof(uint16_t));
+  //   recordSampleCount += AUDIO_BLOCK_SAMPLES;  //Increment count of recorded samples
+  //   if (recordSampleCount % (unsigned)AUDIO_SAMPLE_RATE == 0) {
+  //     DPRINTF("Audio recording in progress...\n");  //One second progress indicator
+  //   }
+  // }
 
 }  //copy_to_fft_buffer()
 
@@ -535,8 +546,8 @@ void rtc_synchronization() {
 }
 
 void update_synchronization() {
-  current_time = millis();
-  ft8_time = current_time - start_time;
+  current_time = millis();                  
+  ft8_time = current_time - start_time;     //mS elapsed in current interval???
 
   ft8_hours = (int8_t)(ft8_time / 3600000);
   hours_fraction = ft8_time % 3600000;
@@ -565,7 +576,13 @@ void sync_FT8(void) {
 
 
 
-
+/**
+ * ???
+ *
+ * Apparently called once during setup.
+ *
+ *
+**/
 void auto_sync_FT8(void) {
   DTRACE();
   // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
@@ -574,15 +591,16 @@ void auto_sync_FT8(void) {
   // tft.print("Synchronzing With RTC");
   //DPRINTF("Synchronizing with RTC\n");
 
+  //Wait for the end of a 15 second interval
   while ((second()) % 15 != 0) continue;
 
-  start_time = millis();
+  start_time = millis();      //Start of interval in ms???
   ft8_flag = 1;
   FT_8_counter = 0;
   ft8_marker = 1;
   WF_counter = 0;
-  tft.setCursor(0, 260);
-  tft.print("FT8 Synched With World");
+  //tft.setCursor(0, 260);
+  //tft.print("FT8 Synched With World");
 }
 
 
