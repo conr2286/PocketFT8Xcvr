@@ -152,6 +152,9 @@ q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 char Station_Call[12];  //six character call sign + /0
 char Locator[11] = "";  // four character locator  + /0
 
+//Global flag to disable the transmitter for testing
+bool disable_xmit=false;      //Flag can be set with config params
+
 uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
 const uint16_t size_content = sizeof ssb_patch_content;  // see ssb_patch_content in patch_full.h or patch_init.h;
@@ -263,6 +266,7 @@ void setup(void) {
   si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
   si5351.set_freq(3276800, SI5351_CLK2);  //Receiver's PLL clock for Si4735
   si5351.output_enable(SI5351_CLK2, 1);   //Receiver's clock is always on
+  si5351.output_enable(SI5351_CLK0, 0);   //Disable transmitter for now
 
   // Gets and sets the Si47XX I2C bus address
   int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);

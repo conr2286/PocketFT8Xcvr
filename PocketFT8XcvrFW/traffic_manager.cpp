@@ -17,6 +17,7 @@ extern Si5351 si5351;
 extern SI4735 si4735;
 extern uint16_t currentFrequency;
 extern int xmit_flag, ft8_xmit_counter, Transmit_Armned;
+extern bool disable_xmit;
 
 extern uint16_t cursor_freq;
 extern uint16_t cursor_line;
@@ -50,7 +51,7 @@ void transmit_sequence(void) {
 
   //Enable the transmitter clock
   si5351.drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);  // Set for max power if desired
-  si5351.output_enable(SI5351_CLK0, 1);
+  if (!disable_xmit) si5351.output_enable(SI5351_CLK0, 1);
 
   //Connect transmitter to antenna and short the receiver RF input to ground
   pinMode(PIN_PTT, OUTPUT);
@@ -104,7 +105,7 @@ void tune_On_sequence(void) {
   si4735.setVolume(35);
 
   //Turn-on the transmitter clock
-  si5351.output_enable(SI5351_CLK0, 1);
+  if (!disable_xmit) si5351.output_enable(SI5351_CLK0, 1);
 
   //Disconnect receiver from antenna and enable the SN74ACT244 PA
   pinMode(PIN_RCV, OUTPUT);

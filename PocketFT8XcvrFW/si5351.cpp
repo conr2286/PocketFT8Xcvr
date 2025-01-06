@@ -27,6 +27,7 @@
 #include "Arduino.h"
 #include "Wire.h"
 #include "si5351.h"
+#include "DEBUG.h"
 
 //Define which I2C bus we are using
 #define WIRE WIRE_ETC
@@ -189,6 +190,8 @@ uint8_t Si5351::set_freq(uint64_t freq, enum si5351_clock clk) {
   uint8_t int_mode = 0;
   uint8_t div_by_4 = 0;
   uint8_t r_div = 0;
+
+  DPRINTF("set_freq(%lu, %1u)\n",freq,clk);
 
   // Check which Multisynth is being set
   if ((uint8_t)clk <= (uint8_t)SI5351_CLK5) {
