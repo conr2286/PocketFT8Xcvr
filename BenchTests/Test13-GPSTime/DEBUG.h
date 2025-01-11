@@ -24,12 +24,6 @@ ATTRIBUTION
 */
 
 #include <Arduino.h>
-#pragma once
-
-//Define a symbol such that all debugging messages in all files can be disabled at this one location
-#define ENABLE_DEBUG 0
-
-#if ENABLE_DEBUG
 
 #define __SOURCEFILE__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
@@ -59,8 +53,3 @@ ATTRIBUTION
       D1T__LINE__ = false; \
     } \
   }
-
-  #else
-//Disable all debugging in all locations in all files
-  #include "NODEBUG.h"
-  #endif

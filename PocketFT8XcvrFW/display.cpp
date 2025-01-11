@@ -1,10 +1,13 @@
 
-#include "HX8357_t3n.h"
-#include "display.h"
+
 #include <TimeLib.h>
 
 #include <SD.h>
 #include <SPI.h>
+
+#include "HX8357_t3n.h"
+#include "display.h"
+#include "GPShelper.h"
 
 char log_filename[] = "FT8_Traffic.txt";
 File Log_File;
@@ -14,6 +17,8 @@ extern char Station_Call[];  //six character call sign + /0
 extern char Locator[];       // four character locator  + /0
 
 extern int log_flag, logging_on;
+
+extern GPShelper gpsHelper;  //Public data acquired by GPShelper
 
 
 extern HX8357_t3n tft;
@@ -33,9 +38,14 @@ void display_value(int x, int y, int value) {
 
 void display_time(int x, int y) {
   getTeensy3Time();
-  char string[10];  // print format stuff
-  sprintf(string, "%2i:%2i:%2i", hour(), minute(), second());
-  tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+  char string[13];  // print format stuff
+  sprintf(string, "%02i:%02i:%02i", hour(), minute(), second());
+  if (gpsHelper.validFix) {
+    tft.setTextColor(HX8357_WHITE, HX8357_BLACK);  //GPS-acquired UTC time
+    strlcat(string, " UTC", sizeof(string));
+  } else {
+    tft.setTextColor(HX8357_RED, HX8357_BLACK);  //Unknown zone and accuracy
+  }
   tft.setTextSize(2);
   tft.setCursor(x, y);
   tft.print(string);
@@ -43,9 +53,14 @@ void display_time(int x, int y) {
 
 void display_date(int x, int y) {
   getTeensy3Time();
-  char string[10];  // print format stuff
-  sprintf(string, "%2i %2i %4i", day(), month(), year());
-  tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+  char string[13];  // print format stuff
+  sprintf(string, "%02i/%02i/%4i", day(), month(), year());
+  if (gpsHelper.validFix) {
+    tft.setTextColor(HX8357_WHITE, HX8357_BLACK);  //GPS-acquired UTC date
+    strlcat(string, " UTC", sizeof(string));
+  } else {
+    tft.setTextColor(HX8357_RED, HX8357_BLACK);  //Unknown zone and accuracy
+  }
   tft.setTextSize(2);
   tft.setCursor(x, y);
   tft.print(string);
@@ -55,7 +70,7 @@ void display_date(int x, int y) {
 
 void make_filename(void) {
   getTeensy3Time();
-  snprintf((char *)log_filename,sizeof(log_filename), "%2i%2i%4i%2i%2i", day(), month(), year(), hour(), minute());
+  snprintf((char *)log_filename, sizeof(log_filename), "%2i%2i%4i%2i%2i", day(), month(), year(), hour(), minute());
   tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
   tft.setTextSize(2);
   tft.setCursor(0, 200);

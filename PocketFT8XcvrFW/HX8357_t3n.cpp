@@ -49,6 +49,7 @@
 
 #include "HX8357_t3n.h"
 #include <SPI.h>
+#include "NODEBUG.h"
 
 //#define DEBUG_ASYNC_UPDATE  // Enable to print out dma info
 //#define DEBUG_ASYNC_LEDS	// Enable to use digitalWrites to Debug
@@ -325,6 +326,9 @@ void HX8357_t3n::process_dma_interrupt(void) {
 // specific to each board type (e.g. 11,13 for Uno, 51,52 for Mega, etc.)
 HX8357_t3n::HX8357_t3n(uint8_t cs, uint8_t dc, uint8_t rst,
                        uint8_t mosi, uint8_t sclk, uint8_t miso) {
+  Serial.begin(9600);
+  DTRACE();
+
   _cs = cs;
   _dc = dc;
   _rst = rst;
@@ -333,6 +337,7 @@ HX8357_t3n::HX8357_t3n(uint8_t cs, uint8_t dc, uint8_t rst,
   _miso = miso;
   _width = WIDTH;
   _height = HEIGHT;
+
 
   rotation = 0;
   cursor_y = cursor_x = 0;

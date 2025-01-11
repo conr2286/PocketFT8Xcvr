@@ -7,6 +7,7 @@
 #include "button.h"
 #include "pins.h"
 #include <SI4735.h>
+#include <TimeLib.h>
 
 
 #define FT8_TONE_SPACING 625
@@ -57,7 +58,7 @@ void transmit_sequence(void) {
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
 
-  DPRINTF("XMIT\n");
+  DPRINTF("XMIT sec=%02d\n",second());
 }
 
 
@@ -84,7 +85,7 @@ void receive_sequence(void) {
   si4735.setVolume(50);
   clear_FT8_message();
 
-  DPRINTF("RECV\n");
+  DPRINTF("RECV sec=%02d\n",second());
 
 }  //receive_sequence()
 
@@ -98,8 +99,10 @@ void receive_sequence(void) {
 void tune_On_sequence(void) {
 
   //Program the transmitter clock to F_Long
-  set_Xmit_Freq();
-  si5351.set_freq(F_Long, SI5351_CLK0);
+  //set_Xmit_Freq();                                        //Charlie tuned at operating carrier freq
+  uint64_t tuneFreq = currentFrequency * 1000ULL * 100ULL;  //KQ7B tuning at FT8 base subband freq (e.g. 7074)
+  DPRINTF("tuneFreq=%llu Hz\n",tuneFreq/100);
+  si5351.set_freq(tuneFreq, SI5351_CLK0);                   //Freq is in hundreths of a HZ
 
   //Drop the receiver's volume
   si4735.setVolume(35);
@@ -153,10 +156,10 @@ void tune_Off_sequence(void) {
 //KQ7B:  Recalculates carrier frequency F_Long and programs SI5351 with new unmodulated carrier frequency
 void set_Xmit_Freq() {
 
-  // display_value(400, 320, ( int ) cursor_freq);
+  //display_value(400, 320, ( int ) cursor_freq);
   // display_value(400, 360,  offset_freq);
   F_Long = (uint64_t)((currentFrequency * 1000 + cursor_freq + offset_freq) * 100);
-  //DPRINTF("%s currentFrequency=%u, cursor_freq=%u, offset_freq=%u, F_Long=%llu\n", __FUNCTION__, currentFrequency, cursor_freq, offset_freq, F_Long);
+  DPRINTF("%s currentFrequency=%u, cursor_freq=%u, offset_freq=%d, F_Long=%llu\n", __FUNCTION__, currentFrequency, cursor_freq, offset_freq, F_Long);
   //F_Long = (uint64_t) ((currentFrequency * 1000 + cursor_freq ) * 100);
   si5351.set_freq(F_Long, SI5351_CLK0);
 
@@ -185,11 +188,12 @@ void set_FT8_Tone(uint8_t ft8_tone) {
 //call setup_to_transmit_on_next_DSP_Flag).  I think the outbound string
 //resides in the global message[].
 void setup_to_transmit_on_next_DSP_Flag(void) {
-  DPRINTF("%s\n", __FUNCTION__);
+  //DPRINTF("%s\n", __FUNCTION__);
   ft8_xmit_counter = 0;
   transmit_sequence();  //Turns-on the transmitter carrier at current F_Long ??
   set_Xmit_Freq();      //Recalculates F_long and reprograms SI5351 ??
   xmit_flag = 1;        //This flag appears to trigger loop() to modulate the carrier
+  DPRINTF("setup_to_transmit_on_next_DSP_Flag F_Long=%llu Hz\n",F_Long/100);
 }
 
 

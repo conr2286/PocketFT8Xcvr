@@ -27,7 +27,6 @@ public:
   unsigned milliseconds;
   double flat;
   double flng;
-  uint32_t elapsedMillis;     //millis() elapsed runtime as of when we acquired GPS date/time
 
   //Publicly accessible methods
   GPShelper(unsigned gpsBaudRate);

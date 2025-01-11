@@ -1,5 +1,5 @@
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "HX8357_t3n.h"
 #include "button.h"
 #include "display.h"
@@ -45,7 +45,8 @@ extern uint16_t cursor_freq;
 extern int tune_flag;
 extern uint16_t cursor_line;
 extern int offset_freq;
-#define ft8_shift 6.25
+
+const float ft8_shift=6.25;         //FT8 Hz/bin???
 int start_up_offset_freq;
 extern int log_flag, logging_on;
 
@@ -366,7 +367,7 @@ void check_WF_Touch(void) {
 
     cursor_line = draw_x;
     cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-    //DPRINTF("button.cpp:  cursor_freq=%u\n",cursor_freq);
+    DPRINTF("cursor_line=%u, cursor_freq=%u\n",cursor_line,cursor_freq);
     set_Xmit_Freq();
   }
 }  //check_WF_Touch()
@@ -374,10 +375,11 @@ void check_WF_Touch(void) {
 
 void set_startup_freq(void) {
   cursor_line = 100;
-  start_up_offset_freq = EEPROMReadInt(10);
+  //start_up_offset_freq = EEPROMReadInt(10);     //Charlie
+  start_up_offset_freq = 0;                       //KQ7B
   cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
   offset_freq = start_up_offset_freq;
-  //DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
+  DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
 }  //set_startup_freq()
 
 

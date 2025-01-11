@@ -20,7 +20,7 @@
 #include "GPShelper.h"
 #include "DEBUG.h"
 
-static Adafruit_GPS gpsDevice(&Serial1);
+static Adafruit_GPS gps(&Serial1);
 
 /**
   ** GPShelper Constructor
@@ -34,9 +34,9 @@ GPShelper::GPShelper(unsigned gpsBaudRate) {
   DTRACE();
   delay(10);
 
-  gpsDevice.begin(9600);                                //Set Serial1 baud rate to GPS device
-  gpsDevice.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);  //We are only interested in RMC messages from GPS
-  gpsDevice.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);     //10 Hz updates improve time resolution
+  gps.begin(9600);                                //Set Serial1 baud rate to GPS device
+  gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);  //We are only interested in RMC messages from GPS
+  gps.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);     //10 Hz updates improve time resolution
   delay(1000);
 
 }  //GPShelper
@@ -70,9 +70,6 @@ GPShelper::GPShelper(unsigned gpsBaudRate) {
 **/
 bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)()) {
 
-  //Assume we won't acquire a fix
-  validFix = false;
-
   //A successful result requires all three flags to become true
   bool gotDate = false;
   bool gotTime = false;
@@ -92,40 +89,38 @@ bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)())
     }
 
     //Process message byte(s), if any, from GPS
-    if (gpsDevice.read()) {
+    if (gps.read()) {
 
       //We have message bytes, do we have a complete NMEA message?
-      if (gpsDevice.newNMEAreceived()) {  
+      if (gps.newNMEAreceived()) {  
 
         //Yes, parse the complete NMEA message, checking for errors
-        if (gpsDevice.parse(gpsDevice.lastNMEA())) {
+        if (gps.parse(gps.lastNMEA())) {
 
           //Message is good, retrieve GPS supplied location if it appears valid
-          if (gpsDevice.fix && gpsDevice.fixquality == 0) {
-            flat = gpsDevice.latitudeDegrees;
-            flng = gpsDevice.longitudeDegrees;
+          if (gps.fix && gps.fixquality == 0) {
+            flat = gps.latitudeDegrees;
+            flng = gps.longitudeDegrees;
             DPRINTF("GPS reports lat/lon = %f %f\n", flat, flng);
             gotLoc = true;
           }
 
           //Retrieve date/time if it seems accurate and recent.  Warning:  milliseconds may exceed 999
           //if the GPS reported time is stale and nearly wrapping 1 second.
-          if (gpsDevice.fix && gpsDevice.secondsSinceTime() < 0.500) {
-            elapsedMillis = millis();                       //Record elapsed runtime when we acquired GPS date/time
-            hour = gpsDevice.hour;
-            minute = gpsDevice.minute;
-            second = gpsDevice.seconds;
-            milliseconds = gpsDevice.milliseconds + gpsDevice.secondsSinceTime() * 1000.0;
-            year = gpsDevice.year;
-            month = gpsDevice.month;
-            day = gpsDevice.day;
-            DPRINTF("GPS time = %02d:%02d:%02d.%d UTC, age=%f secs\n", hour, minute, second, milliseconds, gpsDevice.secondsSinceTime());
+          if (gps.fix && gps.secondsSinceTime() < 0.500) {
+            hour = gps.hour;
+            minute = gps.minute;
+            second = gps.seconds;
+            milliseconds = gps.milliseconds + gps.secondsSinceTime() * 1000.0;
+            year = gps.year;
+            month = gps.month;
+            day = gps.day;
+            DPRINTF("GPS time = %02d:%02d:%02d.%04d UTC, age=%f secs\n", hour, minute, second, milliseconds, gps.secondsSinceTime());
             gotTime = gotDate = true;
           }
 
           //We are finished when/if we've acquired date, time and location
           if (gotDate && gotTime && gotLoc) {
-            validFix=true;
             return true;  //Success
           }
 

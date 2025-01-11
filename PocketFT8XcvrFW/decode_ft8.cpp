@@ -39,7 +39,7 @@ char erase[] = "                   ";
 const int kLDPC_iterations = 10;
 const int kMax_candidates = 20;
 const int kMax_decoded_messages = 6;  //chhh 27 feb
-const int kMax_message_length = 20;
+const int kMax_message_length = 22;
 
 const int kMin_score = 40;  // Minimum sync score threshold for candidates (40)
 
@@ -242,7 +242,7 @@ void display_messages(int decoded_messages) {
   //so 240 pixels has room for 20 chars with 2 pixels for escapement.  Similarly, each char should be
   //16 pixels tall so 140 pixels should have room for 7 rows of text if rows have 4 leading pixels between.
   //See:  https://learn.adafruit.com/adafruit-gfx-graphics-library/graphics-primitives
-  tft.fillRect(0, 100, 240, 140, HX8357_BLACK);
+  tft.fillRect(0, 100, 256, 140, HX8357_BLACK);
 
   //Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
   //field3 is an RSL or locator or ???.

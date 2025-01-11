@@ -49,6 +49,8 @@
 **/
 ADIFlog::ADIFlog(SDClass* sd, char* fileName) {
 
+  Serial.begin(9600); DTRACE();
+
   //Initialize our member variables
   this->sd = sd;
   this->fileName = fileName;

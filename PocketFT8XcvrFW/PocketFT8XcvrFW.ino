@@ -16,18 +16,17 @@
 **    + Station configuration JSON file
 **    + Plugable filters
 **  The overall goal is to construct a single band, self-contained, HF FT8 transceiver for
-**  POTA/SOTA work where light weight and power demand dominate other requirements.
+**  POTA/SOTA work where light weight and power demand dominate other goals.
 **
 ** RATIONAL
 **  + Single-band operation is not a serious limitation for SOTA/POTA work where the available
 **  antenna defines the available band.
 **  + QRPP == battery life for SOTA/POTA
-**  + While the SI4735 receiver's performance lags that available from a Tayloe detector,
+**  + While the SI4735 receiver's performance likely lags that available from a Tayloe detector,
 **  it offers considerable simplicity and effectiveness for SOTA/POTA FT8 operation.  If it
-**  proves an issue, then the solution is well understood.
+**  proves an issue, then the solution is well understood (see DX FT8 project).
 **
 ** FUTURE
-**    + Finish support for GPS-sourced grid square and UTC time
 **    + Standard log file format
 **    + Wouldn't it be nice if the SD card were accessible via USB from a computer host
 **    + Consider using a real touchscreen controller to replace the MCP342X ADC
@@ -39,8 +38,8 @@
 **  VERSIONS
 **  1.00 Never built due to unobtanium componentry
 **  1.01 PCB requires several patches to correct known issues
-**  1.10 Working firmware and transmitter but SI4735 suffers from serious I2C noise issues
-**  2.00 (In Progress) Revised board/firmware to overcome I2C noise problem
+**  1.10 Working firmware and transmitter but SI4735 suffers serious I2C noise issues
+**  2.00 Revised board/firmware overcomes I2C noise problems
 **  
 ** ATTRIBUTION
 **  https://github.com/Rotron/Pocket-FT8  Charley Hill's original Pocket FT8
@@ -120,7 +119,7 @@ struct Config {
 #define DEFAULT_CALLSIGN "****"               //There's no realistic default callsign
 #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  //Default of 0 seconds disables audio recording
 #define DEFAULT_ENABLE_AVC 1                  //SI4735 AVC enabled by default
-#define DEFAULT_GPS_TIMEOUT 10                //Number of seconds before GPS fix time-out
+#define DEFAULT_GPS_TIMEOUT 60                //Number of seconds before GPS fix time-out
 
 //Adafruit 480x320 touchscreen configuration
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  //Teensy 4.1 pins
@@ -153,7 +152,7 @@ char Station_Call[12];  //six character call sign + /0
 char Locator[11] = "";  // four character locator  + /0
 
 //Global flag to disable the transmitter for testing
-bool disable_xmit=false;      //Flag can be set with config params
+bool disable_xmit = false;  //Flag can be set with config params
 
 uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
@@ -199,7 +198,8 @@ int tune_flag;
 int log_flag, logging_on;
 
 //Build the GPSHelper that ensures valid gps member variables
-GPShelper gps(9600);
+GPShelper gpsHelper(9600);
+
 
 
 
@@ -210,7 +210,6 @@ void setup(void) {
 
   //Get the USB serial port running before something else goes wrong
   Serial.begin(9600);
-  delay(100);
   DTRACE();
 
   //Is Teensy recovering from a crash?
@@ -219,8 +218,8 @@ void setup(void) {
     delay(5000);
   }
 
-  //Confirm installation of the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
-  //won't run at the standard sample rate.
+  //Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
+  //won't run at the standard Teensy sample rate.
   if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
     Serial.println("Build Firmware Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
     Serial.println("You must copy the modified AudioStream.h file into .../teensy/hardware/avr/1.59.0/cores/teensy4\n");
@@ -256,9 +255,9 @@ void setup(void) {
   if (newChip) {
     Serial.print("Initializing EEPROM for new chip\n");
     EEPROMWriteInt(10, 0);  //Address 10 is offset but the encoding remains mysterious
-  } 
-  DPRINTF("Offset = %d\n",EEPROM.read(10));
-  
+  }
+  DPRINTF("Offset = %d\n", EEPROM.read(10));
+
   //Initialize the SI5351 clock generator.  Pocket FT8 Revisited boards use CLKIN input.
   si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          //Charlie's correction was 2200 if that someday matters
   si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  //KQ7B V1.00 uses cmos CLKIN, not a XTAL
@@ -303,37 +302,14 @@ void setup(void) {
   DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
   DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
 
-  //Sync MCU and RTC time with GPS if it's working and can get a timely fix
-  if (gps.obtainGPSfix(config.gpsTimeout)) {
-
-    //Set the MCU time to the GPS result
-    setTime(gps.hour, gps.minute, gps.second, gps.day, gps.month, gps.year);
-    DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gps.month, gps.day, gps.year, gps.hour, gps.minute, gps.second);
-
-    //Now set the Teensy RTC to the GPS-derived time in the MCU
-    Teensy3Clock.set(now());
-
-    //Use the GPS-derived locator unless config.json hardwired it to something
-    if (strlen(config.locator) == 0) {
-      strlcpy(Locator, get_mh(gps.flat, gps.flng, 4), sizeof(Locator));
-      DPRINTF("GPS derived Locator = %s\n", Locator);
-    }
-  } else {
-    DPRINTF("MCU/RTC using old Teensy time\n");
-  }
-
-  //Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
-  setSyncProvider(getTeensy3Time);
-  delay(100);
-
   //Argh... copy station callsign config struct to C global variables (fix someday)
   strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
 
-  //We have finalized the configuration to use
-  DPRINTF("Date/Time in use are %2d/%2d/%2d %2d:%2d:%2d\n", month(), day(), year(), hour(), minute(), second());
-  DPRINTF("Station callsign in use is '%s'\n", Station_Call);
-  DPRINTF("Locator in use is '%s'\n", Locator);
-  DPRINTF("Frequency in use is %u kHz\n", config.frequency);
+
+
+
+
+
 
   //Initialize the SI4735 receiver
   delay(10);
@@ -349,10 +325,10 @@ void setup(void) {
   si4735.setVolume(50);
   display_value(360, 40, (int)currentFrequency);
 
-//Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
-//frequency which is stabilized but *not* determined by the Si5351.  
-//The apparent result of all this is the transmit and receive
-//frequencies may not be obviously aligned (need to understand this better).
+  //Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
+  //frequency which is stabilized but *not* determined by the Si5351.
+  //The apparent result of all this is the transmit and receive
+  //frequencies may not be obviously aligned (need to understand this better).
   Serial.println(" ");
   Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
   Serial.println("Use keyboard u to raise, d to lower, & s to save ");
@@ -370,22 +346,53 @@ void setup(void) {
   //   }
   // }
 
+  display_all_buttons();
+  open_log_file();
+
   //Start the audio pipeline
   queue1.begin();
-  start_time = millis();  //Note the RTC elapsed time when we began streaming audio
 
+  //Set operating frequency
   set_startup_freq();
   delay(10);
   display_value(360, 40, (int)currentFrequency);
 
-  receive_sequence();
 
-  update_synchronization();
+
+
+
+
+  //Sync MCU and RTC time with GPS if it's working and can get a timely fix
+  if (gpsHelper.obtainGPSfix(config.gpsTimeout, NULL)) {
+
+    //Set the MCU time to the GPS result
+    setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
+    DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gpsHelper.month, gpsHelper.day, gpsHelper.year, gpsHelper.hour, gpsHelper.minute, gpsHelper.second);
+
+    //Now set the Teensy RTC to the GPS-derived time in the MCU
+    Teensy3Clock.set(now());
+
+    //Use the GPS-derived locator unless config.json hardwired it to something
+    if (strlen(config.locator) == 0) {
+      strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
+      DPRINTF("GPS derived Locator = %s\n", Locator);
+    }
+  } else {
+    DPRINTF("MCU/RTC using old Teensy time\n");
+  }
+
+  //Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
+  setSyncProvider(getTeensy3Time);
+
+  //Misc initialization
   set_Station_Coordinates(Locator);
-  display_all_buttons();
-  open_log_file();
 
-  auto_sync_FT8();
+  receive_sequence();  //Setup to receive at start of first timeslot
+
+  //Start receiving in a new timeslot
+  //start_time = millis();     //Note start time for update_synchronization()
+  //update_synchronization();  //Do we really need this in-addition to and before waitForFT8timeslot()?
+  waitForFT8timeslot();  //Wait for a 15 second FT8 timeslot
 
 }  //setup()
 
@@ -416,7 +423,7 @@ void loop() {
     //Is a transmission in-progress?  Why is this guarded by DSP_Flag???????
     if (xmit_flag == 1) {
 
-      int offset_index = 5;   //???
+      int offset_index = 5;  //???
 
       //Is it time to modulate the SI5351 with the transmitter's next FSK tone?
       if (ft8_xmit_counter >= offset_index && ft8_xmit_counter < 79 + offset_index) {
@@ -443,28 +450,31 @@ void loop() {
   //Apparently:  Have we acquired all of the receive timeslot's data?
   if (decode_flag == 1) {
     DPRINTF("End of receive timeslot\n");
-    num_decoded_msg = ft8_decode();         //Decode the received messages
+    num_decoded_msg = ft8_decode();  //Decode the received messages
     master_decoded = num_decoded_msg;
     decode_flag = 0;
 
     //Following a receive timeslot, if a message is waiting for transmission,
-    //turn-on the carrier and set xmit_flag to modulate it. 
+    //turn-on the carrier and set xmit_flag to modulate it.
     if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
   }
-
-  update_synchronization();
-  // rtc_synchronization();
 
   process_touch();
   if (tune_flag == 1) process_serial();
 
-  //If we are recording audio, then stop after the requested seconds of raw audio data
-  //at 6400 samples/second.
-  if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned)AUDIO_SAMPLE_RATE) {
-    ft8Raw.close();
-    ft8Raw = NULL;
-    DPRINTF("Audio recording file, %s, closed with %ul samples\n", AUDIO_RECORDING_FILENAME, recordSampleCount);
-  }
+  update_synchronization();
+  // rtc_synchronization();
+
+  //process_touch();
+  //if (tune_flag == 1) process_serial();
+
+  // //If we are recording audio, then stop after the requested seconds of raw audio data
+  // //at 6400 samples/second.
+  // if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned)AUDIO_SAMPLE_RATE) {
+  //   ft8Raw.close();
+  //   ft8Raw = NULL;
+  //   DPRINTF("Audio recording file, %s, closed with %ul samples\n", AUDIO_RECORDING_FILENAME, recordSampleCount);
+  // }
 
 }  //loop()
 
@@ -563,7 +573,13 @@ static void copy_to_fft_buffer(void *destination, const void *source) {
 }  //copy_to_fft_buffer()
 
 
+/**
+ * Updates synchronization using Teensy's TimeLib
+ *
+ *
+**/
 void rtc_synchronization() {
+  DPRINTF("*****rtc_synchronization()\n");
   getTeensy3Time();
 
   if (ft8_flag == 0 && second() % 15 == 0) {
@@ -574,26 +590,62 @@ void rtc_synchronization() {
   }
 }
 
+
+/**
+ * Update timeslot synchronization using Arduino's elapsed time, millis()
+ *
+ * Note the objective here is to poll the current time and setup the various
+ * flags when the next timeslot begins, not to wait (block) for that timeslot
+ * to begin.  The flags cause loop() to perform whatever receive/transmit activities
+ * are required in that timeslot.
+ *
+ * Because we are using millis() with millisecond accuracy, this approach to find the
+ * beginning of a timeslot is likely accurate, assuming start_time represents
+ * the number of elapsed milliseconds recorded at the *true* (UTC) start of a timeslot
+ * (i.e. the 0, 15, 30 or 45 second boundary).  Note that waitForFT8timeslot()
+ * initializes start_time at the beginning of the first timeslot; if that time is
+ * accurate (see discussion in waitForFT8timeslot), then update_synchronization() may
+ * accurately determine the beginning of subsequent timeslots.
+ *
+**/
 void update_synchronization() {
-  current_time = millis();                  
-  ft8_time = current_time - start_time;     //mS elapsed in current interval???
+  current_time = millis();
+  ft8_time = current_time - start_time;  //mS elapsed in current interval???
 
-  ft8_hours = (int8_t)(ft8_time / 3600000);
-  hours_fraction = ft8_time % 3600000;
-  ft8_minutes = (int8_t)(hours_fraction / 60000);
-  ft8_seconds = (int8_t)((hours_fraction % 60000) / 1000);
+  // ft8_hours = (int8_t)(ft8_time / 3600000);
+  // hours_fraction = ft8_time % 3600000;
+  // ft8_minutes = (int8_t)(hours_fraction / 60000);
+  // ft8_seconds = (int8_t)((hours_fraction % 60000) / 1000);
 
 
-  if (ft8_flag == 0 && ft8_time % 15000 <= 200) {
+  if (ft8_flag == 0 && ft8_time % 15000 <= 160) {  //Charlie's original sync decision used 200 mS now 160
+                                                   //if (ft8_time%15000 <= 160 || FT_8_counter > 91) {     //An idea from DX FT8 (Charlie's latest)
     ft8_flag = 1;
     FT_8_counter = 0;
     ft8_marker = 1;
     WF_counter = 0;
+
+    //Debug time synch problems :(
+    DPRINTF("Start FT8 timeslot\n");
   }
 }
 
 
+/**
+ * This function appears to manually sync to an FT8 timeslot
+ *
+ * FT8 timeslots begin on 15 second boundaries (e.g. 0, 15, 30 or 45 seconds into a minute).
+ * This function appears to be invoked only by the Sy button press to manually sync to (i.e. begin)
+ * a timeslot when the station operator has identified (by observing an accurate clock?  by listening
+ * to FT8 traffic on a different receiver?) the beginning of a timeslot.
+ *
+ * If we had a dependable satellite receiver (or other super accurate clock), would the Sy button
+ * and this function still be necessary???
+ *
+**/
 void sync_FT8(void) {
+
+  DPRINTF("*****sync_FT8()\n");
 
   setSyncProvider(getTeensy3Time);  //commented out?
   start_time = millis();
@@ -606,30 +658,61 @@ void sync_FT8(void) {
 
 
 /**
- * ???
+ *  Wait for a 15-second FT8 timeslot (e.g. 0, 15, 30 or 45 seconds into a minute)
  *
- * Apparently called once during setup.
+ *  @return At the beginning of the next upcoming FT8 timeslot
  *
+ *  Unlike update_syncronization(), this function blocks (waits) until the next
+ *  timeslot begins.  Then it initializes the various flags so loop() can perform
+ *  whatever activities (e.g. transmit or receive) are needed in that timeslot.
+ *  When waitForFT8timeslot() returns, the next timeslot has begun.
+ *
+ *  Note:  The current implementation uses TimeLib's second() function whose resolution
+ *  (~1000 ms) is rather course for FT8.  If invoked prior to the start of an FT8
+ *  interval, then it likely works well, but perhaps second()%15 will return 0 if the
+ *  true UTC time lies between 0...999 ms following the start of an interval???
+ *  An alternative approach might be to use GPS (which has ~100 ms accuracy) to record
+ *  millis() at the true start of a timeslot and then wait for (millis()-record)%15000.
  *
 **/
-void auto_sync_FT8(void) {
-  DTRACE();
-  // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-  // tft.setTextSize(2);
-  // tft.setCursor(0, 240);
-  // tft.print("Synchronzing With RTC");
-  DPRINTF("Synchronizing with RTC\n");
+void waitForFT8timeslot(void) {
+  DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
 
-  //Wait for the end of a 15 second interval
-  while ((second()) % 15 != 0) continue;
+  tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+  tft.setTextSize(2);
+  tft.setCursor(0, 260);
+  tft.print("Waiting for timeslot");
 
-  start_time = millis();      //Start of interval in ms???
+  //If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
+  if (gpsHelper.validFix) {
+
+    //Calculate the value of elapsed millis() when the next FT8 timeslot will begin
+    unsigned msGPS = gpsHelper.second * 1000 + gpsHelper.milliseconds;  //Milliseconds into the minute when GPShelper acquired UTC date/time
+    unsigned msGPS2FT8 = 15000 - msGPS % 15000;                         //Milliseconds between GPSHelper acquisition and start of next FT8 timeslot
+    unsigned millisAtFT8 = gpsHelper.elapsedMillis + msGPS2FT8;         //Elapsed runtime millis() at start of next FT8 timeslot (might be in the past)
+    while (millis() < millisAtFT8) continue;                            //Wait for elapsed runtime to reach/exceed start of next FT8 timeslot
+    DPRINTF("msGPS=%u, msGPS2FT8=%u, millisAtFT8=%u, millis()=%u\n", msGPS, msGPS2FT8, millisAtFT8, millis());
+
+    //When we don't have valid GPS data, then we fall back to using Teensy timelib's 1 second clock resolution:(
+  } else {
+
+    //Wait for the end of the current 15 second FT8 timeslot.  This will arise at 0, 15, 30 or 45 seconds past the current minute.
+    //Sadly... second() has only 1000 ms resolution and, without GPS, its accuracy may not be what FT8 needs.
+    while ((second()) % 15 != 0) continue;
+  }
+
+  //Begin an FT8 timeslot
+  start_time = millis();  //Start of the first timeslot in ms of elapsed execution
   ft8_flag = 1;
   FT_8_counter = 0;
   ft8_marker = 1;
   WF_counter = 0;
-  //tft.setCursor(0, 260);
-  //tft.print("FT8 Synched With World");
+
+  //Update display
+  tft.setCursor(0, 260);
+  tft.print("Receiving           ");
+
+  DPRINTF("Starting first 15 second FT8 timeslot, second()=%u, millis()=%u\n", second(), millis());
 }
 
 

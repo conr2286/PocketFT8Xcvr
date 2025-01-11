@@ -46,6 +46,7 @@
 **/
 CSVlog::CSVlog(SDClass* sd, char* fileName) {
   char entry[LOG_ENTRY_SIZE];
+  Serial.begin(9600); DTRACE();
 
   //Initialize our member variables
   this->sd = sd;
