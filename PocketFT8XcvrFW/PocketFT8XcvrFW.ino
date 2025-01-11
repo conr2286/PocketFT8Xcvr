@@ -626,7 +626,7 @@ void update_synchronization() {
     WF_counter = 0;
 
     //Debug time synch problems :(
-    DPRINTF("Start FT8 timeslot\n");
+    DPRINTF("Start timeslot, millis()=%lu -----------------------------------------------------------------------------------\n",millis());
   }
 }
 
@@ -687,11 +687,11 @@ void waitForFT8timeslot(void) {
   if (gpsHelper.validFix) {
 
     //Calculate the value of elapsed millis() when the next FT8 timeslot will begin
-    unsigned msGPS = gpsHelper.second * 1000 + gpsHelper.milliseconds;  //Milliseconds into the minute when GPShelper acquired UTC date/time
-    unsigned msGPS2FT8 = 15000 - msGPS % 15000;                         //Milliseconds between GPSHelper acquisition and start of next FT8 timeslot
-    unsigned millisAtFT8 = gpsHelper.elapsedMillis + msGPS2FT8;         //Elapsed runtime millis() at start of next FT8 timeslot (might be in the past)
+    unsigned long msGPS = gpsHelper.second * 1000 + gpsHelper.milliseconds;  //Milliseconds into the minute when GPShelper acquired UTC date/time
+    unsigned long msGPS2FT8 = 15000 - msGPS % 15000;                         //Milliseconds between GPSHelper acquisition and start of next FT8 timeslot
+    unsigned long millisAtFT8 = gpsHelper.elapsedMillis + msGPS2FT8;         //Elapsed runtime millis() at start of next FT8 timeslot (might be in the past)
     while (millis() < millisAtFT8) continue;                            //Wait for elapsed runtime to reach/exceed start of next FT8 timeslot
-    DPRINTF("msGPS=%u, msGPS2FT8=%u, millisAtFT8=%u, millis()=%u\n", msGPS, msGPS2FT8, millisAtFT8, millis());
+    DPRINTF("msGPS=%lu, msGPS2FT8=%lu, millis()=%lu\n", msGPS, msGPS2FT8, millis());
 
     //When we don't have valid GPS data, then we fall back to using Teensy timelib's 1 second clock resolution:(
   } else {
@@ -712,7 +712,7 @@ void waitForFT8timeslot(void) {
   tft.setCursor(0, 260);
   tft.print("Receiving           ");
 
-  DPRINTF("Starting first 15 second FT8 timeslot, second()=%u, millis()=%u\n", second(), millis());
+  DPRINTF("Starting first 15 second FT8 timeslot, second()=%u, millis()=%lu --------------------------------------\n", second(), millis());
 }
 
 

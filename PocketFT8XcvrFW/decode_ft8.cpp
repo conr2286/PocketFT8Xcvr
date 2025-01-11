@@ -242,7 +242,9 @@ void display_messages(int decoded_messages) {
   //so 240 pixels has room for 20 chars with 2 pixels for escapement.  Similarly, each char should be
   //16 pixels tall so 140 pixels should have room for 7 rows of text if rows have 4 leading pixels between.
   //See:  https://learn.adafruit.com/adafruit-gfx-graphics-library/graphics-primitives
+  //DTRACE();
   tft.fillRect(0, 100, 256, 140, HX8357_BLACK);
+  //DTRACE();
 
   //Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
   //field3 is an RSL or locator or ???.

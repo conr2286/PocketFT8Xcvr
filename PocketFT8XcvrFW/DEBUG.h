@@ -27,7 +27,7 @@ ATTRIBUTION
 #pragma once
 
 //Define a symbol such that all debugging messages in all files can be disabled at this one location
-#define ENABLE_DEBUG 0
+#define ENABLE_DEBUG 1
 
 #if ENABLE_DEBUG
 
