@@ -24,6 +24,7 @@ void Write_Station_File(void);
 void Read_Station_File(void);
 void Station_Data_Initialize(void);
 
+char* get_message();
 void set_message(uint16_t index);
 void clear_FT8_message(void);
 

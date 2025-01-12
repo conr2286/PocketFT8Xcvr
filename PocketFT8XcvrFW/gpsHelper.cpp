@@ -68,7 +68,7 @@ GPShelper::GPShelper(unsigned gpsBaudRate) {
  * The 10Hz update rate proved important to obtaining accurate time readings.
  *
 **/
-bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)()) {
+bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)(unsigned)) {
 
   //Assume we won't acquire a fix
   validFix = false;
@@ -88,7 +88,7 @@ bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)())
     //gpsAcquiringFix() callback is notified once/second
     if ((millis() - t1) >= 1000) {
       t1 = millis();         //Update second monitor
-      if (gpsAcquiringFix!=NULL) (*gpsAcquiringFix)();  //Notify callback function if provided
+      if (gpsAcquiringFix!=NULL) (*gpsAcquiringFix)((t1-t0)/1000);  //Notify callback function if provided
     }
 
     //Process message byte(s), if any, from GPS

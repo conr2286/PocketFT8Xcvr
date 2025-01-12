@@ -31,7 +31,7 @@ public:
 
   //Publicly accessible methods
   GPShelper(unsigned gpsBaudRate);
-  bool obtainGPSfix(unsigned timeoutSeconds,void (*gpsAcquiringFix)());  //Returns true and assigns member var values if it obtains a GPS fix
+  bool obtainGPSfix(unsigned timeoutSeconds,void (*gpsAcquiringFix)(unsigned));  //Returns true and assigns member var values if it obtains a GPS fix
 
 
  

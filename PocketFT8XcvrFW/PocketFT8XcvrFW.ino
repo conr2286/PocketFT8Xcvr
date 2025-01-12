@@ -203,6 +203,25 @@ GPShelper gpsHelper(9600);
 
 
 
+
+/**
+ * @brief Callback function invoked by GPShelper while it acquires a GPS fix
+ *
+ * @param seconds Number of seconds elapsed while acquiring the GPS fix
+ *
+ * GPShelper calls here ~once/second
+ *
+ * Note:  The display must be initialized before GPShelper calls here
+ *
+**/
+static void gpsCallback(unsigned seconds) {
+  char msg[32];
+  snprintf(msg, sizeof(msg), "Acquiring GPS fix:  %03d", seconds);
+  displayInfoMsg(msg);
+}  //gpsCallback()
+
+
+
 /**
  ** @brief Sketch initialization
 **/
@@ -219,10 +238,10 @@ void setup(void) {
   }
 
   //Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
-  //won't run at the standard Teensy sample rate.
+  //won't run at the standard Teensy sample rate.  No known way to do this at compile-time with a floating constant.
   if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
     Serial.println("Build Firmware Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
-    Serial.println("You must copy the modified AudioStream.h file into .../teensy/hardware/avr/1.59.0/cores/teensy4\n");
+    Serial.println("You must copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
     Serial.println("...before building the Pocket FT8 firmware.\n");
     while (true) continue;  //Fatal
   }
@@ -233,17 +252,18 @@ void setup(void) {
   digitalWrite(PIN_RCV, HIGH);  //Disable the PA and disconnect receiver's RF input from antenna
   digitalWrite(PIN_PTT, LOW);   //Unground the receiver's RF input
 
-  //Initialize the SD library if the card is available
-  if (!SD.begin(BUILTIN_SDCARD)) {
-    Serial.println("Unable to access the SD card");  //Someday move this message to display
-  }
-
   //Initialize the Adafruit 480x320 TFT display
   tft.begin(HX8357D);
   tft.fillScreen(HX8357_BLACK);
   tft.setTextColor(HX8357_YELLOW);
   tft.setRotation(3);
   tft.setTextSize(2);
+
+  //Initialize the SD library if the card is available
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    displayInfoMsg("Unable to access SD card");
+    delay(2000);
+  }
 
 //Zero-out EEPROM when executed on a new Teensy (whose memory is filled with 0xff).  This prevents
 //calcuation of crazy transmit offset from 0xffff filled EEPROM.
@@ -270,20 +290,22 @@ void setup(void) {
   // Gets and sets the Si47XX I2C bus address
   int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
   if (si4735Addr == 0) {
-    Serial.println("Error:  Si473X not found!");
-    Serial.flush();
+    displayInfoMsg("Fatal:  Si473X not found");
     while (1) continue;  //Fatal
   } else {
-    //DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
+    DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
   }
 
   //Read the JSON configuration file into the config structure.  We allow the firmware to continue even
   //if the configuration file is unreadable or useless because the receiver is still operable.
   JsonDocument doc;  //Key-Value pair doc
   File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
-  if (!configFile) Serial.printf("Error:  Unable to open Teensy SD config file, %s\n", CONFIG_FILENAME);
   DeserializationError error = deserializeJson(doc, configFile);
-  if (error) Serial.printf("Error:  Unable to read Teensy SD config file, %s\n", CONFIG_FILENAME);
+  if (error) {
+    char msg[40];
+    snprintf(msg, sizeof(msg), "Unable to read Teensy SD config file, %s\n", CONFIG_FILENAME);
+    delay(1000);
+  }
 
   //Extract the configuration parameters from doc or assign their defaults to the config struct
   strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  //Station callsign
@@ -305,12 +327,6 @@ void setup(void) {
   //Argh... copy station callsign config struct to C global variables (fix someday)
   strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
 
-
-
-
-
-
-
   //Initialize the SI4735 receiver
   delay(10);
   et1 = millis();
@@ -323,7 +339,7 @@ void setup(void) {
   delay(10);
   currentFrequency = si4735.getFrequency();
   si4735.setVolume(50);
-  display_value(360, 40, (int)currentFrequency);
+  display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
 
   //Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
   //frequency which is stabilized but *not* determined by the Si5351.
@@ -355,15 +371,10 @@ void setup(void) {
   //Set operating frequency
   set_startup_freq();
   delay(10);
-  display_value(360, 40, (int)currentFrequency);
-
-
-
-
-
+  display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
 
   //Sync MCU and RTC time with GPS if it's working and can get a timely fix
-  if (gpsHelper.obtainGPSfix(config.gpsTimeout, NULL)) {
+  if (gpsHelper.obtainGPSfix(config.gpsTimeout, gpsCallback)) {
 
     //Set the MCU time to the GPS result
     setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
@@ -377,8 +388,11 @@ void setup(void) {
       strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
       DPRINTF("GPS derived Locator = %s\n", Locator);
     }
+
+    //Inform user
+    displayInfoMsg("Using GPS and UTC");
   } else {
-    DPRINTF("MCU/RTC using old Teensy time\n");
+    displayInfoMsg("GPS and UTC unavailable");
   }
 
   //Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
@@ -443,8 +457,8 @@ void loop() {
     }  //xmit_flag
 
     DSP_Flag = 0;
-    display_time(360, 0);
-    display_date(360, 60);
+    display_time(DISPLAY_TIME_X, DISPLAY_TIME_Y);
+    display_date(DISPLAY_DATE_X, DISPLAY_DATE_Y);
   }  //DSP_Flag
 
   //Apparently:  Have we acquired all of the receive timeslot's data?
@@ -626,7 +640,7 @@ void update_synchronization() {
     WF_counter = 0;
 
     //Debug time synch problems :(
-    DPRINTF("Start timeslot, millis()=%lu -----------------------------------------------------------------------------------\n",millis());
+    DPRINTF("Start timeslot, millis()=%lu -----------------------------------------------------------------------------------\n", millis());
   }
 }
 
@@ -678,10 +692,7 @@ void sync_FT8(void) {
 void waitForFT8timeslot(void) {
   DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
 
-  tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-  tft.setTextSize(2);
-  tft.setCursor(0, 260);
-  tft.print("Waiting for timeslot");
+  displayInfoMsg("Waiting for timeslot");
 
   //If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
   if (gpsHelper.validFix) {
@@ -690,7 +701,7 @@ void waitForFT8timeslot(void) {
     unsigned long msGPS = gpsHelper.second * 1000 + gpsHelper.milliseconds;  //Milliseconds into the minute when GPShelper acquired UTC date/time
     unsigned long msGPS2FT8 = 15000 - msGPS % 15000;                         //Milliseconds between GPSHelper acquisition and start of next FT8 timeslot
     unsigned long millisAtFT8 = gpsHelper.elapsedMillis + msGPS2FT8;         //Elapsed runtime millis() at start of next FT8 timeslot (might be in the past)
-    while (millis() < millisAtFT8) continue;                            //Wait for elapsed runtime to reach/exceed start of next FT8 timeslot
+    while (millis() < millisAtFT8) continue;                                 //Wait for elapsed runtime to reach/exceed start of next FT8 timeslot
     DPRINTF("msGPS=%lu, msGPS2FT8=%lu, millis()=%lu\n", msGPS, msGPS2FT8, millis());
 
     //When we don't have valid GPS data, then we fall back to using Teensy timelib's 1 second clock resolution:(
@@ -709,20 +720,7 @@ void waitForFT8timeslot(void) {
   WF_counter = 0;
 
   //Update display
-  tft.setCursor(0, 260);
-  tft.print("Receiving           ");
+  displayInfoMsg("RECV");
 
   DPRINTF("Starting first 15 second FT8 timeslot, second()=%u, millis()=%lu --------------------------------------\n", second(), millis());
 }
-
-
-
-
-//       char *locator = get_mh(flat, flon, 4);
-//       for (int i = 0; i < 11; i++) Locator[i] = locator[i];
-
-//       //ToDo:  Allow config to overide GPS location
-//       set_Station_Coordinates(Locator);
-//     }
-//   }
-// }

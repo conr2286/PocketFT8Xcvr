@@ -24,6 +24,80 @@ extern GPShelper gpsHelper;  //Public data acquired by GPShelper
 extern HX8357_t3n tft;
 
 
+
+
+/**
+ * Local helper function to pad a char[] to a specified length
+ *
+ * @param str  Pointer to the char[] string to pad
+ * @param size sizeof(str) including the NUL terminator
+ * @param c    The pad character (e.g. ' ')
+ *
+ * strlpad() pads the specified array containing a NUL terminated char string
+ * with the specified char, c, ensuring that str remains NUL terminated.  The
+ * resulting string, including the NUL terminator, will occupy no more than
+ * size chars in str[].
+ *
+**/
+static char* strlpad(char* str, unsigned size, char c) {
+
+  const char NUL=0;
+  bool paddingUnderway = false;
+  int i;
+
+  for (i=0; i<size-1; i++) {
+    if (str[i]==NUL) paddingUnderway=true;
+    if (paddingUnderway) {
+      str[i] = c;
+    }
+  }
+
+  str[size-1] = NUL;
+
+  return str;
+
+} //strlpad()
+
+
+
+
+
+/**
+ * Local helper function to pad a char[] to a specified length
+ *
+ * @param dst  Pointer to the destination char[] string
+ * @param src  Pointer to the source char[] string
+ * @param c    The pad character (e.g. ' ')
+ * @param size sizeof(dst) including the NUL terminator
+ *
+ * strlpad() copies chars from src[] to dst[], padding dst[] with c to ensure
+ * it's filled (including the NUL terminator).  The resulting dst string,
+ * including the NUL terminator, will occupy no more than size chars in dst[].
+ *
+**/
+static char* strlpad(char* dst, char* src, char c, unsigned size) {
+  const char NUL=0;
+  bool paddingUnderway = false;
+  int i;
+
+  for (i=0; i<size-1; i++) {
+    if (src[i]==NUL) paddingUnderway=true;
+    if (paddingUnderway) {
+      dst[i] = c;
+    } else {
+      dst[i] = src[i];
+    }
+  }
+
+  dst[size-1] = NUL;
+
+  return dst;
+
+} //strlpad()
+
+
+
+
 void display_value(int x, int y, int value) {
   char string[7];  // print format stuff
   sprintf(string, "%6i", value);
@@ -41,8 +115,8 @@ void display_time(int x, int y) {
   char string[13];  // print format stuff
   sprintf(string, "%02i:%02i:%02i", hour(), minute(), second());
   if (gpsHelper.validFix) {
-    tft.setTextColor(HX8357_WHITE, HX8357_BLACK);  //GPS-acquired UTC time
-    strlcat(string, " UTC", sizeof(string));
+    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);  //GPS-acquired UTC time
+    //strlcat(string, " UTC", sizeof(string));
   } else {
     tft.setTextColor(HX8357_RED, HX8357_BLACK);  //Unknown zone and accuracy
   }
@@ -54,10 +128,14 @@ void display_time(int x, int y) {
 void display_date(int x, int y) {
   getTeensy3Time();
   char string[13];  // print format stuff
-  sprintf(string, "%02i/%02i/%4i", day(), month(), year());
+#if DISPLAY_DATE == MMDDYY
+  sprintf(string, "%02i/%02i/%02i", month(), day(), year() % 1000);
+#else
+  sprintf(string, "%02i/%02i/%02i", year() % 1000, month(), day());
+#endif
   if (gpsHelper.validFix) {
-    tft.setTextColor(HX8357_WHITE, HX8357_BLACK);  //GPS-acquired UTC date
-    strlcat(string, " UTC", sizeof(string));
+    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);  //GPS-acquired UTC date
+    //strlcat(string, " UTC", sizeof(string));
   } else {
     tft.setTextColor(HX8357_RED, HX8357_BLACK);  //Unknown zone and accuracy
   }
@@ -65,6 +143,47 @@ void display_date(int x, int y) {
   tft.setCursor(x, y);
   tft.print(string);
 }
+
+
+
+
+/**
+ *
+ * Display informational messages in the OUTBOUND text region 
+ *
+ * @param msg Message to be displayed
+ * 
+ * Note:  Display must be initialized
+ *
+**/
+void displayInfoMsg(char *msg) {
+  // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+  // tft.setTextSize(2);
+  // tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
+  // tft.print(msg);
+  displayInfoMsg(msg, HX8357_YELLOW);
+}  //displayMsg()
+
+
+
+/**
+ *
+ * Display informational messages in the OUTBOUND text region 
+ *
+ * @param msg Message to be displayed
+ * @param color Color of displayed message
+ * 
+ * Note:  Display must be initialized
+ *
+**/
+void displayInfoMsg(char *msg, uint16_t color) {
+  char bfr[24];
+  strlpad(bfr,msg,' ',sizeof(bfr));
+  tft.setTextColor(color, HX8357_BLACK);
+  tft.setTextSize(2);
+  tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
+  tft.print(bfr);
+}  //displayMsg()
 
 
 

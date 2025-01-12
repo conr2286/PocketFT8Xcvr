@@ -58,6 +58,16 @@ char ft8_time_string[] = "15:44:15";
 int max_displayed_messages = 8;
 
 /**
+ * Retrieves the outbound message char[] string
+ *
+ * @return pointer to the outbound message char[] string
+ *
+**/
+char* get_message() {
+  return message;
+}
+
+/**
  *  Builds an outbound FT8 message[] for later transmission
  *  
  *  Constructs and displays the specified FT8 outbound message and sets the
@@ -116,10 +126,11 @@ void set_message(uint16_t index) {
 
       break;
   }
-  tft.setTextColor(HX8357_WHITE, HX8357_BLACK);
-  tft.setTextSize(2);
-  tft.setCursor(0, 260);
-  tft.print(message);
+  // tft.setTextColor(HX8357_WHITE, HX8357_BLACK);
+  // tft.setTextSize(2);
+  // tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
+  // tft.print(message);
+  displayInfoMsg(message);
 
   pack77_1(message, packed);
   genft8(packed, tones);
@@ -140,14 +151,14 @@ void clear_FT8_message(void) {
 
   tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
   tft.setTextSize(2);
-  tft.setCursor(0, 260);
+  tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
   tft.print(blank);
 
   message_state = 0;
 }
 
 
-
+//?????
 void clear_reply_message_box(void) {
 
   tft.fillRect(0, 100, 400, 140, HX8357_BLACK);

@@ -1,3 +1,4 @@
+#include "display.h"
 /*
  * decode_ft8.c
  *
@@ -243,7 +244,7 @@ void display_messages(int decoded_messages) {
   //16 pixels tall so 140 pixels should have room for 7 rows of text if rows have 4 leading pixels between.
   //See:  https://learn.adafruit.com/adafruit-gfx-graphics-library/graphics-primitives
   //DTRACE();
-  tft.fillRect(0, 100, 256, 140, HX8357_BLACK);
+  tft.fillRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLACK);
   //DTRACE();
 
   //Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
@@ -261,7 +262,7 @@ void display_messages(int decoded_messages) {
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
     tft.setTextSize(2);  //10X16 pixels per AdaFruit
     //tft.setCursor(0, 100 + i * 25);   //Charlie's 6-row leading required 25 pixel high rows
-    tft.setCursor(0, 100 + i * 20);  //Kq7B leading allows 7 rows, each 20 pixels tall
+    tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * 20);  //Kq7B leading allows 7 rows, each 20 pixels tall
 
     tft.print(message);
 
@@ -284,9 +285,9 @@ void display_selected_call(int index) {
   snprintf(selected_station, sizeof(selected_station), "%7s %3i", Target_Call, Target_RSL);
   tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
   tft.setTextSize(2);
-  tft.setCursor(360, 20);
+  tft.setCursor(DISPLAY_SELECTED_X, DISPLAY_SELECTED_Y);
   tft.print(blank);
-  tft.setCursor(360, 20);
+  tft.setCursor(DISPLAY_SELECTED_X, DISPLAY_SELECTED_Y);
   tft.print(Target_Call);
 }
 
@@ -400,7 +401,7 @@ int Check_Calling_Stations(int num_decoded) {
       snprintf(big_gulp, sizeof(message), "%02i/%02i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
       tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
       tft.setTextSize(2);
-      tft.setCursor(240, 100 + i * 25);
+      tft.setCursor(DISPLAY_CALLING_X, DISPLAY_CALLING_Y + i * 25);
       tft.print(message);
 
       //Log details from this message to us
@@ -412,7 +413,7 @@ int Check_Calling_Stations(int num_decoded) {
       message_test = i + 100;  //100+index of this calling station.  Why the 100 bias???
     }
 
-    //???Why didn't we erase before displaying anything rather than if there are many???
+    //Erase something???  What (decoded messages)?  Why?
     if (num_Calling_Stations == max_Calling_Stations) {
       tft.fillRect(0, 100, 240, 190, HX8357_BLACK);
       num_Calling_Stations = 0;

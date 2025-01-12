@@ -39,6 +39,8 @@ uint64_t F_Long, F_FT8, F_Offset;
 **/
 void transmit_sequence(void) {
 
+  displayInfoMsg(get_message(),RED);
+
   //Program the transmitter clock at F_Long
   set_Xmit_Freq();
   si5351.set_freq(F_Long, SI5351_CLK0);
@@ -70,6 +72,8 @@ void transmit_sequence(void) {
 **/
 void receive_sequence(void) {
 
+  displayInfoMsg("RECV");
+
   //Turn off the transmitter's clock -- this should stop the xmit RF chain
   si5351.output_enable(SI5351_CLK0, 0);
 
@@ -97,6 +101,8 @@ void receive_sequence(void) {
  *
 **/
 void tune_On_sequence(void) {
+
+  displayInfoMsg("TUNE");
 
   //Program the transmitter clock to F_Long
   //set_Xmit_Freq();                                        //Charlie tuned at operating carrier freq
@@ -130,6 +136,8 @@ void tune_On_sequence(void) {
  * Turn-off transmitter w/o affecting outbound message[]
 **/
 void tune_Off_sequence(void) {
+
+  displayInfoMsg("RECV");
 
   //Turn-off the transmitter's clock
   si5351.output_enable(SI5351_CLK0, 0);
