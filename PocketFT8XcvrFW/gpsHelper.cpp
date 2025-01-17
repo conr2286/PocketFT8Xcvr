@@ -73,6 +73,9 @@ bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)(un
   //Assume we won't acquire a fix
   validFix = false;
 
+  //Assume an inactive/disconnected/defective GPS
+  bool activeGPS=false;
+
   //A successful result requires all three flags to become true
   bool gotDate = false;
   bool gotTime = false;
@@ -96,6 +99,8 @@ bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)(un
 
       //We have message bytes, do we have a complete NMEA message?
       if (gpsDevice.newNMEAreceived()) {  
+
+        DPRINTF("satellites=%u\n",gpsDevice.satellites);
 
         //Yes, parse the complete NMEA message, checking for errors
         if (gpsDevice.parse(gpsDevice.lastNMEA())) {
