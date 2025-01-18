@@ -464,7 +464,9 @@ void loop() {
   //Apparently:  Have we acquired all of the receive timeslot's data?
   if (decode_flag == 1) {
     DPRINTF("End of receive timeslot\n");
+    unsigned long td0 = millis();
     num_decoded_msg = ft8_decode();  //Decode the received messages
+    DPRINTF("ft8_decode() time = %lu ms\n", millis() - td0);
     master_decoded = num_decoded_msg;
     decode_flag = 0;
 

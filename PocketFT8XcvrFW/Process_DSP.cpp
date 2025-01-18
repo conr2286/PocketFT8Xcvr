@@ -134,7 +134,7 @@ void process_FT8_FFT(void) {
 //displays successfully decoded messages (if any).  Prepares to send CQ.
 void update_offset_waterfall(int offset) {
 
-  //DPRINTF("WF_counter=%d\n", WF_counter);
+  //DPRINTF("update_offset_waterfall(%d), WF_counter=%d\n", offset, WF_counter);
 
   for (int j = ft8_min_bin; j < ft8_buffer; j++) FFT_Buffer[j] = export_fft_power[j + offset];
 
@@ -147,15 +147,13 @@ void update_offset_waterfall(int offset) {
     WF_index[x] = bar;
   }
 
-  //DTRACE();
-
   //Draw waterfall pixels
   for (int k = ft8_min_bin; k < ft8_buffer; k++) {
     tft.drawPixel(k - ft8_min_bin, WF_counter, WFPalette[WF_index[k]]);
     if (k - ft8_min_bin == cursor_line) tft.drawPixel(k - ft8_min_bin, WF_counter, HX8357_RED);
   }
 
-  //At the end of a timeslot, display recvd messages, and prepare to send CQ or respond to calls
+  //At the beginning(!!!) of a timeslot, display recvd messages, and prepare to send CQ or respond to calls
   // if (WF_counter == 0 && num_decoded_msg > 0) {
   //   display_messages(num_decoded_msg);  //Displays received messages
   //   if (CQ_Flag == 1) {
@@ -164,7 +162,8 @@ void update_offset_waterfall(int offset) {
   //     Check_Calling_Stations(num_decoded_msg);
   //   }
   // }
-  if (WF_counter == 0) {
+  if (WF_counter == 0) {          
+    DTRACE();
     if (num_decoded_msg > 0) {
       display_messages(num_decoded_msg);  //Displays received messages
     }

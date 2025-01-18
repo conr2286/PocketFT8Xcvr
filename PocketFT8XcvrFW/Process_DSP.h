@@ -12,6 +12,7 @@
 #define ft8_min_freq FFT_Resolution* ft8_min_bin
 
 #define ft8_msg_samples 92    //Number of blocks?????
+//#define ft8_msg_samples 81  //JRC?????
 
 void init_DSP(void);
 float ft_blackman_i(int i, int N);

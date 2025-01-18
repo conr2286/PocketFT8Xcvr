@@ -100,7 +100,7 @@ bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)(un
       //We have message bytes, do we have a complete NMEA message?
       if (gpsDevice.newNMEAreceived()) {  
 
-        DPRINTF("satellites=%u\n",gpsDevice.satellites);
+        //DTRACE();
 
         //Yes, parse the complete NMEA message, checking for errors
         if (gpsDevice.parse(gpsDevice.lastNMEA())) {
