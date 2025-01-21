@@ -61,6 +61,7 @@
 #define LSB_NARROW 3
 
 
+char* strlpad(char* str, unsigned size, char c);
 
 void display_value(int x, int y, int value);
 void erase_value(int x, int y);
@@ -68,8 +69,8 @@ void display_time(int x, int y);
 void display_date(int x, int y);
 void display_station_data(int x, int y);
 void displayInfoMsg(char* msg);
-void displayInfoMsg(char* msg,uint16_t color);
+void displayInfoMsg(char* msg, uint16_t color);
 
 void make_filename(void);
 bool open_log_file(void);
-void write_log_data(char *data);
+void write_log_data(char* data);

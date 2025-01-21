@@ -11,7 +11,7 @@
 **    + Small, 4.0x2.8" PCB mates with the Adafruit display
 **    + Adafruit 320x480 3.5" resistive touchscreen display
 **    + TCXO
-**    + Powered by 0.37 Amps from a single +5V USB power source 
+**    + Powered by 0.37 Amps from a single +5V USB power source
 **    + SD Card logging to txt file
 **    + Station configuration JSON file
 **    + Plugable filters
@@ -40,7 +40,7 @@
 **  1.01 PCB requires several patches to correct known issues
 **  1.10 Working firmware and transmitter but SI4735 suffers serious I2C noise issues
 **  2.00 Revised board/firmware overcomes I2C noise problems
-**  
+**
 ** ATTRIBUTION
 **  https://github.com/Rotron/Pocket-FT8  Charley Hill's original Pocket FT8
 **  https://github.com/WB2CBA/W5BAA-FT8-POCKET-TERMINAL  Barb's FT8 Pocket Terminal
@@ -52,107 +52,102 @@
 **  Various open source licenses widely cited throughout
 */
 
-#include "DEBUG.h"
 #include <Audio.h>
-#include <SD.h>
-#include <SPI.h>
-#include "HX8357_t3n.h"
-#include "TouchScreen_I2C.h"
-#include "MCP342x.h"
-#include "si5351.h"
-#include <SI4735.h>
-#include "patch_full.h"  // SSB patch for whole SSBRX full download
-#include <TimeLib.h>
 #include <EEPROM.h>
-
-
-
-#include "Process_DSP.h"
-#include "decode_ft8.h"
-#include "WF_Table.h"
-#include "arm_math.h"
-#include "display.h"
-#include "button.h"
-#include "locator.h"
-#include "traffic_manager.h"
-#include "pins.h"
+#include <SD.h>
+#include <SI4735.h>
+#include <SPI.h>
+#include <TimeLib.h>
 
 #include "Arduino.h"
 #include "AudioStream.h"
-#include "arm_math.h"
-#include "constants.h"
-#include "maidenhead.h"
+#include "DEBUG.h"
 #include "GPShelper.h"
+#include "HX8357_t3n.h"
 #include "LogFactory.h"
+#include "MCP342x.h"
+#include "Process_DSP.h"
+#include "TouchScreen_I2C.h"
+#include "WF_Table.h"
+#include "arm_math.h"
+#include "button.h"
+#include "constants.h"
+#include "decode_ft8.h"
+#include "display.h"
+#include "locator.h"
+#include "maidenhead.h"
+#include "patch_full.h"  // SSB patch for whole SSBRX full download
+#include "pins.h"
+#include "si5351.h"
+#include "traffic_manager.h"
 
-
-//Enable comments in the JSON configuration file
+// Enable comments in the JSON configuration file
 #define ARDUINOJSON_ENABLE_COMMENTS 1
 #include <ArduinoJson.h>
 
-//We include .../teensy4/AudioStream.h only so we can confirm AUDIO_SAMPLE_RATE_EXACT is 6400.0f
+// We include .../teensy4/AudioStream.h only so we can confirm AUDIO_SAMPLE_RATE_EXACT is 6400.0f
 #include <AudioStream.h>
 
 #define AM_FUNCTION 1
 #define USB 2
 
-//For HW debugging, define an option to record received audio to an SD file, ft8.raw,
-//encoded as a single channel of 16-bit unsigned integers at 6400 samples/second.
-//The command, sox -r 6400 -c 1 -e unsigned -b 16 ft8.raw ft8.wav, will convert the
-//recording to a wav file.  Set the duration to 0 to eliminate file I/O overhead.
+// For HW debugging, define an option to record received audio to an SD file, ft8.raw,
+// encoded as a single channel of 16-bit unsigned integers at 6400 samples/second.
+// The command, sox -r 6400 -c 1 -e unsigned -b 16 ft8.raw ft8.wav, will convert the
+// recording to a wav file.  Set the duration to 0 to eliminate file I/O overhead.
 #define AUDIO_RECORDING_FILENAME "ft8.raw"
-//#define AUDIO_SAMPLE_RATE 6400
+// #define AUDIO_SAMPLE_RATE 6400
 
-//Configuration parameters read from SD file
+// Configuration parameters read from SD file
 #define CONFIG_FILENAME "/config.json"
 struct Config {
-  char callsign[12];                     //11 chars and NUL
-  char locator[5];                       //4 char maidenhead locator and NUL
-  unsigned frequency;                    //Operating frequency in kHz
-  unsigned long audioRecordingDuration;  //Seconds or 0 to disable audio recording
-  unsigned enableAVC;                    //0=disable, 1=enable SI47xx AVC
-  unsigned gpsTimeout;                   //GPS timeout (seconds) to obtain a fix
+    char callsign[12];                     // 11 chars and NUL
+    char locator[5];                       // 4 char maidenhead locator and NUL
+    unsigned frequency;                    // Operating frequency in kHz
+    unsigned long audioRecordingDuration;  // Seconds or 0 to disable audio recording
+    unsigned enableAVC;                    // 0=disable, 1=enable SI47xx AVC
+    unsigned gpsTimeout;                   // GPS timeout (seconds) to obtain a fix
 } config;
 
-//Default configuration
-#define DEFAULT_FREQUENCY 7074                //kHz
-#define DEFAULT_CALLSIGN "****"               //There's no realistic default callsign
-#define DEFAULT_AUDIO_RECORDING_DURATION 0UL  //Default of 0 seconds disables audio recording
-#define DEFAULT_ENABLE_AVC 1                  //SI4735 AVC enabled by default
-#define DEFAULT_GPS_TIMEOUT 60                //Number of seconds before GPS fix time-out
+// Default configuration
+#define DEFAULT_FREQUENCY 7074                // kHz
+#define DEFAULT_CALLSIGN "****"               // There's no realistic default callsign
+#define DEFAULT_AUDIO_RECORDING_DURATION 0UL  // Default of 0 seconds disables audio recording
+#define DEFAULT_ENABLE_AVC 1                  // SI4735 AVC enabled by default
+#define DEFAULT_GPS_TIMEOUT 60                // Number of seconds before GPS fix time-out
 
-//Adafruit 480x320 touchscreen configuration
-HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  //Teensy 4.1 pins
-TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   //The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
+// Adafruit 480x320 touchscreen configuration
+HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
+TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 
-///Build the VFO clock
+/// Build the VFO clock
 Si5351 si5351;
 
-//Build the receiver
-#define MINIMUM_FREQUENCY 7000  //The Si4735 sadly wants to know these :(
+// Build the receiver
+#define MINIMUM_FREQUENCY 7000  // The Si4735 sadly wants to know these :(
 #define MAXIMUM_FREQUENCY 7300
 SI4735 si4735;
 
-//Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
-AudioInputAnalog adc1;  //xy=132,104
+// Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
+AudioInputAnalog adc1;  // xy=132,104
 AudioRecordQueue queue1;
 AudioConnection patchCord2(adc1, queue1);
 
-//Optional raw audio recording file written to SD card for debugging nasty receiver problems
+// Optional raw audio recording file written to SD card for debugging nasty receiver problems
 File ft8Raw = NULL;
-unsigned long recordSampleCount = 0;  //Number of 16-bit audio samples recorded so far
+unsigned long recordSampleCount = 0;  // Number of 16-bit audio samples recorded so far
 
-//Audio pipeline buffers
+// Audio pipeline buffers
 q15_t dsp_buffer[3 * input_gulp_size] __attribute__((aligned(4)));
 q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
-//ToDo:  Arrange for the various modules to access these directly from config structure
-char Station_Call[12];  //six character call sign + /0
+// ToDo:  Arrange for the various modules to access these directly from config structure
+char Station_Call[12];  // six character call sign + /0
 char Locator[11] = "";  // four character locator  + /0
 
-//Global flag to disable the transmitter for testing
-bool disable_xmit = false;  //Flag can be set with config params
+// Global flag to disable the transmitter for testing
+bool disable_xmit = false;  // Flag can be set with config params
 
 uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
@@ -164,26 +159,26 @@ uint8_t ft8_hours, ft8_minutes, ft8_seconds;
 
 int FT_8_counter, ft8_marker;
 
-//Apparently set when it's time to do an FFT (When is that?  At the end of a received symbol?????)
+// Apparently set when it's time to do an FFT (When is that?  At the end of a received symbol?????)
 int DSP_Flag;
 
-//Apparently set when the timeslot's received messages are ready to be decoded
+// Apparently set when the timeslot's received messages are ready to be decoded
 int decode_flag;
 
-//Initialized to 1 by setup() and the multitude of synchronization functions.  Set to 0 by
-//process_FT8_FFT() apparently at the end of a receive timeslot???
+// Initialized to 1 by setup() and the multitude of synchronization functions.  Set to 0 by
+// process_FT8_FFT() apparently at the end of a receive timeslot???
 int ft8_flag;
 
-//Apparently set when CQ button pressed, cleared when beacon mode ends???
+// Apparently set when CQ button pressed, cleared when beacon mode ends???
 extern int CQ_Flag;
 
 int WF_counter;
 int num_decoded_msg;
 
-//Apparently set when the transmitted carrier is on
+// Apparently set when the transmitted carrier is on
 int xmit_flag;
 
-//Apparently set when a transmission is pending
+// Apparently set when a transmission is pending
 int Transmit_Armned;
 
 int ft8_xmit_counter;
@@ -197,12 +192,8 @@ int tune_flag;
 
 int log_flag, logging_on;
 
-//Build the GPSHelper that ensures valid gps member variables
+// Build the GPSHelper that ensures valid gps member variables
 GPShelper gpsHelper(9600);
-
-
-
-
 
 /**
  * @brief Callback function invoked by GPShelper while it acquires a GPS fix
@@ -213,316 +204,298 @@ GPShelper gpsHelper(9600);
  *
  * Note:  The display must be initialized before GPShelper calls here
  *
-**/
+ **/
 static void gpsCallback(unsigned seconds) {
-  char msg[32];
-  snprintf(msg, sizeof(msg), "Acquiring GPS fix:  %03d", seconds);
-  displayInfoMsg(msg);
-}  //gpsCallback()
-
-
+    char msg[32];
+    snprintf(msg, sizeof(msg), "Acquiring GPS fix:  %03d", seconds);
+    displayInfoMsg(msg);
+}  // gpsCallback()
 
 /**
  ** @brief Sketch initialization
-**/
+ **/
 void setup(void) {
+    // Get the USB serial port running before something else goes wrong
+    Serial.begin(9600);
+    DTRACE();
 
-  //Get the USB serial port running before something else goes wrong
-  Serial.begin(9600);
-  DTRACE();
-
-  //Is Teensy recovering from a crash?
-  if (CrashReport) {
-    Serial.print(CrashReport);
-    delay(5000);
-  }
-
-  //Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
-  //won't run at the standard Teensy sample rate.  No known way to do this at compile-time with a floating constant.
-  if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
-    Serial.println("Build Firmware Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
-    Serial.println("You must copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
-    Serial.println("...before building the Pocket FT8 firmware.\n");
-    while (true) continue;  //Fatal
-  }
-
-  //Turn the transmitter off and the receiver on
-  pinMode(PIN_PTT, OUTPUT);
-  pinMode(PIN_RCV, OUTPUT);
-  digitalWrite(PIN_RCV, HIGH);  //Disable the PA and disconnect receiver's RF input from antenna
-  digitalWrite(PIN_PTT, LOW);   //Unground the receiver's RF input
-
-  //Initialize the Adafruit 480x320 TFT display
-  tft.begin(HX8357D);
-  tft.fillScreen(HX8357_BLACK);
-  tft.setTextColor(HX8357_YELLOW);
-  tft.setRotation(3);
-  tft.setTextSize(2);
-
-  //Initialize the SD library if the card is available
-  if (!SD.begin(BUILTIN_SDCARD)) {
-    displayInfoMsg("Unable to access SD card");
-    delay(2000);
-  }
-
-//Zero-out EEPROM when executed on a new Teensy (whose memory is filled with 0xff).  This prevents
-//calcuation of crazy transmit offset from 0xffff filled EEPROM.
-#define EEPROMSIZE 4284  //Teensy 4.1
-  bool newChip = true;
-  for (int adr = 0; adr < EEPROMSIZE; adr++) {
-    if (EEPROM.read(adr) != 0xff) newChip = false;
-  }
-  if (newChip) {
-    Serial.print("Initializing EEPROM for new chip\n");
-    EEPROMWriteInt(10, 0);  //Address 10 is offset but the encoding remains mysterious
-  }
-  DPRINTF("Offset = %d\n", EEPROM.read(10));
-
-  //Initialize the SI5351 clock generator.  Pocket FT8 Revisited boards use CLKIN input.
-  si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          //Charlie's correction was 2200 if that someday matters
-  si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  //KQ7B V1.00 uses cmos CLKIN, not a XTAL
-  si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  //All PLLs using CLKIN
-  si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
-  si5351.set_freq(3276800, SI5351_CLK2);  //Receiver's PLL clock for Si4735
-  si5351.output_enable(SI5351_CLK2, 1);   //Receiver's clock is always on
-  si5351.output_enable(SI5351_CLK0, 0);   //Disable transmitter for now
-
-  // Gets and sets the Si47XX I2C bus address
-  int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
-  if (si4735Addr == 0) {
-    displayInfoMsg("Fatal:  Si473X not found");
-    while (1) continue;  //Fatal
-  } else {
-    DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
-  }
-
-  //Read the JSON configuration file into the config structure.  We allow the firmware to continue even
-  //if the configuration file is unreadable or useless because the receiver is still operable.
-  JsonDocument doc;  //Key-Value pair doc
-  File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
-  DeserializationError error = deserializeJson(doc, configFile);
-  if (error) {
-    char msg[40];
-    snprintf(msg, sizeof(msg), "Unable to read Teensy SD config file, %s\n", CONFIG_FILENAME);
-    delay(1000);
-  }
-
-  //Extract the configuration parameters from doc or assign their defaults to the config struct
-  strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  //Station callsign
-  config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
-  strlcpy(config.locator, doc["Locator"] | "", sizeof(config.locator));
-  // config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
-  config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
-  config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
-  configFile.close();
-
-  //When debugging, print contents of the config file
-  DPRINTF("config[callsign]=%s\n", config.callsign);
-  DPRINTF("config[frequency]=%u\n", config.frequency);
-  DPRINTF("config[locator]=%s\n", config.locator);
-  // DPRINTF("config[audioRecordingDuration]=%lu\n", config.audioRecordingDuration);
-  DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
-  DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
-
-  //Argh... copy station callsign config struct to C global variables (fix someday)
-  strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
-
-  //Initialize the SI4735 receiver
-  delay(10);
-  et1 = millis();
-  loadSSB();
-  et2 = millis();
-  delay(10);
-  si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
-  delay(10);
-  si4735.setSSB(MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, config.frequency, 1, USB);  //FT8 is *always* USB
-  delay(10);
-  currentFrequency = si4735.getFrequency();
-  si4735.setVolume(50);
-  display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
-
-  //Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
-  //frequency which is stabilized but *not* determined by the Si5351.
-  //The apparent result of all this is the transmit and receive
-  //frequencies may not be obviously aligned (need to understand this better).
-  Serial.println(" ");
-  Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
-  Serial.println("Use keyboard u to raise, d to lower, & s to save ");
-  Serial.println(" ");
-
-  //Initialize the receiver's DSP chain
-  init_DSP();
-  initalize_constants();
-  AudioMemory(20);
-
-  // //If we are recording raw audio to SD, then create/open the SD file for writing
-  // if (config.audioRecordingDuration > 0) {
-  //   if ((ft8Raw = SD.open(AUDIO_RECORDING_FILENAME, FILE_WRITE)) == 0) {
-  //     Serial.printf("Unable to open %s\n", AUDIO_RECORDING_FILENAME);
-  //   }
-  // }
-
-  display_all_buttons();
-  open_log_file();
-
-  //Start the audio pipeline
-  queue1.begin();
-
-  //Set operating frequency
-  set_startup_freq();
-  delay(10);
-  display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
-
-  //Sync MCU and RTC time with GPS if it's working and can get a timely fix
-  if (gpsHelper.obtainGPSfix(config.gpsTimeout, gpsCallback)) {
-
-    //Set the MCU time to the GPS result
-    setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
-    DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gpsHelper.month, gpsHelper.day, gpsHelper.year, gpsHelper.hour, gpsHelper.minute, gpsHelper.second);
-
-    //Now set the Teensy RTC to the GPS-derived time in the MCU
-    Teensy3Clock.set(now());
-
-    //Use the GPS-derived locator unless config.json hardwired it to something
-    if (strlen(config.locator) == 0) {
-      strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
-      DPRINTF("GPS derived Locator = %s\n", Locator);
+    // Is Teensy recovering from a crash?
+    if (CrashReport) {
+        Serial.print(CrashReport);
+        delay(5000);
     }
 
-    //Inform user
-    displayInfoMsg("Using GPS and UTC");
-  } else {
-    displayInfoMsg("GPS and UTC unavailable");
-  }
+    // Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
+    // won't run at the standard Teensy sample rate.  No known way to do this at compile-time with a floating constant.
+    if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
+        Serial.println("Build Firmware Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
+        Serial.println("You must copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
+        Serial.println("...before building the Pocket FT8 firmware.\n");
+        while (true) continue;  // Fatal
+    }
 
-  //Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
-  setSyncProvider(getTeensy3Time);
+    // Turn the transmitter off and the receiver on
+    pinMode(PIN_PTT, OUTPUT);
+    pinMode(PIN_RCV, OUTPUT);
+    digitalWrite(PIN_RCV, HIGH);  // Disable the PA and disconnect receiver's RF input from antenna
+    digitalWrite(PIN_PTT, LOW);   // Unground the receiver's RF input
 
-  //Misc initialization
-  set_Station_Coordinates(Locator);
+    // Initialize the Adafruit 480x320 TFT display
+    tft.begin(HX8357D);
+    tft.fillScreen(HX8357_BLACK);
+    tft.setTextColor(HX8357_YELLOW);
+    tft.setRotation(3);
+    tft.setTextSize(2);
 
-  receive_sequence();  //Setup to receive at start of first timeslot
+    // Initialize the SD library if the card is available
+    if (!SD.begin(BUILTIN_SDCARD)) {
+        displayInfoMsg("Unable to access SD card");
+        delay(2000);
+    }
 
-  //Start receiving in a new timeslot
-  //start_time = millis();     //Note start time for update_synchronization()
-  //update_synchronization();  //Do we really need this in-addition to and before waitForFT8timeslot()?
-  waitForFT8timeslot();  //Wait for a 15 second FT8 timeslot
+// Zero-out EEPROM when executed on a new Teensy (whose memory is filled with 0xff).  This prevents
+// calcuation of crazy transmit offset from 0xffff filled EEPROM.
+#define EEPROMSIZE 4284  // Teensy 4.1
+    bool newChip = true;
+    for (int adr = 0; adr < EEPROMSIZE; adr++) {
+        if (EEPROM.read(adr) != 0xff) newChip = false;
+    }
+    if (newChip) {
+        Serial.print("Initializing EEPROM for new chip\n");
+        EEPROMWriteInt(10, 0);  // Address 10 is offset but the encoding remains mysterious
+    }
+    DPRINTF("Offset = %d\n", EEPROM.read(10));
 
-}  //setup()
+    // Initialize the SI5351 clock generator.  Pocket FT8 Revisited boards use CLKIN input.
+    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          // Charlie's correction was 2200 if that someday matters
+    si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  // KQ7B V1.00 uses cmos CLKIN, not a XTAL
+    si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  // All PLLs using CLKIN
+    si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
+    si5351.set_freq(3276800, SI5351_CLK2);  // Receiver's PLL clock for Si4735
+    si5351.output_enable(SI5351_CLK2, 1);   // Receiver's clock is always on
+    si5351.output_enable(SI5351_CLK0, 0);   // Disable transmitter for now
 
+    // Gets and sets the Si47XX I2C bus address
+    int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
+    if (si4735Addr == 0) {
+        displayInfoMsg("Fatal:  Si473X not found");
+        while (1) continue;  // Fatal
+    } else {
+        DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
+    }
 
+    // Read the JSON configuration file into the config structure.  We allow the firmware to continue even
+    // if the configuration file is unreadable or useless because the receiver is still operable.
+    JsonDocument doc;  // Key-Value pair doc
+    File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
+    DeserializationError error = deserializeJson(doc, configFile);
+    if (error) {
+        char msg[40];
+        snprintf(msg, sizeof(msg), "Unable to read Teensy SD config file, %s\n", CONFIG_FILENAME);
+        delay(1000);
+    }
 
+    // Extract the configuration parameters from doc or assign their defaults to the config struct
+    strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  // Station callsign
+    config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
+    strlcpy(config.locator, doc["Locator"] | "", sizeof(config.locator));
+    // config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
+    config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
+    config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
+    configFile.close();
 
+    // When debugging, print contents of the config file
+    DPRINTF("config[callsign]=%s\n", config.callsign);
+    DPRINTF("config[frequency]=%u\n", config.frequency);
+    DPRINTF("config[locator]=%s\n", config.locator);
+    // DPRINTF("config[audioRecordingDuration]=%lu\n", config.audioRecordingDuration);
+    DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
+    DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
+
+    // Argh... copy station callsign config struct to C global variables (fix someday)
+    strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
+
+    // Initialize the SI4735 receiver
+    delay(10);
+    et1 = millis();
+    loadSSB();
+    et2 = millis();
+    delay(10);
+    si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
+    delay(10);
+    si4735.setSSB(MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, config.frequency, 1, USB);  // FT8 is *always* USB
+    delay(10);
+    currentFrequency = si4735.getFrequency();
+    si4735.setVolume(50);
+    display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
+
+    // Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
+    // frequency which is stabilized but *not* determined by the Si5351.
+    // The apparent result of all this is the transmit and receive
+    // frequencies may not be obviously aligned (need to understand this better).
+    Serial.println(" ");
+    Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
+    Serial.println("Use keyboard u to raise, d to lower, & s to save ");
+    Serial.println(" ");
+
+    // Initialize the receiver's DSP chain
+    init_DSP();
+    initalize_constants();
+    AudioMemory(20);
+
+    // //If we are recording raw audio to SD, then create/open the SD file for writing
+    // if (config.audioRecordingDuration > 0) {
+    //   if ((ft8Raw = SD.open(AUDIO_RECORDING_FILENAME, FILE_WRITE)) == 0) {
+    //     Serial.printf("Unable to open %s\n", AUDIO_RECORDING_FILENAME);
+    //   }
+    // }
+
+    display_all_buttons();
+    open_log_file();
+
+    // Start the audio pipeline
+    queue1.begin();
+
+    // Set operating frequency
+    set_startup_freq();
+    delay(10);
+    display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
+
+    // Sync MCU and RTC time with GPS if it's working and can get a timely fix
+    if (gpsHelper.obtainGPSfix(config.gpsTimeout, gpsCallback)) {
+        // Set the MCU time to the GPS result
+        setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
+        DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gpsHelper.month, gpsHelper.day, gpsHelper.year, gpsHelper.hour, gpsHelper.minute, gpsHelper.second);
+
+        // Now set the Teensy RTC to the GPS-derived time in the MCU
+        Teensy3Clock.set(now());
+
+        // Use the GPS-derived locator unless config.json hardwired it to something
+        if (strlen(config.locator) == 0) {
+            strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
+            DPRINTF("GPS derived Locator = %s\n", Locator);
+        }
+
+        // Inform user
+        displayInfoMsg("Using GPS and UTC");
+    } else {
+        displayInfoMsg("GPS and UTC unavailable");
+    }
+
+    // Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
+    setSyncProvider(getTeensy3Time);
+
+    // Misc initialization
+    set_Station_Coordinates(Locator);
+
+    receive_sequence();  // Setup to receive at start of first timeslot
+
+    // Start receiving in a new timeslot
+    // start_time = millis();     //Note start time for update_synchronization()
+    // update_synchronization();  //Do we really need this in-addition to and before waitForFT8timeslot()?
+    waitForFT8timeslot();  // Wait for a 15 second FT8 timeslot
+
+}  // setup()
 
 unsigned oldFlags = 0;
 
 void loop() {
+    // Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
+    unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
+    if (newFlags != oldFlags) {
+        // DPRINTF("newFlags = 0x%x\n", newFlags);
+        oldFlags = newFlags;
+    }
 
-  //Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
-  unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
-  if (newFlags != oldFlags) {
-    //DPRINTF("newFlags = 0x%x\n", newFlags);
-    oldFlags = newFlags;
-  }
+    // Apparently... if it's not time to decode incoming messages, then it's time to grab the recv'd sigs from A/D
+    if (decode_flag == 0) process_data();
 
-  //Apparently... if it's not time to decode incoming messages, then it's time to grab the recv'd sigs from A/D
-  if (decode_flag == 0) process_data();
+    // Is there buffered time-domain data for the DSP logic to work with?
+    if (DSP_Flag == 1) {
+        // Yes, transform recv'd time-domain audio to frequency domain (to see the FT8 channels)
+        process_FT8_FFT();
 
-  //Is there buffered time-domain data for the DSP logic to work with?
-  if (DSP_Flag == 1) {
+        // Is a transmission in-progress?  Why is this guarded by DSP_Flag???????
+        if (xmit_flag == 1) {
+            int offset_index = 5;  //???
 
-    //Yes, transform recv'd time-domain audio to frequency domain (to see the FT8 channels)
-    process_FT8_FFT();
+            // Is it time to modulate the SI5351 with the transmitter's next FSK tone?
+            if (ft8_xmit_counter >= offset_index && ft8_xmit_counter < 79 + offset_index) {
+                // Each tone transmits 3 bits of message
+                set_FT8_Tone(tones[ft8_xmit_counter - offset_index]);  // Program new FT8 tone into the SI5351
+            }
 
-    //Is a transmission in-progress?  Why is this guarded by DSP_Flag???????
-    if (xmit_flag == 1) {
+            ft8_xmit_counter++;  // Apparently counting tones in the FSK transmission
 
-      int offset_index = 5;  //???
+            // Is it time to switch from transmitting to receiving (i.e. all tones sent) at the end of our timeslot?
+            if (ft8_xmit_counter == 80 + offset_index) {
+                DPRINTF("End of transmit timeslot\n");
+                xmit_flag = 0;               // Indication that the transmission has ended
+                receive_sequence();          // Switch HW from transmitting to receiving
+                terminate_transmit_armed();  // Switch again then update GUI
+            }
+        }  // xmit_flag
 
-      //Is it time to modulate the SI5351 with the transmitter's next FSK tone?
-      if (ft8_xmit_counter >= offset_index && ft8_xmit_counter < 79 + offset_index) {
-        //Each tone transmits 3 bits of message
-        set_FT8_Tone(tones[ft8_xmit_counter - offset_index]);  //Program new FT8 tone into the SI5351
-      }
+        DSP_Flag = 0;
+        display_time(DISPLAY_TIME_X, DISPLAY_TIME_Y);
+        display_date(DISPLAY_DATE_X, DISPLAY_DATE_Y);
+    }  // DSP_Flag
 
-      ft8_xmit_counter++;  //Apparently counting tones in the FSK transmission
+    // Apparently:  Have we acquired all of the receive timeslot's data?
+    if (decode_flag == 1) {
+        DPRINTF("End of receive timeslot\n");
+        unsigned long td0 = millis();
+        num_decoded_msg = ft8_decode();  // Decode the received messages
+        DPRINTF("ft8_decode() %u msgs, time = %lu ms\n", num_decoded_msg, millis() - td0);
+        master_decoded = num_decoded_msg;
+        decode_flag = 0;
 
-      //Is it time to switch from transmitting to receiving (i.e. all tones sent) at the end of our timeslot?
-      if (ft8_xmit_counter == 80 + offset_index) {
-        DPRINTF("End of transmit timeslot\n");
-        xmit_flag = 0;               //Indication that the transmission has ended
-        receive_sequence();          //Switch HW from transmitting to receiving
-        terminate_transmit_armed();  //Switch again then update GUI
-      }
-    }  //xmit_flag
+        // Following a receive timeslot, if a message is waiting for transmission,
+        // turn-on the carrier and set xmit_flag to modulate it.
+        if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
+    }
 
-    DSP_Flag = 0;
-    display_time(DISPLAY_TIME_X, DISPLAY_TIME_Y);
-    display_date(DISPLAY_DATE_X, DISPLAY_DATE_Y);
-  }  //DSP_Flag
+    process_touch();
+    if (tune_flag == 1) process_serial();
 
-  //Apparently:  Have we acquired all of the receive timeslot's data?
-  if (decode_flag == 1) {
-    DPRINTF("End of receive timeslot\n");
-    unsigned long td0 = millis();
-    num_decoded_msg = ft8_decode();  //Decode the received messages
-    DPRINTF("ft8_decode() time = %lu ms\n", millis() - td0);
-    master_decoded = num_decoded_msg;
-    decode_flag = 0;
+    update_synchronization();
+    // rtc_synchronization();
 
-    //Following a receive timeslot, if a message is waiting for transmission,
-    //turn-on the carrier and set xmit_flag to modulate it.
-    if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
-  }
+    // process_touch();
+    // if (tune_flag == 1) process_serial();
 
-  process_touch();
-  if (tune_flag == 1) process_serial();
+    // //If we are recording audio, then stop after the requested seconds of raw audio data
+    // //at 6400 samples/second.
+    // if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned)AUDIO_SAMPLE_RATE) {
+    //   ft8Raw.close();
+    //   ft8Raw = NULL;
+    //   DPRINTF("Audio recording file, %s, closed with %ul samples\n", AUDIO_RECORDING_FILENAME, recordSampleCount);
+    // }
 
-  update_synchronization();
-  // rtc_synchronization();
-
-  //process_touch();
-  //if (tune_flag == 1) process_serial();
-
-  // //If we are recording audio, then stop after the requested seconds of raw audio data
-  // //at 6400 samples/second.
-  // if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned)AUDIO_SAMPLE_RATE) {
-  //   ft8Raw.close();
-  //   ft8Raw = NULL;
-  //   DPRINTF("Audio recording file, %s, closed with %ul samples\n", AUDIO_RECORDING_FILENAME, recordSampleCount);
-  // }
-
-}  //loop()
-
-
+}  // loop()
 
 time_t getTeensy3Time() {
-  return Teensy3Clock.get();
+    return Teensy3Clock.get();
 }
-
-
-
 
 void loadSSB() {
-  si4735.queryLibraryId();  // Is it really necessary here? I will check it.
-  si4735.patchPowerUp();
-  //si4735.setPowerUp(1, 1, 1, 0, 1, SI473X_ANALOG_DIGITAL_AUDIO);
-  //si4735.radioPowerUp();
-  delay(50);
-  si4735.downloadPatch(ssb_patch_content, size_content);
-  // Parameters
-  // AUDIOBW - SSB Audio bandwidth; 0 = 1.2KHz (default); 1=2.2KHz; 2=3KHz; 3=4KHz; 4=500Hz; 5=1KHz;
-  // SBCUTFLT SSB - side band cutoff filter for band passand low pass filter ( 0 or 1)
-  // AVC_DIVIDER  - set 0 for SSB mode; set 3 for SYNC mode.
-  // AVCEN - SSB Automatic Volume Control (AVC) enable; 0=disable; 1=enable (default).
-  // SMUTESEL - SSB Soft-mute Based on RSSI or SNR (0 or 1).
-  // DSP_AFCDIS - DSP AFC Disable or enable; 0=SYNC MODE, AFC enable; 1=SSB MODE, AFC disable.
-  //si4735.setSSBConfig(bandwidthIdx, 1, 0, 1, 0, 1);
-  si4735.setSSBConfig(2, 1, 0, config.enableAVC, 0, 1);  //2 = 3 kc bandwidth
-  DPRINTF("SI4735 AVC = %u\n", config.enableAVC);
+    si4735.queryLibraryId();  // Is it really necessary here? I will check it.
+    si4735.patchPowerUp();
+    // si4735.setPowerUp(1, 1, 1, 0, 1, SI473X_ANALOG_DIGITAL_AUDIO);
+    // si4735.radioPowerUp();
+    delay(50);
+    si4735.downloadPatch(ssb_patch_content, size_content);
+    // Parameters
+    // AUDIOBW - SSB Audio bandwidth; 0 = 1.2KHz (default); 1=2.2KHz; 2=3KHz; 3=4KHz; 4=500Hz; 5=1KHz;
+    // SBCUTFLT SSB - side band cutoff filter for band passand low pass filter ( 0 or 1)
+    // AVC_DIVIDER  - set 0 for SSB mode; set 3 for SYNC mode.
+    // AVCEN - SSB Automatic Volume Control (AVC) enable; 0=disable; 1=enable (default).
+    // SMUTESEL - SSB Soft-mute Based on RSSI or SNR (0 or 1).
+    // DSP_AFCDIS - DSP AFC Disable or enable; 0=SYNC MODE, AFC enable; 1=SSB MODE, AFC disable.
+    // si4735.setSSBConfig(bandwidthIdx, 1, 0, 1, 0, 1);
+    si4735.setSSBConfig(2, 1, 0, config.enableAVC, 0, 1);  // 2 = 3 kc bandwidth
+    DPRINTF("SI4735 AVC = %u\n", config.enableAVC);
 }
-
-
 
 /**
  * Apparently copies queued blocks of received audio into the FFT buffer
@@ -538,28 +511,25 @@ void loadSSB() {
  * Note:  If we sample for 12.64 seconds at 6400 samples/second, then we
  * anticipate acquiring 80896 samples during a complete timeslot.
  *
-**/
+ **/
 void process_data() {
+    if (queue1.available() >= num_que_blocks) {
+        // Copy received audio from queue buffers to the FFT buffer
+        for (int i = 0; i < num_que_blocks; i++) {
+            copy_to_fft_buffer(input_gulp + block_size * i, queue1.readBuffer());
+            queue1.freeBuffer();
+        }
 
-  if (queue1.available() >= num_que_blocks) {
+        for (int i = 0; i < input_gulp_size; i++) {
+            dsp_buffer[i] = dsp_buffer[i + input_gulp_size];
+            dsp_buffer[i + input_gulp_size] = dsp_buffer[i + 2 * input_gulp_size];
+            dsp_buffer[i + 2 * input_gulp_size] = input_gulp[i];
+        }
 
-    //Copy received audio from queue buffers to the FFT buffer
-    for (int i = 0; i < num_que_blocks; i++) {
-      copy_to_fft_buffer(input_gulp + block_size * i, queue1.readBuffer());
-      queue1.freeBuffer();
+        // There is apparently work to do for the DSP logic
+        DSP_Flag = 1;
     }
-
-    for (int i = 0; i < input_gulp_size; i++) {
-      dsp_buffer[i] = dsp_buffer[i + input_gulp_size];
-      dsp_buffer[i + input_gulp_size] = dsp_buffer[i + 2 * input_gulp_size];
-      dsp_buffer[i + 2 * input_gulp_size] = input_gulp[i];
-    }
-
-    //There is apparently work to do for the DSP logic
-    DSP_Flag = 1;
-  }
-}  //process_data()
-
+}  // process_data()
 
 /**
  * Copies one audio block of 16-bit words from source to destination
@@ -569,43 +539,41 @@ void process_data() {
  *
  * The AUDIO_BLOCK_SIZE appears to be cast-in-brass at 128 in AudioStream6400.h
  *
-**/
+ **/
 static void copy_to_fft_buffer(void *destination, const void *source) {
-  const uint16_t *src = (const uint16_t *)source;
-  uint16_t *dst = (uint16_t *)destination;
-  for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
-    *dst++ = *src++;  // real sample plus a zero for imaginary
-  }
+    const uint16_t *src = (const uint16_t *)source;
+    uint16_t *dst = (uint16_t *)destination;
+    for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
+        *dst++ = *src++;  // real sample plus a zero for imaginary
+    }
 
-  // //Configurable recording of raw 16-bit audio at 6400 samples/second to an SD file
-  // if (ft8Raw != NULL) {
-  //   ft8Raw.write(source, AUDIO_BLOCK_SAMPLES * sizeof(uint16_t));
-  //   recordSampleCount += AUDIO_BLOCK_SAMPLES;  //Increment count of recorded samples
-  //   if (recordSampleCount % (unsigned)AUDIO_SAMPLE_RATE == 0) {
-  //     DPRINTF("Audio recording in progress...\n");  //One second progress indicator
-  //   }
-  // }
+    // //Configurable recording of raw 16-bit audio at 6400 samples/second to an SD file
+    // if (ft8Raw != NULL) {
+    //   ft8Raw.write(source, AUDIO_BLOCK_SAMPLES * sizeof(uint16_t));
+    //   recordSampleCount += AUDIO_BLOCK_SAMPLES;  //Increment count of recorded samples
+    //   if (recordSampleCount % (unsigned)AUDIO_SAMPLE_RATE == 0) {
+    //     DPRINTF("Audio recording in progress...\n");  //One second progress indicator
+    //   }
+    // }
 
-}  //copy_to_fft_buffer()
-
+}  // copy_to_fft_buffer()
 
 /**
  * Updates synchronization using Teensy's TimeLib
  *
- *
-**/
+ * Appears to be dead code?
+ **/
 void rtc_synchronization() {
-  DPRINTF("*****rtc_synchronization()\n");
-  getTeensy3Time();
+    DPRINTF("*****rtc_synchronization()\n");
+    getTeensy3Time();
 
-  if (ft8_flag == 0 && second() % 15 == 0) {
-    ft8_flag = 1;
-    FT_8_counter = 0;
-    ft8_marker = 1;
-    WF_counter = 0;
-  }
+    if (ft8_flag == 0 && second() % 15 == 0) {
+        ft8_flag = 1;
+        FT_8_counter = 0;
+        ft8_marker = 1;
+        WF_counter = 0;
+    }
 }
-
 
 /**
  * Update timeslot synchronization using Arduino's elapsed time, millis()
@@ -623,29 +591,27 @@ void rtc_synchronization() {
  * accurate (see discussion in waitForFT8timeslot), then update_synchronization() may
  * accurately determine the beginning of subsequent timeslots.
  *
-**/
+ **/
 void update_synchronization() {
-  current_time = millis();
-  ft8_time = current_time - start_time;  //mS elapsed in current interval???
+    current_time = millis();
+    ft8_time = current_time - start_time;  // mS elapsed in current interval???
 
-  // ft8_hours = (int8_t)(ft8_time / 3600000);
-  // hours_fraction = ft8_time % 3600000;
-  // ft8_minutes = (int8_t)(hours_fraction / 60000);
-  // ft8_seconds = (int8_t)((hours_fraction % 60000) / 1000);
+    // ft8_hours = (int8_t)(ft8_time / 3600000);
+    // hours_fraction = ft8_time % 3600000;
+    // ft8_minutes = (int8_t)(hours_fraction / 60000);
+    // ft8_seconds = (int8_t)((hours_fraction % 60000) / 1000);
 
+    if (ft8_flag == 0 && ft8_time % 15000 <= 160) {  // Charlie's original sync decision used 200 mS now 160
+                                                     // if (ft8_time%15000 <= 160 || FT_8_counter > 91) {     //An idea from DX FT8 (Charlie's latest)
+        ft8_flag = 1;
+        FT_8_counter = 0;
+        ft8_marker = 1;
+        WF_counter = 0;
 
-  if (ft8_flag == 0 && ft8_time % 15000 <= 160) {  //Charlie's original sync decision used 200 mS now 160
-                                                   //if (ft8_time%15000 <= 160 || FT_8_counter > 91) {     //An idea from DX FT8 (Charlie's latest)
-    ft8_flag = 1;
-    FT_8_counter = 0;
-    ft8_marker = 1;
-    WF_counter = 0;
-
-    //Debug time synch problems :(
-    DPRINTF("Start timeslot, millis()=%lu -----------------------------------------------------------------------------------\n", millis());
-  }
+        // Debug time synch problems :(
+        DPRINTF("Start timeslot, millis()=%lu -----------------------------------------------------------------------------------\n", millis());
+    }
 }
-
 
 /**
  * This function appears to manually sync to an FT8 timeslot
@@ -658,20 +624,17 @@ void update_synchronization() {
  * If we had a dependable satellite receiver (or other super accurate clock), would the Sy button
  * and this function still be necessary???
  *
-**/
+ **/
 void sync_FT8(void) {
+    DPRINTF("*****sync_FT8()\n");
 
-  DPRINTF("*****sync_FT8()\n");
-
-  setSyncProvider(getTeensy3Time);  //commented out?
-  start_time = millis();
-  ft8_flag = 1;
-  FT_8_counter = 0;
-  ft8_marker = 1;
-  WF_counter = 0;
+    setSyncProvider(getTeensy3Time);  // commented out?
+    start_time = millis();
+    ft8_flag = 1;
+    FT_8_counter = 0;
+    ft8_marker = 1;
+    WF_counter = 0;
 }
-
-
 
 /**
  *  Wait for a 15-second FT8 timeslot (e.g. 0, 15, 30 or 45 seconds into a minute)
@@ -690,39 +653,37 @@ void sync_FT8(void) {
  *  An alternative approach might be to use GPS (which has ~100 ms accuracy) to record
  *  millis() at the true start of a timeslot and then wait for (millis()-record)%15000.
  *
-**/
+ **/
 void waitForFT8timeslot(void) {
-  DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
+    DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
 
-  displayInfoMsg("Waiting for timeslot");
+    displayInfoMsg("Waiting for timeslot");
 
-  //If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
-  if (gpsHelper.validFix) {
+    // If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
+    if (gpsHelper.validFix) {
+        // Calculate the value of elapsed millis() when the next FT8 timeslot will begin
+        unsigned long msGPS = gpsHelper.second * 1000 + gpsHelper.milliseconds;  // Milliseconds into the minute when GPShelper acquired UTC date/time
+        unsigned long msGPS2FT8 = 15000 - msGPS % 15000;                         // Milliseconds between GPSHelper acquisition and start of next FT8 timeslot
+        unsigned long millisAtFT8 = gpsHelper.elapsedMillis + msGPS2FT8;         // Elapsed runtime millis() at start of next FT8 timeslot (might be in the past)
+        while (millis() < millisAtFT8) continue;                                 // Wait for elapsed runtime to reach/exceed start of next FT8 timeslot
+        DPRINTF("msGPS=%lu, msGPS2FT8=%lu, millis()=%lu\n", msGPS, msGPS2FT8, millis());
 
-    //Calculate the value of elapsed millis() when the next FT8 timeslot will begin
-    unsigned long msGPS = gpsHelper.second * 1000 + gpsHelper.milliseconds;  //Milliseconds into the minute when GPShelper acquired UTC date/time
-    unsigned long msGPS2FT8 = 15000 - msGPS % 15000;                         //Milliseconds between GPSHelper acquisition and start of next FT8 timeslot
-    unsigned long millisAtFT8 = gpsHelper.elapsedMillis + msGPS2FT8;         //Elapsed runtime millis() at start of next FT8 timeslot (might be in the past)
-    while (millis() < millisAtFT8) continue;                                 //Wait for elapsed runtime to reach/exceed start of next FT8 timeslot
-    DPRINTF("msGPS=%lu, msGPS2FT8=%lu, millis()=%lu\n", msGPS, msGPS2FT8, millis());
+        // When we don't have valid GPS data, then we fall back to using Teensy timelib's 1 second clock resolution:(
+    } else {
+        // Wait for the end of the current 15 second FT8 timeslot.  This will arise at 0, 15, 30 or 45 seconds past the current minute.
+        // Sadly... second() has only 1000 ms resolution and, without GPS, its accuracy may not be what FT8 needs.
+        while ((second()) % 15 != 0) continue;
+    }
 
-    //When we don't have valid GPS data, then we fall back to using Teensy timelib's 1 second clock resolution:(
-  } else {
+    // Begin an FT8 timeslot
+    start_time = millis();  // Start of the first timeslot in ms of elapsed execution
+    ft8_flag = 1;
+    FT_8_counter = 0;
+    ft8_marker = 1;
+    WF_counter = 0;
 
-    //Wait for the end of the current 15 second FT8 timeslot.  This will arise at 0, 15, 30 or 45 seconds past the current minute.
-    //Sadly... second() has only 1000 ms resolution and, without GPS, its accuracy may not be what FT8 needs.
-    while ((second()) % 15 != 0) continue;
-  }
+    // Update display
+    displayInfoMsg("RECV");
 
-  //Begin an FT8 timeslot
-  start_time = millis();  //Start of the first timeslot in ms of elapsed execution
-  ft8_flag = 1;
-  FT_8_counter = 0;
-  ft8_marker = 1;
-  WF_counter = 0;
-
-  //Update display
-  displayInfoMsg("RECV");
-
-  DPRINTF("Starting first 15 second FT8 timeslot, second()=%u, millis()=%lu --------------------------------------\n", second(), millis());
+    DPRINTF("Starting first 15 second FT8 timeslot, second()=%u, millis()=%lu --------------------------------------\n", second(), millis());
 }

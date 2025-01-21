@@ -106,6 +106,9 @@ extern int log_flag, logging_on;
 **/
 int ft8_decode(void) {
 
+  DTRACE();
+
+
   // Find top candidates by Costas sync score and localize them in time and frequency
   Candidate candidate_list[kMax_candidates];
 
@@ -113,6 +116,8 @@ int ft8_decode(void) {
   char decoded[kMax_decoded_messages][kMax_message_length];
 
   const float fsk_dev = 6.25f;  // tone deviation in Hz and symbol rate
+
+  DTRACE();
 
   // Go over candidates and attempt to decode messages
   int num_decoded = 0;
@@ -206,18 +211,25 @@ int ft8_decode(void) {
         }
 
         //When debugging, print info about the decoded received message
-        DPRINTF("decoded:  field1='%s' field2='%s' field3='%s' snr=%d Target_Locator='%s'\n",
-                new_decoded[num_decoded].field1, new_decoded[num_decoded].field2, new_decoded[num_decoded].field3,
-                new_decoded[num_decoded].snr, new_decoded[num_decoded].locator);
+        //DPRINTF("decoded:  field1='%s' field2='%s' field3='%s' snr=%d Target_Locator='%s'\n",
+        // new_decoded[num_decoded].field1, new_decoded[num_decoded].field2, new_decoded[num_decoded].field3,
+        // new_decoded[num_decoded].snr, new_decoded[num_decoded].locator);
 
         ++num_decoded;
       }
     }
   }  //End of big decode loop
 
+  DTRACE();
+
+  // //Investigate displaying decoded messages sooner (was in update_waterfall)
+  // if (num_decoded > 0) {
+  //   display_messages(num_decoded);  // Displays received messages
+  // }
 
   return num_decoded;
-}
+
+}  //ft8_decode()
 
 
 
@@ -233,38 +245,39 @@ int ft8_decode(void) {
  * be displayed, only the first message_limit messages appear.
  *
  * The LCD display region is rectangular, 240 pixels wide and 140 pixels high
+ *
+ * Warning:  fillRect() is amazingly time-consuming.
 **/
+static const unsigned lineHeight = 25;       //Height in pixels of one line of text (including leading)
+static unsigned previousMessagesHeight = 0;  //Height in pixels of previous timeslot's messages (all of them)
 void display_messages(int decoded_messages) {
 
   char message[kMax_message_length];
   char big_gulp[60];
 
-  //Erase the message display region on the LCD.  Using text size 2, each char should be 10 pixels wide
-  //so 240 pixels has room for 20 chars with 2 pixels for escapement.  Similarly, each char should be
-  //16 pixels tall so 140 pixels should have room for 7 rows of text if rows have 4 leading pixels between.
-  //See:  https://learn.adafruit.com/adafruit-gfx-graphics-library/graphics-primitives
-  //DTRACE();
-  tft.fillRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLACK);
-  //DTRACE();
+  //Erase the message display region on the LCD.  It turns out that fillRect() of a large region is slow, increasing the
+  //risk of missing the next FT8 timeslot.  So, rather than erase the entire message text region, we track and erase only
+  //the area actually used by the previous timeslot's messages.
+  DTRACE();
+  //tft.fillRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLACK);
+  tft.fillRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, previousMessagesHeight, HX8357_BLACK);
+  DPRINTF("Erased %u pixels high\n",previousMessagesHeight);
+  previousMessagesHeight = 0;  //Reset to calculate height of this timeslot's messages in loop below
 
   //Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
   //field3 is an RSL or locator or ???.
-  //for (int i = 0; i < decoded_messages && i < message_limit; i++) {   //Charlie's leading handled 6 rows of text
-  for (int i = 0; i < decoded_messages && i <= message_limit; i++) {  //KQ7B thinks we can handle 7 rows of text???
+  for (int i = 0; i < decoded_messages && i < message_limit; i++) {   //Charlie's leading handled 6 rows of text
 
     //snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);  //TFT displayed text
     snprintf(message, sizeof(message), "%s %s %4s %d", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].snr);  //TFT displayed text
-
-    snprintf(big_gulp, sizeof(big_gulp), "%s %s", new_decoded[i].decode_time, message);  //Logged text includes timestamp
-
-    DPRINTF("display_message %u = '%s' snr=%d, loc='%s'\n", i, big_gulp, new_decoded[i].snr, new_decoded[i].locator);
+    //snprintf(big_gulp, sizeof(big_gulp), "%s %s", new_decoded[i].decode_time, message);                                                           //Logged text includes timestamp
+    DPRINTF("display_message %u = '%s' loc='%s'\n", i, message, new_decoded[i].locator);
 
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    tft.setTextSize(2);  //10X16 pixels per AdaFruit
-    //tft.setCursor(0, 100 + i * 25);   //Charlie's 6-row leading required 25 pixel high rows
-    tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * 20);  //Kq7B leading allows 7 rows, each 20 pixels tall
-
+    tft.setTextSize(2);                                                    //10X16 pixels per AdaFruit
+    tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);  //Kq7B leading allows 7 rows, each 20 pixels tall
     tft.print(message);
+    previousMessagesHeight += lineHeight;  //Keep track of extent of this Timeslot's messages
 
     //Don't we really want to log inside Check_Calling_Stations()?  This QSO may have nothing to do with us.
     //if (logging_on == 1) write_log_data(big_gulp);
