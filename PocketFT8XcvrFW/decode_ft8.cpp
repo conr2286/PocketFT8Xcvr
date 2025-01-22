@@ -246,42 +246,43 @@ int ft8_decode(void) {
  *
  * The LCD display region is rectangular, 240 pixels wide and 140 pixels high
  *
- * Warning:  fillRect() is amazingly time-consuming.
+ * Warning:  fillRect() is amazingly time-consuming.  Thus, we erase old messages by
+ * printing space chars.
 **/
-static const unsigned lineHeight = 25;       //Height in pixels of one line of text (including leading)
-static unsigned previousMessagesHeight = 0;  //Height in pixels of previous timeslot's messages (all of them)
+static const unsigned lineHeight = 25;     //Height in pixels of one line of text (including leading)
+static unsigned previousMessageCount = 0;  //Number of messages displayed in previous timeslot
 void display_messages(int decoded_messages) {
 
   char message[kMax_message_length];
   char big_gulp[60];
 
-  //Erase the message display region on the LCD.  It turns out that fillRect() of a large region is slow, increasing the
-  //risk of missing the next FT8 timeslot.  So, rather than erase the entire message text region, we track and erase only
-  //the area actually used by the previous timeslot's messages.
+  //Erase the message display region on the LCD.  It turns out that fillRect() of a large region is amazingly slow, increasing the
+  //risk of missing the following FT8 timeslot.  So... we erase with space characters.
   DTRACE();
   //tft.fillRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLACK);
-  tft.fillRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, previousMessagesHeight, HX8357_BLACK);
-  DPRINTF("Erased %u pixels high\n",previousMessagesHeight);
-  previousMessagesHeight = 0;  //Reset to calculate height of this timeslot's messages in loop below
 
   //Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
   //field3 is an RSL or locator or ???.
-  for (int i = 0; i < decoded_messages && i < message_limit; i++) {   //Charlie's leading handled 6 rows of text
-
-    //snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);  //TFT displayed text
-    snprintf(message, sizeof(message), "%s %s %4s %d", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].snr);  //TFT displayed text
-    //snprintf(big_gulp, sizeof(big_gulp), "%s %s", new_decoded[i].decode_time, message);                                                           //Logged text includes timestamp
-    DPRINTF("display_message %u = '%s' loc='%s'\n", i, message, new_decoded[i].locator);
-
-    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    tft.setTextSize(2);                                                    //10X16 pixels per AdaFruit
-    tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);  //Kq7B leading allows 7 rows, each 20 pixels tall
+  tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);                     //Currently... all messages are the same color
+  tft.setTextSize(2);                                                //10X16 pixels per AdaFruit
+  for (int i = 0; i < decoded_messages && i < message_limit; i++) {  //Charlie's leading handled 6 rows of text
+    snprintf(message, sizeof(message), "%s %s %4s %d", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].snr);  
+    //DPRINTF("display_message %u = '%s' loc='%s'\n", i, message, new_decoded[i].locator);
+    strlpad(message, sizeof(message), ' ');  //Padding is faster than fillRect()
+    tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
     tft.print(message);
-    previousMessagesHeight += lineHeight;  //Keep track of extent of this Timeslot's messages
-
-    //Don't we really want to log inside Check_Calling_Stations()?  This QSO may have nothing to do with us.
-    //if (logging_on == 1) write_log_data(big_gulp);
   }
+
+  //Erase messages lines from the previous timeslot that weren't overwritten above
+  message[0] = 0;                          //An empty line
+  strlpad(message, sizeof(message), ' ');  //A line of spaces
+  for (int i = decoded_messages; i < previousMessageCount; i++) {
+    tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
+    tft.print(message);  //A line of spaces to clear previous timeslot's messages
+  }
+  previousMessageCount = decoded_messages;  //Remember for next timeslot
+  DTRACE();
+
 }  //display_messages()
 
 
