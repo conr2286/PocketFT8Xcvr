@@ -27,7 +27,7 @@ extern HX8357_t3n tft;
 
 
 /**
- * Local helper function to pad a char[] to a specified length
+ * Helper function to pad a char[] to a specified length
  *
  * @param str  Pointer to the char[] string to pad
  * @param size sizeof(str) including the NUL terminator
@@ -39,7 +39,7 @@ extern HX8357_t3n tft;
  * size chars in str[].
  *
 **/
-static char* strlpad(char* str, unsigned size, char c) {
+ char* strlpad(char* str, unsigned size, char c) {
 
   const char NUL=0;
   bool paddingUnderway = false;
