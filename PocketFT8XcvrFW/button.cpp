@@ -1,5 +1,5 @@
 
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "HX8357_t3n.h"
 #include "button.h"
 #include "display.h"
