@@ -8,6 +8,7 @@
 #ifndef DECODE_FT8_H_
 #define DECODE_FT8_H_
 
+#include "msgTypes.h"
 
 int ft8_decode(void);
 
@@ -22,7 +23,7 @@ typedef struct
   int sync_score;        //
   int snr;               //Their received signal level
   int distance;          //Between their and our station
-
+  MsgType msgType;       //Type of received message (e.g. CQ, LOC, RSL...)
 } Decode;
 
 typedef struct

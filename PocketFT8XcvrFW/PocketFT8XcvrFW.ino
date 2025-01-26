@@ -80,6 +80,7 @@
 #include "pins.h"
 #include "si5351.h"
 #include "traffic_manager.h"
+#include "Sequencer.h"
 
 // Enable comments in the JSON configuration file
 #define ARDUINOJSON_ENABLE_COMMENTS 1
@@ -192,6 +193,9 @@ int offset_freq;
 int tune_flag;
 
 int log_flag, logging_on;
+
+//Build the transmit/receive message sequencer
+Sequencer sequencer;
 
 // Build the GPSHelper that ensures valid gps member variables
 GPShelper gpsHelper(9600);
@@ -444,16 +448,17 @@ void loop() {
 
   // Apparently:  Have we acquired all of the receive timeslot's data?
   if (decode_flag == 1) {
-    DPRINTF("End of receive timeslot\n");
+    DPRINTF("Decode recvd msgs\n");
     unsigned long td0 = millis();
     num_decoded_msg = ft8_decode();  // Decode the received messages
-    DPRINTF("ft8_decode() %u msgs, time = %lu ms\n", num_decoded_msg, millis() - td0);
+    DPRINTF("ft8_decode() %u msgs in time = %lu ms\n", num_decoded_msg, millis() - td0);
     master_decoded = num_decoded_msg;
     decode_flag = 0;
 
     // Following a receive timeslot, if a message is waiting for transmission,
     // turn-on the carrier and set xmit_flag to modulate it.
     if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
+    DPRINTF("Awaiting next timeslot\n");
   }
 
   process_touch();
@@ -564,22 +569,24 @@ static void copy_to_fft_buffer(void *destination, const void *source) {
 
 }  // copy_to_fft_buffer()
 
-/**
- * Updates synchronization using Teensy's TimeLib
- *
- * Appears to be dead code?
- **/
-void rtc_synchronization() {
-  DPRINTF("*****rtc_synchronization()\n");
-  getTeensy3Time();
+// /**
+//  * Updates synchronization using Teensy's TimeLib
+//  *
+//  * Accuracy limited to +/- 1 second
+//  *
+//  * Appears to be dead code
+//  **/
+// void rtc_synchronization() {
+//   DPRINTF("*****rtc_synchronization()\n");
+//   getTeensy3Time();
 
-  if (ft8_flag == 0 && second() % 15 == 0) {
-    ft8_flag = 1;
-    FT_8_counter = 0;
-    ft8_marker = 1;
-    WF_counter = 0;
-  }
-}
+//   if (ft8_flag == 0 && second() % 15 == 0) {
+//     ft8_flag = 1;
+//     FT_8_counter = 0;
+//     ft8_marker = 1;
+//     WF_counter = 0;
+//   }
+// }
 
 /**
  * Update timeslot synchronization using Arduino's elapsed time, millis()
@@ -608,12 +615,15 @@ void update_synchronization() {
   // ft8_minutes = (int8_t)(hours_fraction / 60000);
   // ft8_seconds = (int8_t)((hours_fraction % 60000) / 1000);
 
-  if (ft8_flag == 0 && ft8_time % 15000 <= 160) {  // Charlie's original sync decision used 200 mS now 160 mS (one FT8 symbol time)
-                                                   // if (ft8_time%15000 <= 160 || FT_8_counter > 91) {     //An idea from DX FT8 (Charlie's latest)
+  // Charlie's original sync decision used 200 mS now 160 mS (one FT8 symbol time)
+  if (ft8_flag == 0 && ft8_time % 15000 <= 160) {
     ft8_flag = 1;
     FT_8_counter = 0;
     ft8_marker = 1;
     WF_counter = 0;
+
+    //Notify sequencer
+    sequencer.timeslotEvent();
 
     //Debug missed timeslots (we are too late to receive the first symbol)
     if (current_time > nextTimeSlot + 160) {
@@ -622,7 +632,7 @@ void update_synchronization() {
     nextTimeSlot = current_time + 15000;
 
     // Debug time synch problems :(
-    DPRINTF("Start timeslot, millis()=%lu -----------------------------------------------------------------------------------\n", millis());
+    DPRINTF("Start timeslot -----------------------------------------------------------------------------------\n");
   }
 }
 
@@ -642,11 +652,16 @@ void sync_FT8(void) {
   DPRINTF("*****sync_FT8()\n");
 
   setSyncProvider(getTeensy3Time);  // commented out?
+
   start_time = millis();
   ft8_flag = 1;
   FT_8_counter = 0;
   ft8_marker = 1;
   WF_counter = 0;
+
+  //Reset sequencer
+  sequencer.begin();
+
 }
 
 /**
@@ -692,13 +707,16 @@ void waitForFT8timeslot(void) {
     while ((second()) % 15 != 0) continue;
   }
 
-  // Begin an FT8 timeslot
+  // Begin the first FT8 timeslot
   start_time = millis();              // Start of the first timeslot in ms of elapsed execution
   nextTimeSlot = start_time + 15000;  //Time (ms) when next timeslot should begin
   ft8_flag = 1;
   FT_8_counter = 0;
   ft8_marker = 1;
   WF_counter = 0;
+
+  // Notify the sequencer
+  sequencer.timeslotEvent();
 
   // Update display
   displayInfoMsg("RECV");
