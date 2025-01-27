@@ -1,9 +1,9 @@
 /**
  * SYNOPSIS
- *  Sequencing --- Implements a state machine for sequencing QSOs begun with our CQ or call
+ *  Sequencer --- Implements a state machine for sequencing QSOs begun with our CQ or call to remote
  *
  * NOTES
- *  All FT8 messages, received and transmitted, worldwide, occur at 15-second
+ *  All FT8 messages, received and transmitted, worldwide, transmit at 15-second
  *  timeslot intervals.  The intervals begin precisely at 0, 15, 30 and 45 seconds
  *  past a minute boundary.  Each message is of a fixed bit length, and requires
  *  12.6 seconds to transmit, the remaining dwell time is available for decoding
@@ -24,20 +24,21 @@
  *           
  *  K1JT is [re]transmitting CQ during even-numbered timeslots and listening for responses
  *  in odd-numbered timeslots.  K9AN responds during an odd-numbered timeslot to avoid
- *  "doubling" with K1JT's retransmissions.  If K9AN initially decodes K1JT's CQ during
- *  timeslot 4, they had only 2.4 seconds, at most, to choose to respond in the following
- *  timeslot (5).  If they procrastinated too long, then their response would necessarily
- *  have to wait for the next odd numbered timeslot (7) as K1JT likely will retransmit CQ
+ *  "doubling" with K1JT's transmissions.  If K9AN initially decodes K1JT's CQ during
+ *  timeslot 4, they had only 2.4 seconds, at most(!), to choose to respond in the following
+ *  timeslot (5).  If they procrastinated, then K9AN's response would necessarily
+ *  have to wait for the next odd numbered timeslot (7) as K1JT will likely retransmit CQ
  *  during timeslot 7.  
  *
  *  Proper sequencing is important, and is most effectively automated due to the short
- *  dwell times available between when a message is decoded, displayed and the following
- *  timeslot begins.  Now consider the following in which a message is lost in the noise:
+ *  dwell time available between when a message is decoded, displayed and the following
+ *  timeslot begins.  Human operators simply can't react that fast.  Now consider the
+ *  following in which K1JT's response is lost in the ozone:
  *
  *  Timeslot Destn Source  Content Commentary
  *     0      CQ    K1JT    FN20    K1JT transmits CQ
  *     1      K1JT  K9AN    EN50    K9AN responds to K1JT with their grid square locator
- *     2      K9AN  K1JT    -20     K9AN listens but K1JT's transmission is lost in the noise
+ *     2      K9AN  K1JT    -20     K9AN listens but K1JT's transmission is lost in noise
  *     3      K1JT  K9AN    EN50    K9AN retransmits their grid square locator
  *     4      K9AN  K1JT    -20     K1JT retransmits the lost signal report
  *     5      K1JT  K9AN    R-12    K9AN rogers the received report and transmits K1JT's report
@@ -55,8 +56,8 @@
  *  some contests and/or special events.
  *
  * DESIGN 
- *  Sequencer is implemented as a state machine, driven by event notifications (methods),
- *  and responding with actions (methods).
+ *  Sequencer implements a state machine, driven by event notification methods,
+ *  and responds by invoking action methods.
  *
  *  Sequencer should be notified about received messages in the timeslot in which they
  *  are decoded (so it can prepare a response to transmit in the following timeslot).
@@ -66,7 +67,7 @@
  *  remote station changes their even/odd timeslot for transmissions.  
  *
  *  Sequencer employs a timer to recognize an incomplete QSO (changing band conditions,
- *  QRT remote station, whatever).
+ *  remote station QRT, whatever).
  *
  * REFERENCES
  *  1. Franke, Somerville and Taylor.  "The FT4 and FT8 Communication Protocols."
@@ -78,7 +79,6 @@
 #include "Sequencer.h"
 #include "SequencerStates.h"
 #include "decode_ft8.h"
-
 
 
 
@@ -94,9 +94,8 @@
 **/
 void Sequencer::timeslotEvent() {
 
-  this->sequenceNumber++;
-  DPRINTF("sequenceNumber=%lu\n",this->sequenceNumber);
-
+  sequenceNumber++;
+  DPRINTF("%s sequenceNumber=%lu\n", __FUNCTION__, sequenceNumber);
 }
 
 
@@ -105,10 +104,15 @@ void Sequencer::timeslotEvent() {
 /**
  *  [Re]Initialize the sequencer
  *
+ *  The sequencer notes which timeslot, even or odd-numbered, in which a remote station 
+ *  is transmitting and attempts to avoid "doubling" with it.  This method resets the
+ *  timeslot counter.
+ *
 **/
 void Sequencer::begin(void) {
-  this->sequenceNumber=0;       //Reset timeslot counter
-  DPRINTF("Sequencer reset\n");
+  sequenceNumber = 0;  //Reset timeslot counter
+  state = IDLE;        //Reset state to idle
+  DPRINTF("%s\n", __FUNCTION__);
 }
 
 
@@ -126,9 +130,63 @@ void Sequencer::begin(void) {
  *    msg->msgType  Defines what to expect in field3 (e.g. LOC, RSL, 73...)
  *
 **/
-void Sequencer::receivedMsgEvent(Decode* msg) {
+void Sequencer::receivedMsgEvent(unsigned index) {
 
   //When debugging, print some things from the received message
-  DPRINTF("%s %s %s msgType=%u, seq=%lu\n", msg->field1, msg->field2, msg->field3, msg->msgType, this->sequenceNumber);
+  DPRINTF("%s %s %s %s msgType=%u, seq=%lu\n", __FUNCTION__, msgs[index].field1, msgs[index].field2, msgs[index].field3, msgs[index].msgType, sequenceNumber);
+}
 
+
+
+
+
+/**
+ *  CQ Button clicked event
+ *
+ *  This event handler is invoked when the operator clicks on the GUI CQ button
+ *
+**/
+void Sequencer::cqButtonEvent() {
+
+  DPRINTF("%s state=%u\n", __FUNCTION__, state);
+
+  //The required action depends upon which state the Synchronizer machine currently resides
+  switch (state) {
+
+    //Prepare to transmit CQ in the next appropriate timeslot
+    case IDLE:         //We are currently idle
+    case LOC_PENDING:  //Operator decided to CQ rather than respond to a known station
+
+      break;
+
+    //The CQ button is ignored during most states
+    case CQ_PENDING:   //Impatient operator --- CQ is already pending
+    case XMIT_CQ:      //Impatient operator --- we are already transmitting CQ
+    case LISTEN_LOC:   //Impatient operator --- we are awaiting response to our CQ
+    case XMIT_RSL:     //QSO is in progress
+    case LISTEN_RRSL:  //QSO is in progress
+    case XMIT_RR73:    //QSO is in progress
+    case LISTEN_73:    //QSO is in progress
+    case XMIT_LOC:     //CALLing: Transmitting our locator in response to their CQ
+    case LISTEN_RSL:   //QSOing:  Listening for our RSL
+    case XMIT_RRSL:    //QSOing:  Transmitting Roger and their RSL
+    case LISTEN_RRR:   //QSOing:  Listen for their RRR/RR73/73
+    case XMIT_73:      //QSOing:  Transmitting 73
+      break;
+  }
+}
+
+
+
+
+
+/**
+ *  Displayed message click event
+ *
+ *
+**/
+void Sequencer::msgClickEvent(unsigned index) {
+
+  //When debugging, print some things from the clicked message
+  DPRINTF("%s %s %s msgType=%u, seq=%lu\n", msgs[index].field1, msgs[index].field2, msgs[index].field3, msgs[index].msgType, sequenceNumber);
 }

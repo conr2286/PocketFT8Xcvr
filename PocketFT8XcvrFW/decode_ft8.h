@@ -43,6 +43,7 @@ typedef struct
 } CQ_Station;
 
 
+Decode* getNewDecoded(void);
 
 void save_Answer_CQ_List(void);
 

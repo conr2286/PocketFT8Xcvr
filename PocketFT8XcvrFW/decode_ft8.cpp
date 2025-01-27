@@ -100,7 +100,19 @@ extern int Target_RSL;  // four character RSL  + /0
 extern time_t getTeensy3Time();
 extern int log_flag, logging_on;
 
-extern Sequencer sequencer;                //The QSO sequencer
+//Get a reference to the Sequencer singleton
+static Sequencer &seq = Sequencer::getSequencer();
+
+
+
+/**
+ *  Retrieve address of the new_decoded[] messages
+ *
+ *
+**/
+Decode* getNewDecoded() {
+  return new_decoded;
+}
 
 /**
  * Decode received FT8 signals into new_decoded[] of successfully decoded messages (if any)
@@ -200,13 +212,14 @@ int ft8_decode(void) {
         if (raw_RSL > 160) raw_RSL = 160;
         display_RSL = (raw_RSL - 160) / 6;
         new_decoded[num_decoded].snr = display_RSL;  //Their received signal level at our station
+        new_decoded[num_decoded].msgType = msgType; //Record the msgType
 
         char Target_Locator[] = "    ";
 
         //Assume field3 is a locator
         strlcpy(Target_Locator, new_decoded[num_decoded].field3, sizeof(Target_Locator));
 
-        //Try to determine if field3 is really a locator (msgType is best indicator except for CQ)
+        //Try to determine if field3 is really a locator (Note:  msgType is the preferred indicator *except* for CQ)
         if (validate_locator(Target_Locator) == 1) {
           distance = Target_Distance(Target_Locator);
           new_decoded[num_decoded].distance = (int)distance;
@@ -217,7 +230,8 @@ int ft8_decode(void) {
         }
 
         //Inform QSO sequencer about newly received message
-        sequencer.receivedMsgEvent(&new_decoded[num_decoded]);
+        DPRINTF("new_decoded[num_decoded].msgType=%u\n",new_decoded[num_decoded].msgType);
+        seq.receivedMsgEvent(num_decoded);
 
         //When debugging, print info about the decoded received message
         //DPRINTF("decoded:  field1='%s' field2='%s' field3='%s' snr=%d Target_Locator='%s'\n",
@@ -422,8 +436,8 @@ int Check_Calling_Stations(int num_decoded) {
 
       //Log details from this message to us
       if (logging_on == 1) write_log_data(big_gulp);
-      DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
-      DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
+      //DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
+      //DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
 
       num_Calling_Stations++;
       message_test = i + 100;  //100+index of this calling station.  Why the 100 bias???

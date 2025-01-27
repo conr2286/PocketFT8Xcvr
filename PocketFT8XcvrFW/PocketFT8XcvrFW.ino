@@ -194,8 +194,9 @@ int tune_flag;
 
 int log_flag, logging_on;
 
-//Build the transmit/receive message sequencer
-Sequencer sequencer;
+//Get a reference to the QSO Sequencer machine implementing a robo-like operator handling
+//QSOs arising from our own CQ and calls to a remote station
+Sequencer &seq = Sequencer::getSequencer();
 
 // Build the GPSHelper that ensures valid gps member variables
 GPShelper gpsHelper(9600);
@@ -623,7 +624,7 @@ void update_synchronization() {
     WF_counter = 0;
 
     //Notify sequencer
-    sequencer.timeslotEvent();
+    seq.timeslotEvent();
 
     //Debug missed timeslots (we are too late to receive the first symbol)
     if (current_time > nextTimeSlot + 160) {
@@ -660,8 +661,7 @@ void sync_FT8(void) {
   WF_counter = 0;
 
   //Reset sequencer
-  sequencer.begin();
-
+  seq.begin();
 }
 
 /**
@@ -716,7 +716,7 @@ void waitForFT8timeslot(void) {
   WF_counter = 0;
 
   // Notify the sequencer
-  sequencer.timeslotEvent();
+  seq.timeslotEvent();
 
   // Update display
   displayInfoMsg("RECV");

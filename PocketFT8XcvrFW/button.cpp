@@ -13,6 +13,7 @@
 #include <SI4735.h>
 #include <Wire.h>
 #include "pins.h"
+#include "Sequencer.h"
 
 //Define which I2C bus we are using
 #define WIRE WIRE_ETC
@@ -46,9 +47,12 @@ extern int tune_flag;
 extern uint16_t cursor_line;
 extern int offset_freq;
 
-const float ft8_shift=6.25;         //FT8 Hz/bin???
+const float ft8_shift = 6.25;  //FT8 Hz/bin???
 int start_up_offset_freq;
 extern int log_flag, logging_on;
+
+//Get a reference to the Sequencer singleton
+static Sequencer& seq = Sequencer::getSequencer();
 
 int CQ_Flag;
 int Beacon_State;
@@ -207,6 +211,7 @@ void executeButton(uint16_t index) {
         CQ_Flag = 0;
         sButtonData[6].active_state = true;
       }
+      seq.cqButtonEvent();
       delay(button_delay);
       break;
 
@@ -349,34 +354,52 @@ int testButton(uint8_t index) {
     return 0;
 }
 
+
+/**
+ *  Check for click on received message
+ *
+ *
+**/
 void check_FT8_Touch(void) {
 
   int FT_8_TouchIndex;
   int y_test;
-
 
   if (draw_x < 400 && (draw_y > 90 && draw_y < 300)) {
     y_test = draw_y - 90;
     FT_8_TouchIndex = y_test / 25;
     if (FT_8_TouchIndex < master_decoded) display_selected_call(FT_8_TouchIndex);
   }
+
 }  //check_FT8_Touch()
 
+
+
+
+
+/*
+ * Check for movement of transmit offset in waterfall
+ *
+ *
+**/
 void check_WF_Touch(void) {
   if (draw_x < 350 && draw_y < 90) {
 
     cursor_line = draw_x;
     cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-    DPRINTF("cursor_line=%u, cursor_freq=%u\n",cursor_line,cursor_freq);
+    DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
     set_Xmit_Freq();
   }
 }  //check_WF_Touch()
 
 
+
+
+//?????
 void set_startup_freq(void) {
   cursor_line = 100;
   //start_up_offset_freq = EEPROMReadInt(10);     //Charlie
-  start_up_offset_freq = 0;                       //KQ7B
+  start_up_offset_freq = 0;  //KQ7B
   cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
   offset_freq = start_up_offset_freq;
   DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
