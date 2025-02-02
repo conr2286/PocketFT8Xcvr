@@ -200,18 +200,16 @@ void executeButton(uint16_t index) {
   switch (index) {
 
     case 0:  //CQ (e.g. CQ KQ7B DN15)
-      //DTRACE();
-      if (sButtonData[0].state) {
-        //DTRACE();
-        CQ_Flag = 1;
-        sButtonData[6].active_state = false;
-        Beacon_State = 0;
-      } else {
-        //DTRACE();
-        CQ_Flag = 0;
-        sButtonData[6].active_state = true;
-      }
+      DTRACE();
       seq.cqButtonEvent();
+      // if (sButtonData[0].state) {
+      //   // CQ_Flag = 1;
+      //   sButtonData[6].active_state = false;
+      //   // Beacon_State = 0;
+      // } else {
+      //   //CQ_Flag = 0;
+      //   sButtonData[6].active_state = true;
+      // }
       delay(button_delay);
       break;
 

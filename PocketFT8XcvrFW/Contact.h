@@ -8,6 +8,8 @@ class Contact {
 
 public:
 
+  unsigned oddEven;  //Remote transmitting in 1==odd, 0=even sequenceNumber
+
   //Define the size of the char arrays recording the various fields
   static const int sizeCallsign = 12;  //11 chars and a NUL
   static const int sizeDate = 9;       //8 chars and a NUL
@@ -18,17 +20,22 @@ public:
   static const int sizeSOTAref = 14;   //14 chars and a NUL
   static const int sizeLocator = 7;    //6 chars and a NUL
 
-  //Define the methods recording info about a contact
-  Contact();                                                                    //Constructor
-  void begin(char* workedCall, char* myCall, unsigned long freq, char* mode);    //Begin a new QSO
-  bool isValid(void);                                                       //Determine if the current QSO, if any, is a valid (completed) contact
+  //Constructor and other significant methods
+  Contact() {
+    this->reset();
+  }                                                                       
+  void begin(char* workedCall, unsigned freq, char* mode, unsigned oddEven);  //Begin a new, active QSO
+  void reset(void);                                                                //Reset all fields in a Contact instance, making it inactive
+  bool isValid(void);                                                              //Determine if the current QSO, if any, is a valid (completed) contact
+  bool isActive(void);                                                             //Determine if a Contact instance has recorded any values
+
+  //Define the setters for the contact fields
   void setWorkedRSL(char* rsl);
   void setMyRSL(char* rsl);
   void setMySOTAref(char* sotaRef);
   void setWorkedSOTAref(char* sotaRef);
   void setMyLocator(char* locator);
   void setWorkedLocator(char* locator);
-  bool end();                                                               //End a QSO
 
   //Define the getters used to extract info about the contact
   char* getWorkedCall();
@@ -44,7 +51,10 @@ public:
   char* getMyLocator();
   char* getWorkedLocator();
 
+
 private:
+
+  bool active;  //true if contact has recorded anything about a QSO
 
   //These are the required fields for a valid (completed) contact
   char workedCall[sizeCallsign];  //Remote station's callsign

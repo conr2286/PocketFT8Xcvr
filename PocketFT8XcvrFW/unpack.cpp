@@ -198,9 +198,9 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
   // }
 
   //Check igrid4 for a 4-char locator in G15  See reference, Table 2.
-  DPRINTF("igrid4=%u\n",igrid4);
+  //DPRINTF("igrid4=%u\n",igrid4);
   if (igrid4 <= MAXGRID4) {
-    DPRINTF("igrid4=%u, MAXGRID4=%u\n",igrid4, MAXGRID4);
+    //DPRINTF("igrid4=%u, MAXGRID4=%u\n",igrid4, MAXGRID4);
     // Extract 4 symbol grid locator into field3
     char *dst = field3;
     uint16_t n = igrid4;
@@ -223,7 +223,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
 
     //We received a locator message.  The 4-char grid square is in field3[].  Assume Locator message type.
     *msgType = MSG_LOC;
-    DTRACE();
+    //DTRACE();
 
     // Decode igrid4 when it's an RRR, RR73, 73, blank or signal report
   } else {
@@ -231,7 +231,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
 
     //Assume this is one form of the several end-of-transmission messages
     *msgType = MSG_EOT;
-    DPRINTF("irpt=%u\n",irpt);
+    //DPRINTF("irpt=%u\n",irpt);
 
     // Check special cases first
     if (irpt == 1) field3[0] = '\0';
@@ -250,7 +250,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
     // if(msg(1:3).eq.'CQ ' .and. irpt.ge.2) unpk77_success=.false.
     // if (irpt >= 2 && strncmp(field1, "CQ", 2) == 0) return -1;
   }
-  DTRACE();
+  //DTRACE();
   //If the destination callsign begins with "CQ" then change msgType to MSG_CQ
   if (strncmp(field1,"CQ",2)==0) *msgType=MSG_CQ;     //CQ overides anything else we discovered
 

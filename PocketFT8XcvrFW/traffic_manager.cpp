@@ -39,18 +39,20 @@ uint64_t F_Long, F_FT8, F_Offset;
 **/
 void transmit_sequence(void) {
 
+  DTRACE();
+
   displayInfoMsg(get_message(),RED);
 
   //Program the transmitter clock at F_Long
   set_Xmit_Freq();
-  si5351.set_freq(F_Long, SI5351_CLK0);
+  //si5351.set_freq(F_Long, SI5351_CLK0);
 
   //Disconnect receiver from antenna and enable the SN74ACT244 PA
   pinMode(PIN_RCV, OUTPUT);
   digitalWrite(PIN_RCV, LOW);
 
   //Set receiver's volume down low
-  si4735.setVolume(35);
+  si4735.setVolume(/*35*/0);
 
   //Enable the transmitter clock
   si5351.drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);  // Set for max power if desired
@@ -60,7 +62,6 @@ void transmit_sequence(void) {
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
 
-  DPRINTF("XMIT sec=%02d\n",second());
 }
 
 
@@ -71,6 +72,7 @@ void transmit_sequence(void) {
  *
 **/
 void receive_sequence(void) {
+  DTRACE();
 
   displayInfoMsg("RECV");
 
@@ -89,8 +91,6 @@ void receive_sequence(void) {
   si4735.setVolume(50);
   clear_FT8_message();
 
-  DPRINTF("RECV sec=%02d\n",second());
-
 }  //receive_sequence()
 
 
@@ -101,6 +101,7 @@ void receive_sequence(void) {
  *
 **/
 void tune_On_sequence(void) {
+  DTRACE();
 
   displayInfoMsg("TUNE");
 
@@ -136,6 +137,7 @@ void tune_On_sequence(void) {
  * Turn-off transmitter w/o affecting outbound message[]
 **/
 void tune_Off_sequence(void) {
+  DTRACE();
 
   displayInfoMsg("RECV");
 
@@ -167,7 +169,7 @@ void set_Xmit_Freq() {
   //display_value(400, 320, ( int ) cursor_freq);
   // display_value(400, 360,  offset_freq);
   F_Long = (uint64_t)((currentFrequency * 1000 + cursor_freq + offset_freq) * 100);
-  DPRINTF("%s currentFrequency=%u, cursor_freq=%u, offset_freq=%d, F_Long=%llu\n", __FUNCTION__, currentFrequency, cursor_freq, offset_freq, F_Long);
+  DFPRINTF("currentFrequency=%u, cursor_freq=%u, offset_freq=%d, F_Long=%llu\n", currentFrequency, cursor_freq, offset_freq, F_Long);
   //F_Long = (uint64_t) ((currentFrequency * 1000 + cursor_freq ) * 100);
   si5351.set_freq(F_Long, SI5351_CLK0);
 
@@ -196,12 +198,11 @@ void set_FT8_Tone(uint8_t ft8_tone) {
 //call setup_to_transmit_on_next_DSP_Flag).  I think the outbound string
 //resides in the global message[].
 void setup_to_transmit_on_next_DSP_Flag(void) {
-  //DPRINTF("%s\n", __FUNCTION__);
+  DTRACE();
   ft8_xmit_counter = 0;
   transmit_sequence();  //Turns-on the transmitter carrier at current F_Long ??
-  set_Xmit_Freq();      //Recalculates F_long and reprograms SI5351 ??
+  //set_Xmit_Freq();      //Recalculates F_long and reprograms SI5351 ??
   xmit_flag = 1;        //This flag appears to trigger loop() to modulate the carrier
-  DPRINTF("setup_to_transmit_on_next_DSP_Flag F_Long=%llu Hz\n",F_Long/100);
 }
 
 
@@ -223,56 +224,56 @@ void setup_to_transmit_on_next_DSP_Flag(void) {
 **/
 void service_CQ(void) {
 
-  DPRINTF("service_CQ(), Beacon_state=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
+  DFPRINTF("Beacon_state=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
 
   int receive_index;
 
-  switch (Beacon_State) {
+  //switch (Beacon_State) {
 
-    case 0:
-      DTRACE();
-      Beacon_State = 1;  //Listen
-      break;
+  //   case 0:
+  //     DTRACE();
+  //     Beacon_State = 1;  //Listen
+  //     break;
 
-    case 1:
-      DTRACE();
-      receive_index = Check_Calling_Stations(num_decoded_msg);
+  //   case 1:
+  //     DTRACE();
+  //     receive_index = Check_Calling_Stations(num_decoded_msg);
 
-      if (receive_index >= 0) {
-        display_selected_call(receive_index);
-        set_message(2);  // Prepare the RSL message for transmission
-      } else
-        set_message(0);  // Prepare the CQ message for transmission
-      Transmit_Armned = 1;
-      Beacon_State = 2;
+  //     if (receive_index >= 0) {
+  //       display_selected_call(receive_index);
+  //       set_message(2);  // Prepare the RSL message for transmission
+  //     } else
+  //       set_message(0);  // Prepare the CQ message for transmission
+  //     Transmit_Armned = 1;
+  //     Beacon_State = 2;
 
-      break;
+  //     break;
 
-    case 2:
-      DTRACE();
-      receive_index = Check_Calling_Stations(num_decoded_msg);
+  //   case 2:
+  //     DTRACE();
+  //     receive_index = Check_Calling_Stations(num_decoded_msg);
 
-      if (receive_index >= 0) {
-        display_selected_call(receive_index);
-        set_message(3);  // Prepare the 73 message for transmission
-        Transmit_Armned = 1;
-      }
+  //     if (receive_index >= 0) {
+  //       display_selected_call(receive_index);
+  //       set_message(3);  // Prepare the 73 message for transmission
+  //       Transmit_Armned = 1;
+  //     }
 
-      Beacon_State = 0;
-      break;
+  //     Beacon_State = 0;
+  //     break;
 
-      /*
-      case 3: receive_index = Check_Calling_Stations(num_decoded_msg);
+  //     /*
+  //     case 3: receive_index = Check_Calling_Stations(num_decoded_msg);
       
-              if(receive_index >= 0) {
-              display_selected_call(receive_index);
-              set_message(3); // send 73
-              Transmit_Armned = 1;
-              }
-              Beacon_State = 0;
+  //             if(receive_index >= 0) {
+  //             display_selected_call(receive_index);
+  //             set_message(3); // send 73
+  //             Transmit_Armned = 1;
+  //             }
+  //             Beacon_State = 0;
        
-      break;
-      */
-  }
+  //     break;
+  //     */
+  // }
   DPRINTF("Exit service_CQ()) with Beacon_State=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
 }  //service_CQ()

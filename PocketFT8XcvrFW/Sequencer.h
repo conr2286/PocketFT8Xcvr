@@ -2,16 +2,20 @@
 
 #include "decode_ft8.h"
 #include "SequencerStates.h"
+#include "Contact.h"
 
 
 class Sequencer {
 
 private:
 
+  //Information saved about a QSO
+  Contact qso;            //Info gathered about the QSO
+  uint8_t theirTimeslot;  //0==even, 1==odd
+
   //The Sequencer singleton's private constructor
   Sequencer() {
     sequenceNumber = 0;
-    msgs = getNewDecoded();
   }
 
   // Delete copy constructor and assignment operator to prevent copying
@@ -25,17 +29,15 @@ private:
 
 
   //Define the actions taken by the Sequencing State Machine
-  void actionXmitCQ();        //Transmit our CQ message
-  void actionXmitRSL(/*?*/);  //Transmit their signal report
-  void actionXmitLoc(/*?*/);  //Transmit our maidenhead locator
-  void actionXmitR73(/*?*/);  //Transmit 73
-  void actionLogQSO(/*?*/);   //Log completed QSO
-  void actionAbort(void);     //Abort QSO, transmission or tuning, and return to idle
+  void actionXmit(unsigned oddEven, SequencerStateType newState);  //Start transmitter in next timeslot
+
+  //Helper methods
+  bool isMsgForUs(Decode *msg);              //Determines if received msg is of interest to us
+  Decode *getDecodedMsg(unsigned msgIndex);  //Retrieves pointer to new_decoded[] message
 
   //Private member variables
   SequencerStateType state;      //The Sequencer's current state
   unsigned long sequenceNumber;  //The current timeslot's sequence number
-  Decode *msgs;                  //Decoded messages
 
 
 public:
@@ -43,9 +45,9 @@ public:
   //Define the events triggering the Sequencing State Machine transitions
   void begin();                           //Reset sequencer
   void timeslotEvent(void);               //FT8 timeslot boundary
-  void receivedMsgEvent(unsigned index);  //Received an FT8 message
+  void receivedMsgEvent(Decode *msg);     //Received an FT8 message
   void cqButtonEvent(void);               //CQ button clicked
-  void msgClickEvent(unsigned index);     //Received message clicked
+  void msgClickEvent(unsigned msgIndex);  //Received message clicked
   void abortEvent(void);                  //Abort transmission request
   void timeoutEvent(void);                //Timeout (QSO taking too long)
 

@@ -123,7 +123,7 @@ Decode* getNewDecoded() {
 **/
 int ft8_decode(void) {
 
-  DTRACE();
+  //DTRACE();
 
 
   // Find top candidates by Costas sync score and localize them in time and frequency
@@ -133,7 +133,7 @@ int ft8_decode(void) {
 
   const float fsk_dev = 6.25f;  // tone deviation in Hz and symbol rate
 
-  DTRACE();
+  //DTRACE();
 
   // Go over candidates and attempt to decode their messages
   int num_decoded = 0;
@@ -178,7 +178,7 @@ int ft8_decode(void) {
     if (rc < 0) continue;  //Unpack failure???
 
     snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);
-    DPRINTF("message='%s', msgType=%u\n", message, msgType);
+    //DPRINTF("message='%s', msgType=%u\n", message, msgType);
 
     // Check for duplicate messages (TODO: use hashing)
     bool found = false;
@@ -230,13 +230,10 @@ int ft8_decode(void) {
         }
 
         //Inform QSO sequencer about newly received message
-        DPRINTF("new_decoded[num_decoded].msgType=%u\n",new_decoded[num_decoded].msgType);
-        seq.receivedMsgEvent(num_decoded);
-
-        //When debugging, print info about the decoded received message
-        //DPRINTF("decoded:  field1='%s' field2='%s' field3='%s' snr=%d Target_Locator='%s'\n",
-        // new_decoded[num_decoded].field1, new_decoded[num_decoded].field2, new_decoded[num_decoded].field3,
-        // new_decoded[num_decoded].snr, new_decoded[num_decoded].locator);
+        //DPRINTF("new_decoded[num_decoded].msgType=%u\n",new_decoded[num_decoded].msgType);
+        //TODO:  Stampe received message with timeslot's sequence number
+        seq.receivedMsgEvent(&new_decoded[num_decoded]);
+        //DTRACE();
 
         ++num_decoded;
       }
@@ -274,7 +271,7 @@ void display_messages(int decoded_messages) {
 
   //Erase the message display region on the LCD.  It turns out that fillRect() of a large region is amazingly slow, increasing the
   //risk of missing the following FT8 timeslot.  So... we erase with space characters.
-  DTRACE();
+  //DTRACE();
   //tft.fillRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLACK);
 
   //Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
@@ -297,7 +294,7 @@ void display_messages(int decoded_messages) {
     tft.print(message);  //A line of spaces to clear previous timeslot's messages
   }
   previousMessageCount = decoded_messages;  //Remember for next timeslot
-  DTRACE();
+  //DTRACE();
 
 }  //display_messages()
 
@@ -415,7 +412,7 @@ int Check_Calling_Stations(int num_decoded) {
   char message[kMax_message_length];
   int message_test = 0;
 
-  DPRINTF("%s(%d)\n", __FUNCTION__, num_decoded);
+  //DPRINTF("%s(%d)\n", __FUNCTION__, num_decoded);
 
   //Loop executed once for each entry in new_decoded[] of received messages
   for (int i = 0; i < num_decoded; i++) {

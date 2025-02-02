@@ -73,6 +73,7 @@
 #include "button.h"
 #include "constants.h"
 #include "decode_ft8.h"
+#include "gen_ft8.h"
 #include "display.h"
 #include "locator.h"
 #include "maidenhead.h"
@@ -133,7 +134,7 @@ SI4735 si4735;
 AudioInputAnalog adc1;  // xy=132,104
 AudioRecordQueue queue1;
 AudioConnection patchCord2(adc1, queue1);
-static const unsigned audioQueueSize = 20;  //Number of blocks in the Teensy audio queue (one symbol's period requires 8 blocks)
+static const unsigned audioQueueSize = 100;  //Number of blocks in the Teensy audio queue (one symbol's period requires 8 blocks)
 
 // Optional raw audio recording file written to SD card for debugging nasty receiver problems
 File ft8Raw = NULL;
@@ -407,16 +408,16 @@ unsigned oldFlags = 0;
 
 void loop() {
   // Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
-  unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
-  if (newFlags != oldFlags) {
-    // DPRINTF("newFlags = 0x%x\n", newFlags);
-    oldFlags = newFlags;
-  }
+  // unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
+  // if (newFlags != oldFlags) {
+  //   DPRINTF("oldFlags=0x%x newFlags = 0x%x\n", oldFlags, newFlags);
+  //   oldFlags = newFlags;
+  // }
 
-  // Apparently... if it's not time to decode incoming messages, then it's time to grab the recv'd sigs from A/D
+  // If it's not time to decode incoming messages, then it's time to grab the recv'd sigs from A/D
   if (decode_flag == 0) process_data();
 
-  // Is there buffered time-domain data for the DSP logic to work with?
+  // Is there buffered time-domain data for the DSP logic to work with???
   if (DSP_Flag == 1) {
     // Yes, transform recv'd time-domain audio to frequency domain (to see the FT8 channels)
     process_FT8_FFT();
@@ -449,41 +450,36 @@ void loop() {
 
   // Apparently:  Have we acquired all of the receive timeslot's data?
   if (decode_flag == 1) {
-    DPRINTF("Decode recvd msgs\n");
+    //DPRINTF("Decode recvd msgs\n");
     unsigned long td0 = millis();
     num_decoded_msg = ft8_decode();  // Decode the received messages
-    DPRINTF("ft8_decode() %u msgs in time = %lu ms\n", num_decoded_msg, millis() - td0);
+    //DPRINTF("ft8_decode() %u msgs in time = %lu ms\n", num_decoded_msg, millis() - td0);
     master_decoded = num_decoded_msg;
     decode_flag = 0;
 
-    // Following a receive timeslot, if a message is waiting for transmission,
+    // If a message is waiting for transmission,
     // turn-on the carrier and set xmit_flag to modulate it.
     if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
-    DPRINTF("Awaiting next timeslot\n");
+    //DPRINTF("Awaiting next timeslot\n");
   }
 
+  //Check touchscreen and serial port for activity
   process_touch();
   if (tune_flag == 1) process_serial();
 
+  //Update flags when a new timeslot begins
   update_synchronization();
-  // rtc_synchronization();
-
-  // process_touch();
-  // if (tune_flag == 1) process_serial();
-
-  // //If we are recording audio, then stop after the requested seconds of raw audio data
-  // //at 6400 samples/second.
-  // if ((ft8Raw != NULL) && recordSampleCount >= config.audioRecordingDuration * (unsigned)AUDIO_SAMPLE_RATE) {
-  //   ft8Raw.close();
-  //   ft8Raw = NULL;
-  //   DPRINTF("Audio recording file, %s, closed with %ul samples\n", AUDIO_RECORDING_FILENAME, recordSampleCount);
-  // }
 
 }  // loop()
+
+
 
 time_t getTeensy3Time() {
   return Teensy3Clock.get();
 }
+
+
+
 
 void loadSSB() {
   si4735.queryLibraryId();  // Is it really necessary here? I will check it.
@@ -632,12 +628,16 @@ void update_synchronization() {
     }
     nextTimeSlot = current_time + 15000;
 
-    // Debug time synch problems :(
-    DPRINTF("Start timeslot -----------------------------------------------------------------------------------\n");
+    // Debug timeslot and sequencer problems
+    if (xmit_flag) {
+      DPRINTF("\nTimeslot:  DSP_Flag=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s' -------------------\n", DSP_Flag, Transmit_Armned, xmit_flag, get_message());
+    } else {
+      DPRINTF("\nTimeslot:  DSP_Flag=%u, Transmit_Armned=%u, xmit_flag=%u,  -------------------------------\n", DSP_Flag, Transmit_Armned, xmit_flag);
+    }
   }
-}
+} //update_synchronization()
 
-/**
+  /**
  * This function appears to manually sync to an FT8 timeslot
  *
  * FT8 timeslots begin on 15 second boundaries (e.g. 0, 15, 30 or 45 seconds into a minute).
@@ -649,22 +649,22 @@ void update_synchronization() {
  * and this function still be necessary???
  *
  **/
-void sync_FT8(void) {
-  DPRINTF("*****sync_FT8()\n");
+  void sync_FT8(void) {
+    DPRINTF("*****sync_FT8()\n");
 
-  setSyncProvider(getTeensy3Time);  // commented out?
+    setSyncProvider(getTeensy3Time);  // commented out?
 
-  start_time = millis();
-  ft8_flag = 1;
-  FT_8_counter = 0;
-  ft8_marker = 1;
-  WF_counter = 0;
+    start_time = millis();
+    ft8_flag = 1;
+    FT_8_counter = 0;
+    ft8_marker = 1;
+    WF_counter = 0;
 
-  //Reset sequencer
-  seq.begin();
-}
+    //Reset sequencer
+    seq.begin();
+  }
 
-/**
+  /**
  *  Wait for a 15-second FT8 timeslot (e.g. 0, 15, 30 or 45 seconds into a minute)
  *
  *  @return At the beginning of the next upcoming FT8 timeslot
@@ -686,40 +686,40 @@ void sync_FT8(void) {
  *  to wait.
  *
  **/
-void waitForFT8timeslot(void) {
-  DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
+  void waitForFT8timeslot(void) {
+    DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
 
-  displayInfoMsg("Waiting for timeslot");
+    displayInfoMsg("Waiting for timeslot");
 
-  // If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
-  if (gpsHelper.validFix) {
-    // Calculate the value of elapsed millis() when the next FT8 timeslot will begin
-    unsigned long msGPS = gpsHelper.second * 1000 + gpsHelper.milliseconds;  // Milliseconds into the minute when setup acquired UTC date/time from GPS
-    unsigned long msGPS2FT8 = 15000 - msGPS % 15000;                         // Milliseconds between GPS acquisition and start of next FT8 timeslot
-    unsigned long millisAtFT8 = gpsHelper.elapsedMillis + msGPS2FT8;         // Elapsed runtime millis() at start of next FT8 timeslot (might be in the past)
-    while (millis() < millisAtFT8) continue;                                 // Wait for elapsed runtime to reach/exceed start of next FT8 timeslot
-    DPRINTF("msGPS=%lu, msGPS2FT8=%lu, millis()=%lu\n", msGPS, msGPS2FT8, millis());
+    // If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
+    if (gpsHelper.validFix) {
+      // Calculate the value of elapsed millis() when the next FT8 timeslot will begin
+      unsigned long msGPS = gpsHelper.second * 1000 + gpsHelper.milliseconds;  // Milliseconds into the minute when setup acquired UTC date/time from GPS
+      unsigned long msGPS2FT8 = 15000 - msGPS % 15000;                         // Milliseconds between GPS acquisition and start of next FT8 timeslot
+      unsigned long millisAtFT8 = gpsHelper.elapsedMillis + msGPS2FT8;         // Elapsed runtime millis() at start of next FT8 timeslot (might be in the past)
+      while (millis() < millisAtFT8) continue;                                 // Wait for elapsed runtime to reach/exceed start of next FT8 timeslot
+      DPRINTF("msGPS=%lu, msGPS2FT8=%lu, millis()=%lu\n", msGPS, msGPS2FT8, millis());
 
-    // When we don't have valid GPS data, then we fall back to using Teensy timelib's 1 second clock resolution:(
-  } else {
-    // Wait for the end of the current 15 second FT8 timeslot.  This will arise at 0, 15, 30 or 45 seconds past the current minute.
-    // Sadly... second() has only 1000 ms resolution and, without GPS, its accuracy may not be what FT8 needs.
-    while ((second()) % 15 != 0) continue;
+      // When we don't have valid GPS data, then we fall back to using Teensy timelib's 1 second clock resolution:(
+    } else {
+      // Wait for the end of the current 15 second FT8 timeslot.  This will arise at 0, 15, 30 or 45 seconds past the current minute.
+      // Sadly... second() has only 1000 ms resolution and, without GPS, its accuracy may not be what FT8 needs.
+      while ((second()) % 15 != 0) continue;
+    }
+
+    // Begin the first FT8 timeslot
+    start_time = millis();              // Start of the first timeslot in ms of elapsed execution
+    nextTimeSlot = start_time + 15000;  //Time (ms) when next timeslot should begin
+    ft8_flag = 1;
+    FT_8_counter = 0;
+    ft8_marker = 1;
+    WF_counter = 0;
+
+    // Notify the sequencer
+    seq.timeslotEvent();
+
+    // Update display
+    displayInfoMsg("RECV");
+
+    DPRINTF("Starting first timeslot, second()=%u, millis()=%lu ---------------------\n", second(), millis());
   }
-
-  // Begin the first FT8 timeslot
-  start_time = millis();              // Start of the first timeslot in ms of elapsed execution
-  nextTimeSlot = start_time + 15000;  //Time (ms) when next timeslot should begin
-  ft8_flag = 1;
-  FT_8_counter = 0;
-  ft8_marker = 1;
-  WF_counter = 0;
-
-  // Notify the sequencer
-  seq.timeslotEvent();
-
-  // Update display
-  displayInfoMsg("RECV");
-
-  DPRINTF("Starting first 15 second FT8 timeslot, second()=%u, millis()=%lu --------------------------------------\n", second(), millis());
-}

@@ -159,15 +159,15 @@ void update_offset_waterfall(int offset) {
     //    }
     //  }
     if (WF_counter == 0) {
-        DTRACE();
+        //DTRACE();
         // DPRINTF("WF_counter=%u, num_decoded_msg=%u, FT_8_counter=%u, CQ_Flag=%u, xmit_flag=%u, Transmit_Armned=%u\n", WF_counter, num_decoded_msg, FT_8_counter, CQ_Flag, xmit_flag, Transmit_Armned);
         if (num_decoded_msg > 0) {
-            display_messages(num_decoded_msg);  // Displays received messages
+            display_messages(num_decoded_msg);  // Displays "all" received messages in lefthand text box
         }
         if (CQ_Flag == 1) {
-            service_CQ();  // Drives the so-called beacon-mode state machine
+            //service_CQ();  // Drives the so-called beacon-mode state machine
         } else {
-            Check_Calling_Stations(num_decoded_msg);
+            Check_Calling_Stations(num_decoded_msg);    //Displays messages sent to our station in righthand text box
         }
     }
 
