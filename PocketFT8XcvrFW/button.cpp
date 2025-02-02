@@ -14,6 +14,7 @@
 #include <Wire.h>
 #include "pins.h"
 #include "Sequencer.h"
+#include "msgTypes.h"
 
 //Define which I2C bus we are using
 #define WIRE WIRE_ETC
@@ -54,7 +55,7 @@ extern int log_flag, logging_on;
 //Get a reference to the Sequencer singleton
 static Sequencer& seq = Sequencer::getSequencer();
 
-int CQ_Flag;
+//int CQ_Flag;
 int Beacon_State;
 
 #define numButtons 9
@@ -214,7 +215,7 @@ void executeButton(uint16_t index) {
       break;
 
     case 1:  //Lo --- Location Msg (e.g. AG0E KQ7B DN15)
-      set_message(1);
+      set_message(MSG_LOC);
       sButtonData[1].state = true;
       drawButton(1);
       delay(button_delay);
@@ -223,7 +224,7 @@ void executeButton(uint16_t index) {
       break;
 
     case 2:  //Rs --- Received Signal Msg (e.g. AG0E KQ7B -3)
-      set_message(2);
+      set_message(MSG_RSL);
       sButtonData[2].state = true;
       drawButton(2);
       delay(button_delay);
@@ -231,8 +232,8 @@ void executeButton(uint16_t index) {
       drawButton(2);
       break;
 
-    case 3:  //73 --- 73 Msg (e.g. AG0E KQ7B RR73)
-      set_message(3);
+    case 3:  //RR73 --- RR73 Msg (e.g. AG0E KQ7B RR73)
+      set_message(MSG_RR73);
       sButtonData[3].state = true;
       drawButton(3);
       delay(button_delay);

@@ -23,7 +23,7 @@ extern bool disable_xmit;
 extern uint16_t cursor_freq;
 extern uint16_t cursor_line;
 
-extern int CQ_Flag;
+//extern int CQ_Flag;
 extern int Beacon_State;
 extern int num_decoded_msg;
 
@@ -41,7 +41,7 @@ void transmit_sequence(void) {
 
   DTRACE();
 
-  displayInfoMsg(get_message(),RED);
+  displayInfoMsg(get_message(), RED);
 
   //Program the transmitter clock at F_Long
   set_Xmit_Freq();
@@ -52,7 +52,7 @@ void transmit_sequence(void) {
   digitalWrite(PIN_RCV, LOW);
 
   //Set receiver's volume down low
-  si4735.setVolume(/*35*/0);
+  si4735.setVolume(/*35*/ 0);
 
   //Enable the transmitter clock
   si5351.drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);  // Set for max power if desired
@@ -61,7 +61,6 @@ void transmit_sequence(void) {
   //Connect transmitter to antenna and short the receiver RF input to ground
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
-
 }
 
 
@@ -108,8 +107,8 @@ void tune_On_sequence(void) {
   //Program the transmitter clock to F_Long
   //set_Xmit_Freq();                                        //Charlie tuned at operating carrier freq
   uint64_t tuneFreq = currentFrequency * 1000ULL * 100ULL;  //KQ7B tuning at FT8 base subband freq (e.g. 7074)
-  DPRINTF("tuneFreq=%llu Hz\n",tuneFreq/100);
-  si5351.set_freq(tuneFreq, SI5351_CLK0);                   //Freq is in hundreths of a HZ
+  DPRINTF("tuneFreq=%llu Hz\n", tuneFreq / 100);
+  si5351.set_freq(tuneFreq, SI5351_CLK0);  //Freq is in hundreths of a HZ
 
   //Drop the receiver's volume
   si4735.setVolume(35);
@@ -202,78 +201,78 @@ void setup_to_transmit_on_next_DSP_Flag(void) {
   ft8_xmit_counter = 0;
   transmit_sequence();  //Turns-on the transmitter carrier at current F_Long ??
   //set_Xmit_Freq();      //Recalculates F_long and reprograms SI5351 ??
-  xmit_flag = 1;        //This flag appears to trigger loop() to modulate the carrier
+  xmit_flag = 1;  //This flag appears to trigger loop() to modulate the carrier
 }
 
 
 
 
-/**
- * Seems to implement a state machine for a QSO initiated by our CQ???
- *
- * Sequence:  The CQ button toggles the CQ_Flag examined by loop() which eventually
- * invokes process_FT8_FFT() which invokes update_offset_waterfall() which invokes
- * service_CQ() at the end of a receive timeslot.
- *
- * @var Beacon_State The state variable with states:
- *    0:  CQ button sets CQ_Flag for loop(), and has initialized Beacon_State to 0
- *    1:  Listening for callers.  Responds to a caller with RSL, or repeats the CQ if none???
- *    2:  Concludes QSO by sending 73 to calling station if they're still there.  Resets Beacon_State to 0.
- *  @var num_decoded_msg:  Number of successfully decoded messages in new_decoded[]
- *
-**/
-void service_CQ(void) {
+// /**
+//  * Seems to implement a state machine for a QSO initiated by our CQ???
+//  *
+//  * Sequence:  The CQ button toggles the CQ_Flag examined by loop() which eventually
+//  * invokes process_FT8_FFT() which invokes update_offset_waterfall() which invokes
+//  * service_CQ() at the end of a receive timeslot.
+//  *
+//  * @var Beacon_State The state variable with states:
+//  *    0:  CQ button sets CQ_Flag for loop(), and has initialized Beacon_State to 0
+//  *    1:  Listening for callers.  Responds to a caller with RSL, or repeats the CQ if none???
+//  *    2:  Concludes QSO by sending 73 to calling station if they're still there.  Resets Beacon_State to 0.
+//  *  @var num_decoded_msg:  Number of successfully decoded messages in new_decoded[]
+//  *
+// **/
+// void service_CQ(void) {
 
-  DFPRINTF("Beacon_state=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
+//   DFPRINTF("Beacon_state=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
 
-  int receive_index;
+//   // int receive_index;
 
-  //switch (Beacon_State) {
+//   //switch (Beacon_State) {
 
-  //   case 0:
-  //     DTRACE();
-  //     Beacon_State = 1;  //Listen
-  //     break;
+//   //   case 0:
+//   //     DTRACE();
+//   //     Beacon_State = 1;  //Listen
+//   //     break;
 
-  //   case 1:
-  //     DTRACE();
-  //     receive_index = Check_Calling_Stations(num_decoded_msg);
+//   //   case 1:
+//   //     DTRACE();
+//   //     receive_index = Check_Calling_Stations(num_decoded_msg);
 
-  //     if (receive_index >= 0) {
-  //       display_selected_call(receive_index);
-  //       set_message(2);  // Prepare the RSL message for transmission
-  //     } else
-  //       set_message(0);  // Prepare the CQ message for transmission
-  //     Transmit_Armned = 1;
-  //     Beacon_State = 2;
+//   //     if (receive_index >= 0) {
+//   //       display_selected_call(receive_index);
+//   //       set_message(2);  // Prepare the RSL message for transmission
+//   //     } else
+//   //       set_message(0);  // Prepare the CQ message for transmission
+//   //     Transmit_Armned = 1;
+//   //     Beacon_State = 2;
 
-  //     break;
+//   //     break;
 
-  //   case 2:
-  //     DTRACE();
-  //     receive_index = Check_Calling_Stations(num_decoded_msg);
+//   //   case 2:
+//   //     DTRACE();
+//   //     receive_index = Check_Calling_Stations(num_decoded_msg);
 
-  //     if (receive_index >= 0) {
-  //       display_selected_call(receive_index);
-  //       set_message(3);  // Prepare the 73 message for transmission
-  //       Transmit_Armned = 1;
-  //     }
+//   //     if (receive_index >= 0) {
+//   //       display_selected_call(receive_index);
+//   //       set_message(3);  // Prepare the 73 message for transmission
+//   //       Transmit_Armned = 1;
+//   //     }
 
-  //     Beacon_State = 0;
-  //     break;
+//   //     Beacon_State = 0;
+//   //     break;
 
-  //     /*
-  //     case 3: receive_index = Check_Calling_Stations(num_decoded_msg);
-      
-  //             if(receive_index >= 0) {
-  //             display_selected_call(receive_index);
-  //             set_message(3); // send 73
-  //             Transmit_Armned = 1;
-  //             }
-  //             Beacon_State = 0;
-       
-  //     break;
-  //     */
-  // }
-  DPRINTF("Exit service_CQ()) with Beacon_State=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
-}  //service_CQ()
+//   //     /*
+//   //     case 3: receive_index = Check_Calling_Stations(num_decoded_msg);
+
+//   //             if(receive_index >= 0) {
+//   //             display_selected_call(receive_index);
+//   //             set_message(3); // send 73
+//   //             Transmit_Armned = 1;
+//   //             }
+//   //             Beacon_State = 0;
+
+//   //     break;
+//   //     */
+//   // }
+//   DPRINTF("Exit service_CQ()) with Beacon_State=%d, Transmit_Armned=%d\n", Beacon_State, Transmit_Armned);
+// }  //service_CQ()

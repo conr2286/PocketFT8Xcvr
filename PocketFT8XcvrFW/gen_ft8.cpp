@@ -28,6 +28,7 @@ extern HX8357_t3n tft;
 #include "locator.h"
 //#include "log_file.h"
 #include "traffic_manager.h"
+#include "msgTypes.h"
 
 
 char Your_Call[] = "W5XXX";
@@ -125,27 +126,27 @@ void set_message(uint16_t index) {
 
   switch (index) {
 
-    case 0:  //We are calling CQ from our Locator, e.g. CQ KQ7B DN15
+    case MSG_CQ:  //We are calling CQ from our Locator, e.g. CQ KQ7B DN15
       snprintf(message, sizeof(message), "%s %s %s", "CQ", Station_Call, Locator);
       break;
 
-    case 1:  //We are calling target from our Locator, e.g. AG0E KQ7B DN15
+    case MSG_LOC:  //We are calling target from our Locator, e.g. AG0E KQ7B DN15
       snprintf(message, sizeof(message), "%s %s %s", Target_Call, Station_Call, Locator);
       break;
 
-    case 2:  //We are responding to target with their signal report, e.g. AG0E KQ7B -12
+    case MSG_RSL:  //We are responding to target with their signal report, e.g. AG0E KQ7B -12
       snprintf(message, sizeof(message), "%s %s %3i", Target_Call, Station_Call, Target_RSL);
       break;
 
-    case 3:  //We are responding to target with 73, e.g. AG0E KQ7B RR73
+    case MSG_RR73:  //We are responding to target with RR73, e.g. AG0E KQ7B RR73
       snprintf(message, sizeof(message), "%s %s %3s", Target_Call, Station_Call, seventy_three);
       break;
 
-    case 4:  //We are responding with Roger and their signal report, e.g. AG0E KQ7B R-3
+    case MSG_RRSL:  //We are responding with Roger and their RRSL signal report, e.g. AG0E KQ7B R-3
       snprintf(message, sizeof(message), "%s %s R%3i", Target_Call, Station_Call, Target_RSL);
       break;
 
-    case 5:  //We are responding with RRR, e.g. AG0E KQ7B RRR
+    case MSG_RRR:  //We are responding with RRR, e.g. AG0E KQ7B RRR
       snprintf(message, sizeof(message), "%s %s RRR", Target_Call, Station_Call);
       break;
   }

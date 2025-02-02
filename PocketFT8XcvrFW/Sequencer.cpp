@@ -373,8 +373,8 @@ void Sequencer::cqButtonEvent() {
     case IDLE:         //We are currently idle
     case LOC_PENDING:  //Operator decided to CQ rather than respond to a known station
       DTRACE();
-      set_message(0);      //Encode our CQ message
-      state = CQ_PENDING;  //Await the next timeslot
+      set_message(MSG_CQ);  //Encode our CQ message
+      state = CQ_PENDING;   //Await the next timeslot
       break;
 
     //Abort CQ transmission (even if it's in progress)
@@ -430,7 +430,7 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
         DTRACE();
         qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber));  //Start gathering QSO info
         qso.setWorkedLocator(msg->field3);                                          //Record their locator
-        set_message(1);                                                             //We send our locator
+        set_message(MSG_LOC);                                                       //We send our locator
         state = LOC_PENDING;                                                        //Await appropriate timeslot to transmit to Target_Call
         break;
 
@@ -463,15 +463,15 @@ void Sequencer::rslEvent(Decode* msg) {
     case LISTEN_RRSL:
       DTRACE();
       qso.setMyRSL(msg->field3);  //Record our signal report in QSO
-      set_message(5);             //Prepare an RRR message
+      set_message(MSG_RRR);             //Prepare an RRR message
       state = RRR_PENDING;        //We must await an appropriate even/odd timeslot
       break;
 
-    //Remote station sent our RSL
+    //Remote station sent our RSL and we should respond with their RRSL
     case LISTEN_RSL:
       DTRACE();
       qso.setMyRSL(msg->field3);  //Record our signal report in QSO structure
-      set_message(4);             //Prepare to send their signal report to remote station
+      set_message(MSG_RRSL);             //Prepare to send their signal report to remote station
       state = RRSL_PENDING;       //Await an appropriate even/odd timeslot
       break;
 
@@ -484,8 +484,8 @@ void Sequencer::rslEvent(Decode* msg) {
       qso.setMyRSL(msg->field3);                                                  //Record our RSL from remote station
       setXmitParams(msg->field2, msg->snr);                                       //Inform gen_ft8 of remote station's info
       DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d\n", Target_Call, msg->field2, msg->snr, Target_RSL);
-      set_message(2);       //Reply with their RSL as we likely haven't sent it to them
-      state = RSL_PENDING;  //Transmit their RSL in next appropriate timeslot
+      set_message(MSG_RSL);  //Reply with their RSL as we likely haven't sent it to them
+      state = RSL_PENDING;   //Transmit their RSL in next appropriate timeslot
       break;
 
     //Ignore non-sense
@@ -572,7 +572,7 @@ void Sequencer::locatorEvent(Decode* msg) {
       DTRACE();
       qso.begin(msg->field2, currentFrequency, "FT8", ODD(sequenceNumber));  //Start gathering QSO info
       qso.setWorkedLocator(msg->field3);                                     //Record responder's locator
-      set_message(2);                                                        //Prepare to transmit RSL to responder
+      set_message(MSG_RSL);                                                  //Prepare to transmit RSL to responder
       state = RSL_PENDING;                                                   //Must await an appropriate timeslot when responder is listening
       break;
 

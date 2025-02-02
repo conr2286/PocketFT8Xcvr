@@ -173,7 +173,7 @@ int decode_flag;
 int ft8_flag;
 
 // Apparently set when CQ button pressed, cleared when beacon mode ends???
-extern int CQ_Flag;
+//extern int CQ_Flag;
 
 int WF_counter;
 int num_decoded_msg;
