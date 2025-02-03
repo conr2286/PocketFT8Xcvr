@@ -30,9 +30,12 @@
 #include "decode_ft8.h"
 //#include "locator.h"
 //#include "traffic_manager.h"
+#include "Sequencer.h"
 
 //#include <HX8357_t3.h>
 #include "HX8357_t3n.h"
+
+
 extern HX8357_t3n tft;
 
 char erase[] = "                   ";
@@ -97,8 +100,22 @@ extern int Target_RSL;  // four character RSL  + /0
 extern time_t getTeensy3Time();
 extern int log_flag, logging_on;
 
+//Get a reference to the Sequencer singleton
+static Sequencer &seq = Sequencer::getSequencer();
+
+
+
 /**
- * Demodulate received FT8 signals into new_decoded[] of successfully demodulated messages (if any)
+ *  Retrieve address of the new_decoded[] messages
+ *
+ *
+**/
+Decode* getNewDecoded() {
+  return new_decoded;
+}
+
+/**
+ * Decode received FT8 signals into new_decoded[] of successfully decoded messages (if any)
  *
  * @return Number of successfully demodulated messages placed in new_decoded[]
  *
@@ -106,20 +123,19 @@ extern int log_flag, logging_on;
 **/
 int ft8_decode(void) {
 
-  DTRACE();
+  //DTRACE();
 
 
   // Find top candidates by Costas sync score and localize them in time and frequency
   Candidate candidate_list[kMax_candidates];
-
   int num_candidates = find_sync(export_fft_power, ft8_msg_samples, ft8_buffer, kCostas_map, kMax_candidates, candidate_list, kMin_score);
   char decoded[kMax_decoded_messages][kMax_message_length];
 
   const float fsk_dev = 6.25f;  // tone deviation in Hz and symbol rate
 
-  DTRACE();
+  //DTRACE();
 
-  // Go over candidates and attempt to decode messages
+  // Go over candidates and attempt to decode their messages
   int num_decoded = 0;
 
   //DPRINTF("num_candidates=%u\n", num_candidates);
@@ -137,7 +153,7 @@ int ft8_decode(void) {
     bp_decode(log174, kLDPC_iterations, plain, &n_errors);
     //DPRINTF("candidate %d n_errors=%d\n", idx, n_errors);
 
-    if (n_errors > 0) continue;
+    if (n_errors > 0) continue;  //Skip messages that can't be decoded
 
     // Extract payload + CRC (first K bits)
     uint8_t a91[K_BYTES];      //Bfr for the received message's packed bits
@@ -149,18 +165,20 @@ int ft8_decode(void) {
     a91[10] = 0;
     a91[11] = 0;
     uint16_t chksum2 = crc(a91, 96 - 14);  //Computed CRC for message as actually received
-    if (chksum != chksum2) continue;       //Skip decoding if CRCs don't match
+    if (chksum != chksum2) continue;       //Skip messages whose CRCs don't match
 
-    //Unpack the verified FT8 message bits into human-readable fields
+    //We have finally decoded the FT8 message bits and verified a valid CRC.  The message looks good.
+    //Now we can unpack the FT8 encoding (see reference) into human-readable fields.
     char message[kMax_message_length];
     char field1[14];
     char field2[14];
     char field3[7];
-    int rc = unpack77_fields(a91, field1, field2, field3);
+    MsgType msgType;
+    int rc = unpack77_fields(a91, field1, field2, field3, &msgType);
     if (rc < 0) continue;  //Unpack failure???
 
     snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);
-    //DPRINTF("message='%s %s %s' \n", field1, field2, field3);
+    //DPRINTF("message='%s', msgType=%u\n", message, msgType);
 
     // Check for duplicate messages (TODO: use hashing)
     bool found = false;
@@ -194,13 +212,14 @@ int ft8_decode(void) {
         if (raw_RSL > 160) raw_RSL = 160;
         display_RSL = (raw_RSL - 160) / 6;
         new_decoded[num_decoded].snr = display_RSL;  //Their received signal level at our station
+        new_decoded[num_decoded].msgType = msgType; //Record the msgType
 
         char Target_Locator[] = "    ";
 
-        //Bug:  field3 does not always contain a locator... and watch what happens below with RR73 :(
+        //Assume field3 is a locator
         strlcpy(Target_Locator, new_decoded[num_decoded].field3, sizeof(Target_Locator));
 
-        //Bug?  RR73 from field3 is a valid locator (somewhere in the Atlantic ocean)
+        //Try to determine if field3 is really a locator (Note:  msgType is the preferred indicator *except* for CQ)
         if (validate_locator(Target_Locator) == 1) {
           distance = Target_Distance(Target_Locator);
           new_decoded[num_decoded].distance = (int)distance;
@@ -210,22 +229,16 @@ int ft8_decode(void) {
           new_decoded[num_decoded].locator[0] = 0;  //We don't have a valid locator for target
         }
 
-        //When debugging, print info about the decoded received message
-        //DPRINTF("decoded:  field1='%s' field2='%s' field3='%s' snr=%d Target_Locator='%s'\n",
-        // new_decoded[num_decoded].field1, new_decoded[num_decoded].field2, new_decoded[num_decoded].field3,
-        // new_decoded[num_decoded].snr, new_decoded[num_decoded].locator);
+        //Inform QSO sequencer about newly received message
+        //DPRINTF("new_decoded[num_decoded].msgType=%u\n",new_decoded[num_decoded].msgType);
+        //TODO:  Stampe received message with timeslot's sequence number
+        seq.receivedMsgEvent(&new_decoded[num_decoded]);
+        //DTRACE();
 
         ++num_decoded;
       }
     }
   }  //End of big decode loop
-
-  DTRACE();
-
-  // //Investigate displaying decoded messages sooner (was in update_waterfall)
-  // if (num_decoded > 0) {
-  //   display_messages(num_decoded);  // Displays received messages
-  // }
 
   return num_decoded;
 
@@ -258,7 +271,7 @@ void display_messages(int decoded_messages) {
 
   //Erase the message display region on the LCD.  It turns out that fillRect() of a large region is amazingly slow, increasing the
   //risk of missing the following FT8 timeslot.  So... we erase with space characters.
-  DTRACE();
+  //DTRACE();
   //tft.fillRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLACK);
 
   //Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
@@ -266,7 +279,7 @@ void display_messages(int decoded_messages) {
   tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);                     //Currently... all messages are the same color
   tft.setTextSize(2);                                                //10X16 pixels per AdaFruit
   for (int i = 0; i < decoded_messages && i < message_limit; i++) {  //Charlie's leading handled 6 rows of text
-    snprintf(message, sizeof(message), "%s %s %4s %d", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].snr);  
+    snprintf(message, sizeof(message), "%s %s %4s %d", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].snr);
     //DPRINTF("display_message %u = '%s' loc='%s'\n", i, message, new_decoded[i].locator);
     strlpad(message, sizeof(message), ' ');  //Padding is faster than fillRect()
     tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
@@ -281,7 +294,7 @@ void display_messages(int decoded_messages) {
     tft.print(message);  //A line of spaces to clear previous timeslot's messages
   }
   previousMessageCount = decoded_messages;  //Remember for next timeslot
-  DTRACE();
+  //DTRACE();
 
 }  //display_messages()
 
@@ -296,6 +309,8 @@ void display_selected_call(int index) {
   strlcpy(Target_Call, new_decoded[index].field2, sizeof(Target_Call));
   Target_RSL = new_decoded[index].snr;
 
+    DPRINTF("display_selected_call(%d) %s\n",index,new_decoded[index]);
+
   snprintf(selected_station, sizeof(selected_station), "%7s %3i", Target_Call, Target_RSL);
   tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
   tft.setTextSize(2);
@@ -303,6 +318,7 @@ void display_selected_call(int index) {
   tft.print(blank);
   tft.setCursor(DISPLAY_SELECTED_X, DISPLAY_SELECTED_Y);
   tft.print(Target_Call);
+
 }
 
 
@@ -399,7 +415,7 @@ int Check_Calling_Stations(int num_decoded) {
   char message[kMax_message_length];
   int message_test = 0;
 
-  DPRINTF("%s(%d)\n", __FUNCTION__, num_decoded);
+  //DPRINTF("%s(%d)\n", __FUNCTION__, num_decoded);
 
   //Loop executed once for each entry in new_decoded[] of received messages
   for (int i = 0; i < num_decoded; i++) {
@@ -420,8 +436,8 @@ int Check_Calling_Stations(int num_decoded) {
 
       //Log details from this message to us
       if (logging_on == 1) write_log_data(big_gulp);
-      DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
-      DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
+      //DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
+      //DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
 
       num_Calling_Stations++;
       message_test = i + 100;  //100+index of this calling station.  Why the 100 bias???

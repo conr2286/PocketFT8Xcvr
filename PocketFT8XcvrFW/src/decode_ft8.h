@@ -8,21 +8,23 @@
 #ifndef DECODE_FT8_H_
 #define DECODE_FT8_H_
 
+#include "msgTypes.h"
 
 int ft8_decode(void);
 
 typedef struct
 {
-  char field1[14];       //Their station's call
-  char field2[14];       //Our station's call
-  char field3[7];        //Extra info
-  char locator[7];       //Their locator if we have it
-  int freq_hz;           //
-  char decode_time[10];  //Timestamp when message successfully decoded
-  int sync_score;        //
-  int snr;               //Their received signal level
-  int distance;          //Between their and our station
-
+  char field1[14];               //Their station's call
+  char field2[14];               //Our station's call
+  char field3[7];                //Extra info
+  char locator[7];               //Their locator if we have it
+  int freq_hz;                   //
+  char decode_time[10];          //Timestamp when message successfully decoded
+  int sync_score;                //
+  int snr;                       //Their received signal level
+  int distance;                  //KM between their and our station
+  MsgType msgType;               //Type of received message (e.g. CQ, LOC, RSL...)
+  unsigned long sequenceNumber;  //Sequencer's timeslot sequenceNumber when msg was received
 } Decode;
 
 typedef struct
@@ -42,6 +44,7 @@ typedef struct
 } CQ_Station;
 
 
+Decode* getNewDecoded(void);
 
 void save_Answer_CQ_List(void);
 

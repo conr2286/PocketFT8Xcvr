@@ -31,7 +31,7 @@ static Adafruit_GPS gpsDevice(&Serial1);
 GPShelper::GPShelper(unsigned gpsBaudRate) {
 
   Serial.begin(9600);
-  DTRACE();
+  //DTRACE();
   delay(10);
 
   gpsDevice.begin(9600);                                //Set Serial1 baud rate to GPS device

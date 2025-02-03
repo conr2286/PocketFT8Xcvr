@@ -13,6 +13,8 @@
 #include <SI4735.h>
 #include <Wire.h>
 #include "pins.h"
+#include "Sequencer.h"
+#include "msgTypes.h"
 
 //Define which I2C bus we are using
 #define WIRE WIRE_ETC
@@ -46,11 +48,14 @@ extern int tune_flag;
 extern uint16_t cursor_line;
 extern int offset_freq;
 
-const float ft8_shift=6.25;         //FT8 Hz/bin???
+const float ft8_shift = 6.25;  //FT8 Hz/bin???
 int start_up_offset_freq;
 extern int log_flag, logging_on;
 
-int CQ_Flag;
+//Get a reference to the Sequencer singleton
+static Sequencer& seq = Sequencer::getSequencer();
+
+//int CQ_Flag;
 int Beacon_State;
 
 #define numButtons 9
@@ -196,22 +201,21 @@ void executeButton(uint16_t index) {
   switch (index) {
 
     case 0:  //CQ (e.g. CQ KQ7B DN15)
-      //DTRACE();
-      if (sButtonData[0].state) {
-        //DTRACE();
-        CQ_Flag = 1;
-        sButtonData[6].active_state = false;
-        Beacon_State = 0;
-      } else {
-        //DTRACE();
-        CQ_Flag = 0;
-        sButtonData[6].active_state = true;
-      }
+      DTRACE();
+      seq.cqButtonEvent();
+      // if (sButtonData[0].state) {
+      //   // CQ_Flag = 1;
+      //   sButtonData[6].active_state = false;
+      //   // Beacon_State = 0;
+      // } else {
+      //   //CQ_Flag = 0;
+      //   sButtonData[6].active_state = true;
+      // }
       delay(button_delay);
       break;
 
     case 1:  //Lo --- Location Msg (e.g. AG0E KQ7B DN15)
-      set_message(1);
+      set_message(MSG_LOC);
       sButtonData[1].state = true;
       drawButton(1);
       delay(button_delay);
@@ -220,7 +224,7 @@ void executeButton(uint16_t index) {
       break;
 
     case 2:  //Rs --- Received Signal Msg (e.g. AG0E KQ7B -3)
-      set_message(2);
+      set_message(MSG_RSL);
       sButtonData[2].state = true;
       drawButton(2);
       delay(button_delay);
@@ -228,8 +232,8 @@ void executeButton(uint16_t index) {
       drawButton(2);
       break;
 
-    case 3:  //73 --- 73 Msg (e.g. AG0E KQ7B RR73)
-      set_message(3);
+    case 3:  //RR73 --- RR73 Msg (e.g. AG0E KQ7B RR73)
+      set_message(MSG_RR73);
       sButtonData[3].state = true;
       drawButton(3);
       delay(button_delay);
@@ -340,6 +344,8 @@ void terminate_transmit_armed(void) {
   drawButton(6);
 }
 
+
+
 int testButton(uint8_t index) {
 
   if ((draw_x > sButtonData[index].x) && (draw_x < sButtonData[index].x + sButtonData[index].w) && (draw_y > sButtonData[index].y) && (draw_y < sButtonData[index].y + sButtonData[index].h)) return 1;
@@ -349,34 +355,59 @@ int testButton(uint8_t index) {
     return 0;
 }
 
+
+
+
+/**
+ *  Check for click on received message (left pane?)
+ *
+ *
+**/
 void check_FT8_Touch(void) {
+
+  DTRACE();
 
   int FT_8_TouchIndex;
   int y_test;
-
 
   if (draw_x < 400 && (draw_y > 90 && draw_y < 300)) {
     y_test = draw_y - 90;
     FT_8_TouchIndex = y_test / 25;
     if (FT_8_TouchIndex < master_decoded) display_selected_call(FT_8_TouchIndex);
+
+    //If the transmitter is armed, then give them a call
+    if (Transmit_Armned) seq.msgClickEvent(FT_8_TouchIndex);
   }
+
 }  //check_FT8_Touch()
 
+
+
+
+
+/*
+ * Check for movement of transmit offset in waterfall
+ *
+ *
+**/
 void check_WF_Touch(void) {
   if (draw_x < 350 && draw_y < 90) {
 
     cursor_line = draw_x;
     cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-    DPRINTF("cursor_line=%u, cursor_freq=%u\n",cursor_line,cursor_freq);
+    DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
     set_Xmit_Freq();
   }
 }  //check_WF_Touch()
 
 
+
+
+//?????
 void set_startup_freq(void) {
   cursor_line = 100;
   //start_up_offset_freq = EEPROMReadInt(10);     //Charlie
-  start_up_offset_freq = 0;                       //KQ7B
+  start_up_offset_freq = 0;  //KQ7B
   cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
   offset_freq = start_up_offset_freq;
   DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);

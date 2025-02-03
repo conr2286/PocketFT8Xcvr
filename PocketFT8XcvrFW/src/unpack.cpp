@@ -1,3 +1,5 @@
+#include "msgTypes.h"
+#include "DEBUG.h"
 #include "unpack.h"
 #include "text.h"
 
@@ -12,8 +14,52 @@ const uint32_t NTOKENS = 2063592L;
 const uint16_t MAXGRID4 = 32400L;
 
 
-// n28 is a 28-bit integer, e.g. n28a or n28b, containing all the
-// call sign bits from a packed message.
+/**
+ * SYNOPSIS
+ *  unpack --- Functions for unpacking FT8 message text from the 77-bit FT8 payload
+ * 
+ * DESCRIPTION
+ *  The main entry is unpack77_fields(); the other functions are helpers.
+ *
+ *  FT8 messages are densely packed to improve channel utilization as described in,
+ *  Franke, Somerville and Taylor.  "The FT4 and FT8 Communication Protocols."
+ *  QEX.  July/August 2020.
+ *
+ *  Unpack has significant insight into the content and meaning of the various
+ *  message fields, especially the so-called field3.
+ *
+ * MIT LICENSE
+ * Copyright (c) 2018 Kārlis Goba
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+**/
+
+/**
+ * Unpack callsign bits
+ *
+ * @param n28 28-bit integer, e.g. n28a or n28b, containing the call sign bits from a packed message.
+ * @param ip  if true then check for /R or /P
+ * @param i3  1==/R, 2==/P 
+ * @param result[] plaintext callsign
+ *
+**/
 int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
   // Check for special tokens DE, QRZ, CQ, CQ_nnn, CQ_aaaa
   if (n28 < NTOKENS) {
@@ -99,11 +145,19 @@ int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
 /**
  * Unpack the FT8 "Standard Message"
  *
+ *  @param a77 Packed, received, 77-bit, FT8 message
+ *  @param i3  Message type
+ *  @param field1 Buffer to receive field1 text, usually the destination station's callsign
+ *  @param field2 Buffer to receive field2 text, usually the source station's callsign
+ *  @param field3 Buffer to receive field3 text
+ *  @param *msgType If successful, returns the MsgType of the unpacked message
+ *
+ *  @return  0==success, -1==destination callsign problem, -2==source callsign problem
+ *
  * Reference:  https://wsjt.sourceforge.io/FT4_FT8_QEX.pdf
  *
- *
 **/
-int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, char *field3) {
+int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, char *field3, MsgType *msgType) {
   uint32_t n28a, n28b;
   uint16_t igrid4;
   uint8_t ir;
@@ -111,11 +165,11 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
   // Extract packed fields
   // read(c77,1000) n28a,ipa,n28b,ipb,ir,igrid4,i3
   // 1000 format(2(b28,b1),b1,b15,b3)
-  n28a = (a77[0] << 21);
+  n28a = (a77[0] << 21);  //Destination callsign
   n28a |= (a77[1] << 13);
   n28a |= (a77[2] << 5);
   n28a |= (a77[3] >> 3);
-  n28b = ((a77[3] & 0x07) << 26);
+  n28b = ((a77[3] & 0x07) << 26);  //Source callsign
   n28b |= (a77[4] << 18);
   n28b |= (a77[5] << 10);
   n28b |= (a77[6] << 2);
@@ -125,16 +179,18 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
   igrid4 |= (a77[8] << 2);
   igrid4 |= (a77[9] >> 6);
 
-  // Unpack both callsigns
+  //Unpack destination station's callsign
   if (unpack28(n28a >> 1, n28a & 0x01, i3, field1) < 0) {
     return -1;
   }
+
+  //Unpack source station's callsign
   if (unpack28(n28b >> 1, n28b & 0x01, i3, field2) < 0) {
     return -2;
   }
   // Fix "CQ_" to "CQ " -> already done in unpack28()
 
-  // TODO: add to recent calls
+  // TODO: add to recent calls. (This is needed for non-standard, hashed calls)
   // if (field1[0] != '<' && strlen(field1) >= 4) {
   //     save_hash_call(field1)
   // }
@@ -142,14 +198,16 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
   //     save_hash_call(field2)
   // }
 
-  //Does igrid4 (G15?) contain a 4-char locator or RRR, RR73, 73 or blank????????  See Reference Table-2.
+  //Check igrid4 for a 4-char locator in G15  See reference, Table 2.
+  //DPRINTF("igrid4=%u\n",igrid4);
   if (igrid4 <= MAXGRID4) {
-    // Extract 4 symbol grid locator
+    //DPRINTF("igrid4=%u, MAXGRID4=%u\n",igrid4, MAXGRID4);
+    // Extract 4 symbol grid locator into field3
     char *dst = field3;
     uint16_t n = igrid4;
     if (ir > 0) {
       // In case of ir=1 add an "R" before grid
-      dst = stpcpy(dst, "R ");
+      dst = stpcpy(dst, "R ");  //Does this get overwritten below???
     }
 
     //Code the maidenhead locator gridsquare in dst[]
@@ -163,31 +221,63 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
     dst[0] = 'A' + (n % 18);
     // if(msg(1:3).eq.'CQ ' .and. ir.eq.1) unpk77_success=.false.
     // if (ir > 0 && strncmp(field1, "CQ", 2) == 0) return -1;
+
+    //We received a locator message.  The 4-char grid square is in field3[].  Assume Locator message type.
+    *msgType = MSG_LOC;
+    //DTRACE();
+
+    // Decode igrid4 when it's an RRR, RR73, 73, blank or signal report
   } else {
-    // Decode igrid4 when it's not a locator
-    int irpt = igrid4 - MAXGRID4;     //See Reference Appendix A discussion of g15
+    int irpt = igrid4 - MAXGRID4;  //See Reference Appendix A discussion of g15
+
+    //Assume this is a signal report
+    *msgType = MSG_RSL;
+    //DPRINTF("irpt=%u\n",irpt);
 
     // Check special cases first
     if (irpt == 1) field3[0] = '\0';
-    else if (irpt == 2) strcpy(field3, "RRR");
-    else if (irpt == 3) strcpy(field3, "RR73");
-    else if (irpt == 4) strcpy(field3, "73");
-    else if (irpt >= 5) {
+    else if (irpt == 2) {
+      strcpy(field3, "RRR");
+      *msgType = MSG_RRR;
+    }  //Roger received report???
+    else if (irpt == 3) {
+      strcpy(field3, "RR73");
+      *msgType = MSG_RR73;
+    }  //Roger received, best regards
+    else if (irpt == 4) {
+      strcpy(field3, "73");  //Best regards
+      *msgType = MSG_73;
+    } else if (irpt >= 5) {
       char *dst = field3;
-      // Extract signal report as a two digit number with a + or - sign
-      if (ir > 0) {
-        *dst++ = 'R';  // Add "R" before report
+      *msgType = MSG_RSL;     //It's a signal report (RSL)
+      if (ir > 0) {           //Or perhaps an RRSL?
+        *dst++ = 'R';         //Add "R" before report
+        *msgType = MSG_RRSL;  //Yes, Roger RSL
       }
-      int_to_dd(dst, irpt - 35, 2, true);
+      // Extract signal report as a two digit number with a + or - sign
+      int_to_dd(dst, irpt - 35, 2, true);  //signal report
     }
     // if(msg(1:3).eq.'CQ ' .and. irpt.ge.2) unpk77_success=.false.
     // if (irpt >= 2 && strncmp(field1, "CQ", 2) == 0) return -1;
   }
+  //DTRACE();
+  //If the destination callsign is "CQ" then change msgType to MSG_CQ
+  if (strcmp(field1, "CQ") == 0) *msgType = MSG_CQ;  //CQ overides anything else we discovered
 
   return 0;  // Success
-}
+
+}  //unpack_type1()
 
 
+
+
+/**
+ * Unpack 13 char "free" text
+ *
+ * @param a71 The packed text
+ * @param text Unpacked text
+ * @return 0==success
+**/
 int unpack_text(const uint8_t *a71, char *text) {
   // TODO: test
   uint8_t b71[9];
@@ -213,7 +303,7 @@ int unpack_text(const uint8_t *a71, char *text) {
 
   strcpy(text, trim(c14));
   return 0;  // Success
-}
+}  //unpack_text()
 
 
 int unpack_telemetry(const uint8_t *a71, char *telemetry) {
@@ -243,12 +333,17 @@ int unpack_telemetry(const uint8_t *a71, char *telemetry) {
 
 //none standard for wsjt-x 2.0
 //by KD8CEC
-int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *field3) {
+int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *field3, MsgType *msgType) {
   /*
 	wsjt-x 2.1.0 rc5
      	read(c77,1050) n12,n58,iflip,nrpt,icq
 	1050 format(b12,b58,b1,b2,b1)
 */
+
+
+  //Assume MSG_UNKNOWN type for now
+  *msgType = MSG_UNKNOWN;
+
   uint32_t n12, iflip, nrpt, icq;
   uint64_t n58;
   n12 = (a77[0] << 4);   //11 ~4  : 8
@@ -289,7 +384,9 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
   char *call_2 = (iflip) ? call_3 : c11;
   //save_hash_call(c11_trimmed);
 
+  //Is it some form of end-of-transmission (EOT)
   if (icq == 0) {
+    *msgType = MSG_BLANK;  //Assume mystery and let the Sequencer choke on it
     strcpy(field1, trim(call_1));
     if (nrpt == 1)
       strcpy(field3, "RRR");
@@ -298,9 +395,11 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
     else if (nrpt == 3)
       strcpy(field3, "73");
     else {
-      field3[0] = '\0';
+      field3[0] = '\0';      //No, it appears to be a blank field3 (ie. AG0E KQ7B).  For reestablishing contact???  Who knows.
+      *msgType = MSG_BLANK;  //Report blank
     }
   } else {
+    *msgType = MSG_CQ;  //It's a CQ with hashed callsign and no locator
     strcpy(field1, "CQ");
     field3[0] = '\0';
   }
@@ -313,37 +412,47 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
  * Unpack a 77-bit received FT8 message
  *
  * @param a77[] The packed 77-bit FT8 message
- * @param field1 Unpacked field1, See Reference
+ * @param field1 Unpacked field1, See Reference.  Needs to reference a 19 element char array for telemetry.
  * @param field2 Unpacked field2, See Reference
  * @param field3 Unpacked field3, See Reference
+ *
+ * @return 0==Success, -1==Error
+ *
+ * This is where we finally learn what (callsigns, location, signal reports, etc) is in the received message
  *
  * Note:  FT8 encodes a message into a tightly packed 77-bit string.  The i3.n3 variables
  * extracted from the message define the message types (See Reference Table-1).  The
  * meaning of the three unpacked fields depends upon the message type:
  *
- *  + Free Text:  Unpacked into field1[]
- *  + Telemetry:  Unpacked into field1[]
- *  + Standard Message:   field1 <- Destination callsign or CQ ???
- *  +                     field2 <- Source callsign???
- *  +                     field3 <- 4-char locator or RRR, RR73, 73 or blank (See Reference)
+ *  + 0.0 Free Text:  Unpacked into field1[]
+ *  + 0.5 Telemetry:  Unpacked into field1[]
+ *  + 1.  Standard Message:   field1 <- Destination callsign or CQ
+ *  +                         field2 <- Source callsign
+ *  +                         field3 <- 4-char locator or RRR, RR73, 73 or blank (See Reference)
  *
  * Reference:  https://wsjt.sourceforge.io/FT4_FT8_QEX.pdf 
  *
 **/
-int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3) {
+int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3, MsgType *msgType) {
   uint8_t n3, i3;
 
   // Extract n3 (bits 71..73) and i3 (bits 74..76)
   n3 = ((a77[8] << 2) & 0x04) | ((a77[9] >> 6) & 0x03);
   i3 = (a77[9] >> 3) & 0x07;
 
+  //Initial assumptions about the result
   field1[0] = field2[0] = field3[0] = '\0';
+  *msgType = MSG_UNKNOWN;
 
-  //See Reference Table-1 for explanation of i3 and n3 values
+
+  //See Reference Table-1 for explanation of i3 and n3 values.  We are here checking for Type 0.0 (13 char free text)
   if (i3 == 0 && n3 == 0) {
-    // 0.0  Free text
-    return unpack_text(a77, field1);    //13-character "Free Text" ???
+    int result = unpack_text(a77, field1);  //13-character "Free Text" --> field1, field2&field3 remain NUL.
+    if (result == 0) *msgType = MSG_FREE;
+    return result;
   }
+
+  //These types are not currently implemented...
   // else if (i3 == 0 && n3 == 1) {
   //     // 0.1  K1ABC RR73; W9XYZ <KH1/KH7Z> -11   28 28 10 5       71   DXpedition Mode
   // }
@@ -354,13 +463,19 @@ int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3
   //     // 0.3   WA9XYZ KA1ABC R 16A EMA            28 28 1 4 3 7    71   ARRL Field Day
   //     // 0.4   WA9XYZ KA1ABC R 32A EMA            28 28 1 4 3 7    71   ARRL Field Day
   // }
+
+  //Check for 0.5, telemetry type (does anyone use this?)
   else if (i3 == 0 && n3 == 5) {
     // 0.5   0123456789abcdef01                 71               71   Telemetry (18 hex)
-    return unpack_telemetry(a77, field1);
+    int result = unpack_telemetry(a77, field1);  //field1 gets 18 chars of hex data
+    if (result == 0) *msgType = MSG_TELE;
+
+    //Check for standard message and EU VHF contest types (maybe somebody will use this code in VHF someday)
   } else if (i3 == 1 || i3 == 2) {
     // Type 1 (standard message) or Type 2 ("/P" form for EU VHF contest)
-    return unpack_type1(a77, i3, field1, field2, field3);   //Most messages likely unpack here
+    return unpack_type1(a77, i3, field1, field2, field3, msgType);  //Ordinary messages likely unpack here
   }
+
   // else if (i3 == 3) {
   //     // Type 3: ARRL RTTY Contest
   // }
@@ -368,32 +483,37 @@ int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3
     //     // Type 4: Nonstandard calls, e.g. <WA9XYZ> PJ4/KA1ABC RR73
     //     // One hashed call or "CQ"; one compound or nonstandard call with up
     //     // to 11 characters; and (if not "CQ") an optional RRR, RR73, or 73.
-    return unpack_nonstandard(a77, field1, field2, field3);
+    return unpack_nonstandard(a77, field1, field2, field3, msgType);
   }
+
   // else if (i3 == 5) {
   //     // Type 5: TU; W9XYZ K1ABC R-09 FN             1 28 28 1 7 9       74   WWROF contest
   // }
 
-  // unknown type, should never get here
+  // unknown type, should never get here.  msgType is MSG_UNKNOWN.
   return -1;
 }
 
-int unpack77(const uint8_t *a77, char *message) {
-  char field1[14];
-  char field2[14];
-  char field3[7];
-  int rc = unpack77_fields(a77, field1, field2, field3);
-  if (rc < 0) return rc;
 
-  char *dst = message;
-  // int msg_sz = strlen(field1) + strlen(field2) + strlen(field3) + 2;
+//Appears to be dead code?
+//
+// int unpack77(const uint8_t *a77, char *message) {
+//   char field1[14];
+//   char field2[14];
+//   char field3[7];
+//   MsgType msgType;
+//   int rc = unpack77_fields(a77, field1, field2, field3, &msgType);
+//   if (rc < 0) return rc;
 
-  dst = stpcpy(dst, field1);
-  *dst++ = ' ';
-  dst = stpcpy(dst, field2);
-  *dst++ = ' ';
-  dst = stpcpy(dst, field3);
-  *dst = '\0';
+//   char *dst = message;
+//   // int msg_sz = strlen(field1) + strlen(field2) + strlen(field3) + 2;
 
-  return 0;
-}
+//   dst = stpcpy(dst, field1);
+//   *dst++ = ' ';
+//   dst = stpcpy(dst, field2);
+//   *dst++ = ' ';
+//   dst = stpcpy(dst, field3);
+//   *dst = '\0';
+
+//   return 0;
+// }

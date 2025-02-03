@@ -27,5 +27,7 @@ void Station_Data_Initialize(void);
 char* get_message();
 void set_message(uint16_t index);
 void clear_FT8_message(void);
+void setXmitParams(char *targetStation,int snr);       
+
 
 #endif /* GEN_FT8_H_ */
