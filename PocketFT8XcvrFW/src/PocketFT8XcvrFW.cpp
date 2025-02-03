@@ -342,7 +342,7 @@ void setup(void) {
     delay(10);
     currentFrequency = si4735.getFrequency();
     si4735.setVolume(50);
-    display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
+    //display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
 
     // Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
     // frequency which is stabilized but *not* determined by the Si5351.
@@ -623,7 +623,7 @@ void update_synchronization() {
         WF_counter = 0;
 
         // Notify sequencer
-        seq.timeslotEvent();
+        seq.timeslotEvent();  // Increments sequence number for upcoming timeslot
 
         // Debug missed timeslots (we are too late to receive the first symbol)
         if (current_time > nextTimeSlot + 160) {
@@ -633,9 +633,9 @@ void update_synchronization() {
 
         // Debug timeslot and sequencer problems
         if (xmit_flag) {
-            DPRINTF("\nTimeslot:  DSP_Flag=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s' -------------------\n", DSP_Flag, Transmit_Armned, xmit_flag, get_message());
+            DPRINTF("-----Timeslot %lu:  DSP_Flag=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s' -------------------\n", seq.getSequenceNumber(), DSP_Flag, Transmit_Armned, xmit_flag, get_message());
         } else {
-            DPRINTF("\nTimeslot:  DSP_Flag=%u, Transmit_Armned=%u, xmit_flag=%u,  -------------------------------\n", DSP_Flag, Transmit_Armned, xmit_flag);
+            DPRINTF("-----Timeslot %lu:  DSP_Flag=%u, Transmit_Armned=%u, xmit_flag=%u  -------------------------------\n", seq.getSequenceNumber(), DSP_Flag, Transmit_Armned, xmit_flag);
         }
     }
 }  // update_synchronization()
@@ -690,7 +690,7 @@ void sync_FT8(void) {
  *
  **/
 void waitForFT8timeslot(void) {
-    DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
+    // DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
 
     displayInfoMsg("Waiting for timeslot");
 
@@ -724,5 +724,6 @@ void waitForFT8timeslot(void) {
     // Update display
     displayInfoMsg("RECV");
 
-    DPRINTF("Starting first timeslot, second()=%u, millis()=%lu ---------------------\n", second(), millis());
-}
+    DPRINTF("-----Timeslot %lu: second()=%u, millis()=%lu ---------------------\n", seq.getSequenceNumber(), millis());
+
+}  // waitForFT8timeslot()

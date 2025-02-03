@@ -2,8 +2,11 @@
 
 #include <string.h>
 
+#include "DEBUG.h"
+
 //extern bool true;
 //extern bool false;
+
 
 
 const char * trim_front(const char *str) {
@@ -96,12 +99,13 @@ int dd_to_int(const char *str, int length) {
     if (str[0] == '-') {
         negative = true;
         i = 1;                          // Consume the - sign
-    }
-    else {
+    } else {
         negative = false;
         i = (str[0] == '+') ? 1 : 0;    // Consume a + sign if found
     }
-
+    while(i<length && str[i]!=0 && str[i]==' ') {
+        i++;                            // Consume ' ' 
+    }
     while (i < length) {
         if (str[i] == 0) break;
         if (!is_digit(str[i])) break;
@@ -109,7 +113,6 @@ int dd_to_int(const char *str, int length) {
         result += (str[i] - '0');
         ++i;
     }
-
     return negative ? -result : result;
 }
 

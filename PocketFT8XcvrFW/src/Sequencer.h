@@ -52,6 +52,9 @@ public:
   void abortEvent(void);                  //Abort transmission request
   void timeoutEvent(void);                //Timeout (QSO taking too long)
 
+  //Expose a getter for debugging sequenceNumber problems
+  unsigned long getSequenceNumber(void);
+
   //Get a reference to the Sequencer singleton
   static Sequencer &getSequencer() {
     static Sequencer instance;  //Build the one-and-only Sequencer
