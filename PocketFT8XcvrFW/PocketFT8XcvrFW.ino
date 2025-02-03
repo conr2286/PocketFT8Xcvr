@@ -59,8 +59,8 @@
 #include <SPI.h>
 #include <TimeLib.h>
 
-#include "Arduino.h"
-#include "AudioStream.h"
+#include <Arduino.h>
+#include <AudioStream.h>
 #include "DEBUG.h"
 #include "GPShelper.h"
 #include "HX8357_t3n.h"
