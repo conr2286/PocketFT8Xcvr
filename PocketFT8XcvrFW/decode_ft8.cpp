@@ -309,6 +309,8 @@ void display_selected_call(int index) {
   strlcpy(Target_Call, new_decoded[index].field2, sizeof(Target_Call));
   Target_RSL = new_decoded[index].snr;
 
+    DPRINTF("display_selected_call(%d) %s\n",index,new_decoded[index]);
+
   snprintf(selected_station, sizeof(selected_station), "%7s %3i", Target_Call, Target_RSL);
   tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
   tft.setTextSize(2);
@@ -316,6 +318,7 @@ void display_selected_call(int index) {
   tft.print(blank);
   tft.setCursor(DISPLAY_SELECTED_X, DISPLAY_SELECTED_Y);
   tft.print(Target_Call);
+
 }
 
 

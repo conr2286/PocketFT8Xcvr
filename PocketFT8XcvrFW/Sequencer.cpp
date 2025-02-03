@@ -116,6 +116,7 @@
 #include "decode_ft8.h"
 #include "gen_ft8.h"
 #include "traffic_manager.h"
+#include "button.h"
 
 
 //Many externals in the legacy C code.  TODO:  See if we can simplify these externals.
@@ -145,7 +146,7 @@ extern unsigned currentFrequency;  //Nominal frequency (sans offset) in kHz
 **/
 void Sequencer::timeslotEvent() {
 
-  DPRINTF("%s sequenceNumber=%lu\n", __FUNCTION__, sequenceNumber);
+  DPRINTF("%s sequenceNumber=%lu, state=%u\n", __FUNCTION__, sequenceNumber, state);
 
   //Sequencer state determines what action to take
   switch (state) {
@@ -240,7 +241,20 @@ void Sequencer::timeslotEvent() {
     //We have transmitted their RRSL message to the remote station
     case XMIT_RRSL:
       DTRACE();
-      state = LISTEN_RRR;  //We expect some form of an EOT
+      state = LISTEN_RRR;  //We expect an RRR or RR73
+      break;
+
+    //We are waiting for an appropriate even/odd timeslot to transmit a 73 message to remote station
+    case M73_PENDING:
+      DTRACE();
+      actionXmit(qso.oddEven, XMIT_73);  //Arm the transmitter
+      break;
+
+    //We have transmitted the 73 message to the remote station
+    case XMIT_73:
+      DTRACE();
+      state = IDLE;  //We have finished
+      //TODO:  need to log?  futz with receiver?  anything?
       break;
 
     //Default --- Ignore timeslot event (nothing for us to do)
@@ -294,10 +308,10 @@ void Sequencer::begin(void) {
 **/
 void Sequencer::receivedMsgEvent(Decode* msg) {
 
-  //Sadly, some stations apparently transmit "RR73" encoded as a locator rather than as an EOT.
+  //Sadly, some encoders apparently transmit "RR73" as a locator rather than as an EOT.
   //We work around this by assuming RR73 means end-of-transmission, not somewhere in the Arctic.
   //TODO:  Verify that we aren't guilty of this!
-  if (msg->msgType == MSG_LOC && strstr(msg->field3, "RR73")) msg->msgType = MSG_EOT;
+  if (msg->msgType == MSG_LOC && strstr(msg->field3, "RR73")) msg->msgType = MSG_RR73;
 
   //When debugging, print some things from the received message
   DPRINTF("%s %s %s %s msgType=%u, seq=%lu state=%u\n", __FUNCTION__, msg->field1, msg->field2, msg->field3, msg->msgType, sequenceNumber, state);
@@ -331,10 +345,17 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
         rslEvent(msg);  //They sent our signal report
         break;
 
-      //Did we receive their 73?
-      case MSG_EOT:
+      //Did we receive an EOT that does not expect a reply?
+      case MSG_73:
         DTRACE();
-        eotEvent(msg);  //They sent us a 73, RRR or RR73
+        eotEvent(msg);
+        break;
+
+      //Did we receive an EOT that expects a reply?
+      case MSG_RR73:
+      case MSG_RRR:
+        DTRACE();
+        eotReplyEvent(msg);
         break;
 
       //The Sequencer does not currently process certain message types
@@ -382,9 +403,9 @@ void Sequencer::cqButtonEvent() {
     case XMIT_CQ:     //CQ transmission in progress
     case LISTEN_LOC:  //Listening for a response to our CQ message[s]
       DTRACE();
-      state = IDLE;         //Return to idle
-      Transmit_Armned = 0;  //TODO:  Not needed after timeslot events in place?
-      clear_FT8_message();  //Clears displayed outbound message
+      state = IDLE;  //Return to idle
+      terminate_transmit_armed();
+      clear_FT8_message();  //Clears displayed outbound message as we're now idle
       break;
 
       //The CQ button is ignored during most states
@@ -399,7 +420,7 @@ void Sequencer::cqButtonEvent() {
 
 
 /**
- *  Displayed message click event
+ *  Clicke on displayed message to initiate a QSO
  *
  *  This event handler initiates a QSO by contacting a displayed, received
  *  message.
@@ -429,8 +450,9 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
       case CQ_PENDING:  //Operator decided to contact a displayed station rather than call CQ
         DTRACE();
         qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber));  //Start gathering QSO info
-        qso.setWorkedLocator(msg->field3);                                          //Record their locator
-        set_message(MSG_LOC);                                                       //We send our locator
+        qso.setWorkedLocator(msg->field3);                                          //Record their locator if we have it
+        setXmitParams(msg->field2, msg->snr);                                       //Inform gen_ft8 of remote station's info
+        set_message(MSG_LOC);                                                       //We initiate QSO by sending our locator
         state = LOC_PENDING;                                                        //Await appropriate timeslot to transmit to Target_Call
         break;
 
@@ -462,17 +484,19 @@ void Sequencer::rslEvent(Decode* msg) {
     //Are we expecting an RRSL?  TODO:  recvd out of sequence --> no qso
     case LISTEN_RRSL:
       DTRACE();
-      qso.setMyRSL(msg->field3);  //Record our signal report in QSO
-      set_message(MSG_RRR);             //Prepare an RRR message
-      state = RRR_PENDING;        //We must await an appropriate even/odd timeslot
+      qso.setMyRSL(msg->field3);             //Record our signal report in QSO
+      setXmitParams(msg->field2, msg->snr);  //Inform gen_ft8 of remote station's info
+      set_message(MSG_RRR);                  //Prepare an RRR message
+      state = RRR_PENDING;                   //We must await an appropriate even/odd timeslot
       break;
 
     //Remote station sent our RSL and we should respond with their RRSL
     case LISTEN_RSL:
       DTRACE();
-      qso.setMyRSL(msg->field3);  //Record our signal report in QSO structure
-      set_message(MSG_RRSL);             //Prepare to send their signal report to remote station
-      state = RRSL_PENDING;       //Await an appropriate even/odd timeslot
+      qso.setMyRSL(msg->field3);             //Record our signal report in QSO structure
+      setXmitParams(msg->field2, msg->snr);  //Inform gen_ft8 of remote station's info
+      set_message(MSG_RRSL);                 //Prepare to send their signal report to remote station
+      state = RRSL_PENDING;                  //Await an appropriate even/odd timeslot
       break;
 
     //We were expecting a LOC but received a signal report.  We likely were calling CQ
@@ -502,7 +526,7 @@ void Sequencer::rslEvent(Decode* msg) {
 
 
 /**
- * Received one form of an End-of-Transmission (EOT), 73, RR73 or RRR
+ * Received an EOT message that does not expect a reply
  *
  * @param msg Their decoded EOT message
  *
@@ -513,32 +537,82 @@ void Sequencer::eotEvent(Decode* msg) {
   //The action taken depends upon our state
   switch (state) {
 
-    //Process a more-or-less normal end of a QSO
-    case LISTEN_73:   //We've been expecting some form of EOT
-    case LISTEN_RRR:  //And will accept RRR as an EOT
+    //Process a QSO ending more or less normally
+    case LISTEN_73:   //We expected their 73
+    case LISTEN_RRR:  //We expected an RRR but received a 73 --- I guess it's over
       DTRACE();
-      state = IDLE;
-      //TODO:  qso.end()
+      state=IDLE;     //It's definitely over now
+      //TODO:  Do we need to logit,  futz with GUI, flags, something else?
       break;
 
-    //We were trying to get a CQ transmission underway and can ignore the EOT which
-    //presumably is left-over from a previous QSO.  Ignore their EOT as we've moved-on.
+    //We were trying to get a CQ transmission underway and can ignore this 73 which
+    //presumably is left-over from a previous QSO.
     case CQ_PENDING:
     case XMIT_CQ:
     case LISTEN_LOC:
       DTRACE();
       break;
 
-    //We were somewhere in a QSO when the remote station vanished.  QSO incomplete.
+    //We were somewhere in midst of a QSO when the remote station 73'd.  QSO incomplete.
     //TODO:  log???
     default:
       DTRACE();
-      Transmit_Armned = 0;  //We won't transmit
-      clear_FT8_message();  //Clears displayed outbound message
-      state = IDLE;         //Return to IDLE
+      terminate_transmit_armed();  //Dis-arm the transmitter
+      clear_FT8_message();         //Clears displayed outbound message
+      state = IDLE;                //Return to IDLE
       break;
   }
 }
+
+
+
+
+/**
+ * Received an EOT message that expects our 73 reply
+ *
+ * @param msg Their decoded EOT message
+ *
+ * Their RRR and RR73 messages expect our 73 reply
+ *
+ * We listen either for a 73 or an RRR, never an RR73.  If they send
+ * us an RR73 then we treat it like an RRR and transmit a 73 reply.
+ *
+**/
+void Sequencer::eotReplyEvent(Decode* msg) {
+
+  //The action taken depends upon our state
+  switch (state) {
+
+    //Process end of QSO when they expect a 73 reply from us
+    case LISTEN_73:   //We expected 73 but they've requested a 73 reply.  Hmm.
+    case LISTEN_RRR:  //They expect 73 from us
+      DTRACE();
+      setXmitParams(msg->field2, msg->snr);  //Inform gen_ft8 of remote station's info
+      set_message(MSG_73);                   //Prepare an RRR message
+      state = M73_PENDING;                   //We must await an appropriate even/odd timeslot
+      //TODO:  qso.end()
+      break;
+
+    //We were trying to get a CQ transmission underway and can ignore the EOT which
+    //presumably is left-over from a previous QSO.
+    case CQ_PENDING:
+    case XMIT_CQ:
+    case LISTEN_LOC:
+      DTRACE();
+      break;
+
+    //We were somewhere in a QSO when the remote station 73'd.  QSO incomplete.
+    //TODO:  log???
+    default:
+      DTRACE();
+      terminate_transmit_armed();  //Dis-arm the transmitter
+      clear_FT8_message();         //Clears displayed outbound message
+      state = IDLE;                //Return to IDLE
+      break;
+  }
+}
+
+
 
 
 
@@ -572,6 +646,7 @@ void Sequencer::locatorEvent(Decode* msg) {
       DTRACE();
       qso.begin(msg->field2, currentFrequency, "FT8", ODD(sequenceNumber));  //Start gathering QSO info
       qso.setWorkedLocator(msg->field3);                                     //Record responder's locator
+      setXmitParams(msg->field2, msg->snr);                                  //Inform gen_ft8 of remote station's info
       set_message(MSG_RSL);                                                  //Prepare to transmit RSL to responder
       state = RSL_PENDING;                                                   //Must await an appropriate timeslot when responder is listening
       break;
@@ -683,7 +758,7 @@ void Sequencer::actionXmit(unsigned oddEven, SequencerStateType newState) {
  *
 **/
 extern Decode new_decoded[];  //References decode_ft8.cpp defining 20 elements
-Decode* getDecodedMsg(unsigned msgIndex) {
+Decode* Sequencer::getDecodedMsg(unsigned msgIndex) {
   if (msgIndex < 20) return &new_decoded[msgIndex];
   else return NULL;
 }

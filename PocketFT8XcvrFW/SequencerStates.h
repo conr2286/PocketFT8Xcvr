@@ -26,9 +26,10 @@ typedef enum {
   RRSL_PENDING = 13,  //QSOing:  Awaiting timeslot to transmit RRSL (e.g. R-12)
   XMIT_RRSL = 14,     //QSOing:  Transmitting Roger and their RSL
   LISTEN_RRR = 15,    //QSOing:  Listen for their RRR/RR73/73
-  XMIT_73 = 16,       //QSOing:  Transmitting 73
+  M73_PENDING = 16,   //QSOing:  Awaiting timeslot to transmit 73
+  XMIT_73 = 17,       //QSOing:  Transmitting 73
 
   //Tuning mode
-  TUNING = 17  //TUNEing:  Transmitting unmodulated carrier
+  TUNING = 18  //TUNEing:  Transmitting unmodulated carrier
 
 } SequencerStateType;

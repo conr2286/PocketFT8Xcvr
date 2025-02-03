@@ -344,6 +344,8 @@ void terminate_transmit_armed(void) {
   drawButton(6);
 }
 
+
+
 int testButton(uint8_t index) {
 
   if ((draw_x > sButtonData[index].x) && (draw_x < sButtonData[index].x + sButtonData[index].w) && (draw_y > sButtonData[index].y) && (draw_y < sButtonData[index].y + sButtonData[index].h)) return 1;
@@ -354,12 +356,16 @@ int testButton(uint8_t index) {
 }
 
 
+
+
 /**
- *  Check for click on received message
+ *  Check for click on received message (left pane?)
  *
  *
 **/
 void check_FT8_Touch(void) {
+
+  DTRACE();
 
   int FT_8_TouchIndex;
   int y_test;
@@ -368,6 +374,9 @@ void check_FT8_Touch(void) {
     y_test = draw_y - 90;
     FT_8_TouchIndex = y_test / 25;
     if (FT_8_TouchIndex < master_decoded) display_selected_call(FT_8_TouchIndex);
+
+    //If the transmitter is armed, then give them a call
+    if (Transmit_Armned) seq.msgClickEvent(FT_8_TouchIndex);
   }
 
 }  //check_FT8_Touch()

@@ -88,7 +88,7 @@ void Contact::begin(char* workedCall, unsigned freq, char* mode, unsigned oddEve
 
   char* myCall = Station_Call;  //TODO:  Seek alternatives to these externs
 
-  DPRINTF("workedCall=%s, myCall=%s, freq=%lu, mode=%s, oddEven=%u\n", workedCall, myCall, freq, mode, oddEven);
+  DPRINTF("workedCall=%s, myCall=%s, freq=%u, mode=%s, oddEven=%u\n", workedCall, myCall, freq, mode, oddEven);
 
   //Reset all Contact field values (except odd/even which has no "undefined" value)
   reset();

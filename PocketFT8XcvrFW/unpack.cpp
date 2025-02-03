@@ -1,3 +1,4 @@
+#include "msgTypes.h"
 #include "DEBUG.h"
 #include "unpack.h"
 #include "text.h"
@@ -229,30 +230,39 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
   } else {
     int irpt = igrid4 - MAXGRID4;  //See Reference Appendix A discussion of g15
 
-    //Assume this is one form of the several end-of-transmission messages
-    *msgType = MSG_EOT;
+    //Assume this is a signal report
+    *msgType = MSG_RSL;
     //DPRINTF("irpt=%u\n",irpt);
 
     // Check special cases first
     if (irpt == 1) field3[0] = '\0';
-    else if (irpt == 2) strcpy(field3, "RRR");    //Roger received report???
-    else if (irpt == 3) strcpy(field3, "RR73");   //Roger received, best regards
-    else if (irpt == 4) strcpy(field3, "73");     //Best regards
-    else if (irpt >= 5) {
+    else if (irpt == 2) {
+      strcpy(field3, "RRR");
+      *msgType = MSG_RRR;
+    }  //Roger received report???
+    else if (irpt == 3) {
+      strcpy(field3, "RR73");
+      *msgType = MSG_RR73;
+    }  //Roger received, best regards
+    else if (irpt == 4) {
+      strcpy(field3, "73");  //Best regards
+      *msgType = MSG_73;
+    } else if (irpt >= 5) {
       char *dst = field3;
-      // Extract signal report as a two digit number with a + or - sign
-      if (ir > 0) {
-        *dst++ = 'R';  // Add "R" before report
+      *msgType = MSG_RSL;     //It's a signal report (RSL)
+      if (ir > 0) {           //Or perhaps an RRSL?
+        *dst++ = 'R';         //Add "R" before report
+        *msgType = MSG_RRSL;  //Yes, Roger RSL
       }
+      // Extract signal report as a two digit number with a + or - sign
       int_to_dd(dst, irpt - 35, 2, true);  //signal report
-      *msgType = MSG_RSL;                  //It's a signal report
     }
     // if(msg(1:3).eq.'CQ ' .and. irpt.ge.2) unpk77_success=.false.
     // if (irpt >= 2 && strncmp(field1, "CQ", 2) == 0) return -1;
   }
   //DTRACE();
-  //If the destination callsign begins with "CQ" then change msgType to MSG_CQ
-  if (strncmp(field1,"CQ",2)==0) *msgType=MSG_CQ;     //CQ overides anything else we discovered
+  //If the destination callsign is "CQ" then change msgType to MSG_CQ
+  if (strcmp(field1, "CQ") == 0) *msgType = MSG_CQ;  //CQ overides anything else we discovered
 
   return 0;  // Success
 
@@ -376,7 +386,7 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
 
   //Is it some form of end-of-transmission (EOT)
   if (icq == 0) {
-    *msgType = MSG_EOT;  //Assume EOT for now
+    *msgType = MSG_BLANK;  //Assume mystery and let the Sequencer choke on it
     strcpy(field1, trim(call_1));
     if (nrpt == 1)
       strcpy(field3, "RRR");
@@ -389,7 +399,7 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
       *msgType = MSG_BLANK;  //Report blank
     }
   } else {
-    *msgType = MSG_CQ;      //It's a CQ with hashed callsign and no locator
+    *msgType = MSG_CQ;  //It's a CQ with hashed callsign and no locator
     strcpy(field1, "CQ");
     field3[0] = '\0';
   }

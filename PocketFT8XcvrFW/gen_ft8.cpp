@@ -117,6 +117,8 @@ void set_message(uint16_t index) {
   char seventy_three[] = "RR73";
   char Reply_State[20];
 
+  DPRINTF("set_message(%u)\n",index);
+
   getTeensy3Time();
   char rtc_string[10];  // print format stuff
   snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());

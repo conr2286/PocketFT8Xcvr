@@ -624,7 +624,7 @@ void update_synchronization() {
 
     //Debug missed timeslots (we are too late to receive the first symbol)
     if (current_time > nextTimeSlot + 160) {
-      DPRINTF("*** Missed a timeslot *************************************************************************************\n");
+      DPRINTF("*** Missed timeslot:  ft8_time%15000=%d, current_time=%lu, nextTimeSlot=%lu *****************************",ft8_time%15000,current_time,nextTimeSlot);
     }
     nextTimeSlot = current_time + 15000;
 
