@@ -365,8 +365,6 @@ int testButton(uint8_t index) {
 **/
 void check_FT8_Touch(void) {
 
-  DTRACE();
-
   int FT_8_TouchIndex;
   int y_test;
 
@@ -376,6 +374,7 @@ void check_FT8_Touch(void) {
     if (FT_8_TouchIndex < master_decoded) display_selected_call(FT_8_TouchIndex);
 
     //If the transmitter is armed, then give them a call
+    DTRACE();
     if (Transmit_Armned) seq.msgClickEvent(FT_8_TouchIndex);
   }
 

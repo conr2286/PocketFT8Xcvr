@@ -303,9 +303,9 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
     // When debugging, print some things from the received message
     DPRINTF("%s %s %s %s msgType=%u, seq=%lu state=%u\n", __FUNCTION__, msg->field1, msg->field2, msg->field3, msg->msgType, sequenceNumber, state);
 
-    // Stamp all received messages with the timeslot's sequenceNumber in which they were received.
-    // We use this if the operator later decides to contact (click on) a displayed message.
-    msg->sequenceNumber = sequenceNumber;
+    // // Stamp all received messages with the timeslot's sequenceNumber in which they were received.
+    // // We use this if the operator later decides to contact (click on) a displayed message.
+    // msg->sequenceNumber = sequenceNumber;
 
     // The Sequencer analyzes mesages of interest to our station
     if (isMsgForUs(msg)) {
@@ -315,7 +315,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             // Did we receive another station's Tx6 CQ?
             case MSG_CQ:
                 DTRACE();
-                // TODO:  RoboOp
+                // TODO:  RoboOp, ignore for now
                 break;
 
             // Did we receive their Tx1 locator message?
@@ -360,7 +360,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
         }  // switch
     }
 
-    DTRACE();
+    // DTRACE();
 }
 
 /**
@@ -419,7 +419,7 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
     Decode* msg = getDecodedMsg(msgIndex);
 
     // Assert Target_Call==msg->field2 as this stuff could become FUBAR
-    DPRINTF("Target_Call='%s', msg->field2='%s', msg->sequenceNumber=%u\n", Target_Call, msg->field2, msg->sequenceNumber);
+    DFPRINTF("sequenceNumber=%lu, Target_Call='%s', msg->field2='%s', msg->sequenceNumber=%u, state=%u\n",sequenceNumber, Target_Call, msg->field2, msg->sequenceNumber, state);
 
     // The required action depends upon which state the Synchronizer machine currently resides
     if (msg != NULL) {
@@ -428,9 +428,10 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
             case IDLE:        // We are currently idle
             case CQ_PENDING:  // Operator decided to contact a displayed station rather than call CQ
                 DTRACE();
-                qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber));  // Start gathering QSO info
+                qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber+1));// Start gathering QSO info
                 qso.setWorkedLocator(msg->field3);                                          // Record their locator if we have it
                 setXmitParams(msg->field2, msg->snr);                                       // Inform gen_ft8 of remote station's info
+                DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, qso.oddEven);
                 set_message(MSG_LOC);                                                       // We initiate QSO by sending our locator
                 state = LOC_PENDING;                                                        // Await appropriate timeslot to transmit to Target_Call
                 break;
@@ -474,14 +475,14 @@ void Sequencer::rslEvent(Decode* msg) {
 
         // We were expecting a LOC but received a signal report.  We likely were calling CQ
         // and listening for a response which came with an RSL.  Let's try to cobble-up a
-        // QSO from what we have.  TODO:  may need to init the gen_ft8 externs.
+        // QSO from what we have.  
         case LISTEN_LOC:
             DTRACE();
             DPRINTF("freq=%u\n", currentFrequency);
-            qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber));  // Begin a QSO with their station
+            qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber+1));// Begin a QSO with their station
             qso.setMyRSL(msg->field3);                                                  // Record our RSL from remote station
             setXmitParams(msg->field2, msg->snr);                                       // Inform gen_ft8 of remote station's info
-            DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d\n", Target_Call, msg->field2, msg->snr, Target_RSL);
+            DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, qso.oddEven);
             set_message(MSG_RSL);  // Reply with their RSL as we likely haven't sent it to them
             state = RSL_PENDING;   // Transmit their RSL in next appropriate timeslot
             break;
@@ -602,13 +603,14 @@ void Sequencer::locatorEvent(Decode* msg) {
             qso.begin(msg->field2, currentFrequency, "FT8", ODD(sequenceNumber));  // Start gathering QSO info
             qso.setWorkedLocator(msg->field3);                                     // Record responder's locator
             setXmitParams(msg->field2, msg->snr);                                  // Inform gen_ft8 of remote station's info
+            DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, qso.oddEven);
             set_message(MSG_RSL);                                                  // Prepare to transmit RSL to responder
             state = RSL_PENDING;                                                   // Must await an appropriate timeslot when responder is listening
             break;
 
             // TODO:  qso.end();
 
-        // Something is wrong and we don't know why or how we apparently received their locator
+        // Something is wrong and we don't know why we apparently received their locator.  Maybe we should reset everything???
         default:
             DTRACE();
             break;
@@ -690,11 +692,6 @@ void Sequencer::actionXmit(unsigned oddEven, SequencerStateType newState) {
 
 }  // actionXmit()
 
-
-
-
-
-
 /**
  *  Helper routine to retrieve pointer to a decoded message
  *
@@ -711,15 +708,11 @@ Decode* Sequencer::getDecodedMsg(unsigned msgIndex) {
         return NULL;
 }
 
-
-
-
-
 /**
  * Getter for debugging sequenceNumber problems
- * 
+ *
  * @return sequenceNumber
- * 
+ *
  */
 unsigned long Sequencer::getSequenceNumber() {
     return sequenceNumber;

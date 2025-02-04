@@ -189,14 +189,11 @@ int pack77_1(const char *msg, uint8_t *b77) {
 
     // Locate the second delimiter
     const char *s2 = strchr(s1 + 1, ' ');
-    DFPRINTF("s2='%s'\n", s2);
     if (s2 != 0) {
         igrid4 = packgrid(s2 + 1);
-        DTRACE();
     } else {
         // Two callsigns, no grid/report
         igrid4 = packgrid(0);
-        DTRACE();
     }
 
     uint8_t i3 = 1;  // No suffix or /R
