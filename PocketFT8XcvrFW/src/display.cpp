@@ -156,7 +156,7 @@ void display_date(int x, int y) {
  * Note:  Display must be initialized
  *
 **/
-void displayInfoMsg(char *msg) {
+void displayInfoMsg(const char *msg) {
   // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
   // tft.setTextSize(2);
   // tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
@@ -176,7 +176,7 @@ void displayInfoMsg(char *msg) {
  * Note:  Display must be initialized
  *
 **/
-void displayInfoMsg(char *msg, uint16_t color) {
+void displayInfoMsg(const char *msg, uint16_t color) {
   char bfr[24];
   strlpad(bfr,msg,' ',sizeof(bfr));
   tft.setTextColor(color, HX8357_BLACK);

@@ -84,7 +84,7 @@ extern char Station_Call[];
  * active will become true.
  *
 **/
-void Contact::begin(char* workedCall, unsigned freq, char* mode, unsigned oddEven) {
+void Contact::begin(char* workedCall, unsigned freq, const char* mode, unsigned oddEven) {
 
   char* myCall = Station_Call;  //TODO:  Seek alternatives to these externs
 

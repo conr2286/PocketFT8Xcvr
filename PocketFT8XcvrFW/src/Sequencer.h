@@ -30,7 +30,7 @@ private:
 
 
   //Define the actions taken by the Sequencing State Machine
-  void actionXmit(unsigned oddEven, SequencerStateType newState);  //Start transmitter in next timeslot
+  void pendXmit(unsigned oddEven, SequencerStateType newState);  //Start transmitter in next timeslot
 
   //Helper methods
   bool isMsgForUs(Decode *msg);              //Determines if received msg is of interest to us

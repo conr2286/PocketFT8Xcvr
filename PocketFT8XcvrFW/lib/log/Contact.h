@@ -24,7 +24,7 @@ public:
   Contact() {
     this->reset();
   }                                                                       
-  void begin(char* workedCall, unsigned freq, char* mode, unsigned oddEven);  //Begin a new, active QSO
+  void begin(char* workedCall, unsigned freq, const char* mode, unsigned oddEven);  //Begin a new, active QSO
   void reset(void);                                                                //Reset all fields in a Contact instance, making it inactive
   bool isValid(void);                                                              //Determine if the current QSO, if any, is a valid (completed) contact
   bool isActive(void);                                                             //Determine if a Contact instance has recorded any values

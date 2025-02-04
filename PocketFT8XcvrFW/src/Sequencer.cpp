@@ -12,13 +12,16 @@
  *  Timeslot  CurrentState  Event           Action              NextState   Commentary
  *    0       IDLE          timeslotEvent   N/A                 IDLE        We are monitoring FT8 traffic
  *    0       IDLE          cqButtonEvent   Prepare CQ msg      CQ_PENDING  Operator pressed CQ button
- *    1       CQ_PENDING    timeslotEvent   actionXMIT          XMIT_CQ     Arm the transmitter for CQ
+ *    1       CQ_PENDING    timeslotEvent   pendXmit
+ *          XMIT_CQ     Arm the transmitter for CQ
  *    1       XMIT_CQ       timeslotEvent   N/A                 LISTEN_LOC  Transmit CQ
  *    2       LISTEN_LOC    locatorEvent    Prepare RSL msg     RSL_PENDING Receive grid locator
- *    2       RSL_PENDING   timeslotEvent   actionXmit          XMIT_RSL    Arm transmitter for RSL
+ *    2       RSL_PENDING   timeslotEvent   pendXmit
+ *          XMIT_RSL    Arm transmitter for RSL
  *    3       XMIT_RSL      timeslotEvent   N/A                 LISTEN_RRSL Transmit RSL
  *    3       LISTEN_RRSL   rslEvent        Prepare RRR msg     RRR_PENDING Receive RRSL
- *    4       RRR_PENDING   timeslotEvent   actionXmit          XMIT_RRR    Arm transmitter for RRR
+ *    4       RRR_PENDING   timeslotEvent   pendXmit
+ *          XMIT_RRR    Arm transmitter for RRR
  *    4       XMIT_RRR      timeslotEvent   N/A                 LISTEN_73   Transmit RRR
  *    5       LISTEN_73     eotEvent        N/A                 IDLE        QSO finished normally
  *
@@ -148,7 +151,7 @@ void Sequencer::timeslotEvent() {
         // Time to start the transmitter sending previously prepared Tx6 CQ message
         case CQ_PENDING:
             DTRACE();
-            actionXmit(ODD(sequenceNumber), XMIT_CQ);  // Always transmit in next timeslot
+            pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Always transmit in next timeslot
             break;
 
         // Time to listen for replies to our Tx6 CQ transmission.  The loop()
@@ -164,7 +167,7 @@ void Sequencer::timeslotEvent() {
         // TODO:  Limit retransmissions with a timer or whatever.
         case LISTEN_LOC:
             DTRACE();
-            actionXmit(ODD(sequenceNumber), XMIT_CQ);  // Transmit in next timeslot
+            pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Transmit in next timeslot
             break;
 
         // We have heard a Tx1 response to our Tx6 CQ, prepared an RSL reply message, and will transmit
@@ -176,7 +179,7 @@ void Sequencer::timeslotEvent() {
         // about-to-start timeslot when responder will be listening.
         case RSL_PENDING:
             DTRACE();
-            actionXmit(qso.oddEven, XMIT_RSL);  // Arms transmitter if next timeslot is appropriate
+            pendXmit(qso.oddEven, XMIT_RSL);  // Arms transmitter if next timeslot is appropriate
             break;
 
         // We have transmitted their RSL reply to their remote station.  Now we expect to
@@ -190,13 +193,13 @@ void Sequencer::timeslotEvent() {
         // We will retransmit when the odd/even timeslot expects remote to be listening for us.
         case LISTEN_RRSL:
             DTRACE();
-            actionXmit(qso.oddEven, XMIT_RSL);
+            pendXmit(qso.oddEven, XMIT_RSL);
             break;
 
         // We are waiting for an appropriate even/odd timeslot to transmit our prepared Tx4 RRR to remote station
         case RRR_PENDING:
             DTRACE();
-            actionXmit(qso.oddEven, XMIT_RRR);  // Arms the transmitter if next timeslot is appropriate
+            pendXmit(qso.oddEven, XMIT_RRR);  // Arms the transmitter if next timeslot is appropriate
             break;
 
         // We have transmitted our Tx4 RRR to the remote station.  The QSO is complete as we expect to receive
@@ -218,7 +221,7 @@ void Sequencer::timeslotEvent() {
         // outbound message containing our own location.
         case LOC_PENDING:
             DTRACE();
-            actionXmit(qso.oddEven, XMIT_LOC);  // QSO struct was initialized by msgClickEvent()
+            pendXmit(qso.oddEven, XMIT_LOC);  // QSO struct was initialized by msgClickEvent()
             break;
 
         // We have transmitted our location to the remote station
@@ -229,7 +232,7 @@ void Sequencer::timeslotEvent() {
         // We are waiting for an appropriate even/odd timeslot to transmit an RRSL message to remote station
         case RRSL_PENDING:
             DTRACE();
-            actionXmit(qso.oddEven, XMIT_RRSL);  // Arm the transmitter
+            pendXmit(qso.oddEven, XMIT_RRSL);  // Arm the transmitter
             break;
 
         // We have transmitted their RRSL message to the remote station
@@ -241,7 +244,7 @@ void Sequencer::timeslotEvent() {
         // We are waiting for an appropriate even/odd timeslot to transmit a 73 message to remote station
         case M73_PENDING:
             DTRACE();
-            actionXmit(qso.oddEven, XMIT_73);  // Arm the transmitter
+            pendXmit(qso.oddEven, XMIT_73);  // Arm the transmitter
             break;
 
         // We have transmitted the 73 message to the remote station
@@ -661,36 +664,37 @@ bool Sequencer::isMsgForUs(Decode* msg) {
  *  Action routine to begin modulation in the requested odd/even timeslot
  *
  *  @param oddEven begin modulation in 1==odd, 0==even-numbered timeslot
- *  @param s new state value if transmitter is armed
+ *  @param newState new state value if transmitter is armed
  *
  *  We don't actually modulate anything here, all we do is setup the flags so loop()
  *  will begin transmitting FSK modulated symbols.
  *
  *  + You must invoke set_message() to prepare the outbound message prior
- *  to invoking actionXmit().
+ *  to invoking pendXmit
  *
- *  + Upon entry, sequenceNumber identifies the current timeslot and, if we
- *  arm the transmitter, loop() will begin modulation in the *following*
- *  timeslot.  Thus, to begin modulation in an odd-numbered timeslot, we
- *  arm the transmitter in an even-numbered timeslot.  :|
+ *  + Upon entry, sequenceNumber identifies the *current* timeslot,
+ *  not the next timeslot.  The oddEven parameter specifies whether the
+ *  transmission should start in an odd or even-numbered timeslot.  To
+ *  begin modulation in an odd-numbered timeslot, we must setup in
+ *  an even-numbered timeslot.
  *
  *  We do nothing if the next timeslot is not appropriate.
  *
  **/
-void Sequencer::actionXmit(unsigned oddEven, SequencerStateType newState) {
+void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
     oddEven &= 0x01;  // Force binary value:  1==odd, 0==even-numbered timeslot
 
-    DPRINTF("oddEven=%u, sequenceNumber=%lu newState=%u\n", oddEven, sequenceNumber, newState);
+    DFPRINTF("oddEven=%u, sequenceNumber=%lu newState=%u\n", oddEven, sequenceNumber, newState);
 
     // Do we want to transmit in the *next* timeslot?
     if (oddEven == ODD(sequenceNumber)) {
-        DTRACE();
-        Transmit_Armned = 1;                   // Yes, transmit in next slot
+        DFPRINTF("Setting-up to transmit in sequenceNumber %lu\n", sequenceNumber);
+        Transmit_Armned = 1;                   // Yes, transmit in the next slot
         setup_to_transmit_on_next_DSP_Flag();  // loop() begins modulation in next timeslot
         state = newState;                      // Advance state machine to new state after arming the transmitter
     }
 
-}  // actionXmit()
+}  // pendXmit()
 
 /**
  *  Helper routine to retrieve pointer to a decoded message
