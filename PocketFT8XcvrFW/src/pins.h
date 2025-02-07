@@ -51,5 +51,6 @@
 //GPS pins (Teensy 4.1 Serial1)
 #define PIN_GPSTX 0  //TX data from GPS
 #define PIN_GPSRX 1  //RX data from GPS
+#define PIN_PPS   2  //PPS pulse
 
 //Note:  The audio input pin is apparently hardwired by the Audio Library in input_adc.h to A2

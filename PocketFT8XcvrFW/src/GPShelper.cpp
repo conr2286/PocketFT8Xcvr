@@ -10,10 +10,6 @@
  *
 **/
 
-
-
-
-
 #include <TimeLib.h>
 
 #include "pins.h"
@@ -21,6 +17,48 @@
 #include "DEBUG.h"
 
 static Adafruit_GPS gpsDevice(&Serial1);
+
+
+
+
+
+/**
+ * @brief Interrupt Service Routine for GPS Pulse-per-Second signal
+ * 
+ * The GPShelper() constructor, if PIN_PPS is defined, attaches this ISR
+ * to service the GPS device PPS signal.  All the ISR does is note the
+ * PPS signal level change, indicating the GPS has acquired a satellite 
+ * fix.  Thus, gpsPPSActive==true implies that the GPS has acquired a
+ * fix while gpsPPSActive==false implies that it has not. 
+ * 
+ * Note:  The static bool gpsPPSActive and the hasFix member variable
+ * have slightly different implications.  While gpsPPSActive means the
+ * GPS device has acquired a fix, the hasFix member variable implies
+ * that the GPS has supplied valid date, time and location.  
+ * 
+ */
+static volatile bool gpsPPSActive = false;
+void isrPPS() {
+    gpsPPSActive = true;
+} //isrPPS()
+
+
+
+
+
+
+/**
+ * @brief Determine if the GPS device has acquired a satellite fix
+ * @return true==satellite fix, false==not yet
+ */
+bool GPShelper::hasFix() {
+    return gpsPPSActive;
+} //hasFix()
+
+
+
+
+
 
 /**
   ** GPShelper Constructor
@@ -34,12 +72,17 @@ GPShelper::GPShelper(unsigned gpsBaudRate) {
   //DTRACE();
   delay(10);
 
+  //Configure GPS communication parameters
   gpsDevice.begin(9600);                                //Set Serial1 baud rate to GPS device
   gpsDevice.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);  //We are only interested in RMC messages from GPS
   gpsDevice.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);     //10 Hz updates improve time resolution
   delay(1000);
 
-}  //GPShelper
+//Compile the following if we've defined a pin to monitor the GPS device PPS signal
+#ifdef PIN_PPS
+attachInterrupt(digitalPinToInterrupt(PIN_PPS), isrPPS, CHANGE);
+#endif
+}  // GPShelper
 
 /**
  *  @brief Loops to obtain date, time and location from GPS 
@@ -71,10 +114,10 @@ GPShelper::GPShelper(unsigned gpsBaudRate) {
 bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)(unsigned)) {
 
   //Assume we won't acquire a fix
-  validFix = false;
+  validGPSdata = false;
 
-  //Assume an inactive/disconnected/defective GPS
-  bool activeGPS=false;
+  // //Assume an inactive/disconnected/defective GPS
+  // bool activeGPS=false;
 
   //A successful result requires all three flags to become true
   bool gotDate = false;
@@ -130,7 +173,7 @@ bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)(un
 
           //We are finished when/if we've acquired date, time and location
           if (gotDate && gotTime && gotLoc) {
-            validFix=true;
+            validGPSdata=true;
             return true;  //Success
           }
 
@@ -144,3 +187,8 @@ bool GPShelper::obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)(un
 
   return false;  //Failure
 }
+
+
+
+
+

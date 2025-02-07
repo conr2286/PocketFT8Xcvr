@@ -342,7 +342,7 @@ void setup(void) {
     delay(10);
     currentFrequency = si4735.getFrequency();
     si4735.setVolume(50);
-    //display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
+    // display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
 
     // Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
     // frequency which is stabilized but *not* determined by the Si5351.
@@ -474,6 +474,35 @@ void loop() {
     // Check touchscreen and serial port for activity
     process_touch();
     if (tune_flag == 1) process_serial();
+
+    // If we have not yet obtained valid GPS data, but the GPS device has acquired a fix, then obtain the GPS data.
+    // This is a bit abrupt as we more or less resynch everything and wait for a timeslot.
+    if (gpsHelper.validGPSdata == false && gpsHelper.hasFix() == true) {
+        // Sync MCU and RTC time with GPS if it's working and can get a timely fix
+        if (gpsHelper.obtainGPSfix(1, NULL)) {
+            // Set the MCU time to the GPS result
+            setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
+            DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gpsHelper.month, gpsHelper.day, gpsHelper.year, gpsHelper.hour, gpsHelper.minute, gpsHelper.second);
+
+            // Now set the battery-backed Teensy RTC to the GPS-derived time in the MCU
+            Teensy3Clock.set(now());
+
+            // Use the GPS-derived locator unless config.json hardwired it to something
+            if (strlen(config.locator) == 0) {
+                strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
+                DPRINTF("GPS derived Locator = %s\n", Locator);
+            }
+
+            // Sync MCU clock with battery-backed RTC (UTC)
+            setSyncProvider(getTeensy3Time);
+
+            // Record the locator gridsquare
+            set_Station_Coordinates(Locator);
+
+            // Wait for an FT8 timeslot to begin (this updates start_time)
+            waitForFT8timeslot();
+        }
+    }  // gps
 
     // Update flags when a new timeslot begins
     update_synchronization();
@@ -695,7 +724,7 @@ void waitForFT8timeslot(void) {
     displayInfoMsg("Waiting for timeslot");
 
     // If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
-    if (gpsHelper.validFix) {
+    if (gpsHelper.validGPSdata) {
         // Calculate the value of elapsed millis() when the next FT8 timeslot will begin
         unsigned long msGPS = gpsHelper.second * 1000 + gpsHelper.milliseconds;  // Milliseconds into the minute when setup acquired UTC date/time from GPS
         unsigned long msGPS2FT8 = 15000 - msGPS % 15000;                         // Milliseconds between GPS acquisition and start of next FT8 timeslot
