@@ -1,4 +1,5 @@
-
+#pragma once
+#include <Arduino.h>
 
 
    void transmit_sequence(void);

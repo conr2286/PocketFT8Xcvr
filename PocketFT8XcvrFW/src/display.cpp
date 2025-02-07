@@ -138,10 +138,6 @@ void display_date(int x, int y) {
  *
  **/
 void displayInfoMsg(const char* msg) {
-    // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    // tft.setTextSize(2);
-    // tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
-    // tft.print(msg);
     displayInfoMsg(msg, HX8357_YELLOW);
 }  // displayMsg()
 

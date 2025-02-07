@@ -120,6 +120,7 @@
 #include "decode_ft8.h"
 #include "gen_ft8.h"
 #include "traffic_manager.h"
+#include "display.h"
 
 // Many externals in the legacy C code.  TODO:  See if we can simplify these externals.
 extern int Transmit_Armned;        // Transmit message pending in next timeslot
@@ -214,6 +215,7 @@ void Sequencer::timeslotEvent() {
         case LISTEN_73:
             DTRACE();
             state = IDLE;  // Return to idle state
+            displayInfoMsg(" ");
             break;
 
         // We are waiting to contact a displayed station after operator clicked on their message.  We
@@ -251,6 +253,7 @@ void Sequencer::timeslotEvent() {
         case XMIT_73:
             DTRACE();
             state = IDLE;  // We have finished
+            displayInfoMsg(" ");
             // TODO:  need to log?  futz with receiver?  anything?
             break;
 
@@ -376,6 +379,7 @@ void Sequencer::tuneButtonEvent() {
         // Stop TUNING in-progress
         case TUNING:
             tune_Off_sequence();
+            displayInfoMsg(" ");
             state = IDLE;
 
         // Ignore TUNE button during ongoing transmission
@@ -396,6 +400,7 @@ void Sequencer::tuneButtonEvent() {
             // Transmit a dead, unmodulated carrier
             tune_On_sequence();
             state = TUNING;
+            displayInfoMsg("TUNING");
             break;
     }
 
@@ -417,6 +422,7 @@ void Sequencer::cqButtonEvent() {
             DTRACE();
             set_message(MSG_CQ);  // Encode our CQ message
             state = CQ_PENDING;   // Await the next timeslot
+            displayInfoMsg(get_message(),HX8357_YELLOW);
             break;
 
         // Abort CQ transmission (even if it's in progress)
@@ -470,6 +476,7 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
                 DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, qso.oddEven);
                 set_message(MSG_LOC);  // We initiate QSO by sending our locator
                 state = LOC_PENDING;   // Await appropriate timeslot to transmit to Target_Call
+                displayInfoMsg(get_message(),HX8357_YELLOW);
                 break;
 
                 // Message clicks are ignored during most states
@@ -498,6 +505,7 @@ void Sequencer::rslEvent(Decode* msg) {
             setXmitParams(msg->field2, msg->snr);  // Inform gen_ft8 of remote station's info
             set_message(MSG_RRR);                  // Prepare an RRR message
             state = RRR_PENDING;                   // We must await an appropriate even/odd timeslot
+            displayInfoMsg(get_message(),HX8357_YELLOW);
             break;
 
         // Remote station sent our RSL and we should respond with their RRSL
@@ -507,6 +515,7 @@ void Sequencer::rslEvent(Decode* msg) {
             setXmitParams(msg->field2, msg->snr);  // Inform gen_ft8 of remote station's info
             set_message(MSG_RRSL);                 // Prepare to send their signal report to remote station
             state = RRSL_PENDING;                  // Await an appropriate even/odd timeslot
+            displayInfoMsg(get_message(),HX8357_YELLOW);
             break;
 
         // We were expecting a LOC but received a signal report.  We likely were calling CQ
@@ -520,6 +529,7 @@ void Sequencer::rslEvent(Decode* msg) {
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, qso.oddEven);
             set_message(MSG_RSL);  // Reply with their RSL as we likely haven't sent it to them
             state = RSL_PENDING;   // Transmit their RSL in next appropriate timeslot
+            displayInfoMsg(get_message(),HX8357_YELLOW);
             break;
 
         // Ignore non-sense
@@ -589,6 +599,7 @@ void Sequencer::eotReplyEvent(Decode* msg) {
             setXmitParams(msg->field2, msg->snr);  // Inform gen_ft8 of remote station's info
             set_message(MSG_73);                   // Prepare an RRR message
             state = M73_PENDING;                   // We must await an appropriate even/odd timeslot
+            displayInfoMsg(get_message(),HX8357_YELLOW);
             // TODO:  qso.end()
             break;
 
@@ -641,6 +652,7 @@ void Sequencer::locatorEvent(Decode* msg) {
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, qso.oddEven);
             set_message(MSG_RSL);  // Prepare to transmit RSL to responder
             state = RSL_PENDING;   // Must await an appropriate timeslot when responder is listening
+            displayInfoMsg(get_message(),HX8357_YELLOW);
             break;
 
             // TODO:  qso.end();

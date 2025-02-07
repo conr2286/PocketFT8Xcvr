@@ -183,8 +183,7 @@ void checkButton(void) {
         }
     }
     // DTRACE();
-    // DPRINTF("CQ_Flag=%u\n", CQ_Flag);
-}
+} //checkButton()
 
 int button_delay = 100;
 
@@ -193,17 +192,12 @@ void executeButton(uint16_t index) {
     DPRINTF("executeButton(%u)\n", index);
     switch (index) {
         case 0:  // CQ (e.g. CQ KQ7B DN15)
-            DPRINTF("sButtonData[0].state=%u\n", sButtonData[0].state);
+            sButtonData[0].state = true;
+            drawButton(0);
             seq.cqButtonEvent();
-            // if (sButtonData[0].state) {
-            //   // CQ_Flag = 1;
-            //   sButtonData[6].active_state = false;
-            //   // Beacon_State = 0;
-            // } else {
-            //   //CQ_Flag = 0;
-            //   sButtonData[6].active_state = true;
-            // }
             delay(button_delay);
+            sButtonData[0].state = false;
+            drawButton(0);
             break;
 
         case 1:  // Lo --- Location Msg (e.g. AG0E KQ7B DN15)
