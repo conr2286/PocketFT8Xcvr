@@ -26,7 +26,7 @@ class GPShelper {
 
     // Publicly accessible methods
     GPShelper(unsigned gpsBaudRate);
-    bool obtainGPSfix(unsigned timeoutSeconds, void (*gpsAcquiringFix)(unsigned));  // Returns true and assigns member var values if it obtains a GPS fix
+    bool obtainGPSData(unsigned timeoutSeconds, void (*gpsAcquiringFix)(unsigned));  // Returns true and assigns member var values if it obtains a GPS fix
     bool hasFix(void);
 
     // Our private implementation variables

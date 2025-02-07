@@ -244,12 +244,14 @@ void executeButton(uint16_t index) {
 
         case 5:  // Tu --- Toggle tune on/off
             if (sButtonData[5].state) {
-                tune_On_sequence();
-                tune_flag = 1;
+                // tune_On_sequence();
+                // tune_flag = 1;
+                seq.tuneButtonEvent();
                 delay(button_delay);
             } else {
-                tune_Off_sequence();
-                tune_flag = 0;
+                // tune_Off_sequence();
+                // tune_flag = 0;
+                seq.tuneButtonEvent();
                 delay(button_delay);
             }
             break;

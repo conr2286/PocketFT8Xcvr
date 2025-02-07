@@ -48,7 +48,8 @@ public:
   void timeslotEvent(void);               //FT8 timeslot boundary
   void receivedMsgEvent(Decode *msg);     //Received an FT8 message
   void cqButtonEvent(void);               //CQ button clicked
-  void msgClickEvent(unsigned msgIndex);  //Received message clicked
+  void tuneButtonEvent(void);             //TUNE button clicked
+  void msgClickEvent(unsigned msgIndex);  // Received message clicked
   void abortEvent(void);                  //Abort transmission request
   void timeoutEvent(void);                //Timeout (QSO taking too long)
 

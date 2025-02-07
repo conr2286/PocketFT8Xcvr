@@ -31,7 +31,7 @@ extern int offset_freq;
 
 uint64_t F_Long, F_FT8, F_Offset;
 
-
+extern int tune_flag;
 
 /**
  * Turn-on the transmitter at the carrier frequency, F_Long
@@ -105,13 +105,12 @@ void tune_On_sequence(void) {
   displayInfoMsg("TUNE");
 
   //Program the transmitter clock to F_Long
-  //set_Xmit_Freq();                                        //Charlie tuned at operating carrier freq
   uint64_t tuneFreq = currentFrequency * 1000ULL * 100ULL;  //KQ7B tuning at FT8 base subband freq (e.g. 7074)
   DPRINTF("tuneFreq=%llu Hz\n", tuneFreq / 100);
   si5351.set_freq(tuneFreq, SI5351_CLK0);  //Freq is in hundreths of a HZ
 
   //Drop the receiver's volume
-  si4735.setVolume(35);
+  si4735.setVolume(0);
 
   //Turn-on the transmitter clock
   if (!disable_xmit) si5351.output_enable(SI5351_CLK0, 1);
@@ -123,6 +122,9 @@ void tune_On_sequence(void) {
   //Short receiver's RF input to ground
   pinMode(PIN_PTT, OUTPUT);
   digitalWrite(PIN_PTT, HIGH);
+
+  //Let loop() know we are tuning
+  tune_flag = 1;
 
   DPRINTF("TUNE\n");
 
@@ -153,6 +155,9 @@ void tune_Off_sequence(void) {
 
   //Crank-up the receiver volume
   si4735.setVolume(50);
+
+  //Finished tuning
+  tune_flag = 0;
 
   DPRINTF("TUNE OFF\n");
 

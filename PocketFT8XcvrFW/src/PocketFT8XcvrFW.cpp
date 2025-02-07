@@ -377,7 +377,7 @@ void setup(void) {
     display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
 
     // Sync MCU and RTC time with GPS if it's working and can get a timely fix
-    if (gpsHelper.obtainGPSfix(config.gpsTimeout, gpsCallback)) {
+    if (gpsHelper.obtainGPSData(config.gpsTimeout, gpsCallback)) {
         // Set the MCU time to the GPS result
         setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
         DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gpsHelper.month, gpsHelper.day, gpsHelper.year, gpsHelper.hour, gpsHelper.minute, gpsHelper.second);
@@ -479,10 +479,10 @@ void loop() {
     // This is a bit abrupt as we more or less resynch everything and wait for a timeslot.
     if (gpsHelper.validGPSdata == false && gpsHelper.hasFix() == true) {
         // Sync MCU and RTC time with GPS if it's working and can get a timely fix
-        if (gpsHelper.obtainGPSfix(1, NULL)) {
+        if (gpsHelper.obtainGPSData(1, NULL)) {
             // Set the MCU time to the GPS result
             setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
-            DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gpsHelper.month, gpsHelper.day, gpsHelper.year, gpsHelper.hour, gpsHelper.minute, gpsHelper.second);
+            // DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gpsHelper.month, gpsHelper.day, gpsHelper.year, gpsHelper.hour, gpsHelper.minute, gpsHelper.second);
 
             // Now set the battery-backed Teensy RTC to the GPS-derived time in the MCU
             Teensy3Clock.set(now());
