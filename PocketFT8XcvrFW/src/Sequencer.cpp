@@ -161,6 +161,7 @@ void Sequencer::timeslotEvent() {
         case XMIT_CQ:
             DTRACE();
             state = LISTEN_LOC;  // We are now listening for a response to our CQ
+            displayInfoMsg(get_message(), HX8357_DARKGREEN);
             break;
 
         // We have listened for responders to our CQ and heard nothing.  At the next timeslot,
