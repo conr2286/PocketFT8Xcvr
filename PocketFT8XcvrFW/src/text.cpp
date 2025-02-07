@@ -4,12 +4,10 @@
 
 #include "DEBUG.h"
 
-//extern bool true;
-//extern bool false;
+// extern bool true;
+// extern bool false;
 
-
-
-const char * trim_front(const char *str) {
+const char *trim_front(const char *str) {
     // Skip leading whitespace
     while (*str == ' ') {
         str++;
@@ -27,7 +25,7 @@ void trim_back(char *str) {
 
 // 1) trims a string from the back by changing whitespaces to '\0'
 // 2) trims a string from the front by skipping whitespaces
-char * trim(char *str) {
+char *trim(char *str) {
     str = (char *)trim_front(str);
     trim_back(str);
     // return a pointer to the first non-whitespace character
@@ -62,7 +60,6 @@ bool equals(const char *string1, const char *string2) {
     return 0 == strcmp(string1, string2);
 }
 
-
 int char_index(const char *string, char c) {
     for (int i = 0; *string; ++i, ++string) {
         if (c == *string) {
@@ -72,14 +69,13 @@ int char_index(const char *string, char c) {
     return -1;  // Not found
 }
 
-
 // Text message formatting:
 //   - replaces lowercase letters with uppercase
 //   - merges consecutive spaces into single space
 void fmtmsg(char *msg_out, const char *msg_in) {
     char c;
     char last_out = 0;
-    while ( (c = *msg_in) ) {
+    while ((c = *msg_in)) {
         if (c != ' ' || last_out != ' ') {
             last_out = to_upper(c);
             *msg_out = last_out;
@@ -87,35 +83,51 @@ void fmtmsg(char *msg_out, const char *msg_in) {
         }
         ++msg_in;
     }
-    *msg_out = 0; // Add zero termination
+    *msg_out = 0;  // Add zero termination
 }
-
 
 // Parse a 2 digit integer from string
 int dd_to_int(const char *str, int length) {
-    int result = 0;
-    bool negative;
-    int i;
-    if (str[0] == '-') {
-        negative = true;
-        i = 1;                          // Consume the - sign
-    } else {
-        negative = false;
-        i = (str[0] == '+') ? 1 : 0;    // Consume a + sign if found
-    }
-    while(i<length && str[i]!=0 && str[i]==' ') {
-        i++;                            // Consume ' ' 
-    }
-    while (i < length) {
-        if (str[i] == 0) break;
-        if (!is_digit(str[i])) break;
-        result *= 10;
-        result += (str[i] - '0');
-        ++i;
-    }
-    return negative ? -result : result;
+    char bfr[4];
+    strlcpy(bfr, str, sizeof(bfr));
+    return atoi(bfr);
 }
 
+//KQ7B:  Never found what was wrong in the below seemingly simple RSL converstion to int
+// int dd_to_int(const char *str, int length) {
+//     int result = 0;
+//     bool negative = false;
+//     int i;
+//     // if (str[0] == '-') {
+//     //     negative = true;
+//     //     i = 1;                          // Consume the - sign
+//     // } else {
+//     //     negative = false;
+//     //     i = (str[0] == '+') ? 1 : 0;    // Consume a + sign if found
+//     // }
+//     // while(i<length && str[i]!=0 && str[i]==' ') {
+//     while (i < length && str[i] != 0) {
+//         DPRINTF("str[i]='%c'\n", str[i]);
+//         if (str[i] == '+')       // Plus sign
+//             negative = false;    // It's a Positive number
+//         else if (str[i] == '-')  // Minus sign
+//             negative = true;     // It's a Negative number
+//         else if (str[i] != ' ')  // Space
+//             break;               // Exit loop for non-space char
+//         i++;                     // Consume '+', '-' and ' ' till non-space
+//     }
+//     DPRINTF("str+i=%s\n", str + i);
+//     while (i < length) {
+//         if (str[i] == 0) break;
+//         if (!is_digit(str[i])) break;
+//         result = result*10;
+//         result = result + (str[i] - '0');
+//         DPRINTF("i=%d, digit='%c', result=%u\n", i, str[i], result);
+//         ++i;
+//     }
+//     DPRINTF("i=%d negative=%u result=%u\n", i, negative, result);
+//     return negative ? -result : result;
+// }
 
 // Convert a 2 digit integer to string
 void int_to_dd(char *str, int value, int width, bool full_sign) {
@@ -123,8 +135,7 @@ void int_to_dd(char *str, int value, int width, bool full_sign) {
         *str = '-';
         ++str;
         value = -value;
-    }
-    else if (full_sign) {
+    } else if (full_sign) {
         *str = '+';
         ++str;
     }
@@ -143,7 +154,7 @@ void int_to_dd(char *str, int value, int width, bool full_sign) {
         value -= digit * divisor;
         divisor /= 10;
     }
-    *str = 0;   // Add zero terminator
+    *str = 0;  // Add zero terminator
 }
 
 // convert integer index to ASCII character according to one of 6 tables:
@@ -168,13 +179,12 @@ char charn(int c, int table_idx) {
     }
 
     if (table_idx == 0) {
-        if (c < 5) return "+-./?" [c];
-    }
-    else if (table_idx == 5) {
+        if (c < 5) return "+-./?"[c];
+    } else if (table_idx == 5) {
         if (c == 0) return '/';
     }
 
-    return '_'; // unknown character, should never get here
+    return '_';  // unknown character, should never get here
 }
 
 // Convert character to its index (charn in reverse) according to a table
@@ -199,12 +209,10 @@ int nchar(char c, int table_idx) {
         if (c == '.') return n + 2;
         if (c == '/') return n + 3;
         if (c == '?') return n + 4;
-    }
-    else if (table_idx == 5) {
+    } else if (table_idx == 5) {
         if (c == '/') return n + 0;
     }
 
     // Character not found
     return -1;
 }
-

@@ -1,13 +1,10 @@
 #pragma once
-#include <SD.h>
+
 #include "Contact.h"
-#include "LogFile.h"
+#include "ContactLogFile.h"
 
-
-
-class CSVlog : public LogFile {
-
-public:
-  CSVlog(SDClass* sd, char* fileName);  //Constructor
-  int logContact(Contact* contact);     //Records an entry in the log file
+class CSVlog : public ContactLogFile {
+   public:
+    CSVlog(const char* fileName);  // Constructor
+    int logContact(Contact* contact);     // Records an entry in the log file
 };

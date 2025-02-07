@@ -1,15 +1,12 @@
 #pragma once
 
-#include <SD.h>
-#include "LogFile.h"
 #include "ADIFlog.h"
 #include "CSVlog.h"
+#include "ContactLogFile.h"
 
 class LogFactory {
-
-public:
-
-  //Define the factory methods
-  static LogFile* buildADIFlog(SDClass* sd, char* fileName);
-  static LogFile* buildCSVlog(SDClass* sd, char* fileName);
+   public:
+    // Define the factory methods
+    static ContactLogFile* buildADIFlog(const char* fileName);
+    static ContactLogFile* buildCSVlog(const char* fileName);
 };

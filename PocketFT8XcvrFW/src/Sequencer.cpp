@@ -304,7 +304,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
     if (msg->msgType == MSG_LOC && strstr(msg->field3, "RR73")) msg->msgType = MSG_RR73;
 
     // When debugging, print some things from the received message
-    DPRINTF("%s %s %s %s msgType=%u, seq=%lu state=%u\n", __FUNCTION__, msg->field1, msg->field2, msg->field3, msg->msgType, sequenceNumber, state);
+    DPRINTF("%s %s %s %s msgType=%u, sequenceNumber=%lu state=%u\n", __FUNCTION__, msg->field1, msg->field2, msg->field3, msg->msgType, sequenceNumber, state);
 
     // // Stamp all received messages with the timeslot's sequenceNumber in which they were received.
     // // We use this if the operator later decides to contact (click on) a displayed message.
@@ -431,7 +431,7 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
             case IDLE:        // We are currently idle
             case CQ_PENDING:  // Operator decided to contact a displayed station rather than call CQ
                 DTRACE();
-                qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber+1));// Start gathering QSO info
+                qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber));// Start gathering QSO info
                 qso.setWorkedLocator(msg->field3);                                          // Record their locator if we have it
                 setXmitParams(msg->field2, msg->snr);                                       // Inform gen_ft8 of remote station's info
                 DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, qso.oddEven);
@@ -481,8 +481,7 @@ void Sequencer::rslEvent(Decode* msg) {
         // QSO from what we have.  
         case LISTEN_LOC:
             DTRACE();
-            DPRINTF("freq=%u\n", currentFrequency);
-            qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber+1));// Begin a QSO with their station
+            qso.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber));// Begin a QSO with their station
             qso.setMyRSL(msg->field3);                                                  // Record our RSL from remote station
             setXmitParams(msg->field2, msg->snr);                                       // Inform gen_ft8 of remote station's info
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, qso.oddEven);
@@ -514,7 +513,7 @@ void Sequencer::eotEvent(Decode* msg) {
         case LISTEN_RRR:  // We expected an RRR but received a 73 --- I guess it's over
             DTRACE();
             state = IDLE;  // It's definitely over now
-            // TODO:  Do we need to logit,  futz with GUI, flags, something else?
+            receive_sequence(); //Clear FT8 msg and enable receiver
             break;
 
         // We were trying to get a CQ transmission underway and can ignore this 73 which

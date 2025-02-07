@@ -56,7 +56,7 @@
  * extensibility of the field (key) names.
  *
 **/
-#include <String.h>
+#include <string.h>
 #include <TimeLib.h>
 #include <stdio.h>
 #include "DEBUG.h"

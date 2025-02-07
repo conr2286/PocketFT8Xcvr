@@ -1,5 +1,5 @@
 /**
-** ADIF --- ADIF logging to SD File
+** ADIF --- ADIF logging to a File
 **
 ** @author Jim Conrad (KQ7B)
 **
@@ -23,14 +23,14 @@
 **
 **/
 
-#include <SD.h>
-#include "DEBUG.h"
-#include "LogFile.h"
+#include <string.h>
+
 #include "ADIFlog.h"
 #include "Contact.h"
+#include "ContactLogFile.h"
+#include "DEBUG.h"
 
-
-//Define the size of the longest log entry (including the NUL)
+// Define the size of the longest log entry (including the NUL)
 #define LOG_ENTRY_SIZE 256
 #define FIELD_SIZE 16
 
@@ -46,17 +46,13 @@
  * Note:  If ADIF required a header (a la CSV), then here is where we'd write
  * the header to the log file.
  *
-**/
-ADIFlog::ADIFlog(SDClass* sd, char* fileName) {
+ **/
+ADIFlog::ADIFlog(const char* fileName) {
+    DTRACE();
 
-  Serial.begin(9600); DTRACE();
-
-  //Initialize our member variables
-  this->sd = sd;
-  this->fileName = fileName;
+    // Initialize our member variables
+    this->fileName = fileName;
 }
-
-
 
 /**
 ** Implements logContact to record a valid Contact entry to the SD disk file
@@ -65,65 +61,64 @@ ADIFlog::ADIFlog(SDClass* sd, char* fileName) {
 **
 **/
 int ADIFlog::logContact(Contact* contact) {
-  char entry[LOG_ENTRY_SIZE];
-  char field[FIELD_SIZE];
+    char entry[LOG_ENTRY_SIZE];
+    char field[FIELD_SIZE];
 
-  //Only log valid contacts
-  if (!contact->isValid()) {
-    return -1;  //Error:  Invalid contact
-  }
+    // Only log valid contacts
+    if (!contact->isValid()) {
+        return -1;  // Error:  Invalid contact
+    }
 
-  //Open the log file for appending
-  File logFile = this->sd->open(this->fileName, FILE_WRITE);
-  if (logFile == NULL) {
-    return -1;  //Error:  Unable to open fileName on sd drive
-  }
+    // Open the log file for appending
+    bool err = logFileAdapter.open(this->fileName, MODE_WRITE);
+    if (err) {
+        return -1;  // Error:  Unable to open fileName on sd drive
+    }
 
-  //Initialize the log entry
-  entry[0] = 0;  //NUL terminator
+    // Initialize the log entry
+    entry[0] = 0;  // NUL terminator
 
-  //Assemble the required fields into the log entry string
-  snprintf(field, sizeof(field), "<qso_date:%u>%s", strlen(contact->getQSOdate()), contact->getQSOdate());
-  strlcat(entry, field, sizeof(entry));
-  snprintf(field, sizeof(field), "<time_on:%u>%s", strlen(contact->getQSOtime()), contact->getQSOtime());
-  strlcat(entry, field, sizeof(entry));
-  snprintf(field, sizeof(field), "<call:%u>%s", strlen(contact->getWorkedCall()), contact->getWorkedCall());
-  strlcat(entry, field, sizeof(entry));
-  snprintf(field, sizeof(field), "<station_call:%u>%s", strlen(contact->getMyCall()), contact->getMyCall());
-  strlcat(entry, field, sizeof(entry));
-  snprintf(field, sizeof(field), "<band:%u>%s", strlen(contact->getBand()), contact->getBand());
-  strlcat(entry, field, sizeof(entry));
-  snprintf(field, sizeof(field), "<mode:%u>%s", strlen(contact->getMode()), contact->getMode());
-  strlcat(entry, field, sizeof(entry));
-  snprintf(field, sizeof(field), "<rst_sent:%u>%s", strlen(contact->getWorkedRSL()), contact->getWorkedRSL());
-  strlcat(entry, field, sizeof(entry));
-  snprintf(field, sizeof(field), "<rst_rcvd:%u>%s", strlen(contact->getMyRSL()), contact->getMyRSL());
-  strlcat(entry, field, sizeof(entry));
-
-  //Assemble the optional fields into the log entry string
-  if (strlen(contact->getMyLocator())) {
-    snprintf(field, sizeof(field), "<my_gridsquare:%u>%s", strlen(contact->getMyLocator()), contact->getMyLocator());
+    // Assemble the required fields into the log entry string
+    snprintf(field, sizeof(field), "<qso_date:%u>%s", strlen(contact->getQSOdate()), contact->getQSOdate());
     strlcat(entry, field, sizeof(entry));
-  }
-  if (strlen(contact->getWorkedLocator())) {
-    snprintf(field, sizeof(field), "<gridsquare:%u>%s", strlen(contact->getWorkedLocator()), contact->getWorkedLocator());
+    snprintf(field, sizeof(field), "<time_on:%u>%s", strlen(contact->getQSOtime()), contact->getQSOtime());
     strlcat(entry, field, sizeof(entry));
-  }
-  if (strlen(contact->getMySOTAref())) {
-    snprintf(field, sizeof(field), "<my_sota_ref:%u>%s", strlen(contact->getMySOTAref()), contact->getMySOTAref());
+    snprintf(field, sizeof(field), "<call:%u>%s", strlen(contact->getWorkedCall()), contact->getWorkedCall());
     strlcat(entry, field, sizeof(entry));
-  }
-  if (strlen(contact->getWorkedSOTAref())) {
-    snprintf(field, sizeof(field), "<sota_ref:%u>%s", strlen(contact->getWorkedSOTAref()), contact->getWorkedSOTAref());
+    snprintf(field, sizeof(field), "<station_call:%u>%s", strlen(contact->getMyCall()), contact->getMyCall());
     strlcat(entry, field, sizeof(entry));
-  }
+    snprintf(field, sizeof(field), "<band:%u>%s", strlen(contact->getBand()), contact->getBand());
+    strlcat(entry, field, sizeof(entry));
+    snprintf(field, sizeof(field), "<mode:%u>%s", strlen(contact->getMode()), contact->getMode());
+    strlcat(entry, field, sizeof(entry));
+    snprintf(field, sizeof(field), "<rst_sent:%u>%s", strlen(contact->getWorkedRSL()), contact->getWorkedRSL());
+    strlcat(entry, field, sizeof(entry));
+    snprintf(field, sizeof(field), "<rst_rcvd:%u>%s", strlen(contact->getMyRSL()), contact->getMyRSL());
+    strlcat(entry, field, sizeof(entry));
 
-  //Append End-of-Record
-  strlcat(entry, "<eor>\n", sizeof(entry));
-  DPRINTF("entry='%s'",entry);
+    // Assemble the optional fields into the log entry string
+    if (strlen(contact->getMyLocator())) {
+        snprintf(field, sizeof(field), "<my_gridsquare:%u>%s", strlen(contact->getMyLocator()), contact->getMyLocator());
+        strlcat(entry, field, sizeof(entry));
+    }
+    if (strlen(contact->getWorkedLocator())) {
+        snprintf(field, sizeof(field), "<gridsquare:%u>%s", strlen(contact->getWorkedLocator()), contact->getWorkedLocator());
+        strlcat(entry, field, sizeof(entry));
+    }
+    if (strlen(contact->getMySOTAref())) {
+        snprintf(field, sizeof(field), "<my_sota_ref:%u>%s", strlen(contact->getMySOTAref()), contact->getMySOTAref());
+        strlcat(entry, field, sizeof(entry));
+    }
+    if (strlen(contact->getWorkedSOTAref())) {
+        snprintf(field, sizeof(field), "<sota_ref:%u>%s", strlen(contact->getWorkedSOTAref()), contact->getWorkedSOTAref());
+        strlcat(entry, field, sizeof(entry));
+    }
 
-  //Record the assembled entry in the log file
-  logFile.write(entry, strlen(entry));
-  logFile.close();
+    // Append End-of-Record
+    strlcat(entry, "<eor>\n", sizeof(entry));
+    DPRINTF("entry='%s'", entry);
 
+    // Record the assembled entry in the log file
+    logFileAdapter.write(entry, strlen(entry));
+    logFileAdapter.close();
 }

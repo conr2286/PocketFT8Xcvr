@@ -11,7 +11,7 @@ private:
 
   //Information saved about a QSO
   Contact qso;            //Info gathered about the QSO
-  uint8_t theirTimeslot;  //0==even, 1==odd
+  char theirTimeslot;  //0==even, 1==odd
 
   //The Sequencer singleton's private constructor
   Sequencer() {
