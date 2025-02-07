@@ -7,7 +7,7 @@
 	(title_block
 		(title "KQ7B Edition of the Pocket FT8 Transceiver")
 		(date "2024-10-25")
-		(rev "2.01")
+		(rev "2.9")
 		(company "KQ7B")
 		(comment 1 "Original design by Charles Hill, Barb Asuroglu, Ricardo Caritti, Karlis Goba, et al")
 		(comment 2 "https://github.com/conr2286/PocketFT8Xcvr.git")
@@ -10285,10 +10285,6 @@
 		(uuid "3a60b5be-6acf-420d-981f-8246db479362")
 	)
 	(no_connect
-		(at 83.82 44.45)
-		(uuid "3ef2b505-9381-44f2-b398-226397b6283e")
-	)
-	(no_connect
 		(at 34.29 64.77)
 		(uuid "3f472acc-cad7-4e45-820e-fa149dc54c20")
 	)
@@ -10435,10 +10431,6 @@
 	(no_connect
 		(at 104.14 90.17)
 		(uuid "a2a6ca70-e280-42ab-9b89-30a8316677a2")
-	)
-	(no_connect
-		(at 104.14 52.07)
-		(uuid "ab6862f2-c39d-49b0-9fec-04f2c929bfa3")
 	)
 	(no_connect
 		(at 20.32 69.85)
@@ -12443,6 +12435,17 @@
 		)
 		(uuid "024e5a69-7053-418a-8401-e53e4aff1d7f")
 	)
+	(label "PPS"
+		(at 83.82 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "07b7330b-2ef7-4b4a-bbea-1a6d46d637c7")
+	)
 	(label "Y+"
 		(at 160.02 90.17 0)
 		(fields_autoplaced yes)
@@ -12684,6 +12687,17 @@
 			(justify left bottom)
 		)
 		(uuid "5d6fc5b4-23c4-482f-9565-383aab477622")
+	)
+	(label "PPS"
+		(at 104.14 52.07 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "654997ee-9492-4f19-984b-386dd581d282")
 	)
 	(label "DRST"
 		(at 60.96 67.31 0)
