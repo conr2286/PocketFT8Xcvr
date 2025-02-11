@@ -6,7 +6,7 @@
  *  log files (e.g. ADIF, CSV, TXT, XLSX, whatever), each derived from ContactLogFile.
  *
  * Limitations
- *  At this time, the factory can only create an instance of an ADIFlog.
+ *  At this time, the factory only supports an instance of an ADIFlog.
  *
  *
  **/

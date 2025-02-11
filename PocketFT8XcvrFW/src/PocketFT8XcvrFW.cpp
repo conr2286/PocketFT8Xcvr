@@ -181,7 +181,6 @@ int decode_flag;
 // process_FT8_FFT() apparently at the end of a receive timeslot???
 int ft8_flag;
 
-
 int WF_counter;
 int num_decoded_msg;
 
@@ -191,7 +190,7 @@ int xmit_flag;
 // Set when a transmission is pending the beginning of the next timeslot
 int Transmit_Armned;
 
-//This appears to be the modulated symbol counter for payload and costas
+// This appears to be the modulated symbol counter for payload and costas
 int ft8_xmit_counter;
 
 int master_decoded;
@@ -660,16 +659,12 @@ void update_synchronization() {
 
         // Debug missed timeslots (we are too late to receive the first symbol)
         if (current_time > nextTimeSlot + 160) {
-            DPRINTF("*** Missed timeslot:  ft8_time%15000=%d, current_time=%lu, nextTimeSlot=%lu *****************************", ft8_time % 15000, current_time, nextTimeSlot);
+            DPRINTF("*** Missed timeslot:  ft8_time%15000=%lu, current_time=%lu, nextTimeSlot=%lu *****************************\n", ft8_time % 15000, current_time, nextTimeSlot);
         }
         nextTimeSlot = current_time + 15000;
 
         // Debug timeslot and sequencer problems
-        if (xmit_flag) {
-            DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s' -------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message());
-        } else {
-            DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u  -------------------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag);
-        }
+        DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s' -------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message());
     }
 }  // update_synchronization()
 

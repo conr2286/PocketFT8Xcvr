@@ -136,6 +136,24 @@ extern uint16_t currentFrequency;  // Nominal frequency (sans offset) in kHz
 #define ODD(n) (n % 2)
 
 /**
+ *  [Re]Initialize the sequencer
+ *
+ *  The sequencer notes which timeslot, even or odd-numbered, in which a remote station
+ *  is transmitting and attempts to avoid "doubling" with it.  This method resets the
+ *  timeslot counter.
+ *
+ *  This method should be invoked once, probably by setup()
+ *
+ **/
+void Sequencer::begin(unsigned timeoutMinutes) {
+    DTRACE();
+    sequenceNumber = 0;                                                     // Reset timeslot counter
+    state = IDLE;                                                           // Reset state to idle
+    timeoutTimer = Timer::buildTimer(timeoutMinutes * 60000L, timerEvent);  // Build the QSO/tuning timeout-timer
+    DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
+}  // begin()
+
+/**
  *  Timeslot event
  *
  *  @param sequenceNumber This timeslot's sequence number
@@ -174,8 +192,7 @@ void Sequencer::timeslotEvent() {
             break;
 
         // We have listened for responders to our CQ and heard nothing.  At the next timeslot,
-        // we'll retransmit our previously prepared CQ message.
-        // TODO:  Limit retransmissions with a timer or whatever.
+        // we'll retransmit the CQ message.
         case LISTEN_LOC:
             DTRACE();
             pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Arm transmitter now if needed in next timeslot
@@ -285,24 +302,6 @@ void Sequencer::timeslotEvent() {
 }  // timeSlotEvent()
 
 /**
- *  [Re]Initialize the sequencer
- *
- *  The sequencer notes which timeslot, even or odd-numbered, in which a remote station
- *  is transmitting and attempts to avoid "doubling" with it.  This method resets the
- *  timeslot counter.
- *
- *  This method should be invoked once, probably by setup()
- *
- **/
-void Sequencer::begin(unsigned timeoutMinutes) {
-    DTRACE();
-    sequenceNumber = 0;                                                     // Reset timeslot counter
-    state = IDLE;                                                           // Reset state to idle
-    timeoutTimer = Timer::buildTimer(timeoutMinutes * 60000L, timerEvent);  // Build the QSO/tuning timeout-timer
-    DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
-}  // begin()
-
-/**
  *  Received message event
  *
  *  @param msg Reference to the decoded message
@@ -319,6 +318,13 @@ void Sequencer::begin(unsigned timeoutMinutes) {
  *  Received messages, as incoming from decode_ft8(), are too broad in scope for us to
  *  act upon until we analyze their type and trigger the appropriate event for that msgType.
  *
+ *  In general (see exceptions below), to sustain a QSO during difficult conditions, we restart
+ *  the timeout Timer when we receive a message from the remote station.  This means the
+ *  Timer aborts a run-on QSO after we don't hear anything from the remote for a "long" time.
+ *  There is some risk with this approach:  if the remote repeatedly retransmits the same
+ *  FT8 message "forever" then we will continue to respond even though the QSO doesn't make
+ *  progress.  If this proves problematic, we could use a 2nd Timer to kill a looping QSO.
+ *
  **/
 void Sequencer::receivedMsgEvent(Decode* msg) {
     // Sadly, some encoders apparently transmit "RR73" as a locator rather than as an EOT.
@@ -334,7 +340,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
         DPRINTF("this msg is for us:  '%s' '%s' '%s'\n", msg->field1, msg->field2, msg->field3);
 
         switch (msg->msgType) {
-            // Did we receive another station's Tx6 CQ?
+            // Did we receive another station's Tx6 CQ?  We don't restart Timer when we hear a CQ.
             case MSG_CQ:
                 DTRACE();
                 // We have received a CQ but currently ignore it
@@ -343,37 +349,40 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             // Did we receive their Tx1 locator message?
             case MSG_LOC:
                 DTRACE();
+                startTimer();       // Keep this QSO alive as long as remote station is responding
                 locatorEvent(msg);  // They are responding to us with a locator
                 break;
 
             // Did we receive a Tx2 or Tx3 RSL containing their report of our signal?
             case MSG_RSL:
                 DTRACE();
+                startTimer();   // Keep this QSO alive as long as remote station is responding
                 rslEvent(msg);  // They sent our signal report
                 break;
 
             // Did we receive an RRSL?
             case MSG_RRSL:
                 DTRACE();
+                startTimer();   // Keep this QSO alive as long as remote station is responding
                 rslEvent(msg);  // They sent our signal report
                 break;
 
-            // Did we receive an EOT that does not expect a reply?
+            // Did we receive an EOT that does not expect a reply?  We don't restart the Timer for EOT.
             case MSG_73:
                 DTRACE();
                 eotEvent(msg);
                 break;
 
-            // Did we receive an EOT that expects a reply?
+            // Did we receive an EOT that expects a reply?  We don't restart the Timer for EOT.
             case MSG_RR73:
             case MSG_RRR:
                 DTRACE();
                 eotReplyEvent(msg);
                 break;
 
-            // The Sequencer does not currently process certain message types
+            // The Sequencer does not currently process certain message types.  We don't restart the Timer for unsupported msgs.
             case MSG_BLANK:
-            case MSG_FREE:  // TODO:  we should try to handle this one
+            case MSG_FREE:  // TODO:  we should try to handle this one someday
             case MSG_TELE:
             case MSG_UNKNOWN:
             default:
@@ -522,7 +531,7 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
 
 /**
  * @brief Callback function notified if/when timeout Timer expires
- * @param thisTimer Pointer to the expiring Timer
+ * @param thisTimer Pointer to the expiring Timer (not actually used)
  *
  * The timeout Timer limits the duration of run-on QSO and TUNING operations.
  * The Timer was created by begin(), started at the beginning of a QSO/TUNE
@@ -535,17 +544,15 @@ void Sequencer::timerEvent(Timer* thisTimer) {
     DFPRINTF("sequenceNumber=%lu, state=%u\n", theSequencer.sequenceNumber, theSequencer.state);
 
     switch (theSequencer.state) {
-        // We don't do anything if we were IDLE but somebody forgot to stop() the Timer!
+        // We don't do anything if we were IDLE
         case IDLE:
-            DTRACE();  // Arriving here is likely a code bug.  TODO:  Log this and other bugs.
+            DTRACE();
             break;
 
         // Interrupt endless TUNING --- if it aint tuned by now, it aint gonna get tuned
         case TUNING:
             tune_Off_sequence();        // Stop the transmitted carrier
-            displayInfoMsg(" ");        // Clear the info message
             theSequencer.state = IDLE;  // IDLE the state machine
-            resetButton(BUTTON_TU);     // Reset highlighted button
             break;
 
         // Interrupt QSO listening for a specific response from the remote station
@@ -554,7 +561,7 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case LISTEN_RRSL:
         case LISTEN_RSL:
         case LISTEN_73:
-            theSequencer.endQSO();                   // Misc activities to terminate QSO
+            theSequencer.endQSO();      // Misc activities to terminate QSO
             theSequencer.state = IDLE;  // IDLE the state machine
             break;
 
@@ -584,7 +591,34 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         default:
             break;
     }
-}
+
+    // Always reset a few more things
+    theSequencer.stopTimer();  // Cancel the QSO Timer
+
+    // Clear the info message
+    displayInfoMsg(" ");
+
+    // Stop modulation, disarm the transmitter, clear the outbound message, and turn the receiver on
+    xmit_flag = 0;               // Stop modulation
+    terminate_transmit_armed();  // Dis-arm the transmitter
+    clear_FT8_message();         // Clear displayed outbound message, if any
+    receive_sequence();          // Only need to do this if in-progress transmission aborted
+
+    // Reset highlighted buttons, if any
+    resetButton(BUTTON_TU);
+    resetButton(BUTTON_CQ);
+}  // timerEvent()
+
+/**
+ * @brief Operator clicked the ABORT button to halt transmissions
+ *
+ * For now, we handle this the same as when the QSO timeout Timer expires
+ *
+ */
+void Sequencer::abortButtonEvent() {
+    DTRACE();
+    timerEvent(NULL);  // TODO:  refactor so we don't need to pass a NULL Timer pointer
+}  // abortButtonEvent()
 
 /**
  * Remote station sent our signal report to us
@@ -927,6 +961,6 @@ void Sequencer::endQSO() {
     receive_sequence();          // Only need to do this if in-progress transmission aborted
 
     // Reset highlighted buttons, if any
-    resetButton(BUTTON_TX);
+    resetButton(BUTTON_TU);
     resetButton(BUTTON_CQ);
 }

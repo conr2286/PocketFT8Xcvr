@@ -6,9 +6,15 @@
  #include <Arduino.h>
 
  //-----Define button handles
- #define BUTTON_CQ 0
- #define BUTTON_TU 5
- #define BUTTON_TX 6
+ #define BUTTON_CQ 0    //CQ
+ #define BUTTON_AB 1    //ABORT
+ #define BUTTON_TU 2    //TUNE
+ #define BUTTON_TX 3    //Reserved
+ #define BUTTON_M1 4    //Custom
+ #define BUTTON_M2 5    //Custom
+ #define BUTTON_M3 6    //Custom
+ #define BUTTON_M4 7    //Custom
+ #define BUTTON_SY 8    //Reserved
 
  //-----Define button functions
  int testButton(uint8_t index);

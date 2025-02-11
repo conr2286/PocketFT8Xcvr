@@ -25,6 +25,8 @@ class Sequencer {
     void rslEvent(Decode *msg);            // Received our signal report in msg
     void eotEvent(Decode *msg);            // Received an EOT (e.g. 73) that doesn't expect a reply
     void eotReplyEvent(Decode *msg);       // Received an EOT (e.g. RRR or RR73) that expects a reply
+
+    //Other internally-generated events
     static void timerEvent(Timer *timer);  // Timer's callback function
     void startTimer(void);                 // Start timeout Timer
     void stopTimer(void);                  // Stop timeout Timer
@@ -48,10 +50,12 @@ class Sequencer {
     void timeslotEvent(void);               // FT8 timeslot boundary
     void receivedMsgEvent(Decode *msg);     // Received an FT8 message
     void cqButtonEvent(void);               // CQ button clicked
+    void abortButtonEvent(void);            // Operator clicked ABORT button
     void tuneButtonEvent(void);             // TUNE button clicked
     void msgClickEvent(unsigned msgIndex);  // Received message clicked
-    void abortEvent(void);                  // Abort transmission request
-    void timeoutEvent(void);                // Timeout (QSO taking too long)
+    //void abortEvent(void);                  // Abort transmission request
+    static void timerEvent(void);                // Timeout (QSO taking too long)
+
 
     // Expose getters for debugging Sequencer problems
     unsigned long getSequenceNumber(void);

@@ -90,56 +90,56 @@ static ButtonStruct sButtonData[] = {
      /*w*/ button_width,
      /*h*/ button_height},
 
-    {/*text*/ "Lo",  // button 1
+    {/*text*/ "Ab",  // button 1
      /*state*/ false,
      /*x*/ 53,
      /*y*/ button_line,
      /*w*/ button_width,
      /*h*/ button_height},
 
-    {/*text*/ "RS",  // button 2
+    {/*text*/ "Tu",  // button 2
      /*state*/ false,
      /*x*/ 106,
      /*y*/ button_line,
      /*w*/ button_width,
      /*h*/ button_height},
 
-    {/*text*/ "73",  // button 3
+    {/*text*/ "Tx",  // button 3
      /*state*/ false,
      /*x*/ 159,
      /*y*/ button_line,
      /*w*/ button_width,
      /*h*/ button_height},
 
-    {/*text*/ "Cl",  // button 4
+    {/*text*/ "M1",  // button 4
      /*state*/ false,
      /*x*/ 212,
      /*y*/ button_line,
      /*w*/ button_width,
      /*h*/ button_height},
 
-    {/*text*/ "Tu",  // button 5
+    {/*text*/ "M2",  // button 5
      /*state*/ false,
      /*x*/ 265,
      /*y*/ button_line,
      /*w*/ button_width,
      /*h*/ button_height},
 
-    {/*text*/ "Tx",  // button 6
+    {/*text*/ "M3",  // button 6
      /*state*/ false,
      /*x*/ 318,
      /*y*/ button_line,
      /*w*/ button_width,
      /*h*/ button_height},
 
-    {/*text*/ "Lg",  // button 7
+    {/*text*/ "M4",  // button 7
      /*state*/ false,
      /*x*/ 371,
      /*y*/ button_line,
      /*w*/ button_width,
      /*h*/ button_height},
 
-    {/*text*/ "Sy",  // button 8
+    {/*text*/ "SY",  // button 8
      /*state*/ false,
      /*x*/ 424,
      /*y*/ button_line,
@@ -149,6 +149,7 @@ static ButtonStruct sButtonData[] = {
 };  // end of button definition
 
 void drawButton(uint16_t i) {
+    DPRINTF("drawButton(%u)\n", i);
     uint16_t color;
     if (sButtonData[i].state)
         color = HX8357_RED;
@@ -163,14 +164,14 @@ void drawButton(uint16_t i) {
 
 void display_all_buttons(void) {
     drawButton(BUTTON_CQ);
-    drawButton(1);
-    drawButton(2);
-    drawButton(3);
-    drawButton(4);
+    drawButton(BUTTON_AB);
+    drawButton(BUTTON_M1);
+    drawButton(BUTTON_M2);
     drawButton(BUTTON_TU);
     drawButton(BUTTON_TX);
-    drawButton(7);
-    drawButton(8);
+    drawButton(BUTTON_M3);
+    drawButton(BUTTON_M4);
+    drawButton(BUTTON_SY);
 
     for (int i = 0; i < numButtons; i++) sButtonData[i].active_state = true;
 }
@@ -201,66 +202,59 @@ void executeButton(uint16_t index) {
     DPRINTF("executeButton(%u)\n", index);
     switch (index) {
         case BUTTON_CQ:  // CQ (e.g. CQ KQ7B DN15)
-            sButtonData[0].state = true;
-            drawButton(0);
+            sButtonData[BUTTON_CQ].state = true;
+            drawButton(BUTTON_CQ);
             seq.cqButtonEvent();
             delay(button_delay);
             //sButtonData[0].state = false;
             //drawButton(0);
             break;
 
-        case 1:  // Lo --- Location Msg (e.g. AG0E KQ7B DN15)
-            set_message(MSG_LOC);
-            sButtonData[1].state = true;
-            drawButton(1);
+        case BUTTON_AB:  // Abort transmission
+            sButtonData[BUTTON_AB].state = true;
+            drawButton(BUTTON_AB);
+            seq.abortButtonEvent(); //Ask Sequencer to abort transmissions
             delay(button_delay);
-            sButtonData[1].state = false;
-            drawButton(1);
+            sButtonData[BUTTON_AB].state = false;
+            drawButton(BUTTON_AB);
             break;
 
-        case 2:  // Rs --- Received Signal Msg (e.g. AG0E KQ7B -3)
-            set_message(MSG_RSL);
-            sButtonData[2].state = true;
-            drawButton(2);
+        case BUTTON_M1:  
+            sButtonData[BUTTON_M1].state = true;
+            drawButton(BUTTON_M1);
             delay(button_delay);
-            sButtonData[2].state = false;
-            drawButton(2);
+            sButtonData[BUTTON_M1].state = false;
+            drawButton(BUTTON_M1);
             break;
 
-        case 3:  // RR73 --- RR73 Msg (e.g. AG0E KQ7B RR73)
-            set_message(MSG_RR73);
-            sButtonData[3].state = true;
-            drawButton(3);
+        case BUTTON_M2:  
+            sButtonData[BUTTON_M2].state = true;
+            drawButton(BUTTON_M2);
             delay(button_delay);
-            sButtonData[3].state = false;
-            drawButton(3);
+            sButtonData[BUTTON_M2].state = false;
+            drawButton(BUTTON_M2);
             break;
 
-        case 4:  // Cl --- Clears the FT8 message buffer
-            clear_FT8_message();
-            sButtonData[4].state = true;
-            drawButton(4);
+        case BUTTON_M3:  
+            sButtonData[BUTTON_M3].state = true;
+            drawButton(BUTTON_M3);
             delay(button_delay);
-            sButtonData[4].state = false;
-            drawButton(4);
+            sButtonData[BUTTON_M3].state = false;
+            drawButton(BUTTON_M3);
             break;
 
         case BUTTON_TU:  // Tu --- Toggle tune on/off
-            if (sButtonData[5].state) {
-                // tune_On_sequence();
-                // tune_flag = 1;
+            if (sButtonData[BUTTON_TU].state) {
                 seq.tuneButtonEvent();
                 delay(button_delay);
             } else {
-                // tune_Off_sequence();
-                // tune_flag = 0;
                 seq.tuneButtonEvent();
                 delay(button_delay);
             }
             break;
 
         case BUTTON_TX:  // Tx
-            if (sButtonData[6].state) {
+            if (sButtonData[BUTTON_TX].state) {
                 //Transmit_Armned = 1;
                 delay(button_delay);
             } else {
@@ -269,28 +263,21 @@ void executeButton(uint16_t index) {
             }
             break;
 
-        case 7:  // Lg
-            if (log_flag == 1 && sButtonData[7].state) {
-                logging_on = 1;
-                sButtonData[7].state = true;
-                drawButton(7);
-                delay(button_delay);
-
-            } else {
-                logging_on = 0;
-                sButtonData[7].state = false;
-                drawButton(7);
-                delay(button_delay);
-            }
+        case BUTTON_M4:  // Lg
+            sButtonData[BUTTON_M4].state = true;
+            drawButton(BUTTON_M4);
+            delay(button_delay);
+            sButtonData[BUTTON_M4].state = false;
+            drawButton(BUTTON_M4);
             break;
 
-        case 8:  // SY
-            sButtonData[8].state = true;
-            drawButton(8);
+        case BUTTON_SY:  // SY
+            sButtonData[BUTTON_SY].state = true;
+            drawButton(BUTTON_SY);
             delay(button_delay);
             sync_FT8();
-            sButtonData[8].state = false;
-            drawButton(8);
+            sButtonData[BUTTON_SY].state = false;
+            drawButton(BUTTON_SY);
             delay(button_delay);
             break;
 
