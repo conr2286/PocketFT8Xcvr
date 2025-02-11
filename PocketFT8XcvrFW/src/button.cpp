@@ -1,5 +1,6 @@
-#include <Arduino.h>
 #include "button.h"
+
+#include <Arduino.h>
 
 #include "DEBUG.h"
 #include "HX8357_t3n.h"
@@ -161,13 +162,13 @@ void drawButton(uint16_t i) {
 }
 
 void display_all_buttons(void) {
-    drawButton(0);
+    drawButton(BUTTON_CQ);
     drawButton(1);
     drawButton(2);
     drawButton(3);
     drawButton(4);
-    drawButton(5);
-    drawButton(6);
+    drawButton(BUTTON_TU);
+    drawButton(BUTTON_TX);
     drawButton(7);
     drawButton(8);
 
@@ -183,21 +184,29 @@ void checkButton(void) {
         }
     }
     // DTRACE();
-} //checkButton()
+}  // checkButton()
+
+/**
+ * @brief Reset's button state and redraws the button
+ * @param index Specifies which button
+ */
+void resetButton(uint16_t index) {
+    sButtonData[index].state = 0;
+    drawButton(index);
+}  // resetButton()
 
 int button_delay = 100;
-
 void executeButton(uint16_t index) {
     int Idx = 0;
     DPRINTF("executeButton(%u)\n", index);
     switch (index) {
-        case 0:  // CQ (e.g. CQ KQ7B DN15)
+        case BUTTON_CQ:  // CQ (e.g. CQ KQ7B DN15)
             sButtonData[0].state = true;
             drawButton(0);
             seq.cqButtonEvent();
             delay(button_delay);
-            sButtonData[0].state = false;
-            drawButton(0);
+            //sButtonData[0].state = false;
+            //drawButton(0);
             break;
 
         case 1:  // Lo --- Location Msg (e.g. AG0E KQ7B DN15)
@@ -236,7 +245,7 @@ void executeButton(uint16_t index) {
             drawButton(4);
             break;
 
-        case 5:  // Tu --- Toggle tune on/off
+        case BUTTON_TU:  // Tu --- Toggle tune on/off
             if (sButtonData[5].state) {
                 // tune_On_sequence();
                 // tune_flag = 1;
@@ -250,12 +259,12 @@ void executeButton(uint16_t index) {
             }
             break;
 
-        case 6:  // Tx
+        case BUTTON_TX:  // Tx
             if (sButtonData[6].state) {
-                Transmit_Armned = 1;
+                //Transmit_Armned = 1;
                 delay(button_delay);
             } else {
-                Transmit_Armned = 0;
+                //Transmit_Armned = 0;
                 delay(button_delay);
             }
             break;
@@ -321,6 +330,9 @@ void executeButton(uint16_t index) {
 
 }  // execute_button()
 
+/**
+ * @brief Dis-arms the transmitter, switches from xmit t recv, and clears the outbound FT8 message
+ */
 void terminate_transmit_armed(void) {
     Transmit_Armned = 0;
     receive_sequence();
@@ -349,11 +361,12 @@ void check_FT8_Touch(void) {
     if (draw_x < 400 && (draw_y > 90 && draw_y < 300)) {
         y_test = draw_y - 90;
         FT_8_TouchIndex = y_test / 25;
-        if (FT_8_TouchIndex < master_decoded) display_selected_call(FT_8_TouchIndex);
-
-        // If the transmitter is armed, then give them a call
+        DPRINTF("FT_8_TouchIndex=%d, master_decoded=%d\n", FT_8_TouchIndex, master_decoded);
+        if (FT_8_TouchIndex < master_decoded) {
+            display_selected_call(FT_8_TouchIndex);
+            seq.msgClickEvent(FT_8_TouchIndex);         //Notify Sequencer when operator clicks on a received message
+        }
         DTRACE();
-        if (Transmit_Armned) seq.msgClickEvent(FT_8_TouchIndex);
     }
 
 }  // check_FT8_Touch()

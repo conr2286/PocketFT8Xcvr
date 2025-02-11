@@ -1,24 +1,30 @@
+/**
+ * Defines button handles and functions
+ */
 
+ #pragma once
+ #include <Arduino.h>
 
-int testButton(uint8_t index);
+ //-----Define button handles
+ #define BUTTON_CQ 0
+ #define BUTTON_TU 5
+ #define BUTTON_TX 6
 
+ //-----Define button functions
+ int testButton(uint8_t index);
 void drawButton(uint16_t i);
 void checkButton(void);
 void executeButton(uint16_t index);
-
 void display_all_buttons(void);
+void resetButton(uint16_t index);
 
+//-----Define helper functions
 void check_FT8_Touch(void);
 void process_touch(void);
-
 void check_WF_Touch(void);
 void set_startup_freq(void);
-
-
 void terminate_transmit_armed(void);
-
 void process_serial(void);
-
 void EEPROMWriteInt(int address, int value);
 int EEPROMReadInt(int address);
 

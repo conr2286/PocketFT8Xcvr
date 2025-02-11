@@ -173,15 +173,14 @@ void set_message(uint16_t index) {
 
 
 void clear_FT8_message(void) {
+    DTRACE();
 
-  char blank[] = "                      ";
-
-  tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-  tft.setTextSize(2);
-  tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
-  tft.print(blank);
-
-  message_state = 0;
+    char blank[] = "                      ";
+    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+    tft.setTextSize(2);
+    tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
+    tft.print(blank);
+    message_state = 0;
 }
 
 

@@ -139,7 +139,7 @@ void Contact::begin(char* workedCall, unsigned freq, const char* mode, unsigned 
 
 
 /**
- * Reset Contact data fields to empty strings
+ * Reset Contact log data fields to empty strings
  *
  * Marks a Contact as inactive
  *

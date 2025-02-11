@@ -73,6 +73,7 @@ void receive_sequence(void) {
 
     // Turn off the transmitter's clock -- this should stop the xmit RF chain
     si5351.output_enable(SI5351_CLK0, 0);
+    delay(1);           //Allow the clock to respond
 
     // Disconnect the SN74ACT244 PA from antenna and float the receiver's RF input
     pinMode(PIN_PTT, OUTPUT);

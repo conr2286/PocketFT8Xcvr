@@ -5,7 +5,7 @@
  *      Author: user
  */
 
-
+#include "DEBUG.h"
 #include "encode.h"
 #include "constants.h"
 
@@ -44,22 +44,22 @@ uint8_t parity8(uint8_t x) {
 // [IN] message   - array of 91 bits stored as 12 bytes (MSB first)
 // [OUT] codeword - array of 174 bits stored as 22 bytes (MSB first)
 void encode174(const uint8_t *message, uint8_t *codeword) {
-  // Here we don't generate the generator bit matrix as in WSJT-X implementation
-  // Instead we access the generator bits straight from the binary representation in kGenerator
+    // Here we don't generate the generator bit matrix as in WSJT-X implementation
+    // Instead we access the generator bits straight from the binary representation in kGenerator
 
-  // For reference:
-  // codeword(1:K)=message
-  // codeword(K+1:N)=pchecks
+    // For reference:
+    // codeword(1:K)=message
+    // codeword(K+1:N)=pchecks
 
-  // printf("Encode ");
-  // for (int i = 0; i < K_BYTES; ++i) {
-  //     printf("%02x ", message[i]);
-  // }
-  // printf("\n");
+    // printf("Encode ");
+    // for (int i = 0; i < K_BYTES; ++i) {
+    //     printf("%02x ", message[i]);
+    // }
+    // printf("\n");
 
-  // Fill the codeword with message and zeros, as we will only update binary ones later
-  for (int j = 0; j < (7 + N) / 8; ++j) {
-    codeword[j] = (j < K_BYTES) ? message[j] : 0;
+    // Fill the codeword with message and zeros, as we will only update binary ones later
+    for (int j = 0; j < (7 + N) / 8; ++j) {
+        codeword[j] = (j < K_BYTES) ? message[j] : 0;
   }
 
   uint8_t col_mask = (0x80 >> (K % 8));  // bitmask of current byte

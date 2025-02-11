@@ -14,7 +14,7 @@
 
 #include <TimeLib.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "pins.h"
 
 static Adafruit_GPS gpsDevice(&Serial1);

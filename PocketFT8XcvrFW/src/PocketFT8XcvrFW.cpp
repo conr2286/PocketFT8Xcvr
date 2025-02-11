@@ -68,6 +68,7 @@
 #include "MCP342x.h"
 #include "Process_DSP.h"
 #include "Sequencer.h"
+#include "Timer.h"
 #include "TouchScreen_I2C.h"
 #include "WF_Table.h"
 #include "arm_math.h"
@@ -180,8 +181,6 @@ int decode_flag;
 // process_FT8_FFT() apparently at the end of a receive timeslot???
 int ft8_flag;
 
-// Apparently set when CQ button pressed, cleared when beacon mode ends???
-// extern int CQ_Flag;
 
 int WF_counter;
 int num_decoded_msg;
@@ -189,9 +188,10 @@ int num_decoded_msg;
 // Apparently set when the transmitted carrier is on
 int xmit_flag;
 
-// Apparently set when a transmission is pending
+// Set when a transmission is pending the beginning of the next timeslot
 int Transmit_Armned;
 
+//This appears to be the modulated symbol counter for payload and costas
 int ft8_xmit_counter;
 
 int master_decoded;
@@ -403,6 +403,9 @@ void setup(void) {
     // Misc initialization
     set_Station_Coordinates(Locator);
 
+    // Start the QSO Sequencer
+    DTRACE();
+    seq.begin(3);        // Parameter configures Sequencer's run-on QSO timeout period in minutes
     receive_sequence();  // Setup to receive at start of first timeslot
 
     // Start receiving in a new timeslot
@@ -458,17 +461,14 @@ void loop() {
 
     // Apparently:  Have we acquired all of the receive timeslot's data?
     if (decode_flag == 1) {
-        // DPRINTF("Decode recvd msgs\n");
-        unsigned long td0 = millis();
+        // unsigned long td0 = millis();
         num_decoded_msg = ft8_decode();  // Decode the received messages
-        // DPRINTF("ft8_decode() %u msgs in time = %lu ms\n", num_decoded_msg, millis() - td0);
         master_decoded = num_decoded_msg;
         decode_flag = 0;
 
         // If a message is waiting for transmission,
         // turn-on the carrier and set xmit_flag to modulate it.
         if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
-        // DPRINTF("Awaiting next timeslot\n");
     }
 
     // Check touchscreen and serial port for activity
@@ -503,6 +503,9 @@ void loop() {
             waitForFT8timeslot();
         }
     }  // gps
+
+    // Service the Timer inventory
+    Timer::serviceTimers();
 
     // Update flags when a new timeslot begins
     update_synchronization();
@@ -645,6 +648,7 @@ void update_synchronization() {
     // ft8_seconds = (int8_t)((hours_fraction % 60000) / 1000);
 
     // Charlie's original sync decision used 200 mS now 160 mS (one FT8 symbol time)
+    // TODO:  Is our time accurate enough to reduce window below 160 mS???
     if (ft8_flag == 0 && ft8_time % 15000 <= 160) {
         ft8_flag = 1;
         FT_8_counter = 0;
@@ -662,9 +666,9 @@ void update_synchronization() {
 
         // Debug timeslot and sequencer problems
         if (xmit_flag) {
-            DPRINTF("-----Timeslot %lu:  DSP_Flag=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s' -------------------\n", seq.getSequenceNumber(), DSP_Flag, Transmit_Armned, xmit_flag, get_message());
+            DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s' -------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message());
         } else {
-            DPRINTF("-----Timeslot %lu:  DSP_Flag=%u, Transmit_Armned=%u, xmit_flag=%u  -------------------------------\n", seq.getSequenceNumber(), DSP_Flag, Transmit_Armned, xmit_flag);
+            DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u  -------------------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag);
         }
     }
 }  // update_synchronization()
@@ -691,9 +695,6 @@ void sync_FT8(void) {
     FT_8_counter = 0;
     ft8_marker = 1;
     WF_counter = 0;
-
-    // Reset sequencer
-    seq.begin();
 }
 
 /**
