@@ -30,9 +30,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 * TCXO
 * Si4735 SSB Receiver & Si5351 Transmit FSK Clock
 * SN74ACT244 line driver PA
-* SD Card Contact Logging
+* ADIF Contact Logging to SD card
 * Adafruit 320 X 480 Resistive Color Touch Screen
 * Station configuration via SD card file, config.json
+* GPS-derived location and UTC time
 
 # DSP Audio Architecture
 Decoding FT8 requires significant data storage and processing speed.  In order to optimize both program storage and processing speed requirements so that the Teensy is not over taxed, the Teensy Audio Library has been modified to allow Analog to Digital conversion to be run at the rate of 6400 samples per second. This allows audio data processing to be done at 3200 Hz. The 3200 Hz audio processing with a 2048 FTT to process the received audio for FT8 decoding yields a bin spacing of 3.125 Hz.  For Teensy 4.1, the revised sample rate required replacement of the core AudioStream.h file with the AudioStream6400.h file in the PocketFT8FW sketch folder.
@@ -40,19 +41,19 @@ Decoding FT8 requires significant data storage and processing speed.  In order t
 The algorithms developed by Karlis Goba use the 3.125 Hz spaced FFT bins to be screened in both frequency and time so that errors in symbol frequency and time reception  can be overcome to provide really great FT8 decoding. The end spacing of the FT8 algorithms is 6.25 Hz.
 
 # Motivation and Related Projects
-About 1966, the ARRL Handbook published a receiver design known as the Junior Miser's Dream that achieved so much with so little.  Likewise, Charley Hill's design for a self-contained FT8 transceiver, ideal for POTA/SOTA, again achieves so much with so little.  The entire transceiver fits in a portable enclosure, and the power demand is acceptable for a USB power block.  Pocket FT8 Revisited V1.10 is a mostly faithful re-implementation of Charley's concept with revisions largely limited to those necessary for the Teensy 4.1.  From there, the project has and continues to implement enhancements to get just a little more from so little.
+About 1966, the ARRL Handbook published a receiver design known as the Junior Miser's Dream that achieved so much with so little.  Likewise, Charley Hill's concept for a self-contained FT8 transceiver, ideal for POTA/SOTA, again achieves so much with so little.  The entire transceiver fits in a portable enclosure, and the power demand is acceptable for a USB power block.  Pocket FT8 Revisited V1.10 is a derivative of Charley's concept.
 
 Unlike the uSDX multi-mode designs, Pocket FT8 focuses entirely on FT8.  Yes, yes, I know.  That's why I have other radios.  Pocket FT8 fits in the pocket of my backpack, doesn't require an external key, microphone, headphone, cell phone, or computer, and offers a completely self-contained transceiver for a contest-like POTA/SOTA "QSO."  It's clean.
 
-An alternative approach, previously investigated as YASDR, is to construct an FT8 radio hat for a Raspberry 5 supporting the comprehensive wsjtx/etc natively.  This archived project offers considerable flexibility but with higher power requirements (I'm getting too old to pack heavy batteries in the mountains;).  This approach is worth revisiting in the future if we can get the power demand down.
+An alternative approach, previously investigated as YASDR, is to construct an FT8 radio hat for a Raspberry 5 supporting the comprehensive wsjtx/etc natively.  This archived project offers considerable flexibility but with higher power requirements (I'm getting too old to pack heavy batteries in the mountains;).  This approach is worth revisiting in the future, especially for POTA.
 
-Charley and Barb have also progressed beyond the original Pocket FT8 with a multiband FT8 transceiver, DX FT8, at https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER, replacing the SI4735 with a Tayloe receiver.
+Charley and Barb also progressed beyond the original Pocket FT8 in another derivative with a multiband FT8 transceiver, DX FT8, at https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER, replacing the SI4735 with a Tayloe receiver.
 
 # Manifest
 * BenchTests:  Arduino sketches for incremental tests of the hardware
 * Bibliography:  "..shoulders of giants"
 * Investigations:  Code and simulations exploring technologies for this project
-* PocketFT8XcvrFW:  Arduino sketch for the Pocket FT8 Revisited transceiver
+* PocketFT8XcvrFW:  The transceiver firmware sources
 * PocketFT8XcvrHW:  KiCad 8 files for the PCB
 * Extras:  Contains Teensy AudioStream.h modified for 6400 samples/second
 
@@ -62,27 +63,28 @@ Charley and Barb have also progressed beyond the original Pocket FT8 with a mult
 * V2.00 A new PCB moves the SI5351 and MCP342x to Wire1 to avoid I2C noise (Issue #23) hampering the SI4735
 
 # Design Notes
-* Versions of Pocket FT8 Revisited are tested on 40M and 20M at KQ7B.
-* The receiver is based upon the SI4735 chip offering a compact, low-power approach for most HF bands  Following up on a tip from the SI4735's application notes, the chip was found to be sensitive to noise from other I2C traffic on the same bus as the SI4735.  Disabling the touchscreen I2C in firmware resolved the issue, greatly improving reception at the loss of the GUI.  The V2.00 boards address this issue by moving the touchscreen (MCP342X) and SI5351 traffic from the Wire to the Wire1 I2C bus, isolating the SI4735 on Wire.  Likewise, the revised boards pay more attention to signal routing adjacent to noise-sensitive circuitry.
+* Versions of Pocket FT8 Revisited have been tested on 40M and 20M at KQ7B.
+* The receiver is based upon the SI4735 chip offering a compact, low-power approach for most HF bands  Following up on a tip from the SI4735's application notes, the chip was found to be sensitive to noise from other I2C traffic on the same bus as the SI4735.  Disabling the touchscreen I2C in firmware resolved the issue, greatly improving reception.  The V2.00 boards address this issue by moving the touchscreen (MCP342X) and SI5351 traffic from the Wire to the Wire1 I2C bus, isolating the SI4735 on Wire.  Likewise, the revised boards pay more attention to signal routing adjacent to noise-sensitive circuitry.
 * CW and SSB modes appear infeasible.  The SI4735's PLL limits the receiver's tuning to 1 kHz steps which is incompatible with amateur CW and SSB operation.  If you need these modes in a kit, check-out the QRP Labs transceivers; Hans does an awesome job.
-* The V1.10 transmitter PA employed a MMIC a la Charles Hill's original design.  The V2.00 boards replaced the MMIC with the readily available SN74ACT244 line driver which is expected to deliver a bit more power (an idea borrowed from the DX FT8).
+* The V1.10 transmitter PA employed a MMIC a la Charles Hill's original design.  The V2.00 boards replaced the MMIC with the readily available SN74ACT244 line driver which is expected to deliver a bit more power (an idea borrowed from Barb in the DX FT8).
 * Many clock designs use a TCXO driving one of the SI5351's crystal pins and often in conflict with the SI5351 application notes recommendations.  Following up on a tip re. phase noise with that approach, this design employs a low jitter TCXO driving the SI5351's CLKIN pin.  Following up on yet another tip regarding the SI5351's phase noise when driving heavy loads, the V2.00 boards buffer the XCLK signal from the SI5351.  All this may be overkill but it was easy to implement.
 * The V2.00 boards and the original Pocket FT8 project use an external MCP342x ADC to poll the touchscreen.  With a non-blocking ADC library, the Teensy 4.1 could likely use the second internal ADC but this idea has not yet been tested (it can be achieved using a patch to the V2.00 boards).  Alternative approaches include using a touchscreen controller.
-* The V1.10 boards employed a 5-pole Chebyshev LP filter providing a measured 40dB of 2nd harmonic rejection and excellent 3rd harmonic rejection of a steady state (Tune) carrier.  However, FT8 transmit/receive switching produced a very brief but annoying 2nd harmonic burst.  The root cause has not yet been investigated, but the V2.00 boards are designed to accept filter plugins allowing experimentation with alternative filters (e.g. a harmonic trap) if the problem persists.
-* The V1.10 LP filter lacked rejection of received signals below the operating frequency.  Investigations into the SI4735 performance found surprisingly strong signals in the 540..7000 kHz range having the potential to limit the receiver's performance.  The V2.00 board filter plugins offer a chance to explore a bandpass design to protect the receiver's front end.
-* The long-term goal is to use a GPS to identify the operator's grid square and sync the clock to UTC.  The V2.00 boards support a GPS connection but no firmware has been completed as yet.
-* The touchscreen circuitry is proving troublesome.  While it walmost always works, its occasional erratic performance is annoying.  One of the project's long-term goals is to better understand and resolve the issue with hardware, firmware or both.
+* The V1.10 boards employed a 5-pole Chebyshev LP filter providing a measured 40dB of 2nd harmonic rejection and excellent 3rd harmonic rejection of a steady state (Tune) carrier.  However, FT8 transmit/receive switching produced a very brief but annoying 2nd harmonic burst.  The root cause has not yet been investigated, but the V2.00 boards are designed to accept filter plugins allowing experimentation with alternative filters (e.g. a harmonic trap) if the problem persists.  The problem has not been seen with the V2.00 hardware.
+* The V1.10 LP filter lacked rejection of received signals below the operating frequency.  Investigations into the SI4735 performance found surprisingly strong signals in the 540..7000 kHz range having the potential to limit the receiver's performance.  The V2.00 board filter plugins offer a chance to explore a bandpass design to protect the receiver's front end.  This has not yet been tested.
+* The V2.00 boards support the Adafruit Ultimate GPS Breakout board.  The firmware supports using the PPS signal to determine when the GPS has a fix; however, the V2.00 PCB requires a patch wire to connect the PPS pin to Digital Pin 2, and the GPS connector has the PPS pin in an awkward location for a ribbon cable.  This will hopefull be fixed in the V3.00 hardware.
 
 # Boards and Parts Availability
-Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out QRP Labs, the uSDX follow-ons, or the DX FT8 kit as Pocket FT8 construction demands some engineering skills.  That said, I sometimes have a *very* limited supply of excess 4-layer boards with most SMD components in-place if you'd like to experiment.  Alternatively, the KiCad files are available as a starting point for your innovations.
+Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out QRP Labs, the uSDX follow-ons, or the DX FT8 kit as Pocket FT8 construction demands some engineering skills.
 
 # Building the Firmware
 1. Install Arduino 2.X IDE
 2. Using Arduino 2.X, install support for the Teensy 4.1 board
-3. Also install support for libraries:  TinyGPS, MCP342x, SD, Adafruit GFX, and PU2CLR SI4735
-4. Copy Extras/AudioStream6400.h into
+3. Install Visual Studio Code and PlatformIO
+4. Using PlatformIO, install support for the Teensy 4.1 platform
+5. Using PlatformIO, install support for the required libraries (documented in the PocketFT8XcvrFW folder)
+6. Copy Extras/AudioStream6400.h into
  .../Library/Arduino15/packages/teensy/hardware/avr/1.59.0/cores/teens4 asArduinoStream.h --- This file redefines AUDIO_SAMPLE_RATE_EXACT enabling Teensy 4.1 to operate the audio stream at 6400 samples/second (required).
-5. Build with Arduino 2.X IDE
+5. Build with PlatformIO
 
 # Modifying the Hardware
 Pocket FT8 Revisited was designed with KiCAD V8, and the PCBs were fabbed and assembled by PCBWay
