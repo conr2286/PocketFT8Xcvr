@@ -1,18 +1,18 @@
-
-// Define the system-independent file access modes
-typedef enum {
-    MODE_WRITE,  // Open for appending onto end of file
-    MODE_READ    // Open for reading file
-} LogFileModeType;
-
-// Define the Arduino implementation for the SD file system
-#ifdef ARDUINO
+#pragma once
 
 #include <SD.h>
 
+
+
+// Define the system-independent file access modes
+typedef enum {
+    MODE_WRITE_FILE,  // Open for appending onto end of file
+    MODE_READ_FILE    // Open for reading file
+} LogFileModeType;
+
+
 class LogFile {
    public:
-    LogFile();
     bool open(const char* fileName, LogFileModeType mode);
     int write(const char c);
     int write(const char* bfr);
@@ -23,21 +23,3 @@ class LogFile {
     SDClass& theFileSystem = SD;
     File theFile;
 };
-
-#else
-#include <stdio.h>
-
-class LogFile {
-   public:
-    LogFile();
-    bool open(const char* fileName, LogFileModeType mode);
-    int write(const char c);
-    int write(const char* bfr);
-    int write(const char* bfr, int count);
-    void close();
-
-   private:
-    FILE theFile;
-};
-
-#endif

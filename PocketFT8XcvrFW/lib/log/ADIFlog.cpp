@@ -23,16 +23,18 @@
 **
 **/
 
+#include "ADIFlog.h"
+
 #include <string.h>
 
-#include "ADIFlog.h"
 #include "Contact.h"
 #include "ContactLogFile.h"
 #include "DEBUG.h"
+#include "FileSystemAdapter.h"
 
 // Define the size of the longest log entry (including the NUL)
 #define LOG_ENTRY_SIZE 256
-#define FIELD_SIZE 16
+#define FIELD_SIZE 32
 
 /**
  * ADIFlog constructor
@@ -64,19 +66,25 @@ int ADIFlog::logContact(Contact* contact) {
     char entry[LOG_ENTRY_SIZE];
     char field[FIELD_SIZE];
 
+    DFPRINTF("workedCall='%s', myCall='%s', band='%s', mode='%s', qsoDate='%s', qsoTime='%s', workedRSL='%s', myRSL='%s')\n", contact->getWorkedCall(), contact->getMyCall(), contact->getBand(), contact->getMode(), contact->getQSOdate(), contact->getQSOtime(), contact->getWorkedRSL(), contact->getMyRSL());
+
     // Only log valid contacts
     if (!contact->isValid()) {
+        DTRACE();
         return -1;  // Error:  Invalid contact
     }
 
     // Open the log file for appending
-    bool err = logFileAdapter.open(this->fileName, MODE_WRITE);
+    bool err = logFileAdapter.open(this->fileName, MODE_WRITE_FILE);
     if (err) {
+        DTRACE();
         return -1;  // Error:  Unable to open fileName on sd drive
     }
 
     // Initialize the log entry
     entry[0] = 0;  // NUL terminator
+
+    DTRACE();
 
     // Assemble the required fields into the log entry string
     snprintf(field, sizeof(field), "<qso_date:%u>%s", strlen(contact->getQSOdate()), contact->getQSOdate());
@@ -116,9 +124,10 @@ int ADIFlog::logContact(Contact* contact) {
 
     // Append End-of-Record
     strlcat(entry, "<eor>\n", sizeof(entry));
-    DPRINTF("entry='%s'", entry);
+    DPRINTF("entry='%s'\n", entry);
 
     // Record the assembled entry in the log file
-    logFileAdapter.write(entry, strlen(entry));
+    logFileAdapter.write(entry);
     logFileAdapter.close();
+    return 0;
 }

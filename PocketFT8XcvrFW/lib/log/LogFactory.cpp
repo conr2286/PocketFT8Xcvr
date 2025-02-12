@@ -22,7 +22,7 @@
  * @param fileName Pointer to the SD file's name
  *
  **/
-static ContactLogFile* LogFactory::buildADIFlog(const char* fileName) {
+ContactLogFile* LogFactory::buildADIFlog(const char* fileName) {
     DTRACE();
     return new ADIFlog(fileName);
 }
@@ -33,7 +33,7 @@ static ContactLogFile* LogFactory::buildADIFlog(const char* fileName) {
  * @param fileName Pointer to the SD file's name
  *
  **/
-static ContactLogFile* LogFactory::buildCSVlog(const char* fileName) {
+ContactLogFile* LogFactory::buildCSVlog(const char* fileName) {
     DTRACE();
     return new CSVlog(fileName);
 }

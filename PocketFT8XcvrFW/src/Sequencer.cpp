@@ -115,6 +115,7 @@
 #include <string.h>
 
 #include "DEBUG.h"
+#include "LogFactory.h"
 #include "SequencerStates.h"
 #include "button.h"
 #include "decode_ft8.h"
@@ -145,12 +146,13 @@ extern uint16_t currentFrequency;  // Nominal frequency (sans offset) in kHz
  *  This method should be invoked once, probably by setup()
  *
  **/
-void Sequencer::begin(unsigned timeoutMinutes) {
+void Sequencer::begin(unsigned timeoutMinutes, const char* logfileName) {
     DTRACE();
     sequenceNumber = 0;                                                     // Reset timeslot counter
     state = IDLE;                                                           // Reset state to idle
     timeoutTimer = Timer::buildTimer(timeoutMinutes * 60000L, timerEvent);  // Build the QSO/tuning timeout-timer
     DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
+    contactLog = LogFactory::buildADIFlog(logfileName);
 }  // begin()
 
 /**
@@ -241,6 +243,7 @@ void Sequencer::timeslotEvent() {
         // We'll assume the QSO has ended.  TODO:  log???
         case LISTEN_73:
             DTRACE();
+            endQSO();           //Log it if we have valid data
             state = IDLE;  // Return to idle state
             displayInfoMsg(" ");
             break;
@@ -356,6 +359,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             // Did we receive a Tx2 or Tx3 RSL containing their report of our signal?
             case MSG_RSL:
                 DTRACE();
+
                 startTimer();   // Keep this QSO alive as long as remote station is responding
                 rslEvent(msg);  // They sent our signal report
                 break;
@@ -634,6 +638,7 @@ void Sequencer::rslEvent(Decode* msg) {
         case LISTEN_RRSL:
             DTRACE();
             contact.setMyRSL(msg->field3);         // Record our signal report in QSO
+            contact.setWorkedRSL(msg->snr);        // Record their RSL at the same time as ours
             setXmitParams(msg->field2, msg->snr);  // Inform gen_ft8 of remote station's info
             set_message(MSG_RRR);                  // Prepare an RRR message
             state = RRR_PENDING;                   // We must await an appropriate even/odd timeslot
@@ -644,6 +649,7 @@ void Sequencer::rslEvent(Decode* msg) {
         case LISTEN_RSL:
             DTRACE();
             contact.setMyRSL(msg->field3);         // Record our signal report in QSO structure
+            contact.setWorkedRSL(msg->snr);        // Record their RSL at the same time as ours
             setXmitParams(msg->field2, msg->snr);  // Inform gen_ft8 of remote station's info
             set_message(MSG_RRSL);                 // Prepare to send their signal report to remote station
             state = RRSL_PENDING;                  // Await an appropriate even/odd timeslot
@@ -657,12 +663,12 @@ void Sequencer::rslEvent(Decode* msg) {
             DTRACE();
             contact.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber));  // Begin a QSO with their station
             contact.setMyRSL(msg->field3);                                                  // Record our RSL from remote station
+            contact.setWorkedRSL(msg->snr);                                                 // Record their RSL at the same time as ours
             setXmitParams(msg->field2, msg->snr);                                           // Inform gen_ft8 of remote station's info
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
-            set_message(MSG_RSL);  // Reply with their RSL as we likely haven't sent it to them
-            state = RSL_PENDING;   // Transmit their RSL in next appropriate timeslot
+            set_message(MSG_RRSL);  // Roger our RSL and send their RSL to remote station
+            state = RRSL_PENDING;   // Transmit their RSL in next appropriate timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);
-            // beginQSO();
             break;
 
         // Ignore non-sense
@@ -942,10 +948,12 @@ void Sequencer::stopTimer() {
  *
  */
 void Sequencer::endQSO() {
+    DTRACE();
+
     // Log the contact if we collected sufficient data about the remote station
     if (contact.isActive() && contact.isValid()) {
         DTRACE();
-        contact.reset();
+        contactLog->logContact(&contact);
     }
 
     // Cancel the QSO timeout Timer
@@ -960,7 +968,10 @@ void Sequencer::endQSO() {
     clear_FT8_message();         // Clear displayed outbound message, if any
     receive_sequence();          // Only need to do this if in-progress transmission aborted
 
-    // Reset highlighted buttons, if any
+    // Clean-up GUI leftovers
     resetButton(BUTTON_TU);
     resetButton(BUTTON_CQ);
+
+    //We are finished with this contact whether we had enough data to log or not
+    contact.reset();
 }

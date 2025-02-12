@@ -6,7 +6,8 @@
 
 class ContactLogFile {
    public:
-    virtual int logContact(Contact* contact);
+    virtual int logContact(Contact* contact) = 0;
+    virtual ~ContactLogFile() {};
 
    protected:
     LogFile logFileAdapter;

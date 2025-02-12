@@ -26,9 +26,10 @@ class Contact {
     void reset(void);                                                                 // Reset all fields in a Contact instance, making it inactive
     bool isValid(void);                                                               // Determine if the current QSO, if any, is a valid (completed) contact
     bool isActive(void);                                                              // Determine if a Contact instance has recorded any values
-
+  
     // Define the setters for the contact fields
     void setWorkedRSL(char* rsl);
+    void setWorkedRSL(int rsl);
     void setMyRSL(char* rsl);
     void setMySOTAref(char* sotaRef);
     void setWorkedSOTAref(char* sotaRef);

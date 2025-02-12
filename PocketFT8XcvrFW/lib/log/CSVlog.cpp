@@ -46,7 +46,7 @@
  *
  **/
 CSVlog::CSVlog(const char* fileName) {
-    char entry[LOG_ENTRY_SIZE];
+    // char entry[LOG_ENTRY_SIZE];
 
     // Initialize our member variables
     this->fileName = fileName;
@@ -102,7 +102,7 @@ int CSVlog::logContact(Contact* contact) {
     }
 
     // Open the log file for appending
-    bool err = logFileAdapter.open(this->fileName, MODE_WRITE);
+    bool err = logFileAdapter.open(this->fileName, MODE_WRITE_FILE);
     if (err) {
         return -1;  // Error:  Unable to open fileName on sd drive
     }
@@ -148,5 +148,6 @@ int CSVlog::logContact(Contact* contact) {
     // Record the assembled entry in the log file
     logFileAdapter.write(entry, strlen(entry));
     logFileAdapter.close();
+    return 0;
 
 }  // logContact()

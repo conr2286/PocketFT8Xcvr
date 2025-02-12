@@ -1,8 +1,8 @@
-#include "button.h"
 
 #include <Arduino.h>
 
-#include "DEBUG.h"
+#include "button.h"
+#include "NODEBUG.h"
 #include "HX8357_t3n.h"
 #include "decode_ft8.h"
 #include "display.h"
@@ -198,7 +198,7 @@ void resetButton(uint16_t index) {
 
 int button_delay = 100;
 void executeButton(uint16_t index) {
-    int Idx = 0;
+    //int Idx = 0;
     DPRINTF("executeButton(%u)\n", index);
     switch (index) {
         case BUTTON_CQ:  // CQ (e.g. CQ KQ7B DN15)

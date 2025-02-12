@@ -404,7 +404,7 @@ void setup(void) {
 
     // Start the QSO Sequencer
     DTRACE();
-    seq.begin(3);        // Parameter configures Sequencer's run-on QSO timeout period in minutes
+    seq.begin(3,"LOGFILE.ADIF");        // Parameter configures Sequencer's run-on QSO timeout period in minutes
     receive_sequence();  // Setup to receive at start of first timeslot
 
     // Start receiving in a new timeslot
