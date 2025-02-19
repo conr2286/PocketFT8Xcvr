@@ -58,6 +58,9 @@ extern int log_flag, logging_on;
 // Get a reference to the Sequencer singleton
 static Sequencer& seq = Sequencer::getSequencer();
 
+// Reference the GPS wait-for-it synchronizer
+void waitForFT8timeslot(void);
+
 // int CQ_Flag;
 int Beacon_State;
 
@@ -275,7 +278,8 @@ void executeButton(uint16_t index) {
             sButtonData[BUTTON_SY].state = true;
             drawButton(BUTTON_SY);
             delay(button_delay);
-            sync_FT8();
+            //sync_FT8();
+            waitForFT8timeslot();
             sButtonData[BUTTON_SY].state = false;
             drawButton(BUTTON_SY);
             delay(button_delay);
