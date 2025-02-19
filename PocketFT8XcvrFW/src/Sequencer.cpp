@@ -242,6 +242,7 @@ void Sequencer::timeslotEvent() {
         // We listened for the remote station's 73 but have heard nothing.
         // We'll assume the QSO has ended.  TODO:  log???
         case LISTEN_73:
+        case LISTEN_RRR:
             DTRACE();
             endQSO();      // Log it if we have valid data
             state = IDLE;  // Return to idle state
@@ -565,9 +566,9 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case LISTEN_RRSL:
         case LISTEN_RSL:
         case LISTEN_73:
-            theSequencer.endQSO();      // Misc activities to terminate QSO
-            clearOutboundMessageText(); //Clear outbound message text chars
-            theSequencer.state = IDLE;  // IDLE the state machine
+            theSequencer.endQSO();       // Misc activities to terminate QSO
+            clearOutboundMessageText();  // Clear outbound message text chars
+            theSequencer.state = IDLE;   // IDLE the state machine
             break;
 
         // Interrupt pending transmission awaiting an appropriate timeslot
@@ -578,8 +579,8 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case RRSL_PENDING:
         case M73_PENDING:
             theSequencer.endQSO();
-            clearOutboundMessageText(); //Clear outbound message text chars
-            theSequencer.state = IDLE;  // IDLE the state machine
+            clearOutboundMessageText();  // Clear outbound message text chars
+            theSequencer.state = IDLE;   // IDLE the state machine
             break;
 
         // Interrupt active transmission (loop() is actively modulating symbols)
@@ -590,8 +591,8 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case XMIT_RSL:
         case XMIT_73:
             theSequencer.endQSO();
-            clearOutboundMessageText(); //Clear outbound message text chars
-            theSequencer.state = IDLE;  // IDLE the state machine
+            clearOutboundMessageText();  // Clear outbound message text chars
+            theSequencer.state = IDLE;   // IDLE the state machine
             break;
 
         // Interrupt a QSO gone bad (e.g. QRN, QRM, QSB, QRT, whatever) --- it's over
