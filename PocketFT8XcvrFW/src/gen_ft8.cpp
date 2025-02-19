@@ -46,7 +46,7 @@ char reply_message[18];
 char reply_message_list[18][8];
 int reply_message_count;
 char message[18];   // FT8 message text pending transmission.
-int message_state;  // Non-zero => message[] is valid/ready.
+int message_state;  // Non-zero => message[] is valid/ready (but nothing checks it???)
 
 extern int log_flag, logging_on;
 extern time_t getTeensy3Time();
@@ -118,7 +118,7 @@ void set_message(uint16_t index) {
     char rtc_string[10];  // print format stuff
     snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
 
-    //strlcpy(message, blank, sizeof(message));
+    // strlcpy(message, blank, sizeof(message));
     clearOutboundMessageText();
     clearOutboundMessageDisplay();
 
@@ -150,11 +150,17 @@ void set_message(uint16_t index) {
         case MSG_RRR:  // We are responding with RRR, e.g. AG0E KQ7B RRR
             snprintf(message, sizeof(message), "%s %s RRR", Target_Call, Station_Call);
             break;
+
+        default:
+            DPRINTF("***** ERROR:  Invalid set_message(%d) index\n", index);
+            break;
     }
     // tft.setTextColor(HX8357_WHITE, HX8357_BLACK);
     // tft.setTextSize(2);
     // tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
     // tft.print(message);
+
+    // TODO:  Check for empty message???
     displayInfoMsg(message);
     pack77_1(message, packed);
     genft8(packed, tones);
@@ -168,12 +174,11 @@ void set_message(uint16_t index) {
 
 }  // set_message()
 
-
 void clearOutboundMessageText(void) {
-    char blank[] = "                   ";
-    strlcpy(message, blank, sizeof(message));
+    // char blank[] = "                   ";
+    // strlcpy(message, blank, sizeof(message));
+    message[0] = 0;
 }
-
 
 void clearOutboundMessageDisplay(void) {
     DTRACE();

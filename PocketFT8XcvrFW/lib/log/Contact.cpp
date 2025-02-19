@@ -82,9 +82,9 @@ extern char Station_Call[];
  *
  * Overwrites existing field data, if any, in an active Contact instance afterwhich
  * active will become true.
- * 
+ *
  * WARNING:  Not all amateur frequencies are converted to ADIF-compliant band enumerations
- * at this version of the code. 
+ * at this version of the code.
  *
  **/
 void Contact::begin(char* workedCall, unsigned freq, const char* mode, unsigned oddEven) {
@@ -156,6 +156,8 @@ void Contact::reset() {
     this->workedSOTAref[0] = 0;
     this->myLocator[0] = 0;
     this->workedLocator[0] = 0;
+    this->myRig[0] = 0;
+    this->txPwr[0] = 0;
     this->active = false;
 }  // reset()
 
@@ -178,7 +180,7 @@ bool Contact::isActive() {
  *
  **/
 bool Contact::isValid() {
-    //DFPRINTF("workedCall='%s', myCall='%s', band='%s', mode='%s', qsoDate='%s', qsoTime='%s', workedRSL='%s', myRSL='%s')\n", this->workedCall, this->myCall, this->band, this->mode,this->qsoDate,this->qsoTime,this->workedRSL,this->myRSL);
+    // DFPRINTF("workedCall='%s', myCall='%s', band='%s', mode='%s', qsoDate='%s', qsoTime='%s', workedRSL='%s', myRSL='%s')\n", this->workedCall, this->myCall, this->band, this->mode,this->qsoDate,this->qsoTime,this->workedRSL,this->myRSL);
     bool result = strlen(this->workedCall) > 0 && strlen(this->myCall) > 0 && strlen(this->band) > 0 && strlen(this->mode) > 0 && strlen(this->qsoDate) > 0 && strlen(this->qsoTime) > 0 && strlen(this->workedRSL) > 0 && strlen(this->myRSL) > 0;
     DPRINTF("isValid()=%u\n", result);
     return result;
@@ -213,7 +215,23 @@ void Contact::setWorkedSOTAref(char* sotaRef) {
     strlcpy(this->workedSOTAref, sotaRef, sizeof(this->workedSOTAref));
 }
 
+void Contact::setRig(char* rig) {
+    strlcpy(this->myRig, rig, sizeof(this->myRig));
+}
+
+void Contact::setPwr(float pwr) {
+    snprintf(this->txPwr, sizeof(this->txPwr), "%f", pwr);
+}
+
 // Here are the getters for the fields
+char* Contact::getRig() {
+    return this->myRig;
+}
+
+char* Contact::getPwr() {
+    return this->txPwr;
+}
+
 char* Contact::getWorkedCall() {
     return this->workedCall;
 }

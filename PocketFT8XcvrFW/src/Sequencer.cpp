@@ -344,10 +344,10 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
         DPRINTF("this msg is for us:  '%s' '%s' '%s'\n", msg->field1, msg->field2, msg->field3);
 
         switch (msg->msgType) {
-            // Did we receive another station's Tx6 CQ?  We don't restart Timer when we hear a CQ.
+            // Did we receive a station's Tx6 CQ?  We don't restart Timer when we hear a CQ.
             case MSG_CQ:
                 DTRACE();
-                // We have received a CQ but currently ignore it
+                // TODO:  Have robo-op respond to curated CQ
                 break;
 
             // Did we receive their Tx1 locator message?
@@ -357,15 +357,8 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
                 locatorEvent(msg);  // They are responding to us with a locator
                 break;
 
-            // Did we receive a Tx2 or Tx3 RSL containing their report of our signal?
+            // Did we receive a [R]RSL containing our signal report?
             case MSG_RSL:
-                DTRACE();
-
-                startTimer();   // Keep this QSO alive as long as remote station is responding
-                rslEvent(msg);  // They sent our signal report
-                break;
-
-            // Did we receive an RRSL?
             case MSG_RRSL:
                 DTRACE();
                 startTimer();   // Keep this QSO alive as long as remote station is responding
@@ -375,14 +368,14 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             // Did we receive an EOT that does not expect a reply?  We don't restart the Timer for EOT.
             case MSG_73:
                 DTRACE();
-                eotEvent(msg);
+                eotEvent(msg);  // No reply to 73 msg
                 break;
 
             // Did we receive an EOT that expects a reply?  We don't restart the Timer for EOT.
             case MSG_RR73:
             case MSG_RRR:
                 DTRACE();
-                eotReplyEvent(msg);
+                eotReplyEvent(msg);  // We reply to RR73/RRR msg
                 break;
 
             // The Sequencer does not currently process certain message types.  We don't restart the Timer for unsupported msgs.
@@ -391,13 +384,13 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             case MSG_TELE:
             case MSG_UNKNOWN:
             default:
-                DTRACE();
+                DPRINTF("***** ERROR:  Unsupported received msgType=%d\n", msg->msgType);
                 break;
         }  // switch
     }
 
     DTRACE();
-}
+}  // receivedMsgEvent()
 
 /**
  * @brief Operator clicked the TUNE button
@@ -638,7 +631,7 @@ void Sequencer::abortButtonEvent() {
 void Sequencer::rslEvent(Decode* msg) {
     // Action to be taken depends upon the Sequencer's current state
     switch (state) {
-        // Are we expecting an RRSL?  TODO:  recvd out of sequence --> no qso
+        // Remote station sent RRSL.  We'll send them an RRR to wrap things up.
         case LISTEN_RRSL:
             DTRACE();
             contact.setMyRSL(msg->field3);         // Record our signal report in QSO
@@ -662,7 +655,7 @@ void Sequencer::rslEvent(Decode* msg) {
 
         // We were expecting a LOC but received a signal report.  We likely were calling CQ
         // and listening for a response which came with an RSL.  Let's try to cobble-up a
-        // QSO from what we have.
+        // QSO from what we've heard.
         case LISTEN_LOC:
             DTRACE();
             contact.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber));  // Begin a QSO with their station
@@ -677,7 +670,7 @@ void Sequencer::rslEvent(Decode* msg) {
 
         // Ignore non-sense
         default:
-            DTRACE();
+            DPRINTF("***** ERROR:  Ignoring received msgType=%d because state=%d\n", msg->msgType, state);
             break;
 
     }  // switch
@@ -787,8 +780,8 @@ void Sequencer::locatorEvent(Decode* msg) {
     // The action to be taken depends upon the Sequencer's current state
     switch (state) {
         // We have a CQ pending or were listening for a response to our own CQ
-        case CQ_PENDING:  // We were going to [re]transmit CQ but received a call
-        case LISTEN_LOC:  // We were listening for a response to our CQ
+        case CQ_PENDING:  // We were going to [re]transmit CQ but received this msg first
+        case LISTEN_LOC:  // We were listening for a response to our CQ and received this msg
             DTRACE();
             contact.begin(msg->field2, currentFrequency, "FT8", ODD(sequenceNumber));  // Start gathering QSO info
             contact.setWorkedLocator(msg->field3);                                     // Record responder's locator
@@ -799,11 +792,9 @@ void Sequencer::locatorEvent(Decode* msg) {
             displayInfoMsg(get_message(), HX8357_YELLOW);
             break;
 
-            // TODO:  qso.end();
-
         // Something is wrong and we don't know why we apparently received their locator.  Maybe we should reset everything???
         default:
-            DTRACE();
+            DPRINTF("***** ERROR:  Received unexpected msgType=%d in state %d\n", msg->msgType, state);
             break;
 
     }  // switch
@@ -842,9 +833,9 @@ bool Sequencer::isMsgForUs(Decode* msg) {
 
     // A received msg is "for us" if our callsign or CQ appears as the destination station's callsign
     bool myCall = strncmp(msg->field1, Station_Call, sizeof(msg->field1)) == 0;  // Sent directly to us?
-    bool cq = strncmp(msg->field1, "CQ", sizeof(msg->field1)) == 0;              // CQ
+    bool cq = strcmp(msg->field1, "CQ") == 0;             
     bool msgIsForUs = cq || myCall;
-    DPRINTF("isMsgForUs()=%u %s\n", msgIsForUs, msg->field1);
+    //DPRINTF("isMsgForUs()=%u %s\n", msgIsForUs, msg->field1);
     return msgIsForUs;
 }
 
@@ -854,8 +845,8 @@ bool Sequencer::isMsgForUs(Decode* msg) {
  *  @param oddEven begin modulation in 1==odd, 0==even-numbered timeslot
  *  @param newState new state value if transmitter is armed
  *
- *  We don't actually modulate anything here, all we do is setup the flags so loop()
- *  will begin transmitting FSK modulated symbols.
+ *  We don't actually modulate anything here, all we do is setup the global
+ *  flags so loop() will begin transmitting FSK modulated symbols.
  *
  *  + You must invoke set_message() to prepare the outbound message prior
  *  to invoking pendXmit
@@ -953,6 +944,10 @@ void Sequencer::stopTimer() {
  */
 void Sequencer::endQSO() {
     DTRACE();
+
+    //Add info to log
+    contact.setRig("Pocket FT8");
+    contact.setPwr(0.250);
 
     // Log the contact if we collected sufficient data about the remote station
     if (contact.isActive() && contact.isValid()) {

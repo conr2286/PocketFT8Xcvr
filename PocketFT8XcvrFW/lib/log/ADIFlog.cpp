@@ -122,6 +122,16 @@ int ADIFlog::logContact(Contact* contact) {
         strlcat(entry, field, sizeof(entry));
     }
 
+    // And a couple more optional fields just for fun
+    if (strlen(contact->getRig())) {
+        snprintf(field, sizeof(field), "<my_rig:%u>%s", strlen(contact->getRig()), contact->getRig());
+        strlcat(entry, field, sizeof(entry));
+    }
+    if (strlen(contact->getPwr())) {
+        snprintf(field, sizeof(field), "<tx_pwr:%u>%s", strlen(contact->getPwr()), contact->getPwr());
+        strlcat(entry, field, sizeof(entry));
+    }
+
     // Append End-of-Record
     strlcat(entry, "<eor>\n", sizeof(entry));
     DPRINTF("entry='%s'\n", entry);

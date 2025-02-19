@@ -1,7 +1,7 @@
 /**
  * @brief Models a single contact between our station and a worked (remote, target) station
  *
-**/
+ **/
 #pragma once
 
 class Contact {
@@ -17,6 +17,8 @@ class Contact {
     static const int sizeRSL = 4;        // 3 chars and a NUL
     static const int sizeSOTAref = 14;   // 14 chars and a NUL
     static const int sizeLocator = 7;    // 6 chars and a NUL
+    static const int sizeRig = 17;       // 16 chars and a NUL
+    static const int sizePwr = 5;        // 5 chars and a NUL
 
     // Constructor and other significant methods
     Contact() {
@@ -26,7 +28,7 @@ class Contact {
     void reset(void);                                                                 // Reset all fields in a Contact instance, making it inactive
     bool isValid(void);                                                               // Determine if the current QSO, if any, is a valid (completed) contact
     bool isActive(void);                                                              // Determine if a Contact instance has recorded any values
-  
+
     // Define the setters for the contact fields
     void setWorkedRSL(char* rsl);
     void setWorkedRSL(int rsl);
@@ -35,6 +37,8 @@ class Contact {
     void setWorkedSOTAref(char* sotaRef);
     void setMyLocator(char* locator);
     void setWorkedLocator(char* locator);
+    void setPwr(float watts);
+    void setRig(char* rig);
 
     // Define the getters used to extract info about the contact
     char* getWorkedCall();
@@ -49,6 +53,8 @@ class Contact {
     char* getWorkedSOTAref();
     char* getMyLocator();
     char* getWorkedLocator();
+    char* getPwr();
+    char* getRig();
 
    private:
     bool active;  // true if contact has recorded anything about a QSO
@@ -68,4 +74,6 @@ class Contact {
     char workedSOTAref[sizeSOTAref];  // Worked statoin's International SOTA Reference
     char myLocator[sizeLocator];      // Our station's maidenhead locator (gridsquare)
     char workedLocator[sizeLocator];  // Worked station's maidenhead locator (gridsquare)
+    char txPwr[sizePwr];              // Our station's transmitter power
+    char myRig[sizeRig];              // Our station's rig
 };
