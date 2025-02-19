@@ -1,6 +1,6 @@
-#include <Arduino.h>
 #include "traffic_manager.h"
 
+#include <Arduino.h>
 #include <SI4735.h>
 #include <TimeLib.h>
 
@@ -73,7 +73,7 @@ void receive_sequence(void) {
 
     // Turn off the transmitter's clock -- this should stop the xmit RF chain
     si5351.output_enable(SI5351_CLK0, 0);
-    delay(1);           //Allow the clock to respond
+    delay(1);  // Allow the clock to respond
 
     // Disconnect the SN74ACT244 PA from antenna and float the receiver's RF input
     pinMode(PIN_PTT, OUTPUT);
@@ -85,7 +85,7 @@ void receive_sequence(void) {
 
     // Receive
     si4735.setVolume(50);
-    clear_FT8_message();
+    clearOutboundMessageDisplay();
 
 }  // receive_sequence()
 
@@ -186,8 +186,8 @@ void set_FT8_Tone(uint8_t ft8_tone) {
 // resides in the global message[].
 void setup_to_transmit_on_next_DSP_Flag(void) {
     DTRACE();
-    ft8_xmit_counter = 0;                       //Reset symbol slot counter
-    transmit_sequence();                        // Turns-on the transmitter carrier at current F_Long ??
+    ft8_xmit_counter = 0;  // Reset symbol slot counter
+    transmit_sequence();   // Turns-on the transmitter carrier at current F_Long ??
     // set_Xmit_Freq();                         //Recalculates F_long and reprograms SI5351 ??
     xmit_flag = 1;                              // This flag appears to trigger loop() to modulate the carrier
     displayInfoMsg(get_message(), HX8357_RED);  // Display transmitted message

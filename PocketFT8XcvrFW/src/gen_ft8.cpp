@@ -118,8 +118,9 @@ void set_message(uint16_t index) {
     char rtc_string[10];  // print format stuff
     snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
 
-    strlcpy(message, blank, sizeof(message));
-    clear_FT8_message();
+    //strlcpy(message, blank, sizeof(message));
+    clearOutboundMessageText();
+    clearOutboundMessageDisplay();
 
     switch (index) {
         case MSG_CQ:  // We are calling CQ from our Locator, e.g. CQ KQ7B DN15
@@ -137,7 +138,7 @@ void set_message(uint16_t index) {
         case MSG_RR73:  // We are responding to target with RR73, e.g. AG0E KQ7B RR73
             snprintf(message, sizeof(message), "%s %s %3s", Target_Call, Station_Call, seventy_three);
             break;
-            
+
         case MSG_73:  // We are responding to target with 73, e.g. AG0E KQ7B 73
             snprintf(message, sizeof(message), "%s %s %s", Target_Call, Station_Call, "73");
             break;
@@ -167,7 +168,14 @@ void set_message(uint16_t index) {
 
 }  // set_message()
 
-void clear_FT8_message(void) {
+
+void clearOutboundMessageText(void) {
+    char blank[] = "                   ";
+    strlcpy(message, blank, sizeof(message));
+}
+
+
+void clearOutboundMessageDisplay(void) {
     DTRACE();
 
     char blank[] = "                      ";

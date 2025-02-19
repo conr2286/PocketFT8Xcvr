@@ -9,9 +9,8 @@
 #define GEN_FT8_H_
 
 #include "arm_math.h"
-//char Locator[5]; // four character locator  + /0
-//char Station_Call[7]; //six character call sign + /0
-
+// char Locator[5]; // four character locator  + /0
+// char Station_Call[7]; //six character call sign + /0
 
 void clear_reply_message_box(void);
 
@@ -26,8 +25,8 @@ void Station_Data_Initialize(void);
 
 char* get_message();
 void set_message(uint16_t index);
-void clear_FT8_message(void);
-void setXmitParams(char *targetStation,int snr);       
-
+void clearOutboundMessageDisplay(void);
+void setXmitParams(char* targetStation, int snr);
+void clearOutboundMessageText(void);
 
 #endif /* GEN_FT8_H_ */

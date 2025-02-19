@@ -243,7 +243,7 @@ void Sequencer::timeslotEvent() {
         // We'll assume the QSO has ended.  TODO:  log???
         case LISTEN_73:
             DTRACE();
-            endQSO();           //Log it if we have valid data
+            endQSO();      // Log it if we have valid data
             state = IDLE;  // Return to idle state
             displayInfoMsg(" ");
             break;
@@ -470,12 +470,12 @@ void Sequencer::cqButtonEvent() {
         case XMIT_CQ:     // CQ transmission in progress
         case LISTEN_LOC:  // Listening for a response to our CQ message[s]
             DTRACE();
-            state = IDLE;                // Return to idle
-            xmit_flag = 0;               // Stop modulator
-            terminate_transmit_armed();  // Disarm the transmitter
-            clear_FT8_message();         // Clears displayed outbound message as we're now idle
-            stopTimer();                 // Stop the Timer
-            resetButton(BUTTON_CQ);      // Reset highlighted button
+            state = IDLE;                   // Return to idle
+            xmit_flag = 0;                  // Stop modulator
+            terminate_transmit_armed();     // Disarm the transmitter
+            clearOutboundMessageDisplay();  // Clears displayed outbound message as we're now idle
+            stopTimer();                    // Stop the Timer
+            resetButton(BUTTON_CQ);         // Reset highlighted button
             break;
 
             // The CQ button is ignored during most states
@@ -566,6 +566,7 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case LISTEN_RSL:
         case LISTEN_73:
             theSequencer.endQSO();      // Misc activities to terminate QSO
+            clearOutboundMessageText(); //Clear outbound message text chars
             theSequencer.state = IDLE;  // IDLE the state machine
             break;
 
@@ -577,6 +578,7 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case RRSL_PENDING:
         case M73_PENDING:
             theSequencer.endQSO();
+            clearOutboundMessageText(); //Clear outbound message text chars
             theSequencer.state = IDLE;  // IDLE the state machine
             break;
 
@@ -588,6 +590,7 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case XMIT_RSL:
         case XMIT_73:
             theSequencer.endQSO();
+            clearOutboundMessageText(); //Clear outbound message text chars
             theSequencer.state = IDLE;  // IDLE the state machine
             break;
 
@@ -603,10 +606,10 @@ void Sequencer::timerEvent(Timer* thisTimer) {
     displayInfoMsg(" ");
 
     // Stop modulation, disarm the transmitter, clear the outbound message, and turn the receiver on
-    xmit_flag = 0;               // Stop modulation
-    terminate_transmit_armed();  // Dis-arm the transmitter
-    clear_FT8_message();         // Clear displayed outbound message, if any
-    receive_sequence();          // Only need to do this if in-progress transmission aborted
+    xmit_flag = 0;                  // Stop modulation
+    terminate_transmit_armed();     // Dis-arm the transmitter
+    clearOutboundMessageDisplay();  // Clear displayed outbound message, if any
+    receive_sequence();             // Only need to do this if in-progress transmission aborted
 
     // Reset highlighted buttons, if any
     resetButton(BUTTON_TU);
@@ -963,15 +966,15 @@ void Sequencer::endQSO() {
     displayInfoMsg(" ");
 
     // Disarm the transmitter, clear the outbound message, and turn the receiver on
-    xmit_flag = 0;               // Stop modulation
-    terminate_transmit_armed();  // Dis-arm the transmitter
-    clear_FT8_message();         // Clear displayed outbound message, if any
-    receive_sequence();          // Only need to do this if in-progress transmission aborted
+    xmit_flag = 0;                  // Stop modulation
+    terminate_transmit_armed();     // Dis-arm the transmitter
+    clearOutboundMessageDisplay();  // Clear displayed outbound message, if any
+    receive_sequence();             // Only need to do this if in-progress transmission aborted
 
     // Clean-up GUI leftovers
     resetButton(BUTTON_TU);
     resetButton(BUTTON_CQ);
 
-    //We are finished with this contact whether we had enough data to log or not
+    // We are finished with this contact whether we had enough data to log or not
     contact.reset();
 }
