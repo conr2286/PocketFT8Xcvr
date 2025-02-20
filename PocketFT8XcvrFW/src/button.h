@@ -24,6 +24,7 @@ void executeButton(uint16_t index);
 void display_all_buttons(void);
 void resetButton(uint16_t index);
 
+
 //-----Define helper functions
 void check_FT8_Touch(void);
 void process_touch(void);

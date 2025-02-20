@@ -378,27 +378,6 @@ void setup(void) {
     delay(10);
     display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
 
-    // // Sync MCU and RTC time with GPS if it's working and can get a timely fix
-    // if (gpsHelper.obtainGPSData(config.gpsTimeout, gpsCallback)) {
-    //     // Set the MCU time to the GPS result
-    //     setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
-    //     DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gpsHelper.month, gpsHelper.day, gpsHelper.year, gpsHelper.hour, gpsHelper.minute, gpsHelper.second);
-
-    //     // Now set the Teensy RTC to the GPS-derived time in the MCU
-    //     Teensy3Clock.set(now());
-
-    //     // Use the GPS-derived locator unless config.json hardwired it to something
-    //     if (strlen(config.locator) == 0) {
-    //         strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
-    //         DPRINTF("GPS derived Locator = %s\n", Locator);
-    //     }
-
-    //     // Inform user
-    //     displayInfoMsg("Using GPS and UTC");
-    // } else {
-    //     displayInfoMsg("GPS and UTC unavailable");
-    // }
-
     // Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
     setSyncProvider(getTeensy3Time);
 

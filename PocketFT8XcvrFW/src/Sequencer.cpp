@@ -132,6 +132,9 @@ extern char Target_Call[];         // Displayed station's callsign
 extern int Target_RSL;             // Remote station's RSL
 extern uint16_t currentFrequency;  // Nominal frequency (sans offset) in kHz
 
+// Our statics
+static bool autoReplyToCQ;  // RoboOp automatically transmits reply to CQ
+
 // Macro used to determine if a timeslot sequence number is odd (1) or even (0)
 // The macro evaluates to 1 if the argument is odd, else 0 if even.
 #define ODD(n) (n % 2)
@@ -156,8 +159,9 @@ void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
     sequenceNumber = 0;                                                    // Reset timeslot counter
     state = IDLE;                                                          // Reset state to idle
     timeoutTimer = Timer::buildTimer(timeoutSeconds * 1000L, timerEvent);  // Build the QSO/tuning timeout-timer
-    //DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
+    // DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
     contactLog = LogFactory::buildADIFlog(logfileName);
+    autoReplyToCQ = false;  // Disable auto reply to CQ
 }  // begin()
 
 /**
@@ -349,10 +353,10 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
         DPRINTF("this msg is for us:  '%s' '%s' '%s'\n", msg->field1, msg->field2, msg->field3);
 
         switch (msg->msgType) {
-            // Did we receive a station's Tx6 CQ?  We don't restart Timer when we hear a CQ.
+            // Did we receive a station's Tx6 CQ?
             case MSG_CQ:
                 DTRACE();
-                // TODO:  Have robo-op respond to curated CQ
+                cqMsgEvent(msg);
                 break;
 
             // Did we receive their Tx1 locator message?
@@ -396,6 +400,45 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
 
     DTRACE();
 }  // receivedMsgEvent()
+
+/**
+ * @brief Process received CQ message event
+ *
+ * If the operator has enabled automatic responses with the Tx button, the Sequencer ("RoboOp") automatically
+ * responds to the first received CQ if we aren't already engaged in another activity (e.g. calling CQ ourself
+ * or in an unfinished QSO).
+ *
+ * You may question why we need RoboOp.  Between the receipt of a CQ and the first opportunity to respond is
+ * the FT8 "dwell" time of about 2.6 seconds (at most).  If we miss that timeslot opportunity, then we have to
+ * sit out yet another timeslot (30 seconds so far) before the next chance to reply without doubling with the
+ * remote station's CQ transmissions.  Thus, without RoboOp, we have only 2.6 secondes (at most) to
+ * respond if we wish to avoid the 30 second penalty.
+ */
+void Sequencer::cqMsgEvent(Decode* msg) {
+    // Has the operated enabled automatic replies with the Tx button?
+    if (!autoReplyToCQ) return;  // No... nothing to do here
+
+    // Automatically respond to received CQ message if we are not already engaged in a QSO
+    switch (state) {
+        case IDLE:
+            DTRACE();
+            contact.begin(msg->field2, currentFrequency, "FT8", ODD(msg->sequenceNumber));  // Start gathering contact info
+            contact.setWorkedLocator(msg->field3);                                          // Record their locator if we recvd it
+            setXmitParams(msg->field2, msg->snr);                                           // Inform gen_ft8 of remote station's info
+            DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, contact.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
+            set_message(MSG_LOC);                          // We get QSO underway by sending our locator
+            displayInfoMsg(get_message(), HX8357_YELLOW);  // Display pending call in yellow
+            startTimer();                                  // Start the Timer to terminate a run-on QSO
+            state = LOC_PENDING;                           // Await appropriate timeslot to transmit to Target_Call
+            break;
+
+        // Automatic responses are disabled if we are calling CQ or otherwise engaged in a QSO
+        default:
+            DTRACE();
+            break;
+
+    }  // switch
+}
 
 /**
  * @brief Operator clicked the TUNE button
@@ -458,6 +501,12 @@ void Sequencer::cqButtonEvent() {
         case IDLE:         // We are currently idle
         case LOC_PENDING:  // Operator decided to CQ rather than respond to a known station
             DTRACE();
+
+            // Disable RoboOp.  Our own CQ activity overides received CQ messages.
+            autoReplyToCQ = false;
+            resetButton(BUTTON_TX);
+
+            // Prepare to call CQ
             set_message(MSG_CQ);                           // Build our CQ message
             state = CQ_PENDING;                            // Await the next timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);  // Display pending CQ message in yellow
@@ -873,7 +922,7 @@ void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
     // Arm the transmitter in the current timeslot if the required oddEven matches
     // the current sequenceNumber's oddEven to avoid doubling with the remote station.
     if (oddEven == ODD(sequenceNumber)) {
-        //DFPRINTF("In sequenceNumber %lu, setting-up to transmit in the following timeslot\n", sequenceNumber);
+        // DFPRINTF("In sequenceNumber %lu, setting-up to transmit in the following timeslot\n", sequenceNumber);
         Transmit_Armned = 1;                   // Yes, transmit in the next slot
         setup_to_transmit_on_next_DSP_Flag();  // loop() begins modulation in next timeslot
         state = newState;                      // Advance state machine to new state after arming the transmitter
@@ -978,4 +1027,17 @@ void Sequencer::endQSO() {
 
     // We are finished with this contact whether we had enough data to log or not
     contact.reset();
+}
+
+/**
+ * @brief Setter for autoReplyToCQ
+ * @param x true enables auto reply to CQ
+ *
+ * The RoboOp sequencer automatically replies to a non-directed CQ message if
+ * autoReplyToCQ==true.
+ *
+ */
+void setAutoReplyToCQ(bool x) {
+    autoReplyToCQ = x;
+    DPRINTF("autoReplyToCQ=%d\n", autoReplyToCQ);
 }

@@ -61,6 +61,9 @@ static Sequencer& seq = Sequencer::getSequencer();
 // Reference the GPS wait-for-it synchronizer
 void waitForFT8timeslot(void);
 
+// Setter for Sequencer's RoboOp response to a received CQ message
+void setAutoReplyToCQ(bool);
+
 // int CQ_Flag;
 int Beacon_State;
 
@@ -152,7 +155,7 @@ static ButtonStruct sButtonData[] = {
 };  // end of button definition
 
 void drawButton(uint16_t i) {
-    DPRINTF("drawButton(%u)\n", i);
+    //DPRINTF("drawButton(%u)\n", i);
     uint16_t color;
     if (sButtonData[i].state)
         color = HX8357_RED;
@@ -256,12 +259,14 @@ void executeButton(uint16_t index) {
             }
             break;
 
-        case BUTTON_TX:  // Tx
+        case BUTTON_TX:  // Tx --- Enable RoboOp to automatically reply to CQ
             if (sButtonData[BUTTON_TX].state) {
-                //Transmit_Armned = 1;       
+                setAutoReplyToCQ(true);
+                drawButton(BUTTON_TX);
                 delay(button_delay);
             } else {
-                //Transmit_Armned = 0;
+                setAutoReplyToCQ(0);
+                drawButton(BUTTON_TX);
                 delay(button_delay);
             }
             break;
@@ -320,6 +325,7 @@ void executeButton(uint16_t index) {
     }
 
 }  // execute_button()
+
 
 /**
  * @brief Dis-arms the transmitter, switches from xmit t recv, and clears the outbound FT8 message
@@ -393,7 +399,7 @@ void process_touch(void) {
         // DTRACE();
         pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
         pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
-        tft.fillCircle(pw.x, pw.y, PENRADIUS, HX8357_YELLOW);
+        //tft.fillCircle(pw.x, pw.y, PENRADIUS, HX8357_YELLOW);
 
         draw_x = pw.x;
         draw_y = pw.y;
