@@ -1,6 +1,7 @@
 /**
  * @brief GPShelper decorates and conceals details of the GPS Library
  *
+ *
  * FEATURES
  *  + Conceals the GPS Library interface from Pocket FT8, simplifying its replacement.
  *  + Waits for the GPS device to acquire a fix and produce quality readings

@@ -29,6 +29,10 @@
  *  configuration through power cycles which meant the software had to accommodate different
  *  speeds for a new (cold start) vs. "experienced" (warm start) device.
  *
+ * LIMITATIONS
+ *  The PPS signal is not exercised, though it is used in the firmware when available.  Sadly,
+ *  the V2.00 hardware requires a patch wire to connect the PPS signal from the GPS to Teensy.
+ *
 **/
 #include <TimeLib.h>
 #include "DEBUG.h" 

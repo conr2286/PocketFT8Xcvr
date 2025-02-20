@@ -6,8 +6,12 @@ DESCRIPTION
   Initializes GPS and prints info read from GPS using TinyGPS library
 
 EXERCISED
+  GPS
+  Serial1
+  TinyGPS Library 
 
 NOTE
+  The Adafruit GPS Library, not TinyGPS, is used in the production firmware.
 
 REFERENCES
 

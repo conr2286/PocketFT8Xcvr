@@ -6,7 +6,9 @@ DESCRIPTION
   Initializes Serial1 and prints raw info read from GPS using Teensy Serial1 port
 
 EXERCISED
-
+  GPS
+  Serial1
+  
 NOTE
   Tested with the Adafruit Ultimate GPS (PA1616S/MTK3339 Chipset) with Teensy 4.1
   at 9600 baud on Serial1
