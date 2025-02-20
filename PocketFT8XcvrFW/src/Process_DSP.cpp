@@ -23,9 +23,9 @@ extern uint16_t cursor_line;
 extern int ft8_flag, FT_8_counter, ft8_marker, decode_flag, WF_counter;
 extern int num_decoded_msg;
 
-// The follow two externs added to support timing investigation (debugging)
+// The follow two externs added to support timing investigation (only used for debugging)
 extern int xmit_flag;
-extern int Transmit_Armned;
+extern int Transmit_Armned;  
 
 int master_offset, offset_step;
 //extern int CQ_Flag;

@@ -258,7 +258,7 @@ void executeButton(uint16_t index) {
 
         case BUTTON_TX:  // Tx
             if (sButtonData[BUTTON_TX].state) {
-                //Transmit_Armned = 1;
+                //Transmit_Armned = 1;       
                 delay(button_delay);
             } else {
                 //Transmit_Armned = 0;

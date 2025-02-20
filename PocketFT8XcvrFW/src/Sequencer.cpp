@@ -3,7 +3,7 @@
  *  Sequencer --- Implements a state machine for automated sequencing of FT8 QSOs
  *
  * NOTES
- *  Following the progress of a state machine implementation can be challenging.
+ *  Following the progress of a large state machine can be challenging.
  *  While a complete FT8 implementation deals with arcane corner cases
  *  handling unexpected, exceptional events, the main flow is not so bad.
  *  Here's the main flow for Sequencer initiating a QSO by calling CQ:
@@ -125,7 +125,7 @@
 #include "traffic_manager.h"
 
 // Many externals in the legacy C code.  TODO:  See if we can simplify these externals.
-extern int Transmit_Armned;        // Transmit message pending in next timeslot
+extern int Transmit_Armned;        // (Maybe) Transmit message pending in next timeslot
 extern int xmit_flag;              // Transmitting modulated symbols
 extern char Station_Call[];        // Our station's callsign
 extern char Target_Call[];         // Displayed station's callsign

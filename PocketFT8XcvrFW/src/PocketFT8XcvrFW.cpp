@@ -468,8 +468,9 @@ void loop() {
         master_decoded = num_decoded_msg;
         decode_flag = 0;
 
-        // If a message is waiting for transmission,
-        // turn-on the carrier and set xmit_flag to modulate it.
+        // If a message is waiting for transmission, turn-on the carrier and set xmit_flag to modulate it.
+        // WARNING:  There may be some confusion about what Transmit_Armned really means.  But this is
+        // legacy code and we're hesitant to modify it.
         if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
     }
 
