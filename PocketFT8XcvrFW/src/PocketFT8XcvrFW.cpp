@@ -314,7 +314,7 @@ void setup(void) {
     // Extract the configuration parameters from doc or assign their defaults to the config struct
     strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  // Station callsign
     config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
-    strlcpy(config.locator, doc["Locator"] | "", sizeof(config.locator));
+    strlcpy(config.locator, doc["locator"] | "", sizeof(config.locator));
     // config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
     config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
     config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;

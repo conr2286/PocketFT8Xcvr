@@ -95,7 +95,7 @@ Pocket FT8 Revisited was designed with KiCAD V8, and the PCBs were fabbed and as
 # Building the Hardware
 1. Attach the Teensy 4.1 MPU to the board using low profile headers.
 2. Attach the Adafruit resistive 320x480 touchscreen with high profile headers.
-3. Construct a suitable filter (e.g. 5-pole Chebyshev) for your chosen band of operation and solder it into the FL1 spot
+3. Construct a suitable filter (e.g. 5-pole Chebyshev) for your chosen band of operation and solder it into the FL1 spot.  The RFFilters folder contains a KiCAD design for the filter daughter board.
 4. Hand solder SMD CR2032 battery holder to reverse side of PCB and install battery
 5. Hand solder THT red XMIT LED
 6. Wind THT T1 (10T bifilar #26 on FT37-43 core) and install
@@ -110,8 +110,22 @@ Pocket FT8 Revisited was designed with KiCAD V8, and the PCBs were fabbed and as
 3. Connect an antenna 
 4. Connect your host computer and load your firmware
 
-# Status
+# Usage
+## Configuration
+During setup(), the rig reads the config.json file, if available, from the Teensy SD card.  The SD card and configuration file are required to enable the transmitter.  Important configuration parameters include:
+* callsign      Station callsign.  Required to enable the transmitter.
+* frequency     Operating frequency in kHz (default is 7074).
+* locator       Four letter Maidenhead grid square (Required).
+* enableAVC     Enable/disable SI4735 AVC (default is enabled).
+* gpsTimeout    Seconds setup() will wait for GPS to obtain a fix
+* qsoTimeout    Seconds the QSO Sequencer will retransmit a msg without receiving a response from remote station (default is 180)
+## GPS
+If available, the rig acquires the current UTC time and location (Maidenhead grid square) from the attached GPS.  The first attempt occurs during setup() and does not require the PPS signal.  If the PPS signal is available (V2.00 hardware requires a patch wire connecting the PPS pin to Teensy digital pin 2), the firmware continues to monitor the GPS and will acquire the UTC time and location when/if they later become available.  Before a GPS fix is obtained, the firmware uses the current date/time from the battery-backed Teensy Real Time Clock (RTC) and displays that date/time in red.  After a fix is obtained, the date/time display becomes yellow.  The GPS is not required but facilitates logging and synchronization with world-wide FT8 timeslots.
 
+## Logging
+Pocket FT8 logs successful contacts to an ADIF file on the Teensy SD disk.  The date/time are recorded in UTC after the rig has successfully acquired a GPS fix.  If the rig has never had a GPS fix, the date/time come from the Teensy RTC which was likely initialized when the firmware was loaded into Teensy by your host computer.  The logging software considers a contact successful when the rig obtains the remote station's callsign and signal report.  Without a GPS, location can be obtained from the configuration file.
 
+## Robo-Op
+Pocket FT8 firmware includes a sequencer somewhat akin (or ajar...;) to those used in wsjtx and DX FT8.  The sequencer is capable of conducting a standard FT8 QSO initiated with your station's CQ or with your reply to a station calling CQ.  The sequencer automagically coordinates its transmissions with those of the remote station to avoid "doubling" (transmitting in the same timeslot as the remote).  In most cases, the sequencer can prepare a reply during the FT8 "dwell" time (between timeslots) and transmit in the subsequent timeslot.  The sequencer is implemented as a giant state machine attempting to make the best of difficult conditions/responses to complete a QSO.  The sequencer has a configurable QSO Timeout feature to abort a run-on QSO (including CQ) arising from QRM, QRN, or a QRT/QLF remote station.  
 
 
