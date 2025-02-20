@@ -137,21 +137,26 @@ extern uint16_t currentFrequency;  // Nominal frequency (sans offset) in kHz
 #define ODD(n) (n % 2)
 
 /**
- *  [Re]Initialize the sequencer
+ * @brief [Re]Initialize the sequencer
+ * @param timeoutSeconds #seconds Sequencer will retransmit msg without a response
+ * @param logFileName Name of the ADIF logfile
  *
  *  The sequencer notes which timeslot, even or odd-numbered, in which a remote station
  *  is transmitting and attempts to avoid "doubling" with it.  This method resets the
  *  timeslot counter.
  *
+ * The timeout parameter governs how long the Sequencer retransmits a message
+ * (including CQ) without receiving a response from a remote station.
+ *
  *  This method should be invoked once, probably by setup()
  *
  **/
-void Sequencer::begin(unsigned timeoutMinutes, const char* logfileName) {
+void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
     DTRACE();
-    sequenceNumber = 0;                                                     // Reset timeslot counter
-    state = IDLE;                                                           // Reset state to idle
-    timeoutTimer = Timer::buildTimer(timeoutMinutes * 60000L, timerEvent);  // Build the QSO/tuning timeout-timer
-    DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
+    sequenceNumber = 0;                                                    // Reset timeslot counter
+    state = IDLE;                                                          // Reset state to idle
+    timeoutTimer = Timer::buildTimer(timeoutSeconds * 1000L, timerEvent);  // Build the QSO/tuning timeout-timer
+    //DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
     contactLog = LogFactory::buildADIFlog(logfileName);
 }  // begin()
 
@@ -833,9 +838,9 @@ bool Sequencer::isMsgForUs(Decode* msg) {
 
     // A received msg is "for us" if our callsign or CQ appears as the destination station's callsign
     bool myCall = strncmp(msg->field1, Station_Call, sizeof(msg->field1)) == 0;  // Sent directly to us?
-    bool cq = strcmp(msg->field1, "CQ") == 0;             
+    bool cq = strcmp(msg->field1, "CQ") == 0;
     bool msgIsForUs = cq || myCall;
-    //DPRINTF("isMsgForUs()=%u %s\n", msgIsForUs, msg->field1);
+    // DPRINTF("isMsgForUs()=%u %s\n", msgIsForUs, msg->field1);
     return msgIsForUs;
 }
 
@@ -868,7 +873,7 @@ void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
     // Arm the transmitter in the current timeslot if the required oddEven matches
     // the current sequenceNumber's oddEven to avoid doubling with the remote station.
     if (oddEven == ODD(sequenceNumber)) {
-        DFPRINTF("In sequenceNumber %lu, setting-up to transmit in the following timeslot\n", sequenceNumber);
+        //DFPRINTF("In sequenceNumber %lu, setting-up to transmit in the following timeslot\n", sequenceNumber);
         Transmit_Armned = 1;                   // Yes, transmit in the next slot
         setup_to_transmit_on_next_DSP_Flag();  // loop() begins modulation in next timeslot
         state = newState;                      // Advance state machine to new state after arming the transmitter
@@ -945,7 +950,7 @@ void Sequencer::stopTimer() {
 void Sequencer::endQSO() {
     DTRACE();
 
-    //Add info to log
+    // Add info to log
     contact.setRig("Pocket FT8");
     contact.setPwr(0.250);
 

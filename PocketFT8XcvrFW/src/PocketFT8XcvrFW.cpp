@@ -118,6 +118,7 @@ struct Config {
     unsigned long audioRecordingDuration;  // Seconds or 0 to disable audio recording
     unsigned enableAVC;                    // 0=disable, 1=enable SI47xx AVC
     unsigned gpsTimeout;                   // GPS timeout (seconds) to obtain a fix
+    unsigned qsoTimeout;                   // QSO timeout (seconds) to obtain a response
 } config;
 
 // Default configuration
@@ -126,6 +127,7 @@ struct Config {
 #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  // Default of 0 seconds disables audio recording
 #define DEFAULT_ENABLE_AVC 1                  // SI4735 AVC enabled by default
 #define DEFAULT_GPS_TIMEOUT 60                // Number of seconds before GPS fix time-out
+#define DEFAULT_QSO_TIMEOUT 180               // Number seconds Sequencer will retry transmission without a response
 
 // Adafruit 480x320 touchscreen configuration
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
@@ -299,7 +301,7 @@ void setup(void) {
     }
 
     // Read the JSON configuration file into the config structure.  We allow the firmware to continue even
-    // if the configuration file is unreadable or useless because the receiver is still operable.
+    // if the configuration file is unreadable or useless because the receiver remains usable.
     JsonDocument doc;  // Key-Value pair doc
     File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
     DeserializationError error = deserializeJson(doc, configFile);
@@ -316,6 +318,7 @@ void setup(void) {
     // config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
     config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
     config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
+    config.qsoTimeout = doc["qsoTimeout"] | DEFAULT_QSO_TIMEOUT;
     configFile.close();
 
     // When debugging, print contents of the config file
@@ -404,8 +407,8 @@ void setup(void) {
 
     // Start the QSO Sequencer
     DTRACE();
-    seq.begin(3,"LOGFILE.ADIF");        // Parameter configures Sequencer's run-on QSO timeout period in minutes
-    receive_sequence();  // Setup to receive at start of first timeslot
+    seq.begin(config.qsoTimeout, "LOGFILE.ADIF");  // Parameter configures Sequencer's run-on QSO timeout period in seconds
+    receive_sequence();                            // Setup to receive at start of first timeslot
 
     // Start receiving in a new timeslot
     // start_time = millis();     //Note start time for update_synchronization()
