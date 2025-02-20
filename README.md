@@ -2,12 +2,12 @@
 An SMD derivative of Charles Hill's Palm-Sized Pocket FT8 Transceiver
 
 # Attribution
-* Copyright (C) 2021, Charles Hill (W5BAA)
+* Copyright (C) 2021, Charles Hill (W5BAA), https://github.com/Rotron/Pocket-FT8 
 * Si4735 Library developed by Ricardo Caritti: https://github.com/pu2clr/SI4735
 * FT8 Decoding Library by Karlis Goba (YL3JG): https://github.com/kgoba/ft8_lib
-* SN74ACT244 PA by Barb (WB2CBA)
-* PC Board and enhancements by Jim Conrad (KQ7B)
-* Adafruit, PJRC and other libraries
+* SN74ACT244 PA by Barb (WB2CBA), https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER 
+* PC Board and enhancements by Jim Conrad (KQ7B), https://github.com/conr2286/PocketFT8Xcvr 
+* Adafruit, PJRC and other Arduino libraries
 
 # MIT License
 * Copyright (c) 2018 Kārlis Goba
@@ -25,23 +25,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 # Features
 * Single band, FT8 Tranceiver
 * Supports 160-15 meters (tested on 40m and 20m)
-* Small Size, 4.0 X 2.8"
+* Small Size, 4.0 X 2.8", 4-layer board
 * Powered by a single 5V USB source (e.g. portable USB power block) delivering ~375 mA
 * Si4735 SSB Receiver
 * TCXO stabilized Si5351 Clock
-* SN74ACT244 line driver PA delivering ~250 mW
+* SN74ACT244 PA delivering ~250 mW
 * ADIF Contact Logging to SD card
 * Adafruit 320 X 480 Resistive Color Touch Screen
 * Station configuration via SD file, config.json
-* GPS-derived location and UTC time
+* Adafruit Ultimate GPS-derived location and UTC time
 
 # DSP Audio Architecture
-Decoding FT8 requires significant data storage and processing speed.  In order to optimize both program storage and processing speed requirements so that the Teensy is not over taxed, the Teensy Audio Library has been modified to allow Analog to Digital conversion to be run at the rate of 6400 samples per second. This allows audio data processing to be done at 3200 Hz. The 3200 Hz audio processing with a 2048 FTT to process the received audio for FT8 decoding yields a bin spacing of 3.125 Hz.  For Teensy 4.1, the revised sample rate required replacement of the core AudioStream.h file with the AudioStream6400.h file in the PocketFT8FW sketch folder.
+Decoding FT8 requires significant data storage and processing speed.  To optimize program storage and processing speed so the Teensy is not over taxed, the Teensy Audio Library has been modified to allow Analog to Digital conversion to be run at the rate of 6400 samples per second. This allows audio data processing to be done at 3200 Hz. The 3200 Hz audio processing with a 2048 FTT to process the received audio for FT8 decoding yields a bin spacing of 3.125 Hz.  For Teensy 4.1, the revised sample rate required replacement of the core AudioStream.h file with the AudioStream6400.h file in the PocketFT8FW sketch folder.
 
 The algorithms developed by Karlis Goba use the 3.125 Hz spaced FFT bins to be screened in both frequency and time so that errors in symbol frequency and time reception  can be overcome to provide really great FT8 decoding. The end spacing of the FT8 algorithms is 6.25 Hz.
 
 # Motivation and Related Projects
-About 1966, the ARRL Handbook published a receiver design known as the Junior Miser's Dream that achieved so much with so little.  Likewise, Charley Hill's concept for a self-contained FT8 transceiver, ideal for portable operation, again achieves so much with so little.  The entire transceiver fits in a small enclosure, and the power demand is acceptable for a USB power block.  Pocket FT8 Revisited is a derivative of Charley's concept.
+About 1966, the ARRL Handbook published a receiver design known as the Junior Miser's Dream challenging us to achieve so much with so little.  Today, Charley Hill's concept for a self-contained FT8 transceiver, ideal for portable operation, again achieves so much with so little.  The entire transceiver fits in a small enclosure, powered by a USB power block.  Pocket FT8 Revisited is a derivative of Charley's concept.
 
 Unlike the uSDX multi-mode designs, Pocket FT8 focuses entirely on FT8.  Yes, yes, I know.  That's why I have other radios.  Pocket FT8 fits in the pocket of my backpack, doesn't require an external key, microphone, headphone, cell phone, or computer, and offers a completely self-contained transceiver for a contest-like "QSO."  It's clean.
 
@@ -77,7 +77,7 @@ Charley and Barb have also progressed with another derivative having a multiband
 * The V2.00 boards support the Adafruit Ultimate GPS Breakout board.  The firmware supports using the PPS signal to determine when the GPS has a fix; however, the V2.00 PCB requires a patch wire to connect the PPS pin to Teensy Digital Pin 2, and the GPS connector has the PPS pin in an awkward location for a ribbon cable.  This will hopefull be fixed in the V3.00 hardware.
 
 # Boards and Parts Availability
-Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out QRP Labs, the uSDX follow-ons, or the DX FT8 kit as Pocket FT8 construction demands some engineering skills.
+Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out QRP Labs, the uSDX follow-ons, or the DX FT8 kit as Pocket FT8 construction demands some engineering skills and tools including KiCAD, the Arduino IDE, and Visual Studio Code with PlatformIO extensions.
 
 # Building the Firmware
 1. Install Arduino 2.X IDE
@@ -86,7 +86,7 @@ Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out
 4. Using PlatformIO, install support for the Teensy 4.1 platform
 5. Using PlatformIO, install support for the required libraries (documented in the PocketFT8XcvrFW folder)
 6. Copy Extras/AudioStream6400.h into
- .../Library/Arduino15/packages/teensy/hardware/avr/1.59.0/cores/teens4 asArduinoStream.h --- This file redefines AUDIO_SAMPLE_RATE_EXACT enabling Teensy 4.1 to operate the audio stream at 6400 samples/second (required).
+ .../Library/Arduino15/packages/teensy/hardware/avr/1.59.0/cores/teens4 asArduinoStream.h --- This file redefines AUDIO_SAMPLE_RATE_EXACT enabling Teensy 4.1 to operate the audio stream at 6400 samples/second (required).  You absolutely must do this.
 5. Build with PlatformIO
 
 # Modifying the Hardware
@@ -109,6 +109,9 @@ Pocket FT8 Revisited was designed with KiCAD V8, and the PCBs were fabbed and as
 2. If you are using a GPS, connect it now.
 3. Connect an antenna 
 4. Connect your host computer and load your firmware
+
+# Status
+
 
 
 
