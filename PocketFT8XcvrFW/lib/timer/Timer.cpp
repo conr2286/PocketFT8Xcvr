@@ -16,10 +16,11 @@
  *  best you can do is neglect to start those you need not.
  */
 
-#include <Arduino.h>
-#include "DEBUG.h"
 #include "Timer.h"
 
+#include <Arduino.h>
+
+#include "DEBUG.h"
 
 /**
  * @brief Private constructor initializes a new Timer object
@@ -32,7 +33,6 @@ Timer::Timer() {
     this->running = false;
     this->callback = NULL;
 }
-
 
 /**
  * @brief Build a new Timer object and add it into the listOfAllTimers
@@ -60,7 +60,7 @@ Timer* Timer::buildTimer(unsigned long milliSeconds, void (*callback)(Timer*)) {
     // Insert new Timer at head of list
     newTimer->next = inventory;  // The existing Timer inventory list or NULL
     inventory = newTimer;        // Add new Timer at head of inventory list
-    DPRINTF("buildTimer()=%lu\n", newTimer);
+    // DPRINTF("buildTimer()=%lu\n", newTimer);
     return newTimer;
 }  // buildTimer()
 
@@ -72,7 +72,7 @@ Timer* Timer::buildTimer(unsigned long milliSeconds, void (*callback)(Timer*)) {
  * when a Timer expires.
  */
 void Timer::start() {
-    DPRINTF("this Timer = %lu\n", this);
+    // DPRINTF("this Timer = %lu\n", this);
     this->running = true;                          // This Timer is now running
     this->timeExpiring = millis() + this->period;  // Record when this Timer will expire
     DTRACE();

@@ -161,7 +161,7 @@ void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
     timeoutTimer = Timer::buildTimer(timeoutSeconds * 1000L, timerEvent);  // Build the QSO/tuning timeout-timer
     // DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
     contactLog = LogFactory::buildADIFlog(logfileName);
-    autoReplyToCQ = false;  // Disable auto reply to CQ
+    setAutoReplyToCQ(false);  // Disable auto reply to CQ and clear button
 }  // begin()
 
 /**
@@ -503,8 +503,7 @@ void Sequencer::cqButtonEvent() {
             DTRACE();
 
             // Disable RoboOp.  Our own CQ activity overides received CQ messages.
-            autoReplyToCQ = false;
-            resetButton(BUTTON_TX);
+            setAutoReplyToCQ(false);
 
             // Prepare to call CQ
             set_message(MSG_CQ);                           // Build our CQ message
@@ -595,6 +594,9 @@ void Sequencer::timerEvent(Timer* thisTimer) {
     Sequencer& theSequencer = Sequencer::getSequencer();
     DFPRINTF("sequenceNumber=%lu, state=%u\n", theSequencer.sequenceNumber, theSequencer.state);
 
+    // The Timer always halts the RoboOp from responding to CQs
+    setAutoReplyToCQ(false);
+
     switch (theSequencer.state) {
         // We don't do anything if we were IDLE
         case IDLE:
@@ -672,7 +674,8 @@ void Sequencer::timerEvent(Timer* thisTimer) {
  */
 void Sequencer::abortButtonEvent() {
     DTRACE();
-    timerEvent(NULL);  // TODO:  refactor so we don't need to pass a NULL Timer pointer
+    setAutoReplyToCQ(false);  // Reset the RoboOp
+    timerEvent(NULL);         // TODO:  refactor so we don't need to pass a NULL Timer pointer
 }  // abortButtonEvent()
 
 /**
@@ -1025,7 +1028,10 @@ void Sequencer::endQSO() {
     resetButton(BUTTON_TU);
     resetButton(BUTTON_CQ);
 
-    // We are finished with this contact whether we had enough data to log or not
+    //Reset the RoboOp
+    setAutoReplyToCQ(false);
+
+    // We are finished with this contact whether we had enough data to log it or not
     contact.reset();
 }
 
@@ -1034,10 +1040,13 @@ void Sequencer::endQSO() {
  * @param x true enables auto reply to CQ
  *
  * The RoboOp sequencer automatically replies to a non-directed CQ message if
- * autoReplyToCQ==true.
+ * autoReplyToCQ==true.  We also reset the Tx button when autoReply clears.
  *
  */
 void setAutoReplyToCQ(bool x) {
     autoReplyToCQ = x;
     DPRINTF("autoReplyToCQ=%d\n", autoReplyToCQ);
+    if (!autoReplyToCQ) {
+        resetButton(BUTTON_TX);  // Reset the Tx Button
+    }
 }

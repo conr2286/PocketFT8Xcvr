@@ -54,6 +54,7 @@ ADIFlog::ADIFlog(const char* fileName) {
 
     // Initialize our member variables
     this->fileName = fileName;
+    this->nLogEntries = 0;  // No new contacts yet
 }
 
 /**
@@ -139,5 +140,9 @@ int ADIFlog::logContact(Contact* contact) {
     // Record the assembled entry in the log file
     logFileAdapter.write(entry);
     logFileAdapter.close();
+
+    // Increment count of new log entries
+    nLogEntries++;
+    DPRINTF("nLogEntries=%u\n", nLogEntries);
     return 0;
 }

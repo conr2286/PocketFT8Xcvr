@@ -12,4 +12,5 @@ class ContactLogFile {
    protected:
     LogFile logFileAdapter;
     const char* fileName;
+    unsigned nLogEntries;         //Number of new log entries recorded in this session
 };

@@ -6,7 +6,7 @@
 #include "Timer.h"
 #include "decode_ft8.h"
 
-void setAutoReplyCQ(bool);
+void setAutoReplyToCQ(bool);
 
 class Sequencer {
    private:
