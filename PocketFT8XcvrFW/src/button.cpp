@@ -1,9 +1,10 @@
 
+#include "button.h"
+
 #include <Arduino.h>
 
-#include "button.h"
-#include "NODEBUG.h"
 #include "HX8357_t3n.h"
+#include "NODEBUG.h"
 #include "decode_ft8.h"
 #include "display.h"
 #include "gen_ft8.h"
@@ -155,7 +156,7 @@ static ButtonStruct sButtonData[] = {
 };  // end of button definition
 
 void drawButton(uint16_t i) {
-    //DPRINTF("drawButton(%u)\n", i);
+    // DPRINTF("drawButton(%u)\n", i);
     uint16_t color;
     if (sButtonData[i].state)
         color = HX8357_RED;
@@ -204,28 +205,28 @@ void resetButton(uint16_t index) {
 
 int button_delay = 100;
 void executeButton(uint16_t index) {
-    //int Idx = 0;
-    DPRINTF("executeButton(%u)\n", index);
+    // int Idx = 0;
+    // DPRINTF("executeButton(%u)\n", index);
     switch (index) {
         case BUTTON_CQ:  // CQ (e.g. CQ KQ7B DN15)
             sButtonData[BUTTON_CQ].state = true;
             drawButton(BUTTON_CQ);
             seq.cqButtonEvent();
             delay(button_delay);
-            //sButtonData[0].state = false;
-            //drawButton(0);
+            // sButtonData[0].state = false;
+            // drawButton(0);
             break;
 
         case BUTTON_AB:  // Abort transmission
             sButtonData[BUTTON_AB].state = true;
             drawButton(BUTTON_AB);
-            seq.abortButtonEvent(); //Ask Sequencer to abort transmissions
+            seq.abortButtonEvent();  // Ask Sequencer to abort transmissions
             delay(button_delay);
             sButtonData[BUTTON_AB].state = false;
             drawButton(BUTTON_AB);
             break;
 
-        case BUTTON_M1:  
+        case BUTTON_M1:
             sButtonData[BUTTON_M1].state = true;
             drawButton(BUTTON_M1);
             delay(button_delay);
@@ -233,7 +234,7 @@ void executeButton(uint16_t index) {
             drawButton(BUTTON_M1);
             break;
 
-        case BUTTON_M2:  
+        case BUTTON_M2:
             sButtonData[BUTTON_M2].state = true;
             drawButton(BUTTON_M2);
             delay(button_delay);
@@ -241,7 +242,7 @@ void executeButton(uint16_t index) {
             drawButton(BUTTON_M2);
             break;
 
-        case BUTTON_M3:  
+        case BUTTON_M3:
             sButtonData[BUTTON_M3].state = true;
             drawButton(BUTTON_M3);
             delay(button_delay);
@@ -283,7 +284,7 @@ void executeButton(uint16_t index) {
             sButtonData[BUTTON_SY].state = true;
             drawButton(BUTTON_SY);
             delay(button_delay);
-            //sync_FT8();
+            // sync_FT8();
             waitForFT8timeslot();
             sButtonData[BUTTON_SY].state = false;
             drawButton(BUTTON_SY);
@@ -326,7 +327,6 @@ void executeButton(uint16_t index) {
 
 }  // execute_button()
 
-
 /**
  * @brief Dis-arms the transmitter, switches from xmit t recv, and clears the outbound FT8 message
  */
@@ -358,10 +358,10 @@ void check_FT8_Touch(void) {
     if (draw_x < 400 && (draw_y > 90 && draw_y < 300)) {
         y_test = draw_y - 90;
         FT_8_TouchIndex = y_test / 25;
-        DPRINTF("FT_8_TouchIndex=%d, master_decoded=%d\n", FT_8_TouchIndex, master_decoded);
+        // DPRINTF("FT_8_TouchIndex=%d, master_decoded=%d\n", FT_8_TouchIndex, master_decoded);
         if (FT_8_TouchIndex < master_decoded) {
             display_selected_call(FT_8_TouchIndex);
-            seq.msgClickEvent(FT_8_TouchIndex);         //Notify Sequencer when operator clicks on a received message
+            seq.msgClickEvent(FT_8_TouchIndex);  // Notify Sequencer when operator clicks on a received message
         }
         DTRACE();
     }
@@ -377,7 +377,7 @@ void check_WF_Touch(void) {
     if (draw_x < 350 && draw_y < 90) {
         cursor_line = draw_x;
         cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-        DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
+        // DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
         set_Xmit_Freq();
     }
 }  // check_WF_Touch()
@@ -389,7 +389,7 @@ void set_startup_freq(void) {
     start_up_offset_freq = 0;  // KQ7B
     cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
     offset_freq = start_up_offset_freq;
-    DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
+    // DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
 }  // set_startup_freq()
 
 void process_touch(void) {
@@ -399,7 +399,7 @@ void process_touch(void) {
         // DTRACE();
         pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
         pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
-        //tft.fillCircle(pw.x, pw.y, PENRADIUS, HX8357_YELLOW);
+        // tft.fillCircle(pw.x, pw.y, PENRADIUS, HX8357_YELLOW);
 
         draw_x = pw.x;
         draw_y = pw.y;

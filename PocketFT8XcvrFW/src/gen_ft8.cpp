@@ -112,7 +112,7 @@ void set_message(uint16_t index) {
     char seventy_three[] = "RR73";
     char Reply_State[20];
 
-    DPRINTF("set_message(%u)\n", index);
+    // DPRINTF("set_message(%u)\n", index);
 
     getTeensy3Time();
     char rtc_string[10];  // print format stuff
@@ -170,7 +170,7 @@ void set_message(uint16_t index) {
     //	sprintf(big_gulp,"%s %s", rtc_string, message);
     //	if (logging_on == 1) write_log_data(big_gulp);
 
-    DPRINTF("message='%s'\n", message);
+    // DPRINTF("message='%s'\n", message);
 
 }  // set_message()
 

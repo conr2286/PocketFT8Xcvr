@@ -143,7 +143,7 @@ int CSVlog::logContact(Contact* contact) {
 
     // Append End-of-Record
     strlcat(entry, "\n", sizeof(entry));
-    DPRINTF("entry='%s'", entry);
+    // DPRINTF("entry='%s'", entry);
 
     // Record the assembled entry in the log file
     logFileAdapter.write(entry, strlen(entry));

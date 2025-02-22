@@ -38,7 +38,7 @@ class Contact {
     void setMyLocator(char* locator);
     void setWorkedLocator(char* locator);
     void setPwr(float watts);
-    void setRig(char* rig);
+    void setRig(const char* rig);
 
     // Define the getters used to extract info about the contact
     char* getWorkedCall();

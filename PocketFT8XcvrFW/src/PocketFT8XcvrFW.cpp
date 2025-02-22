@@ -280,7 +280,7 @@ void setup(void) {
         Serial.print("Initializing EEPROM for new chip\n");
         EEPROMWriteInt(10, 0);  // Address 10 is offset but the encoding remains mysterious
     }
-    DPRINTF("Offset = %d\n", EEPROM.read(10));
+    // DPRINTF("Offset = %d\n", EEPROM.read(10));
 
     // Initialize the SI5351 clock generator.  Pocket FT8 Revisited boards use CLKIN input.
     si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          // Charlie's correction was 2200 if that someday matters
@@ -297,7 +297,7 @@ void setup(void) {
         displayInfoMsg("Fatal:  Si473X not found");
         while (1) continue;  // Fatal
     } else {
-        DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
+        // DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
     }
 
     // Read the JSON configuration file into the config structure.  We allow the firmware to continue even
@@ -322,12 +322,12 @@ void setup(void) {
     configFile.close();
 
     // When debugging, print contents of the config file
-    DPRINTF("config[callsign]=%s\n", config.callsign);
-    DPRINTF("config[frequency]=%u\n", config.frequency);
-    DPRINTF("config[locator]=%s\n", config.locator);
+    // DPRINTF("config[callsign]=%s\n", config.callsign);
+    // DPRINTF("config[frequency]=%u\n", config.frequency);
+    // DPRINTF("config[locator]=%s\n", config.locator);
     // DPRINTF("config[audioRecordingDuration]=%lu\n", config.audioRecordingDuration);
-    DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
-    DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
+    // DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
+    // DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
 
     // Argh... copy station callsign config struct to C global variables (fix someday)
     strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
@@ -428,7 +428,7 @@ void loop() {
 
             // Is it time to switch from transmitting to receiving (i.e. all tones sent) at the end of our timeslot?
             if (ft8_xmit_counter == 80 + offset_index) {
-                DPRINTF("End of transmit timeslot\n");
+                // DPRINTF("End of transmit timeslot\n");
                 xmit_flag = 0;               // Indication that the transmission has ended
                 receive_sequence();          // Switch HW from transmitting to receiving
                 terminate_transmit_armed();  // Switch again then update GUI
@@ -472,7 +472,7 @@ void loop() {
             // Use the GPS-derived locator unless config.json hardwired it to something
             if (strlen(config.locator) == 0) {
                 strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
-                DPRINTF("GPS derived Locator = %s\n", Locator);
+                // DPRINTF("GPS derived Locator = %s\n", Locator);
             }
 
             // Re-sync MCU clock with battery-backed RTC (UTC)
@@ -514,7 +514,7 @@ void loadSSB() {
     // DSP_AFCDIS - DSP AFC Disable or enable; 0=SYNC MODE, AFC enable; 1=SSB MODE, AFC disable.
     // si4735.setSSBConfig(bandwidthIdx, 1, 0, 1, 0, 1);
     si4735.setSSBConfig(2, 1, 0, config.enableAVC, 0, 1);  // 2 = 3 kc bandwidth
-    DPRINTF("SI4735 AVC = %u\n", config.enableAVC);
+    // DPRINTF("SI4735 AVC = %u\n", config.enableAVC);
 }
 
 /**
@@ -664,7 +664,7 @@ void update_synchronization() {
  *
  **/
 void sync_FT8(void) {
-    DPRINTF("*****sync_FT8()\n");
+    // DPRINTF("*****sync_FT8()\n");
 
     setSyncProvider(getTeensy3Time);  // commented out?
 

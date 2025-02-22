@@ -90,7 +90,7 @@ extern char Station_Call[];
 void Contact::begin(char* workedCall, unsigned freq, const char* mode, unsigned oddEven) {
     char* myCall = Station_Call;  // TODO:  Seek alternatives to these externs
 
-    DPRINTF("workedCall=%s, myCall=%s, freq=%u, mode=%s, oddEven=%u\n", workedCall, myCall, freq, mode, oddEven);
+    // DPRINTF("workedCall=%s, myCall=%s, freq=%u, mode=%s, oddEven=%u\n", workedCall, myCall, freq, mode, oddEven);
 
     // Reset all Contact field values (except odd/even which has no "undefined" value)
     reset();
@@ -167,7 +167,7 @@ void Contact::reset() {
  *
  **/
 bool Contact::isActive() {
-    DPRINTF("isActive()=%u\n", this->active);
+    // DPRINTF("isActive()=%u\n", this->active);
     return this->active;
 }
 
@@ -182,7 +182,7 @@ bool Contact::isActive() {
 bool Contact::isValid() {
     // DFPRINTF("workedCall='%s', myCall='%s', band='%s', mode='%s', qsoDate='%s', qsoTime='%s', workedRSL='%s', myRSL='%s')\n", this->workedCall, this->myCall, this->band, this->mode,this->qsoDate,this->qsoTime,this->workedRSL,this->myRSL);
     bool result = strlen(this->workedCall) > 0 && strlen(this->myCall) > 0 && strlen(this->band) > 0 && strlen(this->mode) > 0 && strlen(this->qsoDate) > 0 && strlen(this->qsoTime) > 0 && strlen(this->workedRSL) > 0 && strlen(this->myRSL) > 0;
-    DPRINTF("isValid()=%u\n", result);
+    // DPRINTF("isValid()=%u\n", result);
     return result;
 }  // isValid()
 
@@ -215,7 +215,7 @@ void Contact::setWorkedSOTAref(char* sotaRef) {
     strlcpy(this->workedSOTAref, sotaRef, sizeof(this->workedSOTAref));
 }
 
-void Contact::setRig(char* rig) {
+void Contact::setRig(const char* rig) {
     strlcpy(this->myRig, rig, sizeof(this->myRig));
 }
 

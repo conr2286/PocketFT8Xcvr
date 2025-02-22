@@ -31,10 +31,11 @@
 #include "ContactLogFile.h"
 #include "DEBUG.h"
 #include "FileSystemAdapter.h"
+#include "lexical.h"
 
 // Define the size of the longest log entry (including the NUL)
-#define LOG_ENTRY_SIZE 256
-#define FIELD_SIZE 32
+// #define LOG_ENTRY_SIZE 256
+// #define FIELD_SIZE 32
 
 /**
  * ADIFlog constructor
@@ -55,6 +56,9 @@ ADIFlog::ADIFlog(const char* fileName) {
     // Initialize our member variables
     this->fileName = fileName;
     this->nLogEntries = 0;  // No new contacts yet
+
+    // Build the list of known (previous) contacts from fileName if it exists
+    buildListOfKnownCallsigns();
 }
 
 /**
@@ -135,7 +139,7 @@ int ADIFlog::logContact(Contact* contact) {
 
     // Append End-of-Record
     strlcat(entry, "<eor>\n", sizeof(entry));
-    DPRINTF("entry='%s'\n", entry);
+    // DPRINTF("entry='%s'\n", entry);
 
     // Record the assembled entry in the log file
     logFileAdapter.write(entry);
@@ -143,6 +147,6 @@ int ADIFlog::logContact(Contact* contact) {
 
     // Increment count of new log entries
     nLogEntries++;
-    DPRINTF("nLogEntries=%u\n", nLogEntries);
+    // DPRINTF("nLogEntries=%u\n", nLogEntries);
     return 0;
-}
+}  // logContact()

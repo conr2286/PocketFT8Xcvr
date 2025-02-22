@@ -164,7 +164,7 @@ uint16_t packgrid(const char *grid4) {
     } else {
         int dd = dd_to_int(grid4, 3);
         uint16_t irpt = 35 + dd;
-        DFPRINTF("dd=%d, irpt=%d\n", dd, irpt);
+        // DFPRINTF("dd=%d, irpt=%d\n", dd, irpt);
         return (MAXGRID4 + irpt);  // ir = 0
     }
 
@@ -279,8 +279,8 @@ void packtext77(const char *text, uint8_t *b77) {
 }
 
 int pack77(const char *msg, uint8_t *c77) {
-    DPRINTF("pack77('%s',...)\n", msg);
-    // Check Type 1 (Standard 77-bit message) or Type 2, with optional "/P"
+    // DPRINTF("pack77('%s',...)\n", msg);
+    //  Check Type 1 (Standard 77-bit message) or Type 2, with optional "/P"
     if (0 == pack77_1(msg, c77)) {
         return 0;
     }

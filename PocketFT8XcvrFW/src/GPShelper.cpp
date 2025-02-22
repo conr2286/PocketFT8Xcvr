@@ -133,7 +133,7 @@ bool GPShelper::obtainGPSData(unsigned timeoutSeconds, void (*gpsAcquiringFix)(u
                     if (gpsDevice.fix && gpsDevice.fixquality == 0) {
                         flat = gpsDevice.latitudeDegrees;
                         flng = gpsDevice.longitudeDegrees;
-                        DPRINTF("GPS reports lat/lon = %f %f\n", flat, flng);
+                        // DPRINTF("GPS reports lat/lon = %f %f\n", flat, flng);
                         gotLoc = true;
                     }
 
@@ -148,7 +148,7 @@ bool GPShelper::obtainGPSData(unsigned timeoutSeconds, void (*gpsAcquiringFix)(u
                         year = gpsDevice.year;
                         month = gpsDevice.month;
                         day = gpsDevice.day;
-                        DPRINTF("GPS time = %02d:%02d:%02d.%d UTC, age=%f secs\n", hour, minute, second, milliseconds, gpsDevice.secondsSinceTime());
+                        // DPRINTF("GPS time = %02d:%02d:%02d.%d UTC, age=%f secs\n", hour, minute, second, milliseconds, gpsDevice.secondsSinceTime());
                         gotTime = gotDate = true;
                     }
 

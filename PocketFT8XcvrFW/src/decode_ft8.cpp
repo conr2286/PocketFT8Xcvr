@@ -251,11 +251,11 @@ int ft8_decode(void) {
  * Warning:  fillRect() is amazingly time-consuming.  Thus, we erase old messages by
  * printing space chars.
  **/
-static const unsigned lineHeight = 25;     // Height in pixels of one line of text (including leading)
-static int previousMessageCount = 0;  // Number of messages displayed in previous timeslot
+static const unsigned lineHeight = 25;  // Height in pixels of one line of text (including leading)
+static int previousMessageCount = 0;    // Number of messages displayed in previous timeslot
 void display_messages(int decoded_messages) {
     char message[kMax_message_length];
-    //char big_gulp[60];
+    // char big_gulp[60];
 
     // Erase the message display region on the LCD.  It turns out that fillRect() of a large region is amazingly slow, increasing the
     // risk of missing the following FT8 timeslot.  So... we erase with space characters.
@@ -293,7 +293,7 @@ void display_selected_call(int index) {
     strlcpy(Target_Call, new_decoded[index].field2, sizeof(Target_Call));
     Target_RSL = new_decoded[index].snr;
     snprintf(selected_station, sizeof(selected_station), "%7s %3i", Target_Call, Target_RSL);
-    DPRINTF("display_selected_call(%d) '%s'\n", index, selected_station);
+    // DPRINTF("display_selected_call(%d) '%s'\n", index, selected_station);
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
     tft.setTextSize(2);
     tft.setCursor(DISPLAY_SELECTED_X, DISPLAY_SELECTED_Y);

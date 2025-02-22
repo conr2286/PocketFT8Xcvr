@@ -100,7 +100,7 @@ void tune_On_sequence(void) {
 
     // Program the transmitter clock to F_Long
     uint64_t tuneFreq = currentFrequency * 1000ULL * 100ULL;  // KQ7B tuning at FT8 base subband freq (e.g. 7074)
-    DPRINTF("tuneFreq=%llu Hz\n", tuneFreq / 100);
+    // DPRINTF("tuneFreq=%llu Hz\n", tuneFreq / 100);
     si5351.set_freq(tuneFreq, SI5351_CLK0);  // Freq is in hundreths of a HZ
 
     // Drop the receiver's volume
@@ -120,7 +120,7 @@ void tune_On_sequence(void) {
     // Let loop() know we are tuning
     tune_flag = 1;
 
-    DPRINTF("TUNE\n");
+    // DPRINTF("TUNE\n");
 
 }  // tune_On_sequence()
 
@@ -149,7 +149,7 @@ void tune_Off_sequence(void) {
     // Finished tuning
     tune_flag = 0;
 
-    DPRINTF("TUNE OFF\n");
+    // DPRINTF("TUNE OFF\n");
 
 }  // tune_Off_sequence()
 
@@ -158,8 +158,8 @@ void set_Xmit_Freq() {
     // display_value(400, 320, ( int ) cursor_freq);
     //  display_value(400, 360,  offset_freq);
     F_Long = (uint64_t)((currentFrequency * 1000 + cursor_freq + offset_freq) * 100);
-    DFPRINTF("currentFrequency=%u, cursor_freq=%u, offset_freq=%d, F_Long=%llu\n", currentFrequency, cursor_freq, offset_freq, F_Long);
-    // F_Long = (uint64_t) ((currentFrequency * 1000 + cursor_freq ) * 100);
+    // DFPRINTF("currentFrequency=%u, cursor_freq=%u, offset_freq=%d, F_Long=%llu\n", currentFrequency, cursor_freq, offset_freq, F_Long);
+    //  F_Long = (uint64_t) ((currentFrequency * 1000 + cursor_freq ) * 100);
     si5351.set_freq(F_Long, SI5351_CLK0);
 
 }  // set_Xmit_Freq()

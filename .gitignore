@@ -1,3 +1,4 @@
 **/.DS_Store
 *.zip
 *.o
+compile_commands.json
