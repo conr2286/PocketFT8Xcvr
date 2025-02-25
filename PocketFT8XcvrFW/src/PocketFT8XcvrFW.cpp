@@ -1,3 +1,4 @@
+#include "SerialChannel.h"
 /*
 ** NAME
 **  PocketFT8XcvrFW -- Firmware for the KQ7B edition of the Pocket FT8 transceiver
