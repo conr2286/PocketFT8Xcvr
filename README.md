@@ -6,7 +6,7 @@ An SMD derivative of Charles Hill's Palm-Sized Pocket FT8 Transceiver
 * Si4735 Library developed by Ricardo Caritti: https://github.com/pu2clr/SI4735
 * FT8 Decoding Library by Karlis Goba (YL3JG): https://github.com/kgoba/ft8_lib
 * SN74ACT244 PA by Barb (WB2CBA), https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER 
-* PC Board and enhancements by Jim Conrad (KQ7B), https://github.com/conr2286/PocketFT8Xcvr 
+* PC Board and firmware enhancements by Jim Conrad (KQ7B), https://github.com/conr2286/PocketFT8Xcvr 
 * Adafruit, PJRC and other Arduino libraries
 
 # MIT License
@@ -19,8 +19,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Features
 * Single band, FT8 Tranceiver
@@ -29,7 +28,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 * Powered by a single 5V USB source (e.g. portable USB power block) delivering ~375 mA
 * Si4735 SSB Receiver
 * TCXO stabilized Si5351 Clock
-* SN74ACT244 PA delivering ~250 mW
+* SN74ACT244 PA delivering ~250 mW on 40M
 * ADIF Contact Logging to SD card
 * Adafruit 320 X 480 Resistive Color Touch Screen
 * Station configuration via SD file, config.json
@@ -47,7 +46,7 @@ Unlike the uSDX multi-mode designs, Pocket FT8 focuses entirely on FT8.  Yes, ye
 
 An alternative approach, previously investigated as YASDR, is to construct an FT8 radio hat for a Raspberry 5 supporting the comprehensive wsjtx/etc natively.  This archived project offers considerable flexibility but with higher power requirements (I'm getting too old to pack heavy batteries in the mountains;).  This approach is worth revisiting in the future, especially for POTA.
 
-Charley and Barb have also progressed with another derivative having a multiband FT8 transceiver, DX FT8, at https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER, replacing the SI4735 with a Tayloe receiver.
+Charley and Barb have also progressed with another Pocket FT8 derivative having a multiband FT8 transceiver, DX FT8, at https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER, notably replacing the SI4735 with a Tayloe receiver.
 
 # Manifest
 * BenchTests:  Arduino sketches for incremental tests of the hardware
@@ -67,11 +66,15 @@ Charley and Barb have also progressed with another derivative having a multiband
 * V1.10 Transmitter works.  Receiver occasionally decodes FT8 messages.  See Issue #23 on github.
 * V2.00 A new PCB moves the SI5351 and MCP342x to Wire1 to avoid I2C noise (Issue #23) hampering the SI4735
 
+# Status
+Feb 24, 2025:  Hardware and current firmware conducts and logs QSOs.  GUI displays misc annoyances that don't prevent operation.
+
 # TODO
 Pocket FT8 is a work-in-progress.  While the V2.00 hardware and firmware will complete QSOs, it lacks features you might find elsewhere.
+* Host USB access to config and log files on SD drive
 * Hashed FT8 callsigns
 * Free text messages (much of the code is present but not integrated)
-* Extensive testing --- I'm hoping PlatformIO will eventually provide some relief with its unit testing support
+* Extensive testing --- I'm hoping PlatformIO will eventually provide some relief with its unit testing support missing in the Arduino IDE
 * FT8 contesting and DXpedition features found in wsjtx
 * Improve the GPS connector and add the PPS trace to PCB
 
@@ -85,7 +88,7 @@ Pocket FT8 is a work-in-progress.  While the V2.00 hardware and firmware will co
 * The V2.00 boards support the Adafruit Ultimate GPS Breakout board.  The firmware supports using the PPS digital interrupt signal to determine when the GPS acquires a fix; however, the V2.00 PCB requires a patch wire to connect the PPS pin to Teensy Digital Pin 2, and the GPS connector has the PPS pin in an awkward location for a ribbon cable.  This will hopefull be fixed in the V3.00 hardware.  The patch is easy to solder and I recommend it.
 
 # Boards and Parts Availability
-Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out QRP Labs, the uSDX follow-ons, or the DX FT8 kit as Pocket FT8 construction demands some engineering skills and tools including KiCAD, the Arduino IDE, and Visual Studio Code with PlatformIO extensions.  This project is more about tinkering than operating.  That said, sometimes I have spare boards for one version or another.
+Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out QRP Labs, the uSDX follow-ons, or the DX FT8 kit as Pocket FT8 construction requires some engineering skills and tools including KiCAD, the Arduino IDE, and Visual Studio Code with PlatformIO extensions.  This project is more about tinkering than operating.  That said, sometimes I have spare boards for one version or another.
 
 # Building the Firmware
 1. Install Arduino 2.X IDE
@@ -110,7 +113,7 @@ Pocket FT8 Revisited was designed with KiCAD V8, and the PCBs were fabbed and as
 7. Install right angle header for GPS
 8. Install SMD SMA antenna socket
 9. Smoke test with wall wart USB supply (not your expensive computer;)
-10. Build and execute each of the BenchTests in order to check-out the circuit subsystems
+10. Build and execute each of the BenchTests in numerical order to individually check-out the circuit subsystems
 
 # Putting Pocket FT8 Revisited On-the-Air
 1. Create an SD file, config.json, to configure the Pocket FT8 for your station.  The required parameters are, callsign and frequency.  If you don't have a GPS, you'll also need location.  Install the SD card in Teensy (not the Adafruit display).
@@ -127,11 +130,12 @@ During setup(), the rig reads the config.json file, if available, from the Teens
 * enableAVC     Enable/disable SI4735 AVC (default is enabled).
 * gpsTimeout    Seconds setup() will wait for the GPS to acquire a fix
 * qsoTimeout    Seconds the QSO Sequencer will retransmit a msg without receiving a usable response from remote station (default is 180)
+
 ## GPS
-If available, the rig acquires the current UTC time and location (Maidenhead grid square) from the attached GPS.  The V2.00 hardware requires a patch wire to connect the GPS PPS connector pin to Teensy digital pin 2.  The firmware monitors PPS interrupts and will acquire the UTC time and location when/if they later become available.  Before a GPS fix is obtained, the firmware uses the current date/time from the battery-backed Teensy Real Time Clock (RTC) and displays that date/time in red.  After a fix is obtained, the date/time display becomes yellow.  The GPS is not required but  facilitates logging and synchronization with FT8 timeslots.
+If available, the rig acquires the current UTC time and location (Maidenhead grid square) from the attached GPS.  The V2.00 hardware requires a patch wire to connect the GPS PPS connector pin to Teensy digital pin 2.  The firmware monitors PPS interrupts and will acquire the UTC time and location when/if they later become available.  Prior to obtaining the GPS fix, the firmware uses the date/time from the battery-backed Teensy Real Time Clock (RTC) and displays that date/time in red.  It has no idea what the location (maidenhead grid square) might be.  After a fix is obtained, the date/time display becomes yellow.  The GPS is not required but greatly facilitates logging and synchronization with FT8 timeslots.
 
 ## Logging
-Pocket FT8 logs successful contacts to an ADIF file on the Teensy SD disk.  The date/time are recorded in UTC after the rig has successfully acquired a GPS fix.  If the rig has never had a GPS fix, the date/time come from the Teensy RTC which was likely initialized when the firmware was loaded into Teensy by your host computer.  The logging software considers a contact successful when the rig obtains the remote station's callsign and signal report.  Without a GPS, location can be obtained from the configuration file.
+Pocket FT8 logs successful contacts to an ADIF file on the Teensy SD disk.  The date/time are recorded in UTC after the rig acquires a GPS fix.  If the rig has never had a GPS fix, the date/time come from the Teensy RTC which was likely initialized when the firmware was loaded into Teensy by your host computer --- that may work for FT8 but the UTC time (for log) is unknown.  The logging software considers a contact successful when the rig obtains the remote station's callsign and signal report.  Without a GPS, locator can be obtained from the configuration file.
 
 ## Robo-Op
 Pocket FT8 firmware includes a sequencer somewhat akin (or ajar...;) to those used in wsjtx and DX FT8.  The sequencer conducts a standard FT8 QSO initiated with your station's CQ, or with your reply to a station calling CQ.  The sequencer automagically coordinates its transmissions with those of the remote station to avoid "doubling" (transmitting in the same timeslot as the remote transmission).  In most cases, the sequencer can prepare a reply during the FT8 "dwell" time (between timeslots) and transmit in the subsequent timeslot.  The sequencer is implemented as a giant state machine attempting to make the best of difficult conditions/responses to complete a QSO.  The sequencer has a configurable QSO Timeout feature to abort a run-on QSO (including CQ) arising from QRM, QRN, or a QRT/QLF remote station.  
