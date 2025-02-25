@@ -148,5 +148,6 @@ int ADIFlog::logContact(Contact* contact) {
     // Increment count of new log entries
     nLogEntries++;
     // DPRINTF("nLogEntries=%u\n", nLogEntries);
+
     return 0;
 }  // logContact()

@@ -24,12 +24,13 @@ extern int ft8_flag, FT_8_counter, ft8_marker, decode_flag, WF_counter;
 extern int num_decoded_msg;
 
 // The follow two externs added to support timing investigation (only used for debugging)
-extern int xmit_flag;
-extern int Transmit_Armned;  
+//extern int xmit_flag;
+//extern int Transmit_Armned;  
 
 int master_offset, offset_step;
 //extern int CQ_Flag;
 
+//TODO:  Move to DMAMEM???
 q15_t FFT_Scale[FFT_SIZE * 2];
 q15_t FFT_Magnitude[FFT_SIZE];
 int32_t FFT_Mag_10[FFT_SIZE / 2];
@@ -39,7 +40,8 @@ float mag_db[FFT_SIZE / 2 + 1];
 arm_rfft_instance_q15 fft_inst;
 arm_cfft_radix4_instance_q15 aux_inst;
 
-uint8_t export_fft_power[ft8_msg_samples * ft8_buffer * 4];
+//Moved export_fft_power array into slower RAM2 on Teensy4.1 to save RAM1 for expanding feature code
+DMAMEM uint8_t export_fft_power[ft8_msg_samples * ft8_buffer * 4];
 
 // void init_DSP(void) {
 //   arm_rfft_init_q15(&fft_inst, &aux_inst, FFT_SIZE, 0);  //T4.1

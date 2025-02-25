@@ -139,6 +139,8 @@ static bool autoReplyToCQ;  // RoboOp automatically transmits reply to CQ
 // The macro evaluates to 1 if the argument is odd, else 0 if even.
 #define ODD(n) (n % 2)
 
+
+
 /**
  * @brief [Re]Initialize the sequencer
  * @param timeoutSeconds #seconds Sequencer will retransmit msg without a response
@@ -184,7 +186,7 @@ void Sequencer::timeslotEvent() {
         // Or TUNING in which case we also do nothing (Timer will eventually stop run-on Tuning)
         case TUNING:
         case IDLE:
-            DTRACE();
+            //DTRACE();
             break;
 
         // Time to start the transmitter sending previously prepared Tx6 CQ message
@@ -398,7 +400,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
         }  // switch
     }
 
-    DTRACE();
+    //DTRACE();
 }  // receivedMsgEvent()
 
 /**
@@ -417,6 +419,12 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
 void Sequencer::cqMsgEvent(Decode* msg) {
     // Has the operated enabled automatic replies with the Tx button?
     if (!autoReplyToCQ) return;  // No... nothing to do here
+
+    // Have we previously contacted this station (i.e. are they in the log)?
+    if (ContactLogFile::isKnownCallsign(msg->field2)) {
+        DPRINTF("RoboOp ignoring previous contact, '%s'\n", msg->field2);
+        return;    //Yes, RoboOp ignores stations already in the log
+    }
 
     // Automatically respond to received CQ message if we are not already engaged in a QSO
     switch (state) {
@@ -1049,4 +1057,13 @@ void setAutoReplyToCQ(bool x) {
     if (!autoReplyToCQ) {
         resetButton(BUTTON_TX);  // Reset the Tx Button
     }
+}
+
+
+/**
+ * @brief getter for autoReplyToCQ
+ * @return true or false
+ */
+bool getAutoReplyToCQ() {
+    return autoReplyToCQ;
 }

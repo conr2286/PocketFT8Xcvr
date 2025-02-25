@@ -7,6 +7,7 @@
 #include "decode_ft8.h"
 
 void setAutoReplyToCQ(bool);
+bool getAutoReplyToCQ(void);
 
 class Sequencer {
    private:

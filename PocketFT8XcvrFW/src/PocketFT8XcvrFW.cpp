@@ -151,9 +151,9 @@ static const unsigned audioQueueSize = 100;  // Number of blocks in the Teensy a
 File ft8Raw = NULL;
 unsigned long recordSampleCount = 0;  // Number of 16-bit audio samples recorded so far
 
-// Audio pipeline buffers
+// Audio pipeline buffers 
 q15_t dsp_buffer[3 * input_gulp_size] __attribute__((aligned(4)));
-q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));
+q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));             //TODO:  Move to DMAMEM?
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
 // ToDo:  Arrange for the various modules to access these directly from config structure
@@ -245,8 +245,8 @@ void setup(void) {
     // won't run at the standard Teensy sample rate.  No known way to do this at compile-time with a floating constant.
     if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
         Serial.println("Build Firmware Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
-        Serial.println("You must copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
-        Serial.println("...before building the Pocket FT8 firmware.\n");
+        // Serial.println("You must copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
+        // Serial.println("...before building the Pocket FT8 firmware.\n");
         while (true) continue;  // Fatal
     }
 
@@ -460,7 +460,7 @@ void loop() {
     // If we have not yet obtained valid GPS data, but the GPS device has acquired a fix, then obtain the GPS data.
     // This is a bit abrupt as we afterward more or less resynch everything and wait for a timeslot.
     if (gpsHelper.validGPSdata == false && gpsHelper.hasFix() == true) {
-        // Sync MCU and RTC time with GPS if it's working and can get a timely fix
+        // Sync MCU and RTC time with GPS if it's working and can get a timely fix  TODO:  eliminate gpsCallback???
         if (gpsHelper.obtainGPSData(config.gpsTimeout, gpsCallback)) {
             // Set the MCU time to the GPS result
             setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
@@ -537,7 +537,7 @@ void loadSSB() {
  **/
 void process_data() {
     unsigned count = queue1.available();
-    if (count >= audioQueueSize) DPRINTF("*** Audio queue filled with %u blocks ********************************************************************************\n", count);
+    if (count >= audioQueueSize) DPRINTF("*** Audio queue filled with %u blocks ***\n", count);
     if (count >= num_que_blocks) {
         // Copy received audio from queue buffers to the FFT buffer
         for (int i = 0; i < num_que_blocks; i++) {
@@ -642,12 +642,12 @@ void update_synchronization() {
 
         // Debug missed timeslots (we are too late to receive the first symbol)
         if (current_time > nextTimeSlot + 160) {
-            DPRINTF("*** Missed timeslot:  ft8_time%15000=%lu, current_time=%lu, nextTimeSlot=%lu *****************************\n", ft8_time % 15000, current_time, nextTimeSlot);
+            DPRINTF("*** Missed timeslot:  ft8_time modulo 15000=%lu, current_time=%lu, nextTimeSlot=%lu, autoReplyToCQ=%u *****************************\n", ft8_time % 15000, current_time, nextTimeSlot, getAutoReplyToCQ());
         }
         nextTimeSlot = current_time + 15000;
 
         // Debug timeslot and sequencer problems
-        DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s' -------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message());
+        DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s', autoReplyToCQ=%u -------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message(), getAutoReplyToCQ());
     }
 }  // update_synchronization()
 

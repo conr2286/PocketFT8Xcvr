@@ -291,7 +291,7 @@ void executeButton(uint16_t index) {
             delay(button_delay);
             break;
 
-        case 9:
+            // case 9:
             /*
                   sButtonData[9].state = true;
                   drawButton(9);
@@ -301,28 +301,28 @@ void executeButton(uint16_t index) {
                   drawButton(9);
                   */
 
-            if (sButtonData[9].state) {
-                /*
-                    si4735.setSSB(14000, 14400, 14074, 1, USB);
-                    //si4735.setSSB(18000, 18400, 18100, 1, USB);
-                    currentFrequency = si4735.getFrequency();
-                    offset_freq = -150;
-                    display_value(360,40,(int)currentFrequency);
-                    LPF_set_lpf(14);
-                    delay(button_delay );
-                  }
-                   else
-                 {
-                    //si4735.setSSB(14000, 14400, 14074, 1, USB);
-                    si4735.setSSB(7000, 7400, 7100, 1, USB);
-                    currentFrequency = si4735.getFrequency();
-                    offset_freq = -244;
-                    display_value(360,40,(int)currentFrequency);
-                    LPF_set_lpf(7);
-                    delay(button_delay );
-                    */
-            }
-            break;
+            // if (sButtonData[9].state) {
+            /*
+                si4735.setSSB(14000, 14400, 14074, 1, USB);
+                //si4735.setSSB(18000, 18400, 18100, 1, USB);
+                currentFrequency = si4735.getFrequency();
+                offset_freq = -150;
+                display_value(360,40,(int)currentFrequency);
+                LPF_set_lpf(14);
+                delay(button_delay );
+              }
+               else
+             {
+                //si4735.setSSB(14000, 14400, 14074, 1, USB);
+                si4735.setSSB(7000, 7400, 7100, 1, USB);
+                currentFrequency = si4735.getFrequency();
+                offset_freq = -244;
+                display_value(360,40,(int)currentFrequency);
+                LPF_set_lpf(7);
+                delay(button_delay );
+                */
+            // }
+            // break;
     }
 
 }  // execute_button()

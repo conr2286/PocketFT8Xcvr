@@ -62,6 +62,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ContactLogFile.h"
 #include "DEBUG.h"
 
 // Externs
@@ -99,6 +100,12 @@ void Contact::begin(char* workedCall, unsigned freq, const char* mode, unsigned 
     strlcpy(this->workedCall, workedCall, sizeof(this->workedCall));
     strlcpy(this->myCall, myCall, sizeof(this->myCall));
     strlcpy(this->mode, mode, sizeof(this->mode));
+
+    // Update in-memory hash table of attempted contacts.  We record all attempted contacts so the
+    // RoboOp ignores stations that won't waste time attempting to contact stations that won't
+    // respond.  TODO:  It might be nice to reset the known call list if our operator really does
+    // want to keep trying (even though they can do so by clicking on them).
+    ContactLogFile::addKnownCallsign(workedCall);
 
     // Record whether remote station transmits in an odd or even numbered sequence
     this->oddEven = oddEven & 0x01;  // Force binary value:  1==odd, 0==even
