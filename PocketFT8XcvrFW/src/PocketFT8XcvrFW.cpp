@@ -1,4 +1,4 @@
-#include "SerialChannel.h"
+#include "CommStream.h"
 /*
 ** NAME
 **  PocketFT8XcvrFW -- Firmware for the KQ7B edition of the Pocket FT8 transceiver
@@ -152,9 +152,9 @@ static const unsigned audioQueueSize = 100;  // Number of blocks in the Teensy a
 File ft8Raw = NULL;
 unsigned long recordSampleCount = 0;  // Number of 16-bit audio samples recorded so far
 
-// Audio pipeline buffers 
+// Audio pipeline buffers
 q15_t dsp_buffer[3 * input_gulp_size] __attribute__((aligned(4)));
-q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));             //TODO:  Move to DMAMEM?
+q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));  // TODO:  Move to DMAMEM?
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
 // ToDo:  Arrange for the various modules to access these directly from config structure
