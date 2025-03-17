@@ -26,9 +26,62 @@
  * (in the endless pursuit of channel efficiency which is otherwise pretty much toast herein).
  *
  * USAGE
- *
+ *  CommChannel myLink(0);          //Build channel 0
+ *  int err = myLink.connect(60);   //Establish connection with 60 second timeout
+ *  int c = myLink.read();          //Read one byte
+ *  myLink.disconnect();            //Disconnect from remote
  *
  */
+
+/**
+ * @brief Build an instance of the specified channel
+ * @param channelNumber The specified channel number
+ *
+ * IMPLEMENTATION
+ * All we do here is construct the CommChannel object and record its location in
+ * allChannels[].  The actual connection, and resulting network traffic, occurs
+ * in connect().
+ *
+ * LIMITATIONS
+ * It would be nice to verify the requested channel isn't already in use
+ * but, at least for now, that's not our problem (so don't foul it up).   Along
+ * that line, perhaps we should implement a destructor someday as well.
+ *
+ */
+CommChannel::CommChannel(unsigned channelNumber) {
+    allChannels[channelNumber] = this;
+}  // CommChannel(channelNumber)
+
+/**
+ * @brief Initiate a connection with this channel to remote endpoint
+ * @return 0=success, else an error code as described below
+ *
+ * ERROR CODES
+ *  ERR_OK      No error (connection established)
+ *  ERR_BUSY    ARQ busy (try again)
+ *  ERR_PENDING Connection request pending (keep waiting)
+ *  ERR_DISCO   Remote disconnected (not good)
+ *
+ * NOTES
+ *  + To successfully establish a connection, both the local and remote host, at both
+ *  ends of the physical link (e.g. USB), must invoke connect().
+ *  + The two endpoints likely invoke connect() at different times.  The
+ *  timeoutSeconds determines how long this endpoint will wait for the other
+ *  endpoint's connect() request.
+ *  + The implementation assumes the ARQ layer reliably transmits the
+ *  connection request --- it is not retried here in CommChannel.
+ *
+ */
+int CommChannel::connect() {
+    return -1;
+}  // connect()
+
+/**
+ * @brief Disconnect from the remote endpoint
+ */
+void CommChannel::disconnect() {
+    return;
+}
 
 /**
  * @brief Write one byte to a CommStream

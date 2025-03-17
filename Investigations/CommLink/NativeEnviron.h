@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 // For a native test build, we need to mock-up the Stream class to enable CommStream to compile.
-// Here we are cheating a bit, defining virtuals for both Stream and its base class, Print.
+// Here we are cheating a bit, defining virtuals for both Stream and its base class, Print. 
 class Stream {
    public:
     // Define the virtual methods of the Arduino Stream (and Print)

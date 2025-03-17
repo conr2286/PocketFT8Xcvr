@@ -1,4 +1,4 @@
-#include "CommChannel.h"
+
 /*
 ** NAME
 **  PocketFT8XcvrFW -- Firmware for the KQ7B edition of the Pocket FT8 transceiver
@@ -131,7 +131,7 @@ struct Config {
 #define DEFAULT_QSO_TIMEOUT 180               // Number seconds Sequencer will retry transmission without a response
 
 // Adafruit 480x320 touchscreen configuration
-HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
+DMAMEM HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 
 /// Build the VFO clock
@@ -231,7 +231,7 @@ static void gpsCallback(unsigned seconds) {
 /**
  ** @brief Sketch initialization
  **/
-void setup(void) {
+FLASHMEM void setup(void) {
     // Get the USB serial port running before something else goes wrong
     Serial.begin(9600);
     DTRACE();
@@ -399,7 +399,7 @@ void setup(void) {
 
 unsigned oldFlags = 0;
 
-void loop() {
+FLASHMEM void loop() {
     // Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
     // unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
     // if (newFlags != oldFlags) {
@@ -499,7 +499,7 @@ time_t getTeensy3Time() {
     return Teensy3Clock.get();
 }
 
-void loadSSB() {
+FLASHMEM void loadSSB() {
     si4735.queryLibraryId();  // Is it really necessary here? I will check it.
     si4735.patchPowerUp();
     // si4735.setPowerUp(1, 1, 1, 0, 1, SI473X_ANALOG_DIGITAL_AUDIO);

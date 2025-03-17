@@ -1,11 +1,13 @@
 
-#include "Base64.h"
+#include "radix64.h"
 
 static const char radix64Table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 char *Radix64::encodeRadix64(char *dst, const char *src, size_t input_length) {
     size_t output_length = 4 * ((input_length + 2) / 3);
-    char *encoded_data = d if (encoded_data == NULL) return NULL;
+    char *encoded_data = dst;
+   
+    if (encoded_data == NULL) return NULL;
 
     for (size_t i = 0, j = 0; i < input_length;) {
         uint32_t octet_a = i < input_length ? (unsigned char)src[i++] : 0;
