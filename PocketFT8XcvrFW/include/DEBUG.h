@@ -26,7 +26,7 @@ ATTRIBUTION
 #include <Arduino.h>
 #pragma once
 
-//Define a symbol such that all debugging messages in all files can be disabled at this one location
+// Define a symbol such that all debugging messages in all files can be disabled at this one location
 #define ENABLE_DEBUG 1
 
 #if ENABLE_DEBUG
@@ -35,41 +35,43 @@ ATTRIBUTION
 
 #define DEBUG_STREAM Serial
 
-#define DPRINTF(...) \
-  { \
-    DEBUG_STREAM.printf("%s:%u ", __SOURCEFILE__, __LINE__); \
-    DEBUG_STREAM.printf(__VA_ARGS__); \
-  }
+#define DPRINTF(...)                                             \
+    {                                                            \
+        DEBUG_STREAM.printf("%s:%u ", __SOURCEFILE__, __LINE__); \
+        DEBUG_STREAM.printf(__VA_ARGS__);                        \
+    }
 
-  #define DFPRINTF(...) \
-  { \
-    DEBUG_STREAM.printf("%s:%u %s ", __SOURCEFILE__, __LINE__, __FUNCTION__); \
-    DEBUG_STREAM.printf(__VA_ARGS__); \
-  }
+#define DFPRINTF(...)                                                             \
+    {                                                                             \
+        DEBUG_STREAM.printf("%s:%u %s ", __SOURCEFILE__, __LINE__, __FUNCTION__); \
+        DEBUG_STREAM.printf(__VA_ARGS__);                                         \
+    }
 
-#define DTRACE() \
-  { DEBUG_STREAM.printf("%s:%u %s\n", __SOURCEFILE__, __LINE__, __FUNCTION__); }
+#define DTRACE()                                                                   \
+    {                                                                              \
+        DEBUG_STREAM.printf("%s:%u %s\n", __SOURCEFILE__, __LINE__, __FUNCTION__); \
+    }
 
-#define D1PRINTF(...) \
-  { \
-    static bool D1F__LINE__ = true; \
-    if (D1F__LINE__) { \
-      DEBUG_STREAM.printf("%s:%u %s", __SOURCEFILE__, __LINE__, __FUNCTION__); \
-      DEBUG_STREAM.printf(__VA_ARGS__); \
-      D1F__LINE__ = false; \
-    } \
-  }
+#define D1PRINTF(...)                                                                \
+    {                                                                                \
+        static bool D1F__LINE__ = true;                                              \
+        if (D1F__LINE__) {                                                           \
+            DEBUG_STREAM.printf("%s:%u %s", __SOURCEFILE__, __LINE__, __FUNCTION__); \
+            DEBUG_STREAM.printf(__VA_ARGS__);                                        \
+            D1F__LINE__ = false;                                                     \
+        }                                                                            \
+    }
 
-#define D1TRACE() \
-  { \
-    static bool D1T__LINE__ = true; \
-    if (D1T__LINE__) { \
-      DEBUG_STREAM.printf("%s:%u %s\n", __SOURCEFILE__, __LINE__, __FUNCTION__); \
-      D1T__LINE__ = false; \
-    } \
-  }
+#define D1TRACE()                                                                      \
+    {                                                                                  \
+        static bool D1T__LINE__ = true;                                                \
+        if (D1T__LINE__) {                                                             \
+            DEBUG_STREAM.printf("%s:%u %s\n", __SOURCEFILE__, __LINE__, __FUNCTION__); \
+            D1T__LINE__ = false;                                                       \
+        }                                                                              \
+    }
 
-  #else
-//Disable all debugging in all locations in all files
-  #include "NODEBUG.h"
-  #endif
+#else
+// Disable all debugging in all locations in all files
+#include "NODEBUG.h"
+#endif

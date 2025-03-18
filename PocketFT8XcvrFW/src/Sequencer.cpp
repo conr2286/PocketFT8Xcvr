@@ -1,6 +1,6 @@
 /**
  * SYNOPSIS
- *  Sequencer --- Implements a state machine for automated sequencing of FT8 QSOs
+ *  Sequencer --- (AKA RoboOp) Implements a state machine for automated sequencing of FT8 QSOs
  *
  * NOTES
  *  Following the progress of a large state machine can be challenging.

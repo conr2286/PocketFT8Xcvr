@@ -87,7 +87,8 @@ unsigned ContactLogFile::hashString(char* str) {
  * @return true if previously seen, else false
  *
  * Method:  Very simple hashing --- a key collision will return a false
- * positive for a station which actually isn't in the log.  TODO:  we
+ * positive for a station which actually isn't in the log.  Note that the
+ * station can still be worked manually (click on their CQ msg).  TODO:  we
  * really should handle collisions better.
  */
 bool ContactLogFile::isKnownCallsign(char* callsign) {
