@@ -63,7 +63,7 @@ extern int M;
 
 extern int K_BYTES;
 
-extern void write_log_data(char *data);
+//extern void write_log_data(char *data);
 
 Decode new_decoded[20];
 
@@ -403,8 +403,8 @@ int Check_Calling_Stations(int num_decoded) {
             tft.setCursor(DISPLAY_CALLING_X, DISPLAY_CALLING_Y + i * 25);
             tft.print(message);
 
-            // Log details from this message to us
-            if (logging_on == 1) write_log_data(big_gulp);
+            // Log details from this message to us (TODO:  prune retired TXT file logging code)
+            //if (logging_on == 1) write_log_data(big_gulp);
             // DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
             // DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
 

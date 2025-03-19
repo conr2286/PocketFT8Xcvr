@@ -3,10 +3,10 @@
  *  Sequencer --- (AKA RoboOp) Implements a state machine for automated sequencing of FT8 QSOs
  *
  * NOTES
- *  Following the progress of a large state machine can be challenging.
- *  While a complete FT8 implementation deals with arcane corner cases
- *  handling unexpected, exceptional events, the main flow is not so bad.
- *  Here's the main flow for Sequencer initiating a QSO by calling CQ:
+ *  Following the progress of a large state machine like this can be challenging.
+ *  While a complete FT8 implementation accommodates arcane corner cases to
+ *  handle unexpected, exceptional events, the main flow is not so bad.
+ *  Here's the main flow for how the Sequencer initiates a QSO by calling CQ:
  *
  *  Timeslot  CurrentState  Event           Action              NextState   Commentary
  *    0       IDLE          timeslotEvent   N/A                 IDLE        We are monitoring FT8 traffic
@@ -164,17 +164,23 @@ void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
     // DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
     contactLog = LogFactory::buildADIFlog(logfileName);
     setAutoReplyToCQ(false);  // Disable auto reply to CQ and clear button
+    setIndicatorIcon(INDICATOR_ICON_RECEIVE);
 }  // begin()
 
 /**
  *  Timeslot event
  *
  *  @param sequenceNumber This timeslot's sequence number
+ * 
+ *  A "timeslot" refers to the 15 second FT8 intervals beginning at 0, 15, 30 and 45
+ *  seconds past the minute.  
  *
- *  The FT8 timeslot synchronizer(s) notify this event handler when a new timeslot
- *  is about to begins (we get notified before loop() takes any actions).  The
- *  Sequencer uses the timeslot's sequenceNumber to determine whether
- *  transmissions to a remote station should occur in even or odd numbered timeslots.
+ *  The FT8 timeslot synchronizer notifies this event handler when a new timeslot
+ *  is about to begin (we get notified before loop() takes any action in that timeslot).
+ *  The Sequencer uses the timeslot's sequenceNumber to determine whether
+ *  transmissions to a remote station should occur in even or odd numbered timeslots, 
+ *  an important consideration ensuring our transmissions do not "double" with those
+ *  of a remote station in our QSO.  
  *
  **/
 void Sequencer::timeslotEvent() {
@@ -193,15 +199,17 @@ void Sequencer::timeslotEvent() {
         case CQ_PENDING:
             DTRACE();
             pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Arm transmitter now if needed in next timeslot
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // Time to listen for replies to our Tx6 CQ transmission.  The loop()
         // has already stopped transmitting symbols and switched us to receive mode.
-        // Our job is to remember what's happening in case we hear a response to CQ.
+        // Our job is to prepare to process a possible response to our CQ.
         case XMIT_CQ:
             DTRACE();
             state = LISTEN_LOC;  // We are now listening for a response to our CQ
             displayInfoMsg(get_message(), HX8357_DARKGREEN);
+            setIndicatorIcon(INDICATOR_ICON_RECEIVE);
             break;
 
         // We have listened for responders to our CQ and heard nothing.  At the next timeslot,
@@ -209,6 +217,7 @@ void Sequencer::timeslotEvent() {
         case LISTEN_LOC:
             DTRACE();
             pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Arm transmitter now if needed in next timeslot
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // We have heard a Tx1 response to our Tx6 CQ, prepared an RSL reply message, and will transmit
@@ -221,6 +230,7 @@ void Sequencer::timeslotEvent() {
         case RSL_PENDING:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_RSL);  // Arm transmitter now if needed in next timeslot
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // We have transmitted their RSL reply to their remote station.  Now we expect to
@@ -228,6 +238,7 @@ void Sequencer::timeslotEvent() {
         case XMIT_RSL:
             DTRACE();
             state = LISTEN_RRSL;  // We are expecting to receive our signal report from remote station
+            setIndicatorIcon(INDICATOR_ICON_RECEIVE);
             break;
 
         // After transmitting Tx2 RSL to the remote station, we have not heard a Tx3 RRSL response.
@@ -235,12 +246,14 @@ void Sequencer::timeslotEvent() {
         case LISTEN_RRSL:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_RSL);  // Arm transmitter now if needed in next timeslot
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // We are waiting for an appropriate even/odd timeslot to transmit our prepared Tx4 RRR to remote station
         case RRR_PENDING:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_RRR);  // Arm transmitter now if needed in next timeslot
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // We have transmitted our Tx4 RRR to the remote station.  The QSO is complete as we expect to receive
@@ -248,6 +261,7 @@ void Sequencer::timeslotEvent() {
         case XMIT_RRR:
             DTRACE();
             state = LISTEN_73;  // Listen for their 73
+            setIndicatorIcon(INDICATOR_ICON_RECEIVE);
             break;
 
         // We listened for the remote station's 73 but have heard nothing.
@@ -266,30 +280,35 @@ void Sequencer::timeslotEvent() {
         case LOC_PENDING:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_LOC);  // Arm transmitter now if needed in next timeslot
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // We have transmitted our location to the remote station
         case XMIT_LOC:
             DTRACE();
             state = LISTEN_RSL;  // We will listen for our RSL from the remote station
+            setIndicatorIcon(INDICATOR_ICON_RECEIVE);
             break;
 
         // We were listening for remote's RSL message to us but heard nothing.  Retransmit LOC.
         case LISTEN_RSL:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_LOC);  // Arm transmitter now if needed in next timeslot
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // We are waiting for an appropriate even/odd timeslot to transmit an RRSL message to remote station
         case RRSL_PENDING:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_RRSL);  // Arm transmitter now if needed in next timeslot
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // We have transmitted their RRSL message to the remote station
         case XMIT_RRSL:
             DTRACE();
             state = LISTEN_RRR;  // We expect an RRR or RR73
+            setIndicatorIcon(INDICATOR_ICON_RECEIVE);
             break;
 
         // We are waiting for an appropriate even/odd timeslot to transmit a 73 message to remote station
@@ -438,6 +457,7 @@ void Sequencer::cqMsgEvent(Decode* msg) {
             displayInfoMsg(get_message(), HX8357_YELLOW);  // Display pending call in yellow
             startTimer();                                  // Start the Timer to terminate a run-on QSO
             state = LOC_PENDING;                           // Await appropriate timeslot to transmit to Target_Call
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // Automatic responses are disabled if we are calling CQ or otherwise engaged in a QSO
@@ -446,7 +466,7 @@ void Sequencer::cqMsgEvent(Decode* msg) {
             break;
 
     }  // switch
-}
+} //cqMsgEvent()
 
 /**
  * @brief Operator clicked the TUNE button
@@ -462,7 +482,8 @@ void Sequencer::tuneButtonEvent() {
             resetButton(BUTTON_TU);
             stopTimer();
             state = IDLE;
-            DTRACE();
+            setIndicatorIcon(INDICATOR_ICON_RECEIVE);
+            //DTRACE();
             break;
 
         // Ignore TUNE button during ongoing transmission
@@ -477,7 +498,7 @@ void Sequencer::tuneButtonEvent() {
         // Start TUNING
         case IDLE:
         default:
-            DTRACE();
+            //DTRACE();
             // Stop anything underway
             terminate_transmit_armed();
             xmit_flag = 0;  // Stop modulation in loop()
@@ -490,6 +511,7 @@ void Sequencer::tuneButtonEvent() {
             // Start a Timer to terminate TUNING if operator forgets
             DTRACE();
             startTimer();
+            setIndicatorIcon(INDICATOR_ICON_TUNING);
             break;
     }
 
@@ -518,6 +540,7 @@ void Sequencer::cqButtonEvent() {
             state = CQ_PENDING;                            // Await the next timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);  // Display pending CQ message in yellow
             startTimer();                                  // Start the Timer to terminate run-on CQ transmissions
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // Abort CQ transmission (even if it's in progress)
@@ -531,6 +554,7 @@ void Sequencer::cqButtonEvent() {
             clearOutboundMessageDisplay();  // Clears displayed outbound message as we're now idle
             stopTimer();                    // Stop the Timer
             resetButton(BUTTON_CQ);         // Reset highlighted button
+            setIndicatorIcon(INDICATOR_ICON_RECEIVE);
             break;
 
             // The CQ button is ignored during most states
@@ -577,6 +601,7 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
                 startTimer();                                  // Start the Timer to terminate a run-on QSO
                 resetButton(BUTTON_CQ);                        // No longer calling CQ
                 state = LOC_PENDING;                           // Await appropriate timeslot to transmit to Target_Call
+                setIndicatorIcon(INDICATOR_ICON_PENDING);
                 break;
 
                 // Message clicks are ignored during most states
@@ -672,6 +697,10 @@ void Sequencer::timerEvent(Timer* thisTimer) {
     // Reset highlighted buttons, if any
     resetButton(BUTTON_TU);
     resetButton(BUTTON_CQ);
+
+    // Update the indicator icon
+    setIndicatorIcon(INDICATOR_ICON_RECEIVE);
+
 }  // timerEvent()
 
 /**
@@ -684,6 +713,7 @@ void Sequencer::abortButtonEvent() {
     DTRACE();
     setAutoReplyToCQ(false);  // Reset the RoboOp
     timerEvent(NULL);         // TODO:  refactor so we don't need to pass a NULL Timer pointer
+    setIndicatorIcon(INDICATOR_ICON_RECEIVE);
 }  // abortButtonEvent()
 
 /**
@@ -705,6 +735,7 @@ void Sequencer::rslEvent(Decode* msg) {
             set_message(MSG_RRR);                  // Prepare an RRR message
             state = RRR_PENDING;                   // We must await an appropriate even/odd timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // Remote station sent our RSL and we should respond with their RRSL
@@ -716,6 +747,7 @@ void Sequencer::rslEvent(Decode* msg) {
             set_message(MSG_RRSL);                 // Prepare to send their signal report to remote station
             state = RRSL_PENDING;                  // Await an appropriate even/odd timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // We were expecting a LOC but received a signal report.  We likely were calling CQ
@@ -731,6 +763,7 @@ void Sequencer::rslEvent(Decode* msg) {
             set_message(MSG_RRSL);  // Roger our RSL and send their RSL to remote station
             state = RRSL_PENDING;   // Transmit their RSL in next appropriate timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // Ignore non-sense
@@ -804,6 +837,7 @@ void Sequencer::eotReplyEvent(Decode* msg) {
             set_message(MSG_73);                   // Prepare an RRR message
             state = M73_PENDING;                   // We must await an appropriate even/odd timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             // TODO:  qso.end()???
             break;
 
@@ -855,6 +889,7 @@ void Sequencer::locatorEvent(Decode* msg) {
             set_message(MSG_RSL);  // Prepare to transmit RSL to responder
             state = RSL_PENDING;   // Must await an appropriate timeslot when responder is listening
             displayInfoMsg(get_message(), HX8357_YELLOW);
+            setIndicatorIcon(INDICATOR_ICON_PENDING);
             break;
 
         // Something is wrong and we don't know why we apparently received their locator.  Maybe we should reset everything???
@@ -938,6 +973,8 @@ void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
         setup_to_transmit_on_next_DSP_Flag();  // loop() begins modulation in next timeslot
         state = newState;                      // Advance state machine to new state after arming the transmitter
     }
+
+    setIndicatorIcon(INDICATOR_ICON_PENDING);  // Transmission pending
 
 }  // pendXmit()
 
@@ -1041,6 +1078,7 @@ void Sequencer::endQSO() {
 
     // We are finished with this contact whether we had enough data to log it or not
     contact.reset();
+    setIndicatorIcon(INDICATOR_ICON_RECEIVE);   //We are receiving again
 }
 
 /**
@@ -1067,3 +1105,6 @@ void setAutoReplyToCQ(bool x) {
 bool getAutoReplyToCQ() {
     return autoReplyToCQ;
 }
+
+
+

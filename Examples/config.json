@@ -1,0 +1,33 @@
+//------------------------------------------------------------------------------------------------------
+//
+//  Pocket FT8 Revisited JSON Configuration File
+//
+//  NOTES
+//  + There is no reasonable default for the station callsign; it must be configured
+//  + There is no reasonable default for the operating frequency; it too must be configured
+//  + The 4-character maidenhead locator is optional if you have a working GPS
+//  + If your GPS is new or slow, you may need 60 seconds or more for the gpsTimeout
+//  + The Si4735 AVC can normally be enabled though your mileage may vary
+//
+//  DETAILS
+//  The operating frequency may be configured for any amateur band between 160 and 12 meters subject
+//  to the following restrictions:  The chosen frequency (e.g. 7074 kHz) must align with the chosen
+//  low pass filter installed in the hardware.  The Si4735 is limited to a maximum frequency of ~26 mHz.
+//  The firmware does not verify the operating frequency lies within an amateur radio band. The
+//  firmware and hardware have only been tested on 40 and 20 meters.
+//
+//  If you have a working GPS, the locator is obtained from the satellites if unspecified.  The
+//  locator you specify overides the GPS if that's what you really want.  If your GPS is not working
+//  and you don't specify a locator, then the firmware omits the locator from your traffic.
+//
+//  This configuration file must be named "config.json" and installed on the Teensy's SD card slot.
+//
+//------------------------------------------------------------------------------------------------------
+{
+   "callsign": "KQ7B",             //REQUIRED:  Station callsign
+   "frequency": 7074,              //REQUIRED:  Operating frequency in kHz
+   "locator": "",                  //OPTIONAL:  Station maidenhead gridsquare (four-characters)
+   "enableAVC": 1,                 //OPTIONAL:  0=disabled, 1=enabled SI4735 AVC (default is enabled)
+   "gpsTimeout": 5,                //OPTIONAL:  Maximum seconds we wait for a GPS fix before giving-up
+   "qsoTimeout": 120               //OPTIONAL:  Seconds Sequencer will retry w/o response from remote
+}

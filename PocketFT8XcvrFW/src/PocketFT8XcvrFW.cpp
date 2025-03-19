@@ -4,7 +4,7 @@
 **  PocketFT8XcvrFW -- Firmware for the KQ7B edition of the Pocket FT8 transceiver
 **
 ** DESCRIPTION
-**  This is a somewhat faithful implementation of the original Pocket FT8 transceiver
+**  The PocketFT8Xcvr is a derivative of the original Pocket FT8 transceiver
 **  in a compact, self-contained, package.  Notable features include:
 **    + 4-Layer PCB
 **    + Single band FT8 transmit/receiver
@@ -13,44 +13,49 @@
 **    + Adafruit 320x480 3.5" resistive touchscreen display
 **    + TCXO
 **    + Powered by 0.37 Amps from a single +5V USB power source
-**    + SD Card logging to txt file
+**    + SD Card logging to ADIF file
 **    + Station configuration JSON file
 **    + Plugable filters
-**  The overall goal is to construct a single band, self-contained, HF FT8 transceiver for
-**  POTA/SOTA work where light weight and power demand dominate other goals.
+**    + Optional Adafruit Ultimate GPS automates time synchronization and Maidenhead Grid Square locator
+**  The overall goal is to construct a single band, fully self-contained, HF FT8 transceiver for
+**  POTA/SOTA work where light weight and power requirements dominate other goals.
 **
 ** RATIONAL
-**  + Single-band operation is not a serious limitation for SOTA/POTA work where the available
-**  antenna defines the available band.
+**  + Single-band operation is not a serious limitation for SOTA/POTA work where the portable
+**  antenna limits the available band(s).
 **  + QRPP == battery life for SOTA/POTA
 **  + While the SI4735 receiver's performance likely lags that available from a Tayloe detector,
-**  it offers considerable simplicity and effectiveness for SOTA/POTA FT8 operation.  If it
-**  proves an issue, then the solution is well understood (see DX FT8 project).
+**  it offers considerable simplicity and effectiveness for SOTA/POTA FT8 operation.
 **
 ** FUTURE
-**    + Standard log file format
-**    + Wouldn't it be nice if the SD card were accessible via USB from a computer host
 **    + Consider using a real touchscreen controller to replace the MCP342X ADC
 **    + Bug fixes (see https://github.com/conr2286/PocketFT8Xcvr Issues)
+**    + Update the FT8 library with Karlis' more recent code
 **
 ** KQ7B
-**  Retired engineer living in north central Idaho (USA)
+**  Retired networking engineer living in north central Idaho (USA), stereotype "old guy"
+**  ham radio operator, began constructing radios and was first licensed in the 1960s.
+**  "What a long, strange trip it has been." -- The Grateful Dead
 **
-**  VERSIONS
-**  1.00 Never built due to unobtanium componentry
-**  1.01 PCB requires several patches to correct known issues
-**  1.10 Working firmware and transmitter but SI4735 suffers serious I2C noise issues
-**  2.00 Revised board/firmware overcomes I2C noise problems
+** VERSIONS
+**  1.00 Never completed due to unobtanium componentry
+**  1.01 PCB required several patches to correct known issues.  You don't want this.
+**  1.10 Working firmware and transmitter but SI4735 suffers serious I2C noise issues.  Avoid this one too.
+**  2.00 Revised board/firmware overcomes I2C noise problems.  Requires one patch wire for GPS.
+**  2.10 Firmware implements bug fixes, ADIF logging, and the "RoboOp" QSO Sequencer.  Uses V2.00 boards.
 **
 ** ATTRIBUTION
-**  https://github.com/Rotron/Pocket-FT8  Charley Hill's original Pocket FT8
+**  https://github.com/Rotron/Pocket-FT8  Charley Hill's original Pocket FT8 project
 **  https://github.com/WB2CBA/W5BAA-FT8-POCKET-TERMINAL  Barb's FT8 Pocket Terminal
 **  https://github.com/kgoba/ft8_lib  Karlis Goba's FT8 Library for microprocessors
-**  https://github.com/conr2286/PocketFT8Xcvr  The KQ7B HW and FW edition
-**  Many other contributions to the various libraries
+**  https://github.com/conr2286/PocketFT8Xcvr  The KQ7B HW and FW projects
+**  Many other contributors (e.g. Adafruit et al) to the various libraries
 **
 ** LICENSES
-**  Various open source licenses widely cited throughout
+**  The permissive MIT license widely cited throughout, except the SI5351 library has a copy-left GPL license.
+**
+** REFERENCES
+**  Franke, Somerville, and Taylor.  "The FT4 and FT8 Communication Protocols." QEX. Jul/Aug 2020.
 */
 
 #include <Arduino.h>
@@ -85,7 +90,7 @@
 #include "si5351.h"
 #include "traffic_manager.h"
 
-// Forward references
+// Forward references (required to build on PlatformIO)
 void loadSSB();
 time_t getTeensy3Time();
 void waitForFT8timeslot();
@@ -132,7 +137,7 @@ struct Config {
 
 // Adafruit 480x320 touchscreen configuration
 DMAMEM HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
-TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
+TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                          // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 
 /// Build the VFO clock
 Si5351 si5351;
@@ -221,6 +226,9 @@ GPShelper gpsHelper(9600);
  *
  * Note:  The display must be initialized before GPShelper calls here
  *
+ * TODO:  We probably don't need this anymore as we're using the GPS PPS interrupt
+ * to determine when a satellite fix is obtained.
+ *
  **/
 static void gpsCallback(unsigned seconds) {
     char msg[32];
@@ -230,6 +238,9 @@ static void gpsCallback(unsigned seconds) {
 
 /**
  ** @brief Sketch initialization
+ **
+ ** The FLASHMEM qualifier places the setup() function in the Teensy 4.1 flash memory, thereby
+ ** saving RAM1 for high performance code/data.
  **/
 FLASHMEM void setup(void) {
     // Get the USB serial port running before something else goes wrong
@@ -238,16 +249,17 @@ FLASHMEM void setup(void) {
 
     // Is Teensy recovering from a crash?
     if (CrashReport) {
-        Serial.print(CrashReport);
+        Serial.print(CrashReport);  // You'll have fun debugging this on a Teensy :(
         delay(5000);
     }
 
     // Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
-    // won't run at the standard Teensy sample rate.  No known way to do this at compile-time with a floating constant.
+    // won't run at the standard Teensy sample rate.  In the best-of-all-possible-worlds, we'd implement this check at
+    // compile time, but KQ7B hasn't found how to check at compile-time with a float value for AUDIO_SAMPLE_RATE_EXACT.
     if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
         Serial.println("Build Firmware Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
-        // Serial.println("You must copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
-        // Serial.println("...before building the Pocket FT8 firmware.\n");
+        Serial.println("You must copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
+        Serial.println("...before building the Pocket FT8 firmware.\n");
         while (true) continue;  // Fatal
     }
 
@@ -271,7 +283,7 @@ FLASHMEM void setup(void) {
     }
 
 // Zero-out EEPROM when executed on a new Teensy (whose memory is filled with 0xff).  This prevents
-// calcuation of crazy transmit offset from 0xffff filled EEPROM.
+// calcuation of crazy transmit offset from 0xffff filled EEPROM.  TODO:  Do we still need the offset thing???
 #define EEPROMSIZE 4284  // Teensy 4.1
     bool newChip = true;
     for (int adr = 0; adr < EEPROMSIZE; adr++) {
@@ -283,14 +295,14 @@ FLASHMEM void setup(void) {
     }
     // DPRINTF("Offset = %d\n", EEPROM.read(10));
 
-    // Initialize the SI5351 clock generator.  Pocket FT8 Revisited boards use CLKIN input.
-    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          // Charlie's correction was 2200 if that someday matters
-    si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  // KQ7B V1.00 uses cmos CLKIN, not a XTAL
+    // Initialize the SI5351 clock generator.  NOTE:  PocketFT8Xcvr boards use CLKIN input (supposedly less jitter than XTAL).
+    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          // KQ7B's counter isn't accurate enough to calculate a correction
+    si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  // We are using cmos CLKIN, not a XTAL input!!!
     si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  // All PLLs using CLKIN
-    si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);
-    si5351.set_freq(3276800, SI5351_CLK2);  // Receiver's PLL clock for Si4735
-    si5351.output_enable(SI5351_CLK2, 1);   // Receiver's clock is always on
-    si5351.output_enable(SI5351_CLK0, 0);   // Disable transmitter for now
+    si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);              // Fixed point division offers less jitter
+    si5351.set_freq(3276800, SI5351_CLK2);                      // Receiver's fixed frequency clock for Si4735
+    si5351.output_enable(SI5351_CLK2, 1);                       // Receiver's clock is always on
+    si5351.output_enable(SI5351_CLK0, 0);                       // Disable transmitter for now
 
     // Gets and sets the Si47XX I2C bus address
     int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
@@ -309,7 +321,8 @@ FLASHMEM void setup(void) {
     if (error) {
         char msg[40];
         snprintf(msg, sizeof(msg), "Unable to read Teensy SD config file, %s\n", CONFIG_FILENAME);
-        delay(1000);
+        displayInfoMsg(msg);
+        delay(5000);
     }
 
     // Extract the configuration parameters from doc or assign their defaults to the config struct
@@ -330,7 +343,7 @@ FLASHMEM void setup(void) {
     // DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
     // DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
 
-    // Argh... copy station callsign config struct to C global variables (fix someday)
+    // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)
     strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
 
     // Initialize the SI4735 receiver
@@ -350,7 +363,7 @@ FLASHMEM void setup(void) {
     // Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
     // frequency which is stabilized but *not* determined by the Si5351.
     // The apparent result of all this is the transmit and receive
-    // frequencies may not be obviously aligned (need to understand this better).
+    // frequencies may not be obviously aligned (TODO:  Why not?  Is this still necessary?).
     Serial.println(" ");
     Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
     Serial.println("Use keyboard u to raise, d to lower, & s to save ");
@@ -359,6 +372,10 @@ FLASHMEM void setup(void) {
     // Initialize the receiver's DSP chain
     init_DSP();
     initalize_constants();
+
+    // Setup buffers for received audio.  Extensive testing discovered smaller buffer pool sizes
+    //(e.g. 20) were sometimes exhausted, especially following certain HX8357 graphics activity.
+    // It can run on less than 100, but you'll occasionally miss a receive timeslot.
     AudioMemory(audioQueueSize);  // Number of Teensy audio queue blocks
 
     // //If we are recording raw audio to SD, then create/open the SD file for writing
@@ -369,7 +386,7 @@ FLASHMEM void setup(void) {
     // }
 
     display_all_buttons();
-    open_log_file();
+    // open_log_file();          //This was the old TXT file (predecessor of ADIF logging)
 
     // Start the audio pipeline
     queue1.begin();
@@ -385,20 +402,25 @@ FLASHMEM void setup(void) {
     // Misc initialization
     set_Station_Coordinates(Locator);
 
-    // Start the QSO Sequencer
+    // Start the QSO Sequencer (RoboOp)
     DTRACE();
-    seq.begin(config.qsoTimeout, "LOGFILE.ADIF");  // Parameter configures Sequencer's run-on QSO timeout period in seconds
+    seq.begin(config.qsoTimeout, "LOGFILE.ADIF");  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
     receive_sequence();                            // Setup to receive at start of first timeslot
 
-    // Start receiving in a new timeslot
+    // Wait for the next FT8 timeslot (at 0, 15, 30, or 45 seconds past the minute)
     // start_time = millis();     //Note start time for update_synchronization()
     // update_synchronization();  //Do we really need this in-addition to and before waitForFT8timeslot()?
     waitForFT8timeslot();  // Wait for a 15 second FT8 timeslot
 
 }  // setup()
 
-unsigned oldFlags = 0;
+unsigned oldFlags = 0;  // Used only for debugging the flags
 
+/**
+ * @brief Here's the Arduino world's main loop()
+ *
+ * Note:  Placing the loop() code in FLASHMEM saves RAM1 memory for more time-sensitive activities
+ */
 FLASHMEM void loop() {
     // Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
     // unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
@@ -412,10 +434,10 @@ FLASHMEM void loop() {
 
     // Is there buffered time-domain data for the DSP logic to work with???
     if (DSP_Flag == 1) {
-        // Yes, transform recv'd time-domain audio to frequency domain (to see the FT8 channels)
+        // Yes, transform recv'd time-domain audio to frequency domain (to see the FT8 sigs)
         process_FT8_FFT();
 
-        // Is a transmission in-progress?  Why is this guarded by DSP_Flag???????
+        // Is a transmission in-progress?  Why is this question guarded by DSP_Flag (above)???????
         if (xmit_flag == 1) {
             int offset_index = 5;  //???
 
@@ -441,7 +463,7 @@ FLASHMEM void loop() {
         display_date(DISPLAY_DATE_X, DISPLAY_DATE_Y);
     }  // DSP_Flag
 
-    // Apparently:  Have we acquired all of the receive timeslot's data?
+    // Apparently:  Have we acquired all of the timeslot's receiver time-domain data?
     if (decode_flag == 1) {
         // unsigned long td0 = millis();
         num_decoded_msg = ft8_decode();  // Decode the received messages
@@ -450,13 +472,13 @@ FLASHMEM void loop() {
 
         // If a message is waiting for transmission, turn-on the carrier and set xmit_flag to modulate it.
         // WARNING:  There may be some confusion about what Transmit_Armned really means.  But this is
-        // legacy code and we're hesitant to modify it.
+        // legacy code and we're hesitant to modify it while the ghosts-of-versions-past still haunt us.
         if (Transmit_Armned == 1) setup_to_transmit_on_next_DSP_Flag();
     }
 
     // Check touchscreen and serial port for activity
     process_touch();
-    if (tune_flag == 1) process_serial();
+    if (tune_flag == 1) process_serial();  // TODO:  Do we still need this???
 
     // If we have not yet obtained valid GPS data, but the GPS device has acquired a fix, then obtain the GPS data.
     // This is a bit abrupt as we afterward more or less resynch everything and wait for a timeslot.
@@ -490,7 +512,7 @@ FLASHMEM void loop() {
     // Service the Timer inventory
     Timer::serviceTimers();
 
-    // Update flags when a new timeslot begins
+    // Update flags when a new timeslot begins.
     update_synchronization();
 
 }  // loop()
@@ -499,6 +521,9 @@ time_t getTeensy3Time() {
     return Teensy3Clock.get();
 }
 
+/**
+ * @brief Loads the SSB patch into the SI4735
+ */
 FLASHMEM void loadSSB() {
     si4735.queryLibraryId();  // Is it really necessary here? I will check it.
     si4735.patchPowerUp();

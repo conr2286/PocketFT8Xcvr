@@ -86,6 +86,42 @@ static char* strlpad(char* dst, char* src, char c, unsigned size) {
 
 }  // strlpad()
 
+/**
+ * @brief Set the GUI's Transmit/Receive/Pending icon color
+ * @param indicator Specifies what we're doing
+ */
+void setIndicatorIcon(IndicatorIconType indicator) {
+    const unsigned iconRadius = 10;
+    unsigned short color;
+    unsigned x = DISPLAY_MAX_X - iconRadius;
+    unsigned y = DISPLAY_MAX_Y - iconRadius;
+
+    switch (indicator) {
+        // We are receiving
+        case INDICATOR_ICON_RECEIVE:
+            color = HX8357_GREEN;
+            break;
+        // We are pending transmission in next timeslot
+        case INDICATOR_ICON_PENDING:
+            color = HX8357_YELLOW;
+            break;
+        // Transmission is in progress
+        case INDICATOR_ICON_TRANSMIT:
+            color = HX8357_RED;
+            break;
+        // Tuning in progress
+        case INDICATOR_ICON_TUNING:
+            color = HX8357_ORANGE;
+            break;
+        // Lost in the ozone again
+        default:
+            color = HX8357_BLACK;
+            break;
+    }
+
+    tft.drawCircle(x, y, iconRadius, color);
+}  // setIndicatorIcon()
+
 void display_value(int x, int y, int value) {
     char string[7];  // print format stuff
     sprintf(string, "%6i", value);
@@ -160,41 +196,41 @@ void displayInfoMsg(const char* msg, uint16_t color) {
     tft.print(bfr);
 }  // displayMsg()
 
-void make_filename(void) {
-    getTeensy3Time();
-    snprintf((char*)log_filename, sizeof(log_filename), "%2i%2i%4i%2i%2i", day(), month(), year(), hour(), minute());
-    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    tft.setTextSize(2);
-    tft.setCursor(0, 200);
-    tft.print(log_filename);
-}
+// void make_filename(void) {
+//     getTeensy3Time();
+//     snprintf((char*)log_filename, sizeof(log_filename), "%2i%2i%4i%2i%2i", day(), month(), year(), hour(), minute());
+//     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+//     tft.setTextSize(2);
+//     tft.setCursor(0, 200);
+//     tft.print(log_filename);
+// }
 
-// Opens the logfile, appends asterisk line, and closes the log file.
-// Displays name of the log file.
-bool open_log_file(void) {
-    if (!SD.begin(BUILTIN_SDCARD)) {
-        tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-        tft.setTextSize(2);
-        tft.setCursor(0, 200);
-        tft.print("SD Card not found");
-        log_flag = 0;
-        return false;
-    } else {
-        Log_File = SD.open("FT8_Log.txt", FILE_WRITE);
-        // Log_File = SD.open(log_filename, FILE_WRITE);
+// // Opens the logfile, appends asterisk line, and closes the log file.
+// // Displays name of the log file.
+// bool open_log_file(void) {
+//     if (!SD.begin(BUILTIN_SDCARD)) {
+//         tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+//         tft.setTextSize(2);
+//         tft.setCursor(0, 200);
+//         tft.print("SD Card not found");
+//         log_flag = 0;
+//         return false;
+//     } else {
+//         Log_File = SD.open("FT8_Log.txt", FILE_WRITE);
+//         // Log_File = SD.open(log_filename, FILE_WRITE);
 
-        Log_File.println(" ");
-        Log_File.println("**********************");
+//         Log_File.println(" ");
+//         Log_File.println("**********************");
 
-        Log_File.close();
-        tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-        tft.setTextSize(2);
-        tft.setCursor(0, 200);
-        tft.print("FT8_Log.txt");
-        log_flag = 1;
-        return true;
-    }
-}
+//         Log_File.close();
+//         tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+//         tft.setTextSize(2);
+//         tft.setCursor(0, 200);
+//         tft.print("FT8_Log.txt");
+//         log_flag = 1;
+//         return true;
+//     }
+// }
 
 // Displays our station callsign and our maidenhead locator
 void display_station_data(int x, int y) {
@@ -206,9 +242,9 @@ void display_station_data(int x, int y) {
     tft.print(string);
 }
 
-// Opens the log file, appends the specified string to the logfile, and closes the file
-void write_log_data(char* data) {
-    Log_File = SD.open("FT8_Log.txt", FILE_WRITE);
-    Log_File.println(data);
-    Log_File.close();
-}
+// Opens the (old) TXT log file, appends the specified string to the logfile, and closes the file
+// void write_log_data(char* data) {
+//     Log_File = SD.open("FT8_Log.txt", FILE_WRITE);
+//     Log_File.println(data);
+//     Log_File.close();
+// }
