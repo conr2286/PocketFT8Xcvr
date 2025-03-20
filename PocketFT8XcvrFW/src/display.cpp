@@ -90,42 +90,50 @@ static char* strlpad(char* dst, char* src, char c, unsigned size) {
  * @brief Set the GUI's Transmit/Receive/Pending icon color
  * @param indicator Specifies what we're doing
  */
-void setIndicatorIcon(IndicatorIconType indicator) {
-    const unsigned iconRadius = 10;
-    unsigned short color;
-    unsigned x = DISPLAY_MAX_X - iconRadius;
-    unsigned y = DISPLAY_MAX_Y - iconRadius;
+void setXmitRecvIndicator(IndicatorIconType indicator) {
+    unsigned short color;  // Indicator icon color
+    char* string;
+    char paddedString[9];
 
     switch (indicator) {
         // We are receiving
         case INDICATOR_ICON_RECEIVE:
             color = HX8357_GREEN;
+            string = "RECEIVE";
             break;
-        // We are pending transmission in next timeslot
+        // Transmission pending for next appropriate timeslot
         case INDICATOR_ICON_PENDING:
             color = HX8357_YELLOW;
+            string = "PENDING";
             break;
-        // Transmission is in progress
+        // Transmission in progress
         case INDICATOR_ICON_TRANSMIT:
             color = HX8357_RED;
+            string = "TRANSMIT";
             break;
         // Tuning in progress
         case INDICATOR_ICON_TUNING:
             color = HX8357_ORANGE;
+            string = "TUNING";
             break;
         // Lost in the ozone again
         default:
             color = HX8357_BLACK;
+            string = " ";
             break;
     }
 
-    tft.drawCircle(x, y, iconRadius, color);
+    tft.setTextColor(color, HX8357_BLACK);
+    tft.setTextSize(2);
+    tft.setCursor(DISPLAY_XMIT_RECV_INDICATOR_X, DISPLAY_XMIT_RECV_INDICATOR_Y);
+    strlpad(paddedString, string, ' ', sizeof(paddedString));
+    tft.print(paddedString);
 }  // setIndicatorIcon()
 
-void display_value(int x, int y, int value) {
-    char string[7];  // print format stuff
-    sprintf(string, "%6i", value);
-    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+void display_frequency(int x, int y, int value) {
+    char string[9];  // print format stuff
+    sprintf(string, "F=%i", value);
+    tft.setTextColor(HX8357_WHITE, HX8357_BLACK);
     tft.setTextSize(2);
     tft.setCursor(x, y);
     tft.print(string);
@@ -136,7 +144,7 @@ void display_time(int x, int y) {
     char string[13];  // print format stuff
     sprintf(string, "%02i:%02i:%02i", hour(), minute(), second());
     if (gpsHelper.validGPSdata) {
-        tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);  // GPS-acquired UTC time
+        tft.setTextColor(HX8357_GREEN, HX8357_BLACK);  // GPS-acquired UTC time
     } else {
         tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
     }
@@ -154,7 +162,7 @@ void display_date(int x, int y) {
     sprintf(string, "%02i/%02i/%02i", year() % 1000, month(), day());
 #endif
     if (gpsHelper.validGPSdata) {
-        tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);  // GPS-acquired UTC date
+        tft.setTextColor(HX8357_GREEN, HX8357_BLACK);  // GPS-acquired UTC date
         // strlcat(string, " UTC", sizeof(string));
     } else {
         tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
@@ -195,56 +203,3 @@ void displayInfoMsg(const char* msg, uint16_t color) {
     tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
     tft.print(bfr);
 }  // displayMsg()
-
-// void make_filename(void) {
-//     getTeensy3Time();
-//     snprintf((char*)log_filename, sizeof(log_filename), "%2i%2i%4i%2i%2i", day(), month(), year(), hour(), minute());
-//     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-//     tft.setTextSize(2);
-//     tft.setCursor(0, 200);
-//     tft.print(log_filename);
-// }
-
-// // Opens the logfile, appends asterisk line, and closes the log file.
-// // Displays name of the log file.
-// bool open_log_file(void) {
-//     if (!SD.begin(BUILTIN_SDCARD)) {
-//         tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-//         tft.setTextSize(2);
-//         tft.setCursor(0, 200);
-//         tft.print("SD Card not found");
-//         log_flag = 0;
-//         return false;
-//     } else {
-//         Log_File = SD.open("FT8_Log.txt", FILE_WRITE);
-//         // Log_File = SD.open(log_filename, FILE_WRITE);
-
-//         Log_File.println(" ");
-//         Log_File.println("**********************");
-
-//         Log_File.close();
-//         tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-//         tft.setTextSize(2);
-//         tft.setCursor(0, 200);
-//         tft.print("FT8_Log.txt");
-//         log_flag = 1;
-//         return true;
-//     }
-// }
-
-// Displays our station callsign and our maidenhead locator
-void display_station_data(int x, int y) {
-    char string[13];  // print format stuff
-    sprintf(string, "%7s %4s", Station_Call, Locator);
-    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    tft.setTextSize(2);
-    tft.setCursor(x, y);
-    tft.print(string);
-}
-
-// Opens the (old) TXT log file, appends the specified string to the logfile, and closes the file
-// void write_log_data(char* data) {
-//     Log_File = SD.open("FT8_Log.txt", FILE_WRITE);
-//     Log_File.println(data);
-//     Log_File.close();
-// }

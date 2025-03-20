@@ -25,3 +25,8 @@ void strncap(char* dst, char* src, unsigned size) {
     }
     *dst = 0;  // NUL terminator
 }
+
+
+
+
+

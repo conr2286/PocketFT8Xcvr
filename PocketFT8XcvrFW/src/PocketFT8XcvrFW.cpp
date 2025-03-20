@@ -394,7 +394,7 @@ FLASHMEM void setup(void) {
     // Set operating frequency
     set_startup_freq();
     delay(10);
-    display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
+    display_frequency(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
 
     // Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
     setSyncProvider(getTeensy3Time);
@@ -756,7 +756,7 @@ void waitForFT8timeslot(void) {
     seq.timeslotEvent();
 
     // Update display
-    displayInfoMsg("RECV");
+    // displayInfoMsg("RECV");
 
     DPRINTF("-----Timeslot %lu: second()=%u, millis()=%lu ---------------------\n", seq.getSequenceNumber(), millis());
 

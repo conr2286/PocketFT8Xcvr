@@ -43,8 +43,6 @@ extern int K_BYTES;
 
 int max_score;
 
-extern void display_value(int x, int y, int value);
-
 // Localize top N candidates in frequency and time according to their sync strength (looking at Costas symbols)
 // We treat and organize the candidate list as a min-heap (empty initially).
 int find_sync(const uint8_t *power, int num_blocks, int num_bins, const uint8_t *sync_map, int num_candidates, Candidate *heap, int min_score) {

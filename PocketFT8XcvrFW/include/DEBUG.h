@@ -2,18 +2,19 @@
 NAME
   DEBUG.h --- A simple Arduino debugging package for MPUs sans JTAG
 
-USAGE
-  #include "DEBUG.h"              //Include the debug macros in your source file
-  #include "NODEBUG.h"            //Disable debug output messages
+USAGE EXAMPLES
+  #include "DEBUG.h"              //Include this file to enable debugging in a source file
+  #include "NODEBUG.h"            //Alternatively include this file to disable debugging in a source file
 
   DTRACE()                        //Print source filename and line number
   DPRINTF("foo=%u\n",foo)         //Print labeled value of foo
 
 NOTES
-  Debug message output is written to a Stream defined by DEBUG_STREAM below
+  Teensy does not support any normal debugging connection (e.g. JTAG).  So... we are left
+  to write debug message output to a Stream defined by DEBUG_STREAM below.  :(
 
 LIMITATIONS
-  DEBUG_STREAM must support printf
+  DEBUG_STREAM must support printf (available on Teensy)
 
 LICENSE
   Public domain
@@ -26,8 +27,8 @@ ATTRIBUTION
 #include <Arduino.h>
 #pragma once
 
-// Define a symbol such that all debugging messages in all files can be disabled at this one location
-#define ENABLE_DEBUG 1
+// Define a symbol such that all debugging messages in all files can be disabled from this one location
+#define ENABLE_DEBUG 1  // This should normally be a 1 so each source file can make its own decision
 
 #if ENABLE_DEBUG
 

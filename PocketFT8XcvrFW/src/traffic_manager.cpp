@@ -61,7 +61,7 @@ void transmit_sequence(void) {
     pinMode(PIN_PTT, OUTPUT);
     digitalWrite(PIN_PTT, HIGH);
 
-    setIndicatorIcon(INDICATOR_ICON_TRANSMIT);
+    setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);
 }
 
 /**
@@ -71,7 +71,7 @@ void transmit_sequence(void) {
 void receive_sequence(void) {
     DTRACE();
 
-    displayInfoMsg("RECV");
+    displayInfoMsg(" ");
 
     // Turn off the transmitter's clock -- this should stop the xmit RF chain
     si5351.output_enable(SI5351_CLK0, 0);
@@ -88,7 +88,7 @@ void receive_sequence(void) {
     // Receive
     si4735.setVolume(50);
     clearOutboundMessageDisplay();
-    setIndicatorIcon(INDICATOR_ICON_RECEIVE);
+    setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 
 }  // receive_sequence()
 
@@ -99,7 +99,7 @@ void receive_sequence(void) {
 void tune_On_sequence(void) {
     DTRACE();
 
-    displayInfoMsg("TUNE");
+    //displayInfoMsg("TUNE");
 
     // Program the transmitter clock to F_Long
     uint64_t tuneFreq = currentFrequency * 1000ULL * 100ULL;  // KQ7B tuning at FT8 base subband freq (e.g. 7074)
@@ -122,7 +122,7 @@ void tune_On_sequence(void) {
 
     // Let loop() know we are tuning
     tune_flag = 1;
-    setIndicatorIcon(INDICATOR_ICON_TUNING);
+    setXmitRecvIndicator(INDICATOR_ICON_TUNING);
 
     // DPRINTF("TUNE\n");
 
@@ -134,7 +134,7 @@ void tune_On_sequence(void) {
 void tune_Off_sequence(void) {
     DTRACE();
 
-    displayInfoMsg("RECV");
+    displayInfoMsg(" ");
 
     // Turn-off the transmitter's clock
     si5351.output_enable(SI5351_CLK0, 0);
@@ -152,7 +152,7 @@ void tune_Off_sequence(void) {
 
     // Finished tuning
     tune_flag = 0;
-    setIndicatorIcon(INDICATOR_ICON_RECEIVE);
+    setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 
     // DPRINTF("TUNE OFF\n");
 
