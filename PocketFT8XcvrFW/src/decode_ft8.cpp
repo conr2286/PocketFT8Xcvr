@@ -246,7 +246,8 @@ int ft8_decode(void) {
  * messages to message_limit=6.  When the number of decoded messages exceeds what can
  * be displayed, only the first message_limit messages appear.
  *
- * The LCD display region is rectangular, 240 pixels wide and 140 pixels high
+ * The LCD display region is rectangular, 240 pixels wide and 140 pixels high.  Text size 2
+ * produces 12X16 (widthXheight) pixel characters. 
  *
  * Warning:  fillRect() is amazingly time-consuming.  Thus, we erase old messages by
  * printing space chars.

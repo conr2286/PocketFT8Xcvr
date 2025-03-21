@@ -253,11 +253,20 @@ FLASHMEM void setup(void) {
         delay(5000);
     }
 
+    // Initialize the Adafruit 480x320 TFT display
+    tft.begin(HX8357D);
+    tft.fillScreen(HX8357_BLACK);
+    tft.setTextColor(HX8357_YELLOW);
+    tft.setRotation(3);
+    tft.setTextSize(2);
+
     // Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
     // won't run at the standard Teensy sample rate.  In the best-of-all-possible-worlds, we'd implement this check at
     // compile time, but KQ7B hasn't found how to check at compile-time with a float value for AUDIO_SAMPLE_RATE_EXACT.
     if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
-        Serial.println("Build Firmware Error:  AUDIO_SAMPLE_RATE_EXACT!=6400.0f\n");
+        char msg[] = "FATAL:  AUDIO_SAMPLE_RATE_EXACT!=6400.0F";
+        displayInfoMsg(msg);
+        Serial.println(msg);
         Serial.println("You must copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
         Serial.println("...before building the Pocket FT8 firmware.\n");
         while (true) continue;  // Fatal
@@ -269,16 +278,10 @@ FLASHMEM void setup(void) {
     digitalWrite(PIN_RCV, HIGH);  // Disable the PA and disconnect receiver's RF input from antenna
     digitalWrite(PIN_PTT, LOW);   // Unground the receiver's RF input
 
-    // Initialize the Adafruit 480x320 TFT display
-    tft.begin(HX8357D);
-    tft.fillScreen(HX8357_BLACK);
-    tft.setTextColor(HX8357_YELLOW);
-    tft.setRotation(3);
-    tft.setTextSize(2);
 
     // Initialize the SD library if the card is available
     if (!SD.begin(BUILTIN_SDCARD)) {
-        displayInfoMsg("Unable to access SD card");
+        displayInfoMsg("Error:  Unable to access SD card");
         delay(2000);
     }
 
@@ -320,7 +323,7 @@ FLASHMEM void setup(void) {
     DeserializationError error = deserializeJson(doc, configFile);
     if (error) {
         char msg[40];
-        snprintf(msg, sizeof(msg), "Unable to read Teensy SD config file, %s\n", CONFIG_FILENAME);
+        snprintf(msg, sizeof(msg), "Error:  Unable to read Teensy SD file, %s\n", CONFIG_FILENAME);
         displayInfoMsg(msg);
         delay(5000);
     }
@@ -364,10 +367,10 @@ FLASHMEM void setup(void) {
     // frequency which is stabilized but *not* determined by the Si5351.
     // The apparent result of all this is the transmit and receive
     // frequencies may not be obviously aligned (TODO:  Why not?  Is this still necessary?).
-    Serial.println(" ");
-    Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
-    Serial.println("Use keyboard u to raise, d to lower, & s to save ");
-    Serial.println(" ");
+    // Serial.println(" ");
+    // Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
+    // Serial.println("Use keyboard u to raise, d to lower, & s to save ");
+    // Serial.println(" ");
 
     // Initialize the receiver's DSP chain
     init_DSP();
@@ -386,7 +389,6 @@ FLASHMEM void setup(void) {
     // }
 
     display_all_buttons();
-    // open_log_file();          //This was the old TXT file (predecessor of ADIF logging)
 
     // Start the audio pipeline
     queue1.begin();
@@ -492,13 +494,13 @@ FLASHMEM void loop() {
             // Now set the battery-backed Teensy RTC to the GPS-derived time in the MCU
             Teensy3Clock.set(now());
 
-            // Use the GPS-derived locator unless config.json hardwired it to something
+            // Use the GPS-derived locator unless config.json hardwired it to something else
             if (strlen(config.locator) == 0) {
                 strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
                 // DPRINTF("GPS derived Locator = %s\n", Locator);
             }
 
-            // Re-sync MCU clock with battery-backed RTC (UTC)
+            // Arrange for the Teensy battery-backed RTC (UTC) to keep the MCU time accurate
             setSyncProvider(getTeensy3Time);
 
             // Record the locator gridsquare
@@ -757,6 +759,8 @@ void waitForFT8timeslot(void) {
 
     // Update display
     // displayInfoMsg("RECV");
+    displayInfoMsg(" ");
+
 
     DPRINTF("-----Timeslot %lu: second()=%u, millis()=%lu ---------------------\n", seq.getSequenceNumber(), millis());
 
