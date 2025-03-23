@@ -124,7 +124,7 @@ void setXmitRecvIndicator(IndicatorIconType indicator) {
     }
 
     tft.setTextColor(color, HX8357_BLACK);
-    tft.setTextSize(2);
+    //tft.setTextSize(2);
     tft.setCursor(DISPLAY_XMIT_RECV_INDICATOR_X, DISPLAY_XMIT_RECV_INDICATOR_Y);
     strlpad(paddedString, string, ' ', sizeof(paddedString));
     tft.print(paddedString);
@@ -134,7 +134,7 @@ void display_frequency(int x, int y, int value) {
     char string[9];  // print format stuff
     sprintf(string, "F=%i", value);
     tft.setTextColor(HX8357_WHITE, HX8357_BLACK);
-    tft.setTextSize(2);
+    //tft.setTextSize(2);
     tft.setCursor(x, y);
     tft.print(string);
 }
@@ -148,7 +148,7 @@ void display_time(int x, int y) {
     } else {
         tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
     }
-    tft.setTextSize(2);
+    //tft.setTextSize(2);
     tft.setCursor(x, y);
     tft.print(string);
 }
@@ -167,7 +167,7 @@ void display_date(int x, int y) {
     } else {
         tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
     }
-    tft.setTextSize(2);
+    //tft.setTextSize(2);
     tft.setCursor(x, y);
     tft.print(string);
 }
@@ -199,7 +199,10 @@ void displayInfoMsg(const char* msg, uint16_t color) {
     char bfr[24];
     strlpad(bfr, msg, ' ', sizeof(bfr));
     tft.setTextColor(color, HX8357_BLACK);
-    tft.setTextSize(2);
+    //tft.setTextSize(2);
     tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
     tft.print(bfr);
 }  // displayMsg()
+
+
+

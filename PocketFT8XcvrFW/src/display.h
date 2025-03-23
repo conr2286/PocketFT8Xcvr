@@ -12,11 +12,17 @@
 #define DISPLAY_MAX_X 479
 #define DISPLAY_MAX_Y 319
 
+// Adafruit Graphics Library Fixed Point Text Size 2 Metrics
+#define TEXT2_WIDTH 12                                    // Pixels
+#define TEXT2_HEIGHT 16                                   // Pixels
+#define TEXT2_LEADING 4                                   // Space between lines
+#define TEXT2_LINE_HEIGHT (TEXT2_HEIGHT + TEXT2_LEADING)  // Line height including text and leading
+
 //------Upper-right region of the display----------------------------------------------------------
 
 // Define location of time region on display
 #define DISPLAY_TIME_X 360
-#define DISPLAY_TIME_Y 0
+#define DISPLAY_TIME_Y 1
 
 // Define location of selected (clicked) call on display
 #define DISPLAY_SELECTED_X 360
@@ -30,15 +36,17 @@
 #define DISPLAY_DATE_X 360
 #define DISPLAY_DATE_Y 20
 
-//------Calling stations region of the display-----------------------------------------------------
-#define DISPLAY_CALLING_X 260
-#define DISPLAY_CALLING_Y 100
-
 //------Decoded messages region of the display-----------------------------------------------------
-#define DISPLAY_DECODED_X 0
-#define DISPLAY_DECODED_Y 100
-#define DISPLAY_DECODED_W 256
-#define DISPLAY_DECODED_H 140
+#define DISPLAY_DECODED_CHARS 21                                 // #chars in a line of decoded text
+#define DISPLAY_DECODED_LINES 6                                  // #lines of messages in this region
+#define DISPLAY_DECODED_X 0                                      // Upper-left corner X
+#define DISPLAY_DECODED_Y 100                                    // Upper-left corner Y
+#define DISPLAY_DECODED_W (DISPLAY_DECODED_CHARS * TEXT2_WIDTH)  // Width in pixels
+#define DISPLAY_DECODED_H 140                                    // Height in pixels
+
+//------Calling stations region of the display-----------------------------------------------------
+#define DISPLAY_CALLING_X (DISPLAY_DECODED_Y + DISPLAY_DECODED_H + TEXT2_LINE_HEIGHT)
+#define DISPLAY_CALLING_Y 100
 
 //------Outbound (info) message region of the display---------------------------------------------
 #define DISPLAY_OUTBOUND_X 0

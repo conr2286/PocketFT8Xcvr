@@ -33,6 +33,7 @@
 
 // #include <HX8357_t3.h>
 #include "HX8357_t3n.h"
+#include "display.h"
 
 extern HX8357_t3n tft;
 
@@ -63,7 +64,7 @@ extern int M;
 
 extern int K_BYTES;
 
-//extern void write_log_data(char *data);
+// extern void write_log_data(char *data);
 
 Decode new_decoded[20];
 
@@ -74,10 +75,10 @@ int num_calls;  // number of unique calling stations
 int num_call_checks;
 int num_CQ_calls;
 int num_calls_to_CQ_station;
-int max_displayed_CQ = 6;
-int message_limit = 6;
+// int max_displayed_CQ = 6;
+int message_limit = DISPLAY_DECODED_LINES;
 
-int max_Calling_Stations = 6;
+int max_Calling_Stations = DISPLAY_DECODED_LINES;
 int num_Calling_Stations;
 
 extern char Station_Call[];
@@ -247,13 +248,13 @@ int ft8_decode(void) {
  * be displayed, only the first message_limit messages appear.
  *
  * The LCD display region is rectangular, 240 pixels wide and 140 pixels high.  Text size 2
- * produces 12X16 (widthXheight) pixel characters. 
+ * produces 12X16 (widthXheight) pixel characters.
  *
  * Warning:  fillRect() is amazingly time-consuming.  Thus, we erase old messages by
  * printing space chars.
  **/
-static const unsigned lineHeight = 25;  // Height in pixels of one line of text (including leading)
-static int previousMessageCount = 0;    // Number of messages displayed in previous timeslot
+static const unsigned lineHeight = TEXT2_LINE_HEIGHT;  // Height in pixels of one line of text (including leading)
+static int previousMessageCount = 0;                   // Number of messages displayed in previous timeslot
 void display_messages(int decoded_messages) {
     char message[kMax_message_length];
     // char big_gulp[60];
@@ -266,9 +267,9 @@ void display_messages(int decoded_messages) {
     // Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
     // field3 is an RSL or locator or ???.
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);                     // Currently... all messages are the same color
-    tft.setTextSize(2);                                                // 10X16 pixels per AdaFruit
+    //tft.setTextSize(2);                                                // 10X16 pixels per AdaFruit
     for (int i = 0; i < decoded_messages && i < message_limit; i++) {  // Charlie's leading handled 6 rows of text
-        snprintf(message, sizeof(message), "%s %s %4s %d", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].snr);
+        snprintf(message, sizeof(message), "%s %s %4s S%c", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, rsl2s(new_decoded[i].snr));
         // DPRINTF("display_message %u = '%s' loc='%s'\n", i, message, new_decoded[i].locator);
         strlpad(message, sizeof(message), ' ');  // Padding is faster than fillRect()
         tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
@@ -296,7 +297,7 @@ void display_selected_call(int index) {
     snprintf(selected_station, sizeof(selected_station), "%7s %3i", Target_Call, Target_RSL);
     // DPRINTF("display_selected_call(%d) '%s'\n", index, selected_station);
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    tft.setTextSize(2);
+    //tft.setTextSize(2);
     tft.setCursor(DISPLAY_SELECTED_X, DISPLAY_SELECTED_Y);
     tft.print(blank);
     tft.setCursor(DISPLAY_SELECTED_X, DISPLAY_SELECTED_Y);
@@ -400,12 +401,12 @@ int Check_Calling_Stations(int num_decoded) {
             getTeensy3Time();
             snprintf(big_gulp, sizeof(message), "%02i/%02i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
             tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-            tft.setTextSize(2);
+            //tft.setTextSize(2);
             tft.setCursor(DISPLAY_CALLING_X, DISPLAY_CALLING_Y + i * 25);
             tft.print(message);
 
             // Log details from this message to us (TODO:  prune retired TXT file logging code)
-            //if (logging_on == 1) write_log_data(big_gulp);
+            // if (logging_on == 1) write_log_data(big_gulp);
             // DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
             // DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
 
@@ -432,178 +433,202 @@ int Check_Calling_Stations(int num_decoded) {
 
 }  // Check_Calling_Stations()
 
-/*
+/**
+ * @brief Translate RSL (in dB) to S-Level
+ * @param rsl Signal-to-Noise level in dB
+ * @return Pointer to S-Level digit, 1..9
+ *
+ * WSJTX reports FT8 received signal levels (RSL) in dB but the Pocket FT8 Revisited's display
+ * doesn't have room for reports such as "-16" so we make signal reports great again by
+ * translating RSL back into a single digit (e.g. 1..9) S-Level (as in RST).
+ */
+char rsl2s(int rsl) {
+    static const char mapRSL2S[] = "112233445566778899";  // RSL Levels -17..0 dB
+    char S = ' ';                                         // S-Level
 
-void Check_CQ_Stations(int num_decoded) {
-
-  char big_gulp[30];
-  char little_gulp[30];
-  char CQ[] = "CQ";
-  int max_SNR = 0;
-  int max_SNR_index = 0;
-  int max_distance = 0;
-  int max_distance_index = 0;
-
-  clear_CQ_List_box();
-
-  for(int i = 0; i < num_decoded ; i++) {  //find stations calling CQ
-
-      if(strcmp(CQ, new_decoded[i].field1) == 0 ) { //check for CQ
-
-    strcpy(Calling_CQ[num_CQ_calls].call, new_decoded[i].field2);
-    strcpy(Calling_CQ[num_CQ_calls].decode_time, new_decoded[i].decode_time);
-    Calling_CQ[num_CQ_calls].distance = new_decoded[i].distance;
-    Calling_CQ[num_CQ_calls].snr = new_decoded[i].snr;
-
-    if(Calling_CQ[num_CQ_calls].snr > max_SNR ) {
-      max_SNR =   Calling_CQ[num_CQ_calls].snr;
-      max_SNR_index = num_CQ_calls;
+    if (rsl <= -17) return '1';  // Check for really weak signal
+    if (rsl >= 0) return '9';    // Check for really strong signal
+    switch (rsl) {
+        case -17:
+        case -16:
+            S = '1';
+            break;
+        case -15:
+        case -14:
+            S = '2';
+            break;
+        case -13:
+        case -12:
+            S = '3';
+            break;
+        case -11:
+        case -10:
+            S = '4';
+            break;
+        case -9:
+        case -8:
+            S = '5';
+            break;
+        case -7:
+        case -6:
+            S = '6';
+            break;
+        case -5:
+        case -4:
+            S = '7';
+            break;
+        case -3:
+        case -2:
+            S = '8';
+            break;
+        case -1:
+        case 0:
+            S = '9';
+            break;
+        default:
+            break;
     }
+    return S;
+}  // rsl2s()
 
+// TODO:  Prune dead code below if it's really dead
 
-   // if(Calling_CQ[num_CQ_calls].distance > max_distance ) {
-   //   max_distance =  Calling_CQ[num_CQ_calls].distance;
-   //   max_distance_index = num_CQ_calls;
-  //  }
+// void Check_CQ_Stations(int num_decoded) {
+//     char big_gulp[30];
+//     char little_gulp[30];
+//     char CQ[] = "CQ";
+//     int max_SNR = 0;
+//     int max_SNR_index = 0;
+//     int max_distance = 0;
+//     int max_distance_index = 0;
 
-    num_CQ_calls++;
-  }
+//     clear_CQ_List_box();
 
-  }
+//     for (int i = 0; i < num_decoded; i++) {  // find stations calling CQ
 
-  if(num_CQ_calls> 0){
+//         if (strcmp(CQ, new_decoded[i].field1) == 0) {  // check for CQ
 
-    //show_variable(200, 225,num_CQ_calls);
+//             strcpy(Calling_CQ[num_CQ_calls].call, new_decoded[i].field2);
+//             strcpy(Calling_CQ[num_CQ_calls].decode_time, new_decoded[i].decode_time);
+//             Calling_CQ[num_CQ_calls].distance = new_decoded[i].distance;
+//             Calling_CQ[num_CQ_calls].snr = new_decoded[i].snr;
 
-    sprintf(big_gulp,"%s %s  %3i %4i", Calling_CQ[max_SNR_index].decode_time,  Calling_CQ[max_SNR_index].call,  Calling_CQ[max_SNR_index].snr,  Calling_CQ[max_SNR_index].distance);
-    //Write_Log_Data(big_gulp);
+//             if (Calling_CQ[num_CQ_calls].snr > max_SNR) {
+//                 max_SNR = Calling_CQ[num_CQ_calls].snr;
+//                 max_SNR_index = num_CQ_calls;
+//             }
 
+//             // if(Calling_CQ[num_CQ_calls].distance > max_distance ) {
+//             //   max_distance =  Calling_CQ[num_CQ_calls].distance;
+//             //   max_distance_index = num_CQ_calls;
+//             //  }
 
+//             num_CQ_calls++;
+//         }
+//     }
 
-    BSP_LCD_SetFont (&Font16);
-    BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
+//     if (num_CQ_calls > 0) {
+//         // show_variable(200, 225,num_CQ_calls);
 
-    for(int i = 0; i < num_CQ_calls && i < max_displayed_CQ; i++) {
-      sprintf(little_gulp,"%s %3i %4i", Calling_CQ[i].call,Calling_CQ[i].snr, Calling_CQ[i].distance);
-      BSP_LCD_DisplayStringAt(240, 20+i*30, little_gulp,0x03);
-        // Write_Log_Data( little_gulp );
-        // Write_Log_Data( " " );
-    }
+//         sprintf(big_gulp, "%s %s  %3i %4i", Calling_CQ[max_SNR_index].decode_time, Calling_CQ[max_SNR_index].call, Calling_CQ[max_SNR_index].snr, Calling_CQ[max_SNR_index].distance);
+//         // Write_Log_Data(big_gulp);
 
-  }
+//         BSP_LCD_SetFont(&Font16);
+//         BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
 
+//         for (int i = 0; i < num_CQ_calls && i < max_displayed_CQ; i++) {
+//             sprintf(little_gulp, "%s %3i %4i", Calling_CQ[i].call, Calling_CQ[i].snr, Calling_CQ[i].distance);
+//             BSP_LCD_DisplayStringAt(240, 20 + i * 30, little_gulp, 0x03);
+//             // Write_Log_Data( little_gulp );
+//             // Write_Log_Data( " " );
+//         }
+//     }
 
-  } //check CQ Stations
+// }  // check CQ Stations
 
+// void process_selected_CQ(void) {
+//     BSP_LCD_SetFont(&Font16);
+//     BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+//     BSP_LCD_DisplayStringAt(240, 180, erase, 0x03);
 
-void process_selected_CQ(void){
+//     if (CQ_State == 0) {
+//         if (num_CQ_calls > 0 && FT_8_TouchIndex <= num_CQ_calls) {
+//             strcpy(Target_Call, Calling_CQ[FT_8_TouchIndex].call);
+//             Target_RSL = Calling_CQ[FT_8_TouchIndex].snr;
 
-    BSP_LCD_SetFont (&Font16);
-  BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-  BSP_LCD_DisplayStringAt(240, 180, erase,0x03);
+//             CQ_State = 1;
 
+//             BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+//             BSP_LCD_DisplayStringAt(240, 180, Target_Call, 0x03);
+//         }
+//     }
 
-    if(CQ_State == 0){
+//     if (CQ_State > 1) {
+//         CQ_State = 0;
+//         clear_CQ_List_box();
+//     }
 
-  if(num_CQ_calls > 0 && FT_8_TouchIndex <= num_CQ_calls ){
-  strcpy(Target_Call, Calling_CQ[FT_8_TouchIndex].call);
-  Target_RSL = Calling_CQ[FT_8_TouchIndex].snr;
+//     FT8_Touch_Flag = 0;
+// }
 
-  CQ_State = 1;
+// void clear_CQ_List_box(void) {
+//     BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+//     BSP_LCD_FillRect(240, 20, 240, 160);
+//     num_CQ_calls = 0;
+// }
 
-  BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-  BSP_LCD_DisplayStringAt(240, 180, Target_Call,0x03);
+// int Check_CQ_Calling_Stations(int num_decoded, int reply_state) {
+//     int CQ_Status = 0;
 
-  }
+//     for (int i = 0; i < num_decoded; i++) {  // check to see if being called
+//         char big_gulp[60];
+//         char little_gulp[30];
+//         char blank[] = "                      ";
+//         char no_reply[] = "No Reply";
+//         char Reply_State[10];
 
-  }
+//         // if(strcmp(Station_Call,new_decoded[i].field1)  == 0 ) { //check for station call
+//         if (strindex(new_decoded[i].field1, Station_Call) >= 0) {
+//             sprintf(little_gulp, "%i %s %s %s", CQ_State, new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
+//             sprintf(big_gulp, "%s %s %s %s %4i %3i %4i", new_decoded[i].decode_time, new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].freq_hz, new_decoded[i].snr, new_decoded[i].distance);
+//             Write_Log_Data(big_gulp);
 
+//             BSP_LCD_SetFont(&Font16);
+//             BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+//             BSP_LCD_DisplayStringAt(240, 40 + reply_state * 20, blank, 0x03);
+//             BSP_LCD_SetTextColor(LCD_COLOR_RED);
+//             BSP_LCD_DisplayStringAt(240, 40 + reply_state * 20, little_gulp, 0x03);
 
-        if(CQ_State > 1){
-      CQ_State = 0;
-      clear_CQ_List_box();
-    }
+//             CQ_Status = 1;  // we already have a reply!!
 
-  FT8_Touch_Flag = 0;
+//             break;
+//         }  // check for station call
 
-}
+//         else {
+//             sprintf(Reply_State, "%i %s", CQ_State, no_reply);
+//             BSP_LCD_SetFont(&Font16);
+//             BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+//             BSP_LCD_DisplayStringAt(240, 40 + reply_state * 20, blank, 0x03);
+//             BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+//             BSP_LCD_DisplayStringAt(240, 40 + reply_state * 20, Reply_State, 0x03);
 
+//             CQ_Status = 0;  // we did not get a reply
 
+//         }  // check to see if being called
+//     }
 
+//     return CQ_Status;
+// }
 
-void clear_CQ_List_box(void) {
+// int strindex(char s[], char t[]) {
+//     int i, j, k, result;
 
-      BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-      BSP_LCD_FillRect(240, 20, 240, 160);
-      num_CQ_calls = 0;
+//     result = -1;
 
-}
-
-
-
-int Check_CQ_Calling_Stations(int num_decoded, int reply_state) {
-
-  int CQ_Status = 0;
-
-  for(int i = 0; i < num_decoded ; i++) {  //check to see if being called
-    char big_gulp[60];
-    char little_gulp[30];
-    char blank[] = "                      ";
-    char no_reply[] = "No Reply";
-    char Reply_State[10];
-
-  //if(strcmp(Station_Call,new_decoded[i].field1)  == 0 ) { //check for station call
-  if(strindex(new_decoded[i].field1, Station_Call)  >= 0 )  {
-
-  sprintf(little_gulp,"%i %s %s %s", CQ_State, new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
-  sprintf(big_gulp,"%s %s %s %s %4i %3i %4i", new_decoded[i].decode_time, new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, new_decoded[i].freq_hz, new_decoded[i].snr, new_decoded[i].distance);
-  Write_Log_Data(big_gulp);
-
-
-    BSP_LCD_SetFont (&Font16);
-    BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-    BSP_LCD_DisplayStringAt(240, 40 + reply_state * 20, blank,0x03);
-    BSP_LCD_SetTextColor(LCD_COLOR_RED);
-    BSP_LCD_DisplayStringAt(240, 40 + reply_state * 20, little_gulp,0x03);
-
-    CQ_Status = 1; //we already have a reply!!
-
-    break;
-  } //check for station call
-
-  else {
-
-    sprintf(Reply_State, "%i %s", CQ_State, no_reply);
-      BSP_LCD_SetFont (&Font16);
-      BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-      BSP_LCD_DisplayStringAt(240, 40 + reply_state * 20, blank,0x03);
-      BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-      BSP_LCD_DisplayStringAt(240, 40 + reply_state * 20, Reply_State,0x03);
-
-      CQ_Status = 0; //we did not get a reply
-
-
-  } //check to see if being called
-
-  }
-
-  return CQ_Status;
-
-}
-
-int strindex(char s[],char t[])
-{
-    int i,j,k, result;
-
-    result = -1;
-
-    for(i=0;s[i]!='\0';i++)
-    {
-        for(j=i,k=0;t[k]!='\0' && s[j]==t[k];j++,k++)
-            ;
-        if(k>0 && t[k] == '\0')
-            result = i;
-    }
-    return result;
-}
-*/
+//     for (i = 0; s[i] != '\0'; i++) {
+//         for (j = i, k = 0; t[k] != '\0' && s[j] == t[k]; j++, k++);
+//         if (k > 0 && t[k] == '\0')
+//             result = i;
+//     }
+//     return result;
+// }

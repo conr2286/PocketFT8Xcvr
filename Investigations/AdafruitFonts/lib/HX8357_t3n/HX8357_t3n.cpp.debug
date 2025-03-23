@@ -47,10 +47,11 @@
 
 // <\SoftEgg>
 
-#include "HX8357_t3n.h"
-
 #include <SPI.h>
-#include <gfxfont.h>
+
+#include "DEBUG.h"
+#include "HX8357_t3n.h"
+#include "gfxfont.h"
 
 // #define DEBUG_ASYNC_UPDATE  // Enable to print out dma info
 // #define DEBUG_ASYNC_LEDS	// Enable to use digitalWrites to Debug
@@ -313,6 +314,7 @@ void HX8357_t3n::process_dma_interrupt(void) {
 }
 
 #endif
+
 // Teensy 3.1 can only generate 30 MHz SPI when running at 120 MHz (overclock)
 
 #define WIDTH HX8357_TFTWIDTH
@@ -350,6 +352,13 @@ HX8357_t3n::HX8357_t3n(uint8_t cs, uint8_t dc, uint8_t rst,
     _use_fbtft = 0;  // Are we in frame buffer mode?
     _we_allocated_buffer = NULL;
 #endif
+}
+
+// extern GFXfont FT8Font;
+void HX8357_t3n::fdump() {
+    // DPRINTF("gfxFont->first=%d\n", FT8Font.first);
+    // DPRINTF("gfxFont->last=%d\n", FT8Font.last);
+    // DPRINTF("gfxFont->yAdvance=%d\n", FT8Font.yAdvance);
 }
 
 //=======================================================================
@@ -2739,7 +2748,7 @@ size_t HX8357_t3n::write(uint8_t c) {
 }
 
 size_t HX8357_t3n::write(const uint8_t *buffer, size_t size) {
-    // Lets try to handle some of the special font centering code that was done for default fonts.
+    //  Lets try to handle some of the special font centering code that was done for default fonts.
     if (_center_x_text || _center_y_text) {
         int16_t x, y;
         uint16_t strngWidth, strngHeight;
@@ -3148,7 +3157,6 @@ uint32_t HX8357_t3n::fetchpixel(const uint8_t *p, uint32_t index, uint32_t x) {
 void HX8357_t3n::drawFontChar(unsigned int c) {
     uint32_t bitoffset;
     const uint8_t *data;
-
     // Serial.printf("drawFontChar(%c) %d\n", c, c);
 
     if (c >= font->index1_first && c <= font->index1_last) {
@@ -3911,12 +3919,12 @@ void HX8357_t3n::drawFontBits(bool opaque, uint32_t bits, uint32_t numbits, int3
 }
 
 void HX8357_t3n::drawGFXFontChar(unsigned int c) {
-    // Lets do Adafruit GFX character output here as well
+    //  Lets do Adafruit GFX character output here as well
     if (c == '\r') return;
 
     // Some quick and dirty tests to see if we can
     uint8_t first = gfxFont->first;
-    if ((c < first) || (c > gfxFont->last)) return;
+    if ((c < first) /*|| (c > gfxFont->last)*/) return;
 
     GFXglyph *glyph = gfxFont->glyph + (c - first);
     uint8_t w = glyph->width,
@@ -3931,18 +3939,18 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
         cursor_x = 0;
         cursor_y += (int16_t)textsize_y * gfxFont->yAdvance;
     }
-
-    // Lets do the work to output the font character
+    //  Lets do the work to output the font character
     uint8_t *bitmap = gfxFont->bitmap;
 
     uint16_t bo = glyph->bitmapOffset;
     uint8_t xx, yy, bits = 0, bit = 0;
-    // Serial.printf("DGFX_char: %c (%d,%d) : %u %u %u %u %d %d %x %x %d\n", c, cursor_x, cursor_y, w, h,
-    //			glyph->xAdvance, gfxFont->yAdvance, xo, yo, textcolor, textbgcolor, _use_fbtft);Serial.flush();
+    // D1PRINTF("DGFX_char: %c (%d,%d) : w=%u h=%u %u %u x0=%d y0=%d %x %x %d\n", c, cursor_x, cursor_y, w, h,
+    //   glyph->xAdvance, gfxFont->yAdvance, xo, yo, textcolor, textbgcolor, _use_fbtft);
+    Serial.flush();
 
     if (textcolor == textbgcolor) {
-        // Serial.printf("DGFXChar: %c %u, %u, wh:%d %d o:%d %d\n", c, cursor_x, cursor_y, w, h, xo, yo);
-        // Todo: Add character clipping here
+        // D1PRINTF("DGFXChar: %c cursor_x=%u, cursor_y=%u, w=%d h=%d xo=%d yo=%d\n", c, cursor_x, cursor_y, w, h, xo, yo);
+        //  Todo: Add character clipping here
 
         // NOTE: Adafruit GFX does not support Opaque font output as there
         // are issues with proportionally spaced characters that may overlap
@@ -4003,6 +4011,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
         // This solid background approach is about 5 time faster
         // Lets calculate bounding rectangle that we will update
         // We need to offset by the origin.
+        // D1PRINTF("_originx=%d, _originy=%d\n", _originx, _originy);
 
         // We are going direct so do some offsets and clipping
         int16_t x_offset_cursor = cursor_x + _originx;  // This is where the offseted cursor is.

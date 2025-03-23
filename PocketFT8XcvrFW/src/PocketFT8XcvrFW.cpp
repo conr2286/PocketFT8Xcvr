@@ -52,12 +52,14 @@
 **  Many other contributors (e.g. Adafruit et al) to the various libraries
 **
 ** LICENSES
-**  The permissive MIT license widely cited throughout, except the SI5351 library has a copy-left GPL license.
+**  + The permissive MIT license widely cited throughout the Pocket FT8 firmware and libraries
+**  + Except the SI5351 library has a copy-left GPL license.
 **
 ** REFERENCES
 **  Franke, Somerville, and Taylor.  "The FT4 and FT8 Communication Protocols." QEX. Jul/Aug 2020.
 */
 
+#include <Adafruit_GFX.h>
 #include <Arduino.h>
 #include <Audio.h>
 #include <AudioStream.h>
@@ -66,8 +68,10 @@
 #include <SI4735.h>
 #include <SPI.h>
 #include <TimeLib.h>
+#include <gfxfont.h>
 
 #include "DEBUG.h"
+#include "FT8Font.h"
 #include "GPShelper.h"
 #include "HX8357_t3n.h"
 #include "LogFactory.h"
@@ -136,8 +140,8 @@ struct Config {
 #define DEFAULT_QSO_TIMEOUT 180               // Number seconds Sequencer will retry transmission without a response
 
 // Adafruit 480x320 touchscreen configuration
-DMAMEM HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
-TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                          // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
+HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
+TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 
 /// Build the VFO clock
 Si5351 si5351;
@@ -254,11 +258,18 @@ FLASHMEM void setup(void) {
     }
 
     // Initialize the Adafruit 480x320 TFT display
-    tft.begin(HX8357D);
+    tft.begin(30000000UL, 20000000Ul);
     tft.fillScreen(HX8357_BLACK);
-    tft.setTextColor(HX8357_YELLOW);
     tft.setRotation(3);
-    tft.setTextSize(2);
+    tft.setFont(&FT8Font);
+    tft.setTextColor(HX8357_WHITE);
+    displayInfoMsg("Starting...");
+    delay(100);
+
+    // For helping with GUI design work, draw outlines of the text boxes
+    tft.drawRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H,HX8357_BLUE);
+    tft.drawRect(DISPLAY_CALLING_X, DISPLAY_CALLING_Y, 480 - DISPLAY_CALLING_X, 320 - DISPLAY_DECODED_H,HX8357_BLUE);
+    tft.drawRect(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y, DISPLAY_CALLING_X, BUTTON_BAR_Y - DISPLAY_OUTBOUND_Y, HX8357_BLUE);
 
     // Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
     // won't run at the standard Teensy sample rate.  In the best-of-all-possible-worlds, we'd implement this check at
@@ -277,7 +288,6 @@ FLASHMEM void setup(void) {
     pinMode(PIN_RCV, OUTPUT);
     digitalWrite(PIN_RCV, HIGH);  // Disable the PA and disconnect receiver's RF input from antenna
     digitalWrite(PIN_PTT, LOW);   // Unground the receiver's RF input
-
 
     // Initialize the SD library if the card is available
     if (!SD.begin(BUILTIN_SDCARD)) {
@@ -760,7 +770,6 @@ void waitForFT8timeslot(void) {
     // Update display
     // displayInfoMsg("RECV");
     displayInfoMsg(" ");
-
 
     DPRINTF("-----Timeslot %lu: second()=%u, millis()=%lu ---------------------\n", seq.getSequenceNumber(), millis());
 

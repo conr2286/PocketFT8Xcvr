@@ -50,6 +50,7 @@
 #include "HX8357_t3n.h"
 
 #include <SPI.h>
+
 #include <gfxfont.h>
 
 // #define DEBUG_ASYNC_UPDATE  // Enable to print out dma info

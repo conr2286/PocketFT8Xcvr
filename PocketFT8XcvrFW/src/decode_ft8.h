@@ -61,4 +61,6 @@ void Check_CQ_Stations(int num_decoded);
 
 void display_selected_call(int index);
 void process_selected_CQ(void);
+
+char rsl2s(int rsl);
 #endif /* DECODE_FT8_H_ */
