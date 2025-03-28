@@ -267,9 +267,9 @@ FLASHMEM void setup(void) {
     delay(100);
 
     // For helping with GUI design work, draw outlines of the text boxes
-    tft.drawRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H,HX8357_BLUE);
-    tft.drawRect(DISPLAY_CALLING_X, DISPLAY_CALLING_Y, 480 - DISPLAY_CALLING_X, 320 - DISPLAY_DECODED_H,HX8357_BLUE);
-    tft.drawRect(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y, DISPLAY_CALLING_X, BUTTON_BAR_Y - DISPLAY_OUTBOUND_Y, HX8357_BLUE);
+    tft.drawRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLUE);
+    tft.drawRect(DISPLAY_CALLING_X, DISPLAY_CALLING_Y, 480 - DISPLAY_CALLING_X, 320 - DISPLAY_DECODED_H, HX8357_BLUE);
+    tft.drawRect(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y-4, DISPLAY_DECODED_W, 24, HX8357_BLUE);
 
     // Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
     // won't run at the standard Teensy sample rate.  In the best-of-all-possible-worlds, we'd implement this check at

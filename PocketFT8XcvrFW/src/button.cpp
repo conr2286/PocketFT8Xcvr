@@ -164,7 +164,7 @@ void drawButton(uint16_t i) {
         color = HX8357_GREEN;
 
     tft.drawRect(sButtonData[i].x, sButtonData[i].y, sButtonData[i].w, sButtonData[i].h, color);
-    tft.setCursor(sButtonData[i].x + 7, sButtonData[i].y + 7);
+    tft.setCursor(sButtonData[i].x + 9, sButtonData[i].y + 9);
     tft.setTextColor(HX8357_WHITE);
     tft.print(sButtonData[i].text);
 }

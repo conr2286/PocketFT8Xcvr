@@ -50,7 +50,7 @@
 
 //------Outbound (info) message region of the display---------------------------------------------
 #define DISPLAY_OUTBOUND_X 0
-#define DISPLAY_OUTBOUND_Y 260
+#define DISPLAY_OUTBOUND_Y 250
 
 //------Button bar location-----------------------------------------------------------------------
 #define BUTTON_BAR_X 0    // Button bar extends across the width of the screen

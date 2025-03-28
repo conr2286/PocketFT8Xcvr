@@ -50,8 +50,9 @@
 #include "HX8357_t3n.h"
 
 #include <SPI.h>
-
 #include <gfxfont.h>
+
+#include "DEBUG.h"
 
 // #define DEBUG_ASYNC_UPDATE  // Enable to print out dma info
 // #define DEBUG_ASYNC_LEDS	// Enable to use digitalWrites to Debug
@@ -3698,6 +3699,10 @@ void HX8357_t3n::charBounds(char c, int16_t *x, int16_t *y,
         } else if (c != '\r') {  // Not a carriage return; is normal char
             uint32_t bitoffset;
             const uint8_t *data;
+            if (c == ' ') {
+                DTRACE();
+                c = '_';  // Use width of underscore for missing SP in font table
+            }
             if (c >= font->index1_first && c <= font->index1_last) {
                 bitoffset = c - font->index1_first;
                 bitoffset *= font->bits_index;
@@ -3758,6 +3763,10 @@ void HX8357_t3n::charBounds(char c, int16_t *x, int16_t *y,
         } else if (c != '\r') {  // Not a carriage return; is normal char
             uint8_t first = gfxFont->first,
                     last = gfxFont->last;
+            if (c == ' ') {
+                DTRACE();
+                c = '_';  // Use width of underscore for missing SP in font table
+            }
             if ((c >= first) && (c <= last)) {  // Char present in this font?
                 GFXglyph *glyph = gfxFont->glyph + (c - first);
                 uint8_t gw = glyph->width,
@@ -3814,8 +3823,10 @@ void HX8357_t3n::getTextBounds(const uint8_t *buffer, uint16_t len, int16_t x, i
 
     int16_t minx = _width, miny = _height, maxx = -1, maxy = -1;
 
-    while (len--)
+    while (len--) {
         charBounds(*buffer++, &x, &y, &minx, &miny, &maxx, &maxy);
+        DPRINTF("c='%c', x=%d, y=%d\n", *(buffer - 1), x, y);
+    }
 
     if (maxx >= minx) {
         *x1 = minx;
@@ -3837,8 +3848,10 @@ void HX8357_t3n::getTextBounds(const char *str, int16_t x, int16_t y,
 
     int16_t minx = _width, miny = _height, maxx = -1, maxy = -1;
 
-    while ((c = *str++))
+    while ((c = *str++)) {
         charBounds(c, &x, &y, &minx, &miny, &maxx, &maxy);
+        DPRINTF("c='%c', x=%d, y=%d\n", c, x, y);
+    }
 
     if (maxx >= minx) {
         *x1 = minx;
@@ -4636,3 +4649,29 @@ void HX8357_t3n::waitTransmitComplete(uint32_t mcr) {
     waitTransmitComplete();
 }
 #endif
+
+/**
+ * @brief Get the leading (#pixels between lines of text) for the chosen font
+ * @return Number of pixels between text lines
+ *
+ * There are 3 font systems in use:  the ILI9341, the GFX and the original 5X7
+ * bit mapped font.  Apparently any of them can be scaled by an integer size.
+ * Since GFX hasn't a font factory with a getLeading() in base class, we'll do
+ * it here with if statements.  Sadly, again related to no font factory, GFX
+ * lacks a getFont() method returning a pointer to the non-existent Font base
+ * class.  So we make do here.
+ */
+uint16_t HX8357_t3n::getLeading() {
+    // Calculate leading for ILI9341 font system
+    if (font) {
+        return (int16_t)textsize_y * font->line_space;
+    }
+
+    // Calculate leading for GFX font system
+    if (gfxFont) {
+        return (int16_t)textsize_y * gfxFont->yAdvance;
+    }
+
+    // We appear to be using the standard (original) GFX bit mapped 5X7 font
+    return (int16_t)textsize_y * 8;
+}
