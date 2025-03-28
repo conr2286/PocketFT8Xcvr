@@ -93,15 +93,16 @@ AListBox::AListBox(HX8357_t3n *tft, ACoord x1, ACoord y1, ACoord w, ACoord h) {
  */
 AListBox::AListBox(HX8357_t3n *tft, ACoord x1, ACoord y1, ACoord w, ACoord h, AColor bdColor) : AListBox(tft, x1, y1, w, h) {
     if (!Serial) Serial.begin(9600);
-    DPRINTF("x1=%d, y1=%d, w=%d, h=%d, bdColor=0x%x\n", x1, y1, w, h, bdColor);
+    //DPRINTF("x1=%d, y1=%d, w=%d, h=%d, bdColor=0x%x\n", x1, y1, w, h, bdColor);
 
     // Initialize additional default values for this list box
     this->bdColor = bdColor;  // Border color
 
-    // Decorate the list box
+    // Decorate the list box border
+    DPRINTF("x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
     tft->drawRect(x1, y1, w, h, bdColor);  // Draw the border (might be just background)
 
-    DTRACE();
+    //DTRACE();
 }  // AListBox()
 
 /**
@@ -136,7 +137,7 @@ AListBox::AListBox(HX8357_t3n *tft, ARect boundary, AColor borderColor) : AListB
  * Advances nextItem index to the following line.
  */
 int AListBox::addItem(int index, const char *str, AColor fgColor) {
-    DTRACE();
+    //DTRACE();
     // Sanity checks
     if (index >= maxItems) return -1;
 
@@ -177,9 +178,9 @@ int AListBox::addItem(const char *str, AColor fgColor) {
  * The string should not contain a NL char.
  */
 int AListBox::addItem(const char *str) {
-    DTRACE();
+    //DTRACE();
     unsigned index = addItem(nextItem, str, fgColor);
-    DTRACE();
+    //DTRACE();
     return index;
 }
 
@@ -217,8 +218,8 @@ size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
     // then we later allow another pixel on each side for drawing the border.
     int16_t clipX = boundary.x1 + 1;                // Always reserve one blank pixel left of text
     int16_t clipY = boundary.y1 + 1;                // Always reserve one blank pixel above text
-    int16_t clipW = boundary.x2 - boundary.x1 - 1;  // Clip width sans border
-    int16_t clipH = boundary.y2 - boundary.y1 - 1;  // Clip height sans border
+    int16_t clipW = boundary.x2 - boundary.x1 - 2;  // Clip width sans border
+    int16_t clipH = boundary.y2 - boundary.y1 - 2;  // Clip height sans border
     //DPRINTF("clipX=%d,clipY=%d,clipW=%d\n", clipX, clipY, clipW);
     //DPRINTF("boundary.y1=%d, boundary.y2=%d, clipH=%d\n", boundary.y1, boundary.y2, clipH);
 
@@ -239,8 +240,8 @@ size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
     tft->setClipRect(clipX, clipY, clipW, clipH);
 
     // Place the cursor where we wish to draw this char[] string
-    int16_t drawX = clipX + itemLen[nextItem] + 1;   // Place after existing text on this item line
-    int16_t drawY = clipY + nextItem * leading + 1;  // Place on this item's line
+    int16_t drawX = clipX + itemLen[nextItem] ;   // Place after existing text on this item line
+    int16_t drawY = clipY + nextItem * leading ;  // Place on this item's line
     DPRINTF("drawX=%d, drawY=%d\n", drawX, drawY);
     tft->setCursor(drawX, drawY);
     //DTRACE();

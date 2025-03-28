@@ -52,7 +52,7 @@
 #include <SPI.h>
 #include <gfxfont.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 // #define DEBUG_ASYNC_UPDATE  // Enable to print out dma info
 // #define DEBUG_ASYNC_LEDS	// Enable to use digitalWrites to Debug

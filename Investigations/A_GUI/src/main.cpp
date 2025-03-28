@@ -58,10 +58,8 @@ void setup() {
     delay(1000);
 
     // Build the list box1
-    // AListBox box1 = AListBox(&tft, ARect(0, 100, 256, 250), RED);
-
-    // // Simple test to get something on the display
-    // box1.addItem(msg);
+    AListBox box1 = AListBox(&tft, ARect(0, 100, 256, 250), RED);
+    box1.addItem(msg);
 
     // // Populate box2 with multiple items
     // AListBox box2 = AListBox(&tft, ARect(257, 100, 479, 250), RED);
@@ -77,16 +75,20 @@ void setup() {
     //box3.printf("Hello world\n");
     //box3.addItem("Oh... hi");
     box3.addItem("text");
-    box3.printf("ooo ");
+    box3.printf("foo ");
     box3.printf("bar\n");
     box3.addItem("More text");
     box3.printf("Good");
     box3.printf(" bye\n");
 
-    // // Check out pixel placement
-    // AListBox box4 __attribute__((unused)) = AListBox(&tft, 160, 252, 100, 50, WHITE);
-    // tft.setClipRect();
-    // tft.fillRect(161, 252, 251 - 2, 50 - 2, GREEN);
+    // Check out pixel placement
+    AListBox box4  = AListBox(&tft, ARect(360, 100, 479, 150), RED);
+    box4.addItem("Oh");
+    box4.addItem("_Too much__________");
+    box4.addItem("Might clip");
+    box4.addItem("Surely clipped");
+    //tft.setClipRect();
+    //tft.fillRect(361, 101, 479-361-1, 150-101-1, GREEN);
 
     // // Test selections
     // Serial.printf("box2.getSelection(0,0)=%d\n", box2.getSelectedItem(0, 0));

@@ -330,7 +330,7 @@ Discarded input sections
  .text._ZN10HX8357_t3n10fetchpixelEPKhmm
                 0x0000000000000000       0x30 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .text._ZN10HX8357_t3n13getTextBoundsEPKcssPsS2_PtS3_
-                0x0000000000000000       0xf0 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000000000       0xb4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .text._ZN10HX8357_t3n11strPixelLenEPKct
                 0x0000000000000000      0x128 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .text._ZN10HX8357_t3n13getTextBoundsERK6StringssPsS3_PtS4_
@@ -398,7 +398,7 @@ Discarded input sections
  .text._ZN10HX8357_t3n13writeRect8BPPEssssPKhPKt
                 0x0000000000000000      0x524 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .text._ZN10HX8357_t3n8drawLineEsssst
-                0x0000000000000000      0xf78 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000000000      0xf2c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .text._ZN10HX8357_t3n12drawTriangleEsssssst
                 0x0000000000000000       0x50 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .text._ZN10HX8357_t3n13drawRoundRectEssssst
@@ -1631,7 +1631,7 @@ Linker script and memory map
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o
-                0x0000000067e61e98                __rtc_localtime = 0x67e61e98
+                0x0000000067e6280e                __rtc_localtime = 0x67e6280e
 LOAD .pio/build/teensy41/src/main.cpp.o
 START GROUP
 LOAD .pio/build/teensy41/lib672/libWire.a
@@ -1722,7 +1722,7 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000060002c38                . = ALIGN (0x4)
  *fill*         0x0000000060002c36        0x2 
 
-.text.itcm      0x0000000000000000     0xfe50 load address 0x0000000060002c38
+.text.itcm      0x0000000000000000     0xfe10 load address 0x0000000060002c38
                 0x0000000000000020                . = (. + 0x20)
  *fill*         0x0000000000000000       0x20 
  *(.fastrun)
@@ -1731,599 +1731,599 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000000000020       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
  .text.frame_dummy
                 0x0000000000000044       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
- .text.setup    0x0000000000000068      0x168 .pio/build/teensy41/src/main.cpp.o
+ .text.setup    0x0000000000000068      0x200 .pio/build/teensy41/src/main.cpp.o
                 0x0000000000000068                setup
- .text.loop     0x00000000000001d0        0x4 .pio/build/teensy41/src/main.cpp.o
-                0x00000000000001d0                loop
+ .text.loop     0x0000000000000268        0x4 .pio/build/teensy41/src/main.cpp.o
+                0x0000000000000268                loop
  .text._ZN5Print17availableForWriteEv
-                0x00000000000001d4        0x4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000001d4                Print::availableForWrite()
+                0x000000000000026c        0x4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x000000000000026c                Print::availableForWrite()
  .text._ZN5Print5flushEv
-                0x00000000000001d8        0x4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000001d8                Print::flush()
+                0x0000000000000270        0x4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000000270                Print::flush()
  .text._ZN10HX8357_t3n5writeEh
-                0x00000000000001dc       0x1c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000001dc                HX8357_t3n::write(unsigned char)
+                0x0000000000000274       0x1c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000000274                HX8357_t3n::write(unsigned char)
  .text._ZL18fetchbits_unsignedPKhmm
-                0x00000000000001f8       0x4c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000000290       0x4c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .text._ZN8SPIClass16beginTransactionE11SPISettings
-                0x0000000000000244      0x110 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000000244                SPIClass::beginTransaction(SPISettings)
+                0x00000000000002dc      0x110 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000002dc                SPIClass::beginTransaction(SPISettings)
  .text._ZN8SPIClass14endTransactionEv
-                0x0000000000000354       0x4c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000000354                SPIClass::endTransaction()
+                0x00000000000003ec       0x4c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000003ec                SPIClass::endTransaction()
  .text._ZN10HX8357_t3n14maybeUpdateTCREm
-                0x00000000000003a0       0x8c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000003a0                HX8357_t3n::maybeUpdateTCR(unsigned long)
+                0x0000000000000438       0x8c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000000438                HX8357_t3n::maybeUpdateTCR(unsigned long)
  .text._ZN10HX8357_t3nC2Ehhhhhh
-                0x000000000000042c      0x23c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x000000000000042c                HX8357_t3n::HX8357_t3n(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
-                0x000000000000042c                HX8357_t3n::HX8357_t3n(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
+                0x00000000000004c4      0x23c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000004c4                HX8357_t3n::HX8357_t3n(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
+                0x00000000000004c4                HX8357_t3n::HX8357_t3n(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
  .text._ZN10HX8357_t3n8readRectEssssPt
-                0x0000000000000668      0x79c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000000668                HX8357_t3n::readRect(short, short, short, short, unsigned short*)
+                0x0000000000000700      0x79c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000000700                HX8357_t3n::readRect(short, short, short, short, unsigned short*)
  .text._ZN10HX8357_t3n5beginEmm
-                0x0000000000000e04      0x550 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000000e04                HX8357_t3n::begin(unsigned long, unsigned long)
+                0x0000000000000e9c      0x550 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000000e9c                HX8357_t3n::begin(unsigned long, unsigned long)
  .text._ZN10HX8357_t3n7setFontEPK7GFXfont
-                0x0000000000001354       0x60 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000001354                HX8357_t3n::setFont(GFXfont const*)
+                0x00000000000013ec       0x60 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000013ec                HX8357_t3n::setFont(GFXfont const*)
  .text._ZN10HX8357_t3n10charBoundsEcPsS0_S0_S0_S0_S0_
-                0x00000000000013b4      0x3d8 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000013b4                HX8357_t3n::charBounds(char, short*, short*, short*, short*, short*, short*)
+                0x000000000000144c      0x398 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x000000000000144c                HX8357_t3n::charBounds(char, short*, short*, short*, short*, short*, short*)
  .text._ZN10HX8357_t3n13getTextBoundsEPKhtssPsS2_PtS3_
-                0x000000000000178c       0xec .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x000000000000178c                HX8357_t3n::getTextBounds(unsigned char const*, unsigned short, short, short, short*, short*, unsigned short*, unsigned short*)
+                0x00000000000017e4       0xb0 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000017e4                HX8357_t3n::getTextBounds(unsigned char const*, unsigned short, short, short, short*, short*, unsigned short*, unsigned short*)
  .text._ZN10HX8357_t3n20gfxFontLastCharPosFGEss
-                0x0000000000001878       0xa4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000001878                HX8357_t3n::gfxFontLastCharPosFG(short, short)
+                0x0000000000001894       0xa4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000001894                HX8357_t3n::gfxFontLastCharPosFG(short, short)
  .text._ZN10HX8357_t3n9setCursorEssb
-                0x000000000000191c       0xb4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x000000000000191c                HX8357_t3n::setCursor(short, short, bool)
+                0x0000000000001938       0xb4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000001938                HX8357_t3n::setCursor(short, short, bool)
  .text._ZN10HX8357_t3n12setTextColorEtt
-                0x00000000000019d0       0x28 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000019d0                HX8357_t3n::setTextColor(unsigned short, unsigned short)
+                0x00000000000019ec       0x28 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000019ec                HX8357_t3n::setTextColor(unsigned short, unsigned short)
  .text._ZN10HX8357_t3n11setTextWrapEb
-                0x00000000000019f8        0x8 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000019f8                HX8357_t3n::setTextWrap(bool)
+                0x0000000000001a14        0x8 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000001a14                HX8357_t3n::setTextWrap(bool)
  .text._ZN10HX8357_t3n15waitFifoNotFullEv
-                0x0000000000001a00       0x20 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000001a00                HX8357_t3n::waitFifoNotFull()
+                0x0000000000001a1c       0x20 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000001a1c                HX8357_t3n::waitFifoNotFull()
  .text._ZN10HX8357_t3n9drawPixelEsst
-                0x0000000000001a20      0x2e8 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000001a20                HX8357_t3n::drawPixel(short, short, unsigned short)
+                0x0000000000001a3c      0x2e8 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000001a3c                HX8357_t3n::drawPixel(short, short, unsigned short)
  .text._ZN10HX8357_t3n8fillRectEsssst
-                0x0000000000001d08      0x4c8 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000001d08                HX8357_t3n::fillRect(short, short, short, short, unsigned short)
+                0x0000000000001d24      0x4c8 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000001d24                HX8357_t3n::fillRect(short, short, short, short, unsigned short)
  .text._ZN10HX8357_t3n10fillScreenEt
-                0x00000000000021d0       0xcc .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000021d0                HX8357_t3n::fillScreen(unsigned short)
+                0x00000000000021ec       0xcc .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000021ec                HX8357_t3n::fillScreen(unsigned short)
  .text._ZN10HX8357_t3n12drawFontBitsEbmmllm
-                0x000000000000229c      0x10c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x000000000000229c                HX8357_t3n::drawFontBits(bool, unsigned long, unsigned long, long, long, unsigned long)
+                0x00000000000022b8      0x10c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000022b8                HX8357_t3n::drawFontBits(bool, unsigned long, unsigned long, long, long, unsigned long)
  .text._ZN10HX8357_t3n20waitTransmitCompleteEv
-                0x00000000000023a8       0x24 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000023a8                HX8357_t3n::waitTransmitComplete()
+                0x00000000000023c4       0x24 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000023c4                HX8357_t3n::waitTransmitComplete()
  .text._ZN10HX8357_t3n15drawGFXFontCharEj
-                0x00000000000023cc      0xefc .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000023cc                HX8357_t3n::drawGFXFontChar(unsigned int)
+                0x00000000000023e8      0xefc .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000023e8                HX8357_t3n::drawGFXFontChar(unsigned int)
  .text._ZN10HX8357_t3n11setRotationEh
-                0x00000000000032c8      0x550 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000000032c8                HX8357_t3n::setRotation(unsigned char)
+                0x00000000000032e4      0x550 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000000032e4                HX8357_t3n::setRotation(unsigned char)
  .text._ZN10HX8357_t3n13drawFastVLineEssst
-                0x0000000000003818      0x370 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000003818                HX8357_t3n::drawFastVLine(short, short, short, unsigned short)
+                0x0000000000003834      0x380 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000003834                HX8357_t3n::drawFastVLine(short, short, short, unsigned short)
  .text._ZN10HX8357_t3n13drawFastHLineEssst
-                0x0000000000003b88      0x38c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000003b88                HX8357_t3n::drawFastHLine(short, short, short, unsigned short)
+                0x0000000000003bb4      0x38c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000003bb4                HX8357_t3n::drawFastHLine(short, short, short, unsigned short)
  .text._ZN10HX8357_t3n8drawRectEsssst
-                0x0000000000003f14      0xc90 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000003f14                HX8357_t3n::drawRect(short, short, short, short, unsigned short)
+                0x0000000000003f40      0xc90 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000003f40                HX8357_t3n::drawRect(short, short, short, short, unsigned short)
  .text._ZN10HX8357_t3n8drawCharEsshtthh
-                0x0000000000004ba4      0x9b0 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000004ba4                HX8357_t3n::drawChar(short, short, unsigned char, unsigned short, unsigned short, unsigned char, unsigned char)
+                0x0000000000004bd0      0x9b0 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000004bd0                HX8357_t3n::drawChar(short, short, unsigned char, unsigned short, unsigned short, unsigned char, unsigned char)
  .text._ZN10HX8357_t3n9writeRectEssssPKt
-                0x0000000000005554      0x578 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000005554                HX8357_t3n::writeRect(short, short, short, short, unsigned short const*)
+                0x0000000000005580      0x578 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000005580                HX8357_t3n::writeRect(short, short, short, short, unsigned short const*)
  .text._ZN10HX8357_t3n14scrollTextAreaEh
-                0x0000000000005acc       0xa4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000005acc                HX8357_t3n::scrollTextArea(unsigned char)
+                0x0000000000005af8       0xa4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000005af8                HX8357_t3n::scrollTextArea(unsigned char)
  .text._ZN10HX8357_t3n12drawFontCharEj
-                0x0000000000005b70     0x1058 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000005b70                HX8357_t3n::drawFontChar(unsigned int)
+                0x0000000000005b9c     0x1058 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000005b9c                HX8357_t3n::drawFontChar(unsigned int)
  .text._ZN10HX8357_t3n5writeEPKhj
-                0x0000000000006bc8      0x208 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000006bc8                HX8357_t3n::write(unsigned char const*, unsigned int)
+                0x0000000000006bf4      0x228 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000006bf4                HX8357_t3n::write(unsigned char const*, unsigned int)
  .text._ZN10HX8357_t3n10getLeadingEv
-                0x0000000000006dd0       0x28 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000000006dd0                HX8357_t3n::getLeading()
+                0x0000000000006e1c       0x28 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000000006e1c                HX8357_t3n::getLeading()
  .text._ZN8AListBox5writeEh
-                0x0000000000006df8       0x4c .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                0x0000000000006df8                AListBox::write(unsigned char)
+                0x0000000000006e44       0x4c .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000006e44                AListBox::write(unsigned char)
  .text._ZN8AListBox9writeItemEPKhj.part.0
-                0x0000000000006e44      0x24c .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000006e90      0x248 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
  .text._ZN8AListBox5writeEPKhj
-                0x0000000000007090      0x10c .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                0x0000000000007090                AListBox::write(unsigned char const*, unsigned int)
+                0x00000000000070d8      0x10c .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+                0x00000000000070d8                AListBox::write(unsigned char const*, unsigned int)
  .text._ZN8AListBoxC2EP10HX8357_t3ntttt
-                0x000000000000719c      0x208 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                0x000000000000719c                AListBox::AListBox(HX8357_t3n*, unsigned short, unsigned short, unsigned short, unsigned short)
-                0x000000000000719c                AListBox::AListBox(HX8357_t3n*, unsigned short, unsigned short, unsigned short, unsigned short)
+                0x00000000000071e4      0x208 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+                0x00000000000071e4                AListBox::AListBox(HX8357_t3n*, unsigned short, unsigned short, unsigned short, unsigned short)
+                0x00000000000071e4                AListBox::AListBox(HX8357_t3n*, unsigned short, unsigned short, unsigned short, unsigned short)
  .text._ZN8AListBoxC2EP10HX8357_t3ntttt6AColor
-                0x00000000000073a4      0x114 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                0x00000000000073a4                AListBox::AListBox(HX8357_t3n*, unsigned short, unsigned short, unsigned short, unsigned short, AColor)
-                0x00000000000073a4                AListBox::AListBox(HX8357_t3n*, unsigned short, unsigned short, unsigned short, unsigned short, AColor)
+                0x00000000000073ec       0xf8 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+                0x00000000000073ec                AListBox::AListBox(HX8357_t3n*, unsigned short, unsigned short, unsigned short, unsigned short, AColor)
+                0x00000000000073ec                AListBox::AListBox(HX8357_t3n*, unsigned short, unsigned short, unsigned short, unsigned short, AColor)
  .text._ZN8AListBoxC2EP10HX8357_t3n5ARect6AColor
-                0x00000000000074b8       0x78 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                0x00000000000074b8                AListBox::AListBox(HX8357_t3n*, ARect, AColor)
-                0x00000000000074b8                AListBox::AListBox(HX8357_t3n*, ARect, AColor)
+                0x00000000000074e4       0x78 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+                0x00000000000074e4                AListBox::AListBox(HX8357_t3n*, ARect, AColor)
+                0x00000000000074e4                AListBox::AListBox(HX8357_t3n*, ARect, AColor)
  .text._ZN8AListBox7addItemEiPKc6AColor
-                0x0000000000007530       0xb4 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                0x0000000000007530                AListBox::addItem(int, char const*, AColor)
+                0x000000000000755c       0x98 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+                0x000000000000755c                AListBox::addItem(int, char const*, AColor)
  .text._ZN8AListBox7addItemEPKc
-                0x00000000000075e4       0x60 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                0x00000000000075e4                AListBox::addItem(char const*)
+                0x00000000000075f4        0xc .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+                0x00000000000075f4                AListBox::addItem(char const*)
  .text._ZN5ARect10setCornersEtttt
-                0x0000000000007644       0x10 .pio/build/teensy41/liba08/libA_GUI.a(ARect.cpp.o)
-                0x0000000000007644                ARect::setCorners(unsigned short, unsigned short, unsigned short, unsigned short)
+                0x0000000000007600       0x10 .pio/build/teensy41/liba08/libA_GUI.a(ARect.cpp.o)
+                0x0000000000007600                ARect::setCorners(unsigned short, unsigned short, unsigned short, unsigned short)
  .text._ZN10DMAChannel5beginEb
-                0x0000000000007654       0xb4 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
-                0x0000000000007654                DMAChannel::begin(bool)
+                0x0000000000007610       0xb4 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
+                0x0000000000007610                DMAChannel::begin(bool)
  .text._ZN10DMAChannel7releaseEv
-                0x0000000000007708       0x34 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
-                0x0000000000007708                DMAChannel::release()
+                0x00000000000076c4       0x34 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
+                0x00000000000076c4                DMAChannel::release()
  .text._ZN16usb_serial_class5writeEh
-                0x000000000000773c        0x8 .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
-                0x000000000000773c                usb_serial_class::write(unsigned char)
+                0x00000000000076f8        0x8 .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
+                0x00000000000076f8                usb_serial_class::write(unsigned char)
  .text._ZN5Print7printlnEv
-                0x0000000000007744       0x1c .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
-                0x0000000000007744                Print::println()
- .text._write   0x0000000000007760       0x1c .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
-                0x0000000000007760                _write
+                0x0000000000007700       0x1c .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
+                0x0000000000007700                Print::println()
+ .text._write   0x000000000000771c       0x1c .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
+                0x000000000000771c                _write
  .text._ZN5Print6printfEPKcz
-                0x000000000000777c       0x1c .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
-                0x000000000000777c                Print::printf(char const*, ...)
- .text.delay    0x0000000000007798       0xa8 .pio/build/teensy41/libFrameworkArduino.a(delay.c.o)
-                0x0000000000007798                delay
+                0x0000000000007738       0x1c .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
+                0x0000000000007738                Print::printf(char const*, ...)
+ .text.delay    0x0000000000007754       0xa8 .pio/build/teensy41/libFrameworkArduino.a(delay.c.o)
+                0x0000000000007754                delay
  .text.digitalWrite
-                0x0000000000007840       0x54 .pio/build/teensy41/libFrameworkArduino.a(digital.c.o)
-                0x0000000000007840                digitalWrite
- .text.pinMode  0x0000000000007894       0x70 .pio/build/teensy41/libFrameworkArduino.a(digital.c.o)
-                0x0000000000007894                pinMode
+                0x00000000000077fc       0x54 .pio/build/teensy41/libFrameworkArduino.a(digital.c.o)
+                0x00000000000077fc                digitalWrite
+ .text.pinMode  0x0000000000007850       0x70 .pio/build/teensy41/libFrameworkArduino.a(digital.c.o)
+                0x0000000000007850                pinMode
  .text.startup.main
-                0x0000000000007904       0x10 .pio/build/teensy41/libFrameworkArduino.a(main.cpp.o)
-                0x0000000000007904                main
- .text          0x0000000000007914      0x134 .pio/build/teensy41/libFrameworkArduino.a(memcpy-armv7m.S.o)
-                0x0000000000007914                memcpy
- .text.ultoa    0x0000000000007a48       0x64 .pio/build/teensy41/libFrameworkArduino.a(nonstd.c.o)
-                0x0000000000007a48                ultoa
+                0x00000000000078c0       0x10 .pio/build/teensy41/libFrameworkArduino.a(main.cpp.o)
+                0x00000000000078c0                main
+ .text          0x00000000000078d0      0x134 .pio/build/teensy41/libFrameworkArduino.a(memcpy-armv7m.S.o)
+                0x00000000000078d0                memcpy
+ .text.ultoa    0x0000000000007a04       0x64 .pio/build/teensy41/libFrameworkArduino.a(nonstd.c.o)
+                0x0000000000007a04                ultoa
  .text.unused_interrupt_vector
-                0x0000000000007aac      0x18c .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000000007aac                unused_interrupt_vector
- .text._sbrk    0x0000000000007c38       0x34 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000000007c38                _sbrk
- .text._read    0x0000000000007c6c        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000000007c6c                _read
- .text._close   0x0000000000007c70        0x8 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000000007c70                _close
- .text._fstat   0x0000000000007c78        0xc .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000000007c78                _fstat
- .text._isatty  0x0000000000007c84        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000000007c84                _isatty
- .text._lseek   0x0000000000007c88        0x8 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000000007c88                _lseek
+                0x0000000000007a68      0x18c .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x0000000000007a68                unused_interrupt_vector
+ .text._sbrk    0x0000000000007bf4       0x34 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x0000000000007bf4                _sbrk
+ .text._read    0x0000000000007c28        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x0000000000007c28                _read
+ .text._close   0x0000000000007c2c        0x8 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x0000000000007c2c                _close
+ .text._fstat   0x0000000000007c34        0xc .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x0000000000007c34                _fstat
+ .text._isatty  0x0000000000007c40        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x0000000000007c40                _isatty
+ .text._lseek   0x0000000000007c44        0x8 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x0000000000007c44                _lseek
  .text.unlikely.abort
-                0x0000000000007c90        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000000007c90                abort
+                0x0000000000007c4c        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x0000000000007c4c                abort
  .text.Panic_Temp_isr
-                0x0000000000007c94        0x4 .pio/build/teensy41/libFrameworkArduino.a(tempmon.c.o)
-                0x0000000000007c94                Panic_Temp_isr
+                0x0000000000007c50        0x4 .pio/build/teensy41/libFrameworkArduino.a(tempmon.c.o)
+                0x0000000000007c50                Panic_Temp_isr
  .text.tempmonGetTemp
-                0x0000000000007c98       0x60 .pio/build/teensy41/libFrameworkArduino.a(tempmon.c.o)
-                0x0000000000007c98                tempmonGetTemp
+                0x0000000000007c54       0x60 .pio/build/teensy41/libFrameworkArduino.a(tempmon.c.o)
+                0x0000000000007c54                tempmonGetTemp
  .text.schedule_transfer
-                0x0000000000007cf8       0x88 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000000007cb4       0x88 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
  .text.run_callbacks
-                0x0000000000007d80       0x38 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000000007d3c       0x38 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
  .text.endpoint0_transmit.constprop.0
-                0x0000000000007db8       0x98 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000000007d74       0x98 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
  .text.usb_stop_sof_interrupts
-                0x0000000000007e50       0x2c .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
-                0x0000000000007e50                usb_stop_sof_interrupts
- .text.usb_isr  0x0000000000007e7c      0x630 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
-                0x0000000000007e7c                usb_isr
+                0x0000000000007e0c       0x2c .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000000007e0c                usb_stop_sof_interrupts
+ .text.usb_isr  0x0000000000007e38      0x630 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000000007e38                usb_isr
  .text.usb_config_rx
-                0x00000000000084ac       0x64 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
-                0x00000000000084ac                usb_config_rx
+                0x0000000000008468       0x64 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000000008468                usb_config_rx
  .text.usb_config_tx
-                0x0000000000008510       0x64 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
-                0x0000000000008510                usb_config_tx
+                0x00000000000084cc       0x64 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x00000000000084cc                usb_config_tx
  .text.usb_prepare_transfer
-                0x0000000000008574       0x30 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
-                0x0000000000008574                usb_prepare_transfer
+                0x0000000000008530       0x30 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000000008530                usb_prepare_transfer
  .text.usb_transmit
-                0x00000000000085a4       0x28 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
-                0x00000000000085a4                usb_transmit
+                0x0000000000008560       0x28 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000000008560                usb_transmit
  .text.usb_receive
-                0x00000000000085cc       0x1c .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
-                0x00000000000085cc                usb_receive
+                0x0000000000008588       0x1c .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000000008588                usb_receive
  .text.usb_transfer_status
-                0x00000000000085e8        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
-                0x00000000000085e8                usb_transfer_status
+                0x00000000000085a4        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x00000000000085a4                usb_transfer_status
  .text.usb_init_serialnumber
-                0x00000000000085ec       0x58 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
-                0x00000000000085ec                usb_init_serialnumber
+                0x00000000000085a8       0x58 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+                0x00000000000085a8                usb_init_serialnumber
  .text._ZN16usb_serial_class5clearEv
-                0x0000000000008644        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x0000000000008644                usb_serial_class::clear()
+                0x0000000000008600        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x0000000000008600                usb_serial_class::clear()
  .text._ZN16usb_serial_class4peekEv
-                0x0000000000008648        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x0000000000008648                usb_serial_class::peek()
+                0x0000000000008604        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x0000000000008604                usb_serial_class::peek()
  .text._ZN16usb_serial_class4readEv
-                0x000000000000864c        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x000000000000864c                usb_serial_class::read()
+                0x0000000000008608        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x0000000000008608                usb_serial_class::read()
  .text._ZN16usb_serial_class9availableEv
-                0x0000000000008650        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x0000000000008650                usb_serial_class::available()
+                0x000000000000860c        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x000000000000860c                usb_serial_class::available()
  .text._ZN16usb_serial_class5flushEv
-                0x0000000000008654        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x0000000000008654                usb_serial_class::flush()
+                0x0000000000008610        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x0000000000008610                usb_serial_class::flush()
  .text._ZN16usb_serial_class17availableForWriteEv
-                0x0000000000008658        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x0000000000008658                usb_serial_class::availableForWrite()
+                0x0000000000008614        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x0000000000008614                usb_serial_class::availableForWrite()
  .text._ZN16usb_serial_class5writeEPKhj
-                0x000000000000865c        0x8 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x000000000000865c                usb_serial_class::write(unsigned char const*, unsigned int)
+                0x0000000000008618        0x8 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x0000000000008618                usb_serial_class::write(unsigned char const*, unsigned int)
  .text.rx_queue_transfer
-                0x0000000000008664       0x60 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008620       0x60 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
  .text.rx_event
-                0x00000000000086c4       0xb4 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008680       0xb4 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
  .text.usb_serial_flush_callback
-                0x0000000000008778       0x90 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008734       0x90 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
  .text.usb_serial_write.part.0
-                0x0000000000008808      0x1b8 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x00000000000087c4      0x1b8 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
  .text.usb_serial_reset
-                0x00000000000089c0        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x00000000000089c0                usb_serial_reset
+                0x000000000000897c        0x4 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x000000000000897c                usb_serial_reset
  .text.usb_serial_configure
-                0x00000000000089c4      0x100 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x00000000000089c4                usb_serial_configure
+                0x0000000000008980      0x100 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008980                usb_serial_configure
  .text.usb_serial_read
-                0x0000000000008ac4       0xe0 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x0000000000008ac4                usb_serial_read
+                0x0000000000008a80       0xe0 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008a80                usb_serial_read
  .text.usb_serial_peekchar
-                0x0000000000008ba4       0x44 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x0000000000008ba4                usb_serial_peekchar
+                0x0000000000008b60       0x44 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008b60                usb_serial_peekchar
  .text.usb_serial_available
-                0x0000000000008be8       0x18 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x0000000000008be8                usb_serial_available
+                0x0000000000008ba4       0x18 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008ba4                usb_serial_available
  .text.usb_serial_flush_input
-                0x0000000000008c00       0x70 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x0000000000008c00                usb_serial_flush_input
+                0x0000000000008bbc       0x70 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008bbc                usb_serial_flush_input
  .text.usb_serial_getchar
-                0x0000000000008c70       0x20 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x0000000000008c70                usb_serial_getchar
+                0x0000000000008c2c       0x20 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008c2c                usb_serial_getchar
  .text.usb_serial_putchar
-                0x0000000000008c90       0x2c .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x0000000000008c90                usb_serial_putchar
+                0x0000000000008c4c       0x2c .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008c4c                usb_serial_putchar
  .text.usb_serial_write
-                0x0000000000008cbc       0x18 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x0000000000008cbc                usb_serial_write
+                0x0000000000008c78       0x18 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008c78                usb_serial_write
  .text.usb_serial_write_buffer_free
-                0x0000000000008cd4       0x50 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x0000000000008cd4                usb_serial_write_buffer_free
+                0x0000000000008c90       0x50 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008c90                usb_serial_write_buffer_free
  .text.usb_serial_flush_output
-                0x0000000000008d24       0x94 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
-                0x0000000000008d24                usb_serial_flush_output
- .text.yield    0x0000000000008db8       0xd8 .pio/build/teensy41/libFrameworkArduino.a(yield.cpp.o)
-                0x0000000000008db8                yield
+                0x0000000000008ce0       0x94 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+                0x0000000000008ce0                usb_serial_flush_output
+ .text.yield    0x0000000000008d74       0xd8 .pio/build/teensy41/libFrameworkArduino.a(yield.cpp.o)
+                0x0000000000008d74                yield
  .text._ZN14EventResponder24triggerEventNotImmediateEv
-                0x0000000000008e90       0x84 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
-                0x0000000000008e90                EventResponder::triggerEventNotImmediate()
+                0x0000000000008e4c       0x84 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
+                0x0000000000008e4c                EventResponder::triggerEventNotImmediate()
  .text._ZN14EventResponder12triggerEventEiPv
-                0x0000000000008f14       0x18 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
-                0x0000000000008f14                EventResponder::triggerEvent(int, void*)
+                0x0000000000008ed0       0x18 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
+                0x0000000000008ed0                EventResponder::triggerEvent(int, void*)
  .text._ZN14EventResponder16runFromInterruptEv
-                0x0000000000008f2c       0x44 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
-                0x0000000000008f2c                EventResponder::runFromInterrupt()
+                0x0000000000008ee8       0x44 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
+                0x0000000000008ee8                EventResponder::runFromInterrupt()
  .text.pendablesrvreq_isr
-                0x0000000000008f70        0x4 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
-                0x0000000000008f70                pendablesrvreq_isr
+                0x0000000000008f2c        0x4 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
+                0x0000000000008f2c                pendablesrvreq_isr
  .text.systick_isr
-                0x0000000000008f74       0x20 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
-                0x0000000000008f74                systick_isr
+                0x0000000000008f30       0x20 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
+                0x0000000000008f30                systick_isr
  .text.set_arm_clock
-                0x0000000000008f94      0x2f0 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
-                0x0000000000008f94                set_arm_clock
+                0x0000000000008f50      0x2f0 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
+                0x0000000000008f50                set_arm_clock
  .text.flexpwm_init
-                0x0000000000009284       0x7c .pio/build/teensy41/libFrameworkArduino.a(pwm.c.o)
-                0x0000000000009284                flexpwm_init
+                0x0000000000009240       0x7c .pio/build/teensy41/libFrameworkArduino.a(pwm.c.o)
+                0x0000000000009240                flexpwm_init
  .text.pwm_init
-                0x0000000000009300       0xf4 .pio/build/teensy41/libFrameworkArduino.a(pwm.c.o)
-                0x0000000000009300                pwm_init
- .text.rtc_get  0x00000000000093f4       0x24 .pio/build/teensy41/libFrameworkArduino.a(rtc.c.o)
-                0x00000000000093f4                rtc_get
+                0x00000000000092bc       0xf4 .pio/build/teensy41/libFrameworkArduino.a(pwm.c.o)
+                0x00000000000092bc                pwm_init
+ .text.rtc_get  0x00000000000093b0       0x24 .pio/build/teensy41/libFrameworkArduino.a(rtc.c.o)
+                0x00000000000093b0                rtc_get
  .text.sm_align_pool
-                0x0000000000009418       0x4c .pio/build/teensy41/libFrameworkArduino.a(sm_pool.c.o)
-                0x0000000000009418                sm_align_pool
+                0x00000000000093d4       0x4c .pio/build/teensy41/libFrameworkArduino.a(sm_pool.c.o)
+                0x00000000000093d4                sm_align_pool
  .text.sm_set_pool
-                0x0000000000009464       0x84 .pio/build/teensy41/libFrameworkArduino.a(sm_pool.c.o)
-                0x0000000000009464                sm_set_pool
+                0x0000000000009420       0x84 .pio/build/teensy41/libFrameworkArduino.a(sm_pool.c.o)
+                0x0000000000009420                sm_set_pool
  .text._Z15_spi_dma_rxISR0v
-                0x00000000000094e8       0xdc .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x00000000000094e8                _spi_dma_rxISR0()
+                0x00000000000094a4       0xdc .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x00000000000094a4                _spi_dma_rxISR0()
  .text._Z15_spi_dma_rxISR1v
-                0x00000000000095c4       0xdc .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x00000000000095c4                _spi_dma_rxISR1()
+                0x0000000000009580       0xdc .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000000009580                _spi_dma_rxISR1()
  .text._ZN8SPIClass5beginEv
-                0x00000000000096a0      0x234 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x00000000000096a0                SPIClass::begin()
+                0x000000000000965c      0x234 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x000000000000965c                SPIClass::begin()
  .text._ZN8SPIClass15pinIsChipSelectEh
-                0x00000000000098d4       0x30 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x00000000000098d4                SPIClass::pinIsChipSelect(unsigned char)
+                0x0000000000009890       0x30 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000000009890                SPIClass::pinIsChipSelect(unsigned char)
  .text._ZN8SPIClass9pinIsMOSIEh
-                0x0000000000009904       0x1c .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000000009904                SPIClass::pinIsMOSI(unsigned char)
+                0x00000000000098c0       0x1c .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x00000000000098c0                SPIClass::pinIsMOSI(unsigned char)
  .text._ZN8SPIClass9pinIsMISOEh
-                0x0000000000009920       0x18 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000000009920                SPIClass::pinIsMISO(unsigned char)
+                0x00000000000098dc       0x18 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x00000000000098dc                SPIClass::pinIsMISO(unsigned char)
  .text._ZN8SPIClass8pinIsSCKEh
-                0x0000000000009938       0x1c .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000000009938                SPIClass::pinIsSCK(unsigned char)
+                0x00000000000098f4       0x1c .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x00000000000098f4                SPIClass::pinIsSCK(unsigned char)
  .text._ZN8SPIClass5setCSEh
-                0x0000000000009954       0x54 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000000009954                SPIClass::setCS(unsigned char)
+                0x0000000000009910       0x54 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000000009910                SPIClass::setCS(unsigned char)
  .text._ZN8SPIClass7setMOSIEh
-                0x00000000000099a8       0x6c .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x00000000000099a8                SPIClass::setMOSI(unsigned char)
+                0x0000000000009964       0x6c .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000000009964                SPIClass::setMOSI(unsigned char)
  .text._ZN8SPIClass7setMISOEh
-                0x0000000000009a14       0x64 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000000009a14                SPIClass::setMISO(unsigned char)
+                0x00000000000099d0       0x64 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x00000000000099d0                SPIClass::setMISO(unsigned char)
  .text._ZN8SPIClass6setSCKEh
-                0x0000000000009a78       0x6c .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000000009a78                SPIClass::setSCK(unsigned char)
+                0x0000000000009a34       0x6c .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000000009a34                SPIClass::setSCK(unsigned char)
  .text._malloc_r
-                0x0000000000009ae4      0x560 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
-                0x0000000000009ae4                _malloc_r
+                0x0000000000009aa0      0x560 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
+                0x0000000000009aa0                _malloc_r
  .text.__malloc_lock
-                0x000000000000a044        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mlock.o)
-                0x000000000000a044                __malloc_lock
+                0x000000000000a000        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mlock.o)
+                0x000000000000a000                __malloc_lock
  .text.__malloc_unlock
-                0x000000000000a050        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mlock.o)
-                0x000000000000a050                __malloc_unlock
+                0x000000000000a00c        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mlock.o)
+                0x000000000000a00c                __malloc_unlock
  .text._realloc_r
-                0x000000000000a05c      0x3d8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-reallocr.o)
-                0x000000000000a05c                _realloc_r
+                0x000000000000a018      0x3d8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-reallocr.o)
+                0x000000000000a018                _realloc_r
  .text.stdio_exit_handler
-                0x000000000000a434       0x18 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
+                0x000000000000a3f0       0x18 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
  .text.cleanup_stdio
-                0x000000000000a44c       0x40 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
+                0x000000000000a408       0x40 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
  .text.global_stdio_init.part.0
-                0x000000000000a48c       0xd4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
- .text.__sinit  0x000000000000a560       0x3c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
-                0x000000000000a560                __sinit
+                0x000000000000a448       0xd4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
+ .text.__sinit  0x000000000000a51c       0x3c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
+                0x000000000000a51c                __sinit
  .text.__sfp_lock_acquire
-                0x000000000000a59c        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
-                0x000000000000a59c                __sfp_lock_acquire
+                0x000000000000a558        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
+                0x000000000000a558                __sfp_lock_acquire
  .text.__sfp_lock_release
-                0x000000000000a5a8        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
-                0x000000000000a5a8                __sfp_lock_release
+                0x000000000000a564        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
+                0x000000000000a564                __sfp_lock_release
  .text._vdprintf_r
-                0x000000000000a5b4       0x4c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vdprintf.o)
-                0x000000000000a5b4                _vdprintf_r
+                0x000000000000a570       0x4c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vdprintf.o)
+                0x000000000000a570                _vdprintf_r
  .text.vdprintf
-                0x000000000000a600       0x1c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vdprintf.o)
-                0x000000000000a600                vdprintf
+                0x000000000000a5bc       0x1c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vdprintf.o)
+                0x000000000000a5bc                vdprintf
  .text._fwalk_sglue
-                0x000000000000a61c       0x48 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fwalk.o)
-                0x000000000000a61c                _fwalk_sglue
- .text.memmove  0x000000000000a664       0xf8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-memmove.o)
-                0x000000000000a664                memmove
- .text.memset   0x000000000000a75c       0xa4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-memset.o)
-                0x000000000000a75c                memset
- .text.strchr   0x000000000000a800       0xcc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strchr.o)
-                0x000000000000a800                strchr
- .text.strncpy  0x000000000000a8cc       0x64 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strncpy.o)
-                0x000000000000a8cc                strncpy
+                0x000000000000a5d8       0x48 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fwalk.o)
+                0x000000000000a5d8                _fwalk_sglue
+ .text.memmove  0x000000000000a620       0xf8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-memmove.o)
+                0x000000000000a620                memmove
+ .text.memset   0x000000000000a718       0xa4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-memset.o)
+                0x000000000000a718                memset
+ .text.strchr   0x000000000000a7bc       0xcc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strchr.o)
+                0x000000000000a7bc                strchr
+ .text.strncpy  0x000000000000a888       0x64 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strncpy.o)
+                0x000000000000a888                strncpy
  .text._vasnprintf_r
-                0x000000000000a930       0x64 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vasnprintf.o)
-                0x000000000000a930                _vasnprintf_r
+                0x000000000000a8ec       0x64 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vasnprintf.o)
+                0x000000000000a8ec                _vasnprintf_r
  .text.__locale_mb_cur_max
-                0x000000000000a994        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
-                0x000000000000a994                __locale_mb_cur_max
- .text._sbrk_r  0x000000000000a9a0       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-sbrkr.o)
-                0x000000000000a9a0                _sbrk_r
+                0x000000000000a950        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
+                0x000000000000a950                __locale_mb_cur_max
+ .text._sbrk_r  0x000000000000a95c       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-sbrkr.o)
+                0x000000000000a95c                _sbrk_r
  .text._write_r
-                0x000000000000a9c4       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-writer.o)
-                0x000000000000a9c4                _write_r
- .text.__errno  0x000000000000a9f0        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-errno.o)
-                0x000000000000a9f0                __errno
+                0x000000000000a980       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-writer.o)
+                0x000000000000a980                _write_r
+ .text.__errno  0x000000000000a9ac        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-errno.o)
+                0x000000000000a9ac                __errno
  .text.__libc_init_array
-                0x000000000000a9fc       0x48 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-init.o)
-                0x000000000000a9fc                __libc_init_array
+                0x000000000000a9b8       0x48 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-init.o)
+                0x000000000000a9b8                __libc_init_array
  .text.__retarget_lock_init_recursive
-                0x000000000000aa44        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lock.o)
-                0x000000000000aa44                __retarget_lock_init_recursive
+                0x000000000000aa00        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lock.o)
+                0x000000000000aa00                __retarget_lock_init_recursive
  .text.__retarget_lock_close_recursive
-                0x000000000000aa48        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lock.o)
-                0x000000000000aa48                __retarget_lock_close_recursive
+                0x000000000000aa04        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lock.o)
+                0x000000000000aa04                __retarget_lock_close_recursive
  .text.__retarget_lock_acquire_recursive
-                0x000000000000aa4c        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lock.o)
-                0x000000000000aa4c                __retarget_lock_acquire_recursive
+                0x000000000000aa08        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lock.o)
+                0x000000000000aa08                __retarget_lock_acquire_recursive
  .text.__retarget_lock_release_recursive
-                0x000000000000aa50        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lock.o)
-                0x000000000000aa50                __retarget_lock_release_recursive
- *fill*         0x000000000000aa54       0x2c 
- .text          0x000000000000aa80       0xdc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strlen.o)
-                0x000000000000aa80                strlen
+                0x000000000000aa0c        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lock.o)
+                0x000000000000aa0c                __retarget_lock_release_recursive
+ *fill*         0x000000000000aa10       0x30 
+ .text          0x000000000000aa40       0xdc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strlen.o)
+                0x000000000000aa40                strlen
  .text._malloc_trim_r
-                0x000000000000ab5c       0xa0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-freer.o)
-                0x000000000000ab5c                _malloc_trim_r
- .text._free_r  0x000000000000abfc      0x20c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-freer.o)
-                0x000000000000abfc                _free_r
+                0x000000000000ab1c       0xa0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-freer.o)
+                0x000000000000ab1c                _malloc_trim_r
+ .text._free_r  0x000000000000abbc      0x20c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-freer.o)
+                0x000000000000abbc                _free_r
  .text.__ascii_mbtowc
-                0x000000000000ae08       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mbtowc_r.o)
-                0x000000000000ae08                __ascii_mbtowc
- *fill*         0x000000000000ae34        0x4 
+                0x000000000000adc8       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mbtowc_r.o)
+                0x000000000000adc8                __ascii_mbtowc
+ *fill*         0x000000000000adf4        0x4 
  .text._svfprintf_r
-                0x000000000000ae38     0x1b44 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
-                0x000000000000ae38                _svfprintf_r
- .text._Balloc  0x000000000000c97c       0x4c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000c97c                _Balloc
- .text._Bfree   0x000000000000c9c8       0x14 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000c9c8                _Bfree
+                0x000000000000adf8     0x1b44 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
+                0x000000000000adf8                _svfprintf_r
+ .text._Balloc  0x000000000000c93c       0x4c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000c93c                _Balloc
+ .text._Bfree   0x000000000000c988       0x14 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000c988                _Bfree
  .text.__multadd
-                0x000000000000c9dc       0xa4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000c9dc                __multadd
+                0x000000000000c99c       0xa4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000c99c                __multadd
  .text.__hi0bits
-                0x000000000000ca80       0x40 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000ca80                __hi0bits
+                0x000000000000ca40       0x40 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000ca40                __hi0bits
  .text.__lo0bits
-                0x000000000000cac0       0x60 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000cac0                __lo0bits
- .text.__i2b    0x000000000000cb20       0x5c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000cb20                __i2b
+                0x000000000000ca80       0x60 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000ca80                __lo0bits
+ .text.__i2b    0x000000000000cae0       0x5c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000cae0                __i2b
  .text.__multiply
-                0x000000000000cb7c      0x15c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000cb7c                __multiply
+                0x000000000000cb3c      0x15c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000cb3c                __multiply
  .text.__pow5mult
-                0x000000000000ccd8       0xc0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000ccd8                __pow5mult
+                0x000000000000cc98       0xc0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000cc98                __pow5mult
  .text.__lshift
-                0x000000000000cd98       0xf0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000cd98                __lshift
- .text.__mcmp   0x000000000000ce88       0x44 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000ce88                __mcmp
- .text.__mdiff  0x000000000000cecc      0x154 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000cecc                __mdiff
- .text.__d2b    0x000000000000d020       0xd4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
-                0x000000000000d020                __d2b
+                0x000000000000cd58       0xf0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000cd58                __lshift
+ .text.__mcmp   0x000000000000ce48       0x44 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000ce48                __mcmp
+ .text.__mdiff  0x000000000000ce8c      0x154 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000ce8c                __mdiff
+ .text.__d2b    0x000000000000cfe0       0xd4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x000000000000cfe0                __d2b
  .text._fclose_r
-                0x000000000000d0f4       0xc8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fclose.o)
-                0x000000000000d0f4                _fclose_r
+                0x000000000000d0b4       0xc8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fclose.o)
+                0x000000000000d0b4                _fclose_r
  .text.__sflush_r
-                0x000000000000d1bc      0x130 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fflush.o)
-                0x000000000000d1bc                __sflush_r
+                0x000000000000d17c      0x130 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fflush.o)
+                0x000000000000d17c                __sflush_r
  .text._fflush_r
-                0x000000000000d2ec       0x54 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fflush.o)
-                0x000000000000d2ec                _fflush_r
- .text.__sread  0x000000000000d340       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-stdio.o)
-                0x000000000000d340                __sread
+                0x000000000000d2ac       0x54 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fflush.o)
+                0x000000000000d2ac                _fflush_r
+ .text.__sread  0x000000000000d300       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-stdio.o)
+                0x000000000000d300                __sread
  .text.__swrite
-                0x000000000000d364       0x40 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-stdio.o)
-                0x000000000000d364                __swrite
- .text.__sseek  0x000000000000d3a4       0x20 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-stdio.o)
-                0x000000000000d3a4                __sseek
+                0x000000000000d324       0x40 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-stdio.o)
+                0x000000000000d324                __swrite
+ .text.__sseek  0x000000000000d364       0x20 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-stdio.o)
+                0x000000000000d364                __sseek
  .text.__sclose
-                0x000000000000d3c4        0x8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-stdio.o)
-                0x000000000000d3c4                __sclose
+                0x000000000000d384        0x8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-stdio.o)
+                0x000000000000d384                __sclose
  .text.__ascii_wctomb
-                0x000000000000d3cc       0x1c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wctomb_r.o)
-                0x000000000000d3cc                __ascii_wctomb
+                0x000000000000d38c       0x1c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wctomb_r.o)
+                0x000000000000d38c                __ascii_wctomb
  .text._localeconv_r
-                0x000000000000d3e8        0x8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-localeconv.o)
-                0x000000000000d3e8                _localeconv_r
+                0x000000000000d3a8        0x8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-localeconv.o)
+                0x000000000000d3a8                _localeconv_r
  .text._close_r
-                0x000000000000d3f0       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-closer.o)
-                0x000000000000d3f0                _close_r
+                0x000000000000d3b0       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-closer.o)
+                0x000000000000d3b0                _close_r
  .text._lseek_r
-                0x000000000000d414       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lseekr.o)
-                0x000000000000d414                _lseek_r
- .text._read_r  0x000000000000d440       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-readr.o)
-                0x000000000000d440                _read_r
- *fill*         0x000000000000d46c        0x4 
- .text          0x000000000000d470       0xa0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-memchr.o)
-                0x000000000000d470                memchr
+                0x000000000000d3d4       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lseekr.o)
+                0x000000000000d3d4                _lseek_r
+ .text._read_r  0x000000000000d400       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-readr.o)
+                0x000000000000d400                _read_r
+ *fill*         0x000000000000d42c        0x4 
+ .text          0x000000000000d430       0xa0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-memchr.o)
+                0x000000000000d430                memchr
  .text._wcrtomb_r
-                0x000000000000d510       0x4c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wcrtomb.o)
-                0x000000000000d510                _wcrtomb_r
+                0x000000000000d4d0       0x4c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wcrtomb.o)
+                0x000000000000d4d0                _wcrtomb_r
  .text._wcsrtombs_r
-                0x000000000000d55c       0x18 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wcsrtombs.o)
-                0x000000000000d55c                _wcsrtombs_r
- *fill*         0x000000000000d574        0x4 
- .text.frexp    0x000000000000d578       0x78 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libm_a-s_frexp.o)
-                0x000000000000d578                frexp
+                0x000000000000d51c       0x18 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wcsrtombs.o)
+                0x000000000000d51c                _wcsrtombs_r
+ *fill*         0x000000000000d534        0x4 
+ .text.frexp    0x000000000000d538       0x78 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libm_a-s_frexp.o)
+                0x000000000000d538                frexp
  .text.__assert_func
-                0x000000000000d5f0       0x40 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-assert.o)
-                0x000000000000d5f0                __assert_func
+                0x000000000000d5b0       0x40 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-assert.o)
+                0x000000000000d5b0                __assert_func
  .text._calloc_r
-                0x000000000000d630       0x78 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-callocr.o)
-                0x000000000000d630                _calloc_r
- .text.quorem   0x000000000000d6a8      0x128 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-dtoa.o)
- .text._dtoa_r  0x000000000000d7d0      0xcec /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-dtoa.o)
-                0x000000000000d7d0                _dtoa_r
+                0x000000000000d5f0       0x78 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-callocr.o)
+                0x000000000000d5f0                _calloc_r
+ .text.quorem   0x000000000000d668      0x128 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-dtoa.o)
+ .text._dtoa_r  0x000000000000d790      0xcec /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-dtoa.o)
+                0x000000000000d790                _dtoa_r
  .text.fiprintf
-                0x000000000000e4bc       0x28 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fiprintf.o)
-                0x000000000000e4bc                fiprintf
+                0x000000000000e47c       0x28 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fiprintf.o)
+                0x000000000000e47c                fiprintf
  .text.__ssprint_r
-                0x000000000000e4e4      0x100 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfiprintf.o)
-                0x000000000000e4e4                __ssprint_r
+                0x000000000000e4a4      0x100 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfiprintf.o)
+                0x000000000000e4a4                __ssprint_r
  .text.__sprint_r.part.0
-                0x000000000000e5e4       0x78 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
+                0x000000000000e5a4       0x78 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
  .text._vfiprintf_r
-                0x000000000000e65c      0xf8c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
-                0x000000000000e65c                _vfiprintf_r
+                0x000000000000e61c      0xf8c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
+                0x000000000000e61c                _vfiprintf_r
  .text.__sbprintf
-                0x000000000000f5e8       0x80 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
+                0x000000000000f5a8       0x80 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
  .text.__sfvwrite_r
-                0x000000000000f668      0x2f4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fvwrite.o)
-                0x000000000000f668                __sfvwrite_r
+                0x000000000000f628      0x2f4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fvwrite.o)
+                0x000000000000f628                __sfvwrite_r
  .text.__swsetup_r
-                0x000000000000f95c       0xcc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wsetup.o)
-                0x000000000000f95c                __swsetup_r
+                0x000000000000f91c       0xcc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wsetup.o)
+                0x000000000000f91c                __swsetup_r
  .text.__fputwc
-                0x000000000000fa28       0xac /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fputwc.o)
-                0x000000000000fa28                __fputwc
+                0x000000000000f9e8       0xac /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fputwc.o)
+                0x000000000000f9e8                __fputwc
  .text._fputwc_r
-                0x000000000000fad4       0x68 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fputwc.o)
-                0x000000000000fad4                _fputwc_r
+                0x000000000000fa94       0x68 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fputwc.o)
+                0x000000000000fa94                _fputwc_r
  .text._wcsnrtombs_l
-                0x000000000000fb3c      0x108 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wcsnrtombs.o)
-                0x000000000000fb3c                _wcsnrtombs_l
+                0x000000000000fafc      0x108 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wcsnrtombs.o)
+                0x000000000000fafc                _wcsnrtombs_l
  .text._wcsnrtombs_r
-                0x000000000000fc44       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wcsnrtombs.o)
-                0x000000000000fc44                _wcsnrtombs_r
+                0x000000000000fc04       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wcsnrtombs.o)
+                0x000000000000fc04                _wcsnrtombs_r
  .text.__smakebuf_r
-                0x000000000000fc68       0xd8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-makebuf.o)
-                0x000000000000fc68                __smakebuf_r
+                0x000000000000fc28       0xd8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-makebuf.o)
+                0x000000000000fc28                __smakebuf_r
  .text.__swbuf_r
-                0x000000000000fd40       0xb0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wbuf.o)
-                0x000000000000fd40                __swbuf_r
+                0x000000000000fd00       0xb0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-wbuf.o)
+                0x000000000000fd00                __swbuf_r
  .text._fstat_r
-                0x000000000000fdf0       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fstatr.o)
-                0x000000000000fdf0                _fstat_r
+                0x000000000000fdb0       0x2c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-fstatr.o)
+                0x000000000000fdb0                _fstat_r
  .text._isatty_r
-                0x000000000000fe1c       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-isattyr.o)
-                0x000000000000fe1c                _isatty_r
+                0x000000000000fddc       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-isattyr.o)
+                0x000000000000fddc                _isatty_r
  .text._isatty_r.__stub
-                0x000000000000fe40       0x10 linker stubs
-                0x000000000000fe50                . = ALIGN (0x10)
+                0x000000000000fe00       0x10 linker stubs
+                0x000000000000fe10                . = ALIGN (0x10)
 
-.glue_7         0x000000000000fe50        0x0 load address 0x0000000060012a88
- .glue_7        0x000000000000fe50        0x0 linker stubs
+.glue_7         0x000000000000fe10        0x0 load address 0x0000000060012a48
+ .glue_7        0x000000000000fe10        0x0 linker stubs
 
-.glue_7t        0x000000000000fe50        0x0 load address 0x0000000060012a88
- .glue_7t       0x000000000000fe50        0x0 linker stubs
+.glue_7t        0x000000000000fe10        0x0 load address 0x0000000060012a48
+ .glue_7t       0x000000000000fe10        0x0 linker stubs
 
-.vfp11_veneer   0x000000000000fe50        0x0 load address 0x0000000060012a88
- .vfp11_veneer  0x000000000000fe50        0x0 linker stubs
+.vfp11_veneer   0x000000000000fe10        0x0 load address 0x0000000060012a48
+ .vfp11_veneer  0x000000000000fe10        0x0 linker stubs
 
-.v4_bx          0x000000000000fe50        0x0 load address 0x0000000060012a88
- .v4_bx         0x000000000000fe50        0x0 linker stubs
+.v4_bx          0x000000000000fe10        0x0 load address 0x0000000060012a48
+ .v4_bx         0x000000000000fe10        0x0 linker stubs
 
-.fini           0x000000000000fe50        0x4 load address 0x0000000060012a88
- .fini          0x000000000000fe50        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
-                0x000000000000fe50                _fini
+.fini           0x000000000000fe10        0x4 load address 0x0000000060012a48
+ .fini          0x000000000000fe10        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
+                0x000000000000fe10                _fini
 
-.iplt           0x000000000000fe54        0x0 load address 0x0000000060012a8c
- .iplt          0x000000000000fe54        0x0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
+.iplt           0x000000000000fe14        0x0 load address 0x0000000060012a4c
+ .iplt          0x000000000000fe14        0x0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 
-.ARM.exidx      0x000000000000fe54        0x0 load address 0x0000000060012a8c
-                0x000000000000fe54                __exidx_start = .
+.ARM.exidx      0x000000000000fe14        0x0 load address 0x0000000060012a4c
+                0x000000000000fe14                __exidx_start = .
  *(.ARM.exidx* .ARM.extab.text* .gnu.linkonce.armexidx.*)
-                0x000000000000fe54                __exidx_end = .
+                0x000000000000fe14                __exidx_end = .
 
-.data           0x0000000020000000     0x22c0 load address 0x0000000060012a8c
+.data           0x0000000020000000     0x22c0 load address 0x0000000060012a4c
  *(.endpoint_queue)
  .endpoint_queue
                 0x0000000020000000      0x280 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
@@ -2338,163 +2338,151 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
  .rodata._ZL13init_commands
                 0x0000000020000370       0x6d .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  *fill*         0x00000000200003dd        0x3 
- .rodata._ZN10HX8357_t3n10charBoundsEcPsS0_S0_S0_S0_S0_.str1.4
-                0x00000000200003e0       0x37 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
- *fill*         0x0000000020000417        0x1 
- .rodata._ZN10HX8357_t3n13getTextBoundsEPKhtssPsS2_PtS3_.str1.4
-                0x0000000020000418       0x1c .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .rodata._ZN10HX8357_t3n5beginEmm.str1.4
-                0x0000000020000434       0xe4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x00000000200003e0       0xe4 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .rodata._ZN8AListBox5writeEPKhj.str1.4
-                0x0000000020000518       0x22 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
- *fill*         0x000000002000053a        0x2 
+                0x00000000200004c4       0x22 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+ *fill*         0x00000000200004e6        0x2 
  .rodata._ZN8AListBox5writeEh.str1.4
-                0x000000002000053c       0x23 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                                         0x2b (size before relaxing)
- *fill*         0x000000002000055f        0x1 
+                0x00000000200004e8       0x2b .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+ *fill*         0x0000000020000513        0x1 
  .rodata._ZN8AListBox7addItemEiPKc6AColor.str1.4
-                0x0000000020000560       0x15 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
- *fill*         0x0000000020000575        0x3 
+                0x0000000020000514        0xd .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+ *fill*         0x0000000020000521        0x3 
  .rodata._ZN8AListBox9writeItemEPKhj.part.0.str1.4
-                0x0000000020000578       0x6e .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
- *fill*         0x00000000200005e6        0x2 
+                0x0000000020000524       0x6e .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+ *fill*         0x0000000020000592        0x2 
  .rodata._ZN8AListBoxC2EP10HX8357_t3n5ARect6AColor.str1.4
-                0x00000000200005e8       0x2a .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
- *fill*         0x0000000020000612        0x2 
- .rodata._ZN8AListBoxC2EP10HX8357_t3ntttt6AColor.str1.4
-                0x0000000020000614       0x31 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                                         0x3d (size before relaxing)
- *fill*         0x0000000020000645        0x3 
+                0x0000000020000594       0x2a .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+ *fill*         0x00000000200005be        0x2 
  .rodata._ZN8SPIClass24spiclass_lpspi1_hardwareE
-                0x0000000020000648       0x70 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000020000648                SPIClass::spiclass_lpspi1_hardware
+                0x00000000200005c0       0x70 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x00000000200005c0                SPIClass::spiclass_lpspi1_hardware
  .rodata._ZN8SPIClass24spiclass_lpspi3_hardwareE
-                0x00000000200006b8       0x70 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x00000000200006b8                SPIClass::spiclass_lpspi3_hardware
+                0x0000000020000630       0x70 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000020000630                SPIClass::spiclass_lpspi3_hardware
  .rodata._ZN8SPIClass24spiclass_lpspi4_hardwareE
-                0x0000000020000728       0x70 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000020000728                SPIClass::spiclass_lpspi4_hardware
+                0x00000000200006a0       0x70 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x00000000200006a0                SPIClass::spiclass_lpspi4_hardware
  .rodata._ZTV10HX8357_t3n
-                0x0000000020000798       0x18 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x0000000020000798                vtable for HX8357_t3n
+                0x0000000020000710       0x18 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000020000710                vtable for HX8357_t3n
  .rodata._ZTV16usb_serial_class
-                0x00000000200007b0       0x28 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x00000000200007b0                vtable for usb_serial_class
+                0x0000000020000728       0x28 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x0000000020000728                vtable for usb_serial_class
  .rodata._ZTV8AListBox
-                0x00000000200007d8       0x18 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
-                0x00000000200007d8                vtable for AListBox
+                0x0000000020000750       0x18 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+                0x0000000020000750                vtable for AListBox
  .rodata._ZZN8SPIClass16beginTransactionE11SPISettingsE7clk_sel
-                0x00000000200007f0       0x10 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                0x00000000200007f0                SPIClass::beginTransaction(SPISettings)::clk_sel
+                0x0000000020000768       0x10 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
+                0x0000000020000768                SPIClass::beginTransaction(SPISettings)::clk_sel
  .rodata.__assert_func.str1.4
-                0x0000000020000800       0x3f /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-assert.o)
+                0x0000000020000778       0x3f /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-assert.o)
                                          0x43 (size before relaxing)
- *fill*         0x000000002000083f        0x1 
+ *fill*         0x00000000200007b7        0x1 
  .rodata.__multadd.str1.4
-                0x0000000020000840       0x76 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
- *fill*         0x00000000200008b6        0x2 
+                0x00000000200007b8       0x76 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+ *fill*         0x000000002000082e        0x2 
  .rodata._ctype_
-                0x00000000200008b8      0x101 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-ctype_.o)
-                0x00000000200008b8                _ctype_
- *fill*         0x00000000200009b9        0x3 
+                0x0000000020000830      0x101 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-ctype_.o)
+                0x0000000020000830                _ctype_
+ *fill*         0x0000000020000931        0x3 
  .rodata._dtoa_r.str1.4
-                0x00000000200009bc       0x71 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-dtoa.o)
+                0x0000000020000934       0x71 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-dtoa.o)
                                          0x89 (size before relaxing)
- *fill*         0x0000000020000a2d        0x3 
+ *fill*         0x00000000200009a5        0x3 
  .rodata._svfprintf_r.str1.4
-                0x0000000020000a30       0x42 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
+                0x00000000200009a8       0x42 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
  .rodata._vfiprintf_r.str1.4
-                0x0000000020000a72       0x2f /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
- *fill*         0x0000000020000a72        0x2 
+                0x00000000200009ea       0x2f /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
+ *fill*         0x00000000200009ea        0x2 
  .rodata.blanks.1
-                0x0000000020000a74       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
+                0x00000000200009ec       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
  .rodata.blanks.1
-                0x0000000020000a84       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
+                0x00000000200009fc       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
  .rodata.digital_pin_to_info_PGM
-                0x0000000020000a94      0x370 .pio/build/teensy41/libFrameworkArduino.a(digital.c.o)
-                0x0000000020000a94                digital_pin_to_info_PGM
+                0x0000000020000a0c      0x370 .pio/build/teensy41/libFrameworkArduino.a(digital.c.o)
+                0x0000000020000a0c                digital_pin_to_info_PGM
  .rodata.glcdfont
-                0x0000000020000e04      0x4fb .pio/build/teensy41/lib849/libHX8357_t3n.a(glcdfont.c.o)
-                0x0000000020000e04                glcdfont
- *fill*         0x00000000200012ff        0x1 
- .rodata.p05.0  0x0000000020001300        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
+                0x0000000020000d7c      0x4fb .pio/build/teensy41/lib849/libHX8357_t3n.a(glcdfont.c.o)
+                0x0000000020000d7c                glcdfont
+ *fill*         0x0000000020001277        0x1 
+ .rodata.p05.0  0x0000000020001278        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
  .rodata.setup.str1.4
-                0x000000002000130c       0x52 .pio/build/teensy41/src/main.cpp.o
- *fill*         0x000000002000135e        0x2 
+                0x0000000020001284       0xa0 .pio/build/teensy41/src/main.cpp.o
  .rodata.str1.4
-                0x0000000020001360       0x48 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
+                0x0000000020001324       0x48 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
                                          0x4c (size before relaxing)
  .rodata.usb_descriptor_list
-                0x00000000200013a8       0x84 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
-                0x00000000200013a8                usb_descriptor_list
+                0x000000002000136c       0x84 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+                0x000000002000136c                usb_descriptor_list
  .rodata.zeroes.0
-                0x000000002000142c       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
+                0x00000000200013f0       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
  .rodata.zeroes.0
-                0x000000002000143c       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
+                0x0000000020001400       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
  *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.data*)))
- *fill*         0x000000002000144c        0x4 
  .data._impure_data
-                0x0000000020001450      0x120 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-impure.o)
-                0x0000000020001450                _impure_data
+                0x0000000020001410      0x120 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-impure.o)
+                0x0000000020001410                _impure_data
  .data.F_BUS_ACTUAL
-                0x0000000020001570        0x4 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
-                0x0000000020001570                F_BUS_ACTUAL
+                0x0000000020001530        0x4 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
+                0x0000000020001530                F_BUS_ACTUAL
  .data.F_CPU_ACTUAL
-                0x0000000020001574        0x4 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
-                0x0000000020001574                F_CPU_ACTUAL
- .data.SPI      0x0000000020001578       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000020001578                SPI
- .data.SPI1     0x00000000200015c8       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x00000000200015c8                SPI1
- .data.SPI2     0x0000000020001618       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000020001618                SPI2
- .data.Serial   0x0000000020001668       0x10 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x0000000020001668                Serial
+                0x0000000020001534        0x4 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
+                0x0000000020001534                F_CPU_ACTUAL
+ .data.SPI      0x0000000020001538       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000020001538                SPI
+ .data.SPI1     0x0000000020001588       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000020001588                SPI1
+ .data.SPI2     0x00000000200015d8       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x00000000200015d8                SPI2
+ .data.Serial   0x0000000020001628       0x10 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x0000000020001628                Serial
  .data.__brkval
-                0x0000000020001678        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000020001678                __brkval
+                0x0000000020001638        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x0000000020001638                __brkval
  .data.__global_locale
-                0x000000002000167c      0x16c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
-                0x000000002000167c                __global_locale
+                0x000000002000163c      0x16c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
+                0x000000002000163c                __global_locale
  .data.__malloc_av_
-                0x00000000200017e8      0x408 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
-                0x00000000200017e8                __malloc_av_
+                0x00000000200017a8      0x408 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
+                0x00000000200017a8                __malloc_av_
  .data.__malloc_sbrk_base
-                0x0000000020001bf0        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
-                0x0000000020001bf0                __malloc_sbrk_base
+                0x0000000020001bb0        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
+                0x0000000020001bb0                __malloc_sbrk_base
  .data.__malloc_trim_threshold
-                0x0000000020001bf4        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
-                0x0000000020001bf4                __malloc_trim_threshold
- .data.__sglue  0x0000000020001bf8        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
-                0x0000000020001bf8                __sglue
+                0x0000000020001bb4        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
+                0x0000000020001bb4                __malloc_trim_threshold
+ .data.__sglue  0x0000000020001bb8        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
+                0x0000000020001bb8                __sglue
  .data._impure_ptr
-                0x0000000020001c04        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-impure.o)
-                0x0000000020001c04                _impure_ptr
+                0x0000000020001bc4        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-impure.o)
+                0x0000000020001bc4                _impure_ptr
  .data.device_descriptor
-                0x0000000020001c08       0x12 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
- *fill*         0x0000000020001c1a        0x2 
+                0x0000000020001bc8       0x12 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+ *fill*         0x0000000020001bda        0x2 
  .data.microsoft_os_compatible_id_desc
-                0x0000000020001c1c       0x28 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+                0x0000000020001bdc       0x28 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
  .data.microsoft_os_string_desc
-                0x0000000020001c44       0x12 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
- *fill*         0x0000000020001c56        0x2 
+                0x0000000020001c04       0x12 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+ *fill*         0x0000000020001c16        0x2 
  .data.usb_string_serial_number_default
-                0x0000000020001c58       0x16 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
-                0x0000000020001c58                usb_string_serial_number_default
-                0x0000000020001c58                usb_string_serial_number
+                0x0000000020001c18       0x16 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+                0x0000000020001c18                usb_string_serial_number_default
+                0x0000000020001c18                usb_string_serial_number
  *(.vectorsram)
- *fill*         0x0000000020001c6e      0x392 
+ *fill*         0x0000000020001c2e      0x3d2 
  .vectorsram    0x0000000020002000      0x2c0 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
                 0x0000000020002000                _VectorsRam
 
 .tm_clone_table
-                0x00000000200022c0        0x0 load address 0x0000000060014d4c
+                0x00000000200022c0        0x0 load address 0x0000000060014d0c
  .tm_clone_table
                 0x00000000200022c0        0x0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
  .tm_clone_table
                 0x00000000200022c0        0x0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtend.o
 
-.igot.plt       0x00000000200022c0        0x0 load address 0x0000000060014d4c
+.igot.plt       0x00000000200022c0        0x0 load address 0x0000000060014d0c
  .igot.plt      0x00000000200022c0        0x0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 
 .bss            0x00000000200022c0      0x460
@@ -2667,20 +2655,20 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
  *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.externalram)))
                 0x0000000070000000                . = ALIGN (0x20)
 
-.text.csf       0x0000000060014d4c      0xeb4
+.text.csf       0x0000000060014d0c      0xef4
  FILL mask 0xff
                 0x0000000060015000                . = ALIGN (0x400)
- *fill*         0x0000000060014d4c      0x2b4 ff
+ *fill*         0x0000000060014d0c      0x2f4 ff
  *(.csf)
  .csf           0x0000000060015000      0xc00 .pio/build/teensy41/libFrameworkArduino.a(bootdata.c.o)
                 0x0000000060015000                hab_csf
                 0x0000000060015c00                __text_csf_end = .
                 0x0000000000000000                _stext = ADDR (.text.itcm)
-                0x000000000000fe50                _etext = ((ADDR (.text.itcm) + SIZEOF (.text.itcm)) + SIZEOF (.ARM.exidx))
+                0x000000000000fe10                _etext = ((ADDR (.text.itcm) + SIZEOF (.text.itcm)) + SIZEOF (.ARM.exidx))
                 0x0000000060002c38                _stextload = LOADADDR (.text.itcm)
                 0x0000000020000000                _sdata = ADDR (.data)
                 0x00000000200022c0                _edata = (ADDR (.data) + SIZEOF (.data))
-                0x0000000060012a8c                _sdataload = LOADADDR (.data)
+                0x0000000060012a4c                _sdataload = LOADADDR (.data)
                 0x00000000200022c0                _sbss = ADDR (.bss)
                 0x0000000020002720                _ebss = (ADDR (.bss) + SIZEOF (.bss))
                 0x0000000020203080                _heap_start = (ADDR (.bss.dma) + SIZEOF (.bss.dma))
