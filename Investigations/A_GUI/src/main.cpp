@@ -19,9 +19,6 @@
 #define TFT_DC 9
 #define TFT_CS 10
 
-// Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
-// HX8357_t3n tft = HX8357_t3n(TFT_CS, TFT_DC,8);
-
 #include "ili9341_t3n_font_Arial.h"
 // #include "font_ArialBold.h"
 //  #include "font_ComicSansMS.h"
@@ -34,12 +31,9 @@
 // #include <Fonts/FreeMonoBoldOblique12pt7b.h>
 // #include <Fonts/FreeSerif9pt7b.h>
 // #include <Fonts/FreeSans9pt7b.h>
-#include "AGUI.h"
 #include "ft8_font.h"
 
-// HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
-
-// AListBox box1(&tft, 0, 0, 240, 200, RED);
+HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 
 void setup() {
     char msg[] = "AB0ABC/P WA9ZXY RR73 S9";
@@ -47,8 +41,6 @@ void setup() {
     Serial.begin(9600);
     Serial.println("Starting...");
 
-    // Initialize the display
-    HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 
     tft.begin(30000000UL, 2000000UL);
     delay(1000);
@@ -72,8 +64,8 @@ void setup() {
 
     // Try mixing printf with addItem
     AListBox box3 = AListBox(&tft, ARect(0, 151, 150, 320), RED);
-    //box3.printf("Hello world\n");
-    //box3.addItem("Oh... hi");
+    // box3.printf("Hello world\n");
+    // box3.addItem("Oh... hi");
     box3.addItem("text");
     box3.printf("foo ");
     box3.printf("bar\n");
@@ -82,13 +74,13 @@ void setup() {
     box3.printf(" bye\n");
 
     // Check out pixel placement
-    AListBox box4  = AListBox(&tft, ARect(360, 100, 479, 150), RED);
+    AListBox box4 = AListBox(&tft, ARect(360, 100, 479, 150), RED);
     box4.addItem("Oh");
     box4.addItem("_Too much__________");
     box4.addItem("Might clip");
     box4.addItem("Surely clipped");
-    //tft.setClipRect();
-    //tft.fillRect(361, 101, 479-361-1, 150-101-1, GREEN);
+    // tft.setClipRect();
+    // tft.fillRect(361, 101, 479-361-1, 150-101-1, GREEN);
 
     // // Test selections
     // Serial.printf("box2.getSelection(0,0)=%d\n", box2.getSelectedItem(0, 0));

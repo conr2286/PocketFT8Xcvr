@@ -3691,6 +3691,11 @@ int16_t HX8357_t3n::strPixelLen(const char *str, uint16_t cb) {
 
 void HX8357_t3n::charBounds(char c, int16_t *x, int16_t *y,
                             int16_t *minx, int16_t *miny, int16_t *maxx, int16_t *maxy) {
+    // Substitute underscore for SP char missing in font tables
+    if (c == ' ') {
+        c = '_';  // Underscore is a rather wide substitution in a proportional font
+    }
+
     // BUGBUG:: Not handling offset/clip
     if (font) {
         if (c == '\n') {  // Newline?
@@ -3699,10 +3704,7 @@ void HX8357_t3n::charBounds(char c, int16_t *x, int16_t *y,
         } else if (c != '\r') {  // Not a carriage return; is normal char
             uint32_t bitoffset;
             const uint8_t *data;
-            if (c == ' ') {
-                DTRACE();
-                c = '_';  // Use width of underscore for missing SP in font table
-            }
+
             if (c >= font->index1_first && c <= font->index1_last) {
                 bitoffset = c - font->index1_first;
                 bitoffset *= font->bits_index;

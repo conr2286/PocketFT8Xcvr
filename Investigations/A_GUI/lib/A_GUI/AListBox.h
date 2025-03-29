@@ -19,8 +19,8 @@
 
 #include <Arduino.h>
 
-#include "ACoord.h"
 #include "AColor.h"
+#include "ACoord.h"
 #include "ARect.h"
 #include "AWidget.h"
 
@@ -32,15 +32,19 @@ class AListBox : public Print, public AWidget {
     AListBox(HX8357_t3n *tft, ACoord x1, ACoord y1, ACoord w, ACoord h);  // No border
     AListBox(HX8357_t3n *tft, ACoord x1, ACoord y1, ACoord w, ACoord h, AColor borderColor);
     AListBox(HX8357_t3n *tft, ARect boundary, AColor borderColor);
+    AListBox(HX8357_t3n *tft, ARect boundary);
+
 
     // Public methods unique to AListBox
     int drawItem(const char *str);
     int addItem(int index, const char *str, AColor color);
     int addItem(const char *str, AColor color);
     int addItem(const char *str);
+    int setItem(int index, const char *str, AColor fgColor, AColor bgColor);
+
     int getSelectedItem(ACoord xScreen, ACoord yScreen);  // Returns index of item selected at xClick,yClick
 
-    //int getSelection(unsigned xScreen, unsigned yScreen);
+    // int getSelection(unsigned xScreen, unsigned yScreen);
 
     // void setDefaultColor(AColor color);
     // void setBackgroundColor(AColor color);
@@ -62,10 +66,11 @@ class AListBox : public Print, public AWidget {
     const GFXfont *txtFont;           // Font choice is cast-in-brass by constructors
     uint16_t leading;                 // Space (pixels) between lines of text for this font
     uint16_t itemLen[maxItems];       // Identifies #pixels in each item (or 0 for empty item)
+    bool isSelected[maxItems];        // True if indexed item is selected
     uint8_t nextItem;                 // Index of where to place next unnumbered addition
 
     // Helper methods
-    bool hasBorder();                                       // Returns true if list box has a border
-    void selection(ACoord xScreen, ACoord yScreen);   // Implements selection for items in this AListBox
+    bool hasBorder();                                // Returns true if list box has a border
+    void selection(ACoord xScreen, ACoord yScreen);  // Implements selection for items in this AListBox
 
 };  // AListBox
