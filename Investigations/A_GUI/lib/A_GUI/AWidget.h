@@ -2,15 +2,15 @@
 
 #include <Arduino.h>
 
-#include "ADisplay.h"
-#include "AColor.h"
+#include "AGraphicsDriver.h"
+// #include "AColor.h"
 #include "ARect.h"
 
 /**
  * @brief This is the base class for all A_GUI widgets.
  *
  */
-class AWidget: virtual public ADisplay {
+class AWidget : virtual public AGraphicsDriver {
    public:
     AWidget(void);
     ~AWidget(void);

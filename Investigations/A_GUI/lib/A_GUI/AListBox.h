@@ -19,20 +19,19 @@
 
 #include <Arduino.h>
 
-#include "AColor.h"
-#include "ACoord.h"
+#include "AGraphicsDriver.h"
 #include "ARect.h"
 #include "AWidget.h"
 
-class AListBox : public Print, public AWidget {
+class AListBox : public AWidget, public Print {
    public:
     const static uint8_t maxItems = 24;  // Maximum number of items in a list
 
     // Constructors
-    AListBox(HX8357_t3n *tft, ACoord x1, ACoord y1, ACoord w, ACoord h);  // No border
-    AListBox(HX8357_t3n *tft, ACoord x1, ACoord y1, ACoord w, ACoord h, AColor borderColor);
-    AListBox(HX8357_t3n *tft, ARect boundary, AColor borderColor);
-    AListBox(HX8357_t3n *tft, ARect boundary);
+    AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h);  // No border
+    AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor borderColor);
+    AListBox(ARect boundary, AColor borderColor);
+    AListBox(ARect boundary);
 
 
     // Public methods unique to AListBox
@@ -59,11 +58,10 @@ class AListBox : public Print, public AWidget {
     size_t write(const uint8_t *buffer, size_t size) override;  // Write a char[] string possibly containing NL chars
 
    private:
-    HX8357_t3n *tft;                  // The underlying display
+    //HX8357_t3n *tft;                  // The underlying display
     AColor siColor;                   // Selected item color
     char *(*getItemText)(int index);  // User-supplied callback function to retrieve an item's text string
     void *(*doSelection)(int index);  // User-supplied callback function notified when item is selected
-    const GFXfont *txtFont;           // Font choice is cast-in-brass by constructors
     uint16_t leading;                 // Space (pixels) between lines of text for this font
     uint16_t itemLen[maxItems];       // Identifies #pixels in each item (or 0 for empty item)
     bool isSelected[maxItems];        // True if indexed item is selected

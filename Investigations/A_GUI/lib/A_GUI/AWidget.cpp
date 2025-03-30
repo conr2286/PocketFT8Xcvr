@@ -1,8 +1,12 @@
+// #include "AWidget.h"
+
+// #include <Adafruit_GFX.h>
+
+// #include "HX8357_t3n.h"
+
 #include "AWidget.h"
 
-#include <Adafruit_GFX.h>
-
-#include "HX8357_t3n.h"
+#include "AGraphicsDriver.h"
 
 // Initialize the head of the unordered list of all AWidget objects.
 // The processTouch() class method uses the list to find the selected widget.
@@ -23,8 +27,9 @@ AWidget::AWidget() {
 
     // New widgets initially have no selection notification (callback) function
     this->doSelection = NULL;
-
     // For now... we are leaving the boundary box uninitialized in the base class
+
+    gfx->setFont();
 }
 
 /**

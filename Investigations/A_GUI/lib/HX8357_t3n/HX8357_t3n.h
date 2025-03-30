@@ -387,7 +387,7 @@ class HX8357_t3n : public Print {
         *y = _originy;
     }
 
-    // setClipRect() sets a clipping rectangle (relative to any set origin) for drawing to be limited to.
+    // ected to.
     // Drawing is also restricted to the bounds of the display
 
     void setClipRect(int16_t x1, int16_t y1, int16_t w, int16_t h) {
