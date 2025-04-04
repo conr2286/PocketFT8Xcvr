@@ -6,6 +6,7 @@
  *  + Compare typefaces
  */
 
+ #include <SPI.h>
 #include <Adafruit_GFX.h>  //Note:  GFX must include prior to HX8357
 #include <Arduino.h>
 
@@ -19,10 +20,10 @@
 #define TFT_DC 9
 #define TFT_CS 10
 
-#include "ili9341_t3n_font_Arial.h"
+//#include "ili9341_t3n_font_Arial.h"
 // #include "font_ArialBold.h"
 //  #include "font_ComicSansMS.h"
-#include "ili9341_t3n_font_OpenSans.h"
+//#include "ili9341_t3n_font_OpenSans.h"
 // #include "ili9341_t3n_font_DroidSans.h"
 //  #include "font_Michroma.h"
 //  #include "font_Crystal.h"
@@ -35,10 +36,11 @@
 #include "ft8_font.h"
 
 static HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
-AGraphicsDriver gfx;
 
 void setup() {
-    char msg[] = "AB0ABC/P WA9ZXY RR73 S9";
+    //char msg[] = "AB0Q/P WA9ZXY RR73 S9";
+    char msg[] = "0";
+    //char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ0123456789,./";
 
     Serial.begin(9600);
     Serial.println("Starting...");
@@ -51,30 +53,37 @@ void setup() {
     tft.setFont(&FreeMono9pt7b);
     DPRINTF("&tft=%lu\n", &tft);
 
+    AGraphicsDriver gfx;
+
     // Init display
     gfx.begin(&tft);
-    DTRACE();
+    //DTRACE();
 
     // Build the list box1
-    DPRINTF("&tft=%lu\n", &tft);
-    AListBox box1 = AListBox(ARect(0, 0, 256, 100), RED);
+    //DPRINTF("&tft=%lu\n", &tft);
+    DTRACE();
+    AListBox box1 = AListBox(ARect(0, 0, 480, 100), RED);
     DTRACE();
     box1.addItem(msg);
+    box1.addItem(msg);
+    // box1.addItem(msg);
+    //  box1.addItem(msg);
+    //  box1.addItem(msg);
     DTRACE();
 
-    // // // Populate box2 with multiple items
-    // // AListBox box2 = AListBox(&tft, ARect(257, 100, 479, 250), RED);
-    // // box2.addItem("AB0ABC/P WA9ZXY RR73");
-    // // box2.addItem("AG0E KQ7B DN15");
-    // // box2.addItem("KQ7B AG0E -12");
-    // // box2.addItem("AG0E KQ7B -3");
-    // // box2.addItem("KQ7B AG0E RR73");
-    // // box2.addItem("AG0E KQ7B 73");
+    // // Populate box2 with multiple items
+    // AListBox box2 = AListBox(ARect(0, 152, 479, 250), RED);
+    // box2.addItem(msg);
+    // box2.addItem("AB0ABC/P WA9ZXY RR73");
+    // box2.addItem("AG0E KQ7B DN15");
+    // box2.addItem("KQ7B AG0E -12");
+    // box2.addItem("AG0E KQ7B -3");
+    // box2.addItem("KQ7B AG0E RR73");
+    // box2.addItem("AG0E KQ7B 73");
+    // DTRACE();
 
     // // Try mixing printf with addItem
     // AListBox box3 = AListBox(ARect(0, 151, 150, 320), RED);
-    // // box3.printf("Hello world\n");
-    // // box3.addItem("Oh... hi");
     // box3.addItem("text");
     // box3.printf("foo ");
     // box3.printf("bar\n");
@@ -86,13 +95,7 @@ void setup() {
     // AListBox box4 = AListBox(ARect(360, 100, 479, 150), RED);
     // box4.addItem("Oh");
     // box4.addItem("Might clip");
-    // box4.addItem("Surely clipped");
-    // // tft.setClipRect();
-    // // tft.fillRect(361, 101, 479-361-1, 150-101-1, GREEN);
-
-    // // // Test selections
-    // // Serial.printf("box2.getSelection(0,0)=%d\n", box2.getSelectedItem(0, 0));
-    // // Serial.printf("box2.getSelection(255,105)=%u\n", box2.getSelectedItem(255, 105));
+    // box4.addItem("Surely clipping somewhere");
 
     // long m0 = micros();
     // for (int i = 0; i < 100; i++) {

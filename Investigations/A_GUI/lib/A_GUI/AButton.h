@@ -9,27 +9,32 @@
  * AButton implements a very simple button
  * AListBox is a AWidget
  *
- * AButton uses a callBack function for clicks.  
- * 
+ * AButton uses a callBack function for clicks.
+ *
  */
 
- #pragma once
+#pragma once
 
- #include <Arduino.h>
- 
- #include "ADisplay.h"
-//  #include "AColor.h"
-//  #include "ACoord.h"
-//  #include "ARect.h"
- #include "AWidget.h"
- 
- class AButton : public AWidget {
-    public:
- 
-     // Constructors
-     AButton(const char *str, AColor borderColor);    
-     AButton(const char *str, ACoord x1, ACoord y1, ACoord w, ACoord h, AColor borderColor);    
+#include <Arduino.h>
+#include <SPI.h>
 
-    private:
- 
- };  // AListBox
+#include "AGraphicsDriver.h"
+#include "AWidget.h"
+
+class AButton : public AWidget {
+   public:
+    // Constructors
+    AButton(const char *str, ACoord x1, ACoord y1, ACoord w, ACoord h);
+
+    // Public methods
+    int setCallback(void *(*callback)(bool stateOn));  // Set user's callback function
+    void enable(void);                                 // Enable this button
+    void disable(void);                                // Disable (grey) this button
+    void setState(bool onOff);                         // Set button state on or off
+    void setText(const char *str);                     // Set button text
+
+   private:
+    // Private variables
+    bool enabled;  // Enabled or disabled (greyed)
+    bool stateOn;  // Button state (on or off)
+};  // AListBox

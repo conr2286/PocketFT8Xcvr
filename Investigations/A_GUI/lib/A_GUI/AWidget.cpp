@@ -3,7 +3,7 @@
 // #include <Adafruit_GFX.h>
 
 // #include "HX8357_t3n.h"
-
+#include "DEBUG.h"
 #include "AWidget.h"
 
 #include "AGraphicsDriver.h"
@@ -16,6 +16,7 @@ AWidget* AWidget::allWidgets = NULL;
  * @brief Constructor for the AWidget base class
  */
 AWidget::AWidget() {
+    DTRACE();
     // Link this new widget into the unordered list of all widgets
     this->next = allWidgets;
     allWidgets = this;

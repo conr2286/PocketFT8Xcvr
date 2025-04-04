@@ -20,7 +20,7 @@
  *  + For now, the text font is cast-in-brass as fonts are expensive and awkward in GFX
  *
  * MISC
- * AListBox "is a" AWidget, and it implements the Print interface so you can print() to it. 
+ * AListBox "is a" AWidget, and it implements the Print interface so you can print() to it.
  *
  * Items in AListBox are drawn with the display's current font, size and color.
  *
@@ -32,15 +32,18 @@
  *
  */
 
+#include "AListBox.h"
 
 #include <Arduino.h>
+#include <Fonts/FreeSerif9pt7b.h>
+#include <SPI.h>
 #include <stdint.h>
 #include <string.h>
 
-#include "AListBox.h"
 #include "AGraphicsDriver.h"
 #include "AWidget.h"
 #include "DEBUG.h"
+#include "ft8_font.h"  //Include the default font
 
 /**
  * @brief Build AListBox sans border line using width and height
@@ -57,12 +60,15 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
     boundary.setCorners(x1, y1, x1 + w, y1 + h);
     DTRACE();
 
-    // Initialize some default values for the list box
+    // Initialize some default colors for this new list box
     fgColor = WHITE;  // Text color
     bgColor = BLACK;  // Text background
     bdColor = BLACK;  // bdColor==bgColor ==> no border
-    leading = getLeading();    // Get the leading (in pixels) for this font
-    getItemText = NULL;        // Assume user can't resupply text strings for this box
+
+    // Initialize some default text values for this new list box
+    setFont(&FreeSerif9pt7b);
+    leading = getLeading();  // Get the leading (in pixels) for this font
+    getItemText = NULL;      // Assume user can't resupply text strings for this box
 
     // Decorate the list box
     setClipRect();                    // Clear any existing clip
@@ -89,13 +95,13 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
  */
 AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor bdColor) : AListBox(x1, y1, w, h) {
     if (!Serial) Serial.begin(9600);
-    // DPRINTF("x1=%d, y1=%d, w=%d, h=%d, bdColor=0x%x\n", x1, y1, w, h, bdColor);
+    DPRINTF("x1=%d, y1=%d, w=%d, h=%d, bdColor=0x%x\n", x1, y1, w, h, bdColor);
 
     // Initialize additional default values for this list box
     this->bdColor = bdColor;  // Border color
 
     // Decorate the list box border
-    DPRINTF("x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
+    DPRINTF("Border:  x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
     drawRect(x1, y1, w, h, bdColor);  // Draw the border (might be just background)
 
     // DTRACE();
@@ -107,7 +113,8 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor bdColor) : A
  * @param borderColor The border line color
  */
 AListBox::AListBox(ARect boundary, AColor borderColor) : AListBox(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1, borderColor) {
-    DPRINTF("x1=%d, y1=%d, x2=%d, y2=%d, bdColor=0x%x\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2, bdColor);
+    DTRACE();
+    // DPRINTF("x1=%d, y1=%d, x2=%d, y2=%d, bdColor=0x%x\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2, bdColor);
 }  // AListBox()
 
 /**
@@ -116,6 +123,7 @@ AListBox::AListBox(ARect boundary, AColor borderColor) : AListBox(boundary.x1, b
  * @param borderColor The border line color
  */
 AListBox::AListBox(ARect boundary) : AListBox(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1) {
+    DTRACE();
     DPRINTF("x1=%d, y1=%d, x2=%d, y2=%d, bdColor=0x%x\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2);
 }  // AListBox()
 
@@ -161,6 +169,7 @@ int AListBox::addItem(int index, const char *str, AColor fgColor) {
 int AListBox::setItem(int index, const char *str, AColor fgColor, AColor bgColor) {
     //  Sanity checks
     if (index >= maxItems) return -1;
+    if (str == NULL) return -1;
 
     // Truncate text containing a NL
     char *pNL = strchr(str, '\n');
@@ -172,11 +181,7 @@ int AListBox::setItem(int index, const char *str, AColor fgColor, AColor bgColor
 
     // Display the text for nextItem line
     writeItem((uint8_t *)str, strlen(str));  // Output the text
-
-    // Advance nextItem for subsequent additions
-    nextItem++;  // This might increment beyond the AListBox clip rectangle
-    DPRINTF("nextItem=%d\n", nextItem);
-    return index;  // Return index of item just written
+    return index;                            // Return index of item just written
 }
 
 /**
@@ -186,6 +191,8 @@ int AListBox::setItem(int index, const char *str, AColor fgColor, AColor bgColor
  * @return Index of where item was added or -1 if error
  */
 int AListBox::addItem(const char *str, AColor fgColor) {
+    // Sanity check
+    if (str == NULL) return -1;
     unsigned index = addItem(nextItem, str, fgColor);  // Add the item in next location
     return index;
 }  // addItem()
@@ -199,6 +206,8 @@ int AListBox::addItem(const char *str, AColor fgColor) {
  */
 int AListBox::addItem(const char *str) {
     // DTRACE();
+    // Sanity check
+    if (str == NULL) return -1;
     unsigned index = addItem(nextItem, str, fgColor);
     // DTRACE();
     return index;
@@ -233,52 +242,48 @@ size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
 
     if (count == 0) return 0;  // Perhaps there's nothing to do
 
-    // Setup the clip rectangle for this AListBox.  We always reserve one blank pixel on
-    // every side so adjacent boxes have some minimal clearance.  If we have a border,
-    // then we later allow another pixel on each side for drawing the border.
-    int16_t clipX = boundary.x1 + 1;                // Always reserve one blank pixel left of text
-    int16_t clipY = boundary.y1 + 1;                // Always reserve one blank pixel above text
-    int16_t clipW = boundary.x2 - boundary.x1 - 2;  // Clip width sans border
-    int16_t clipH = boundary.y2 - boundary.y1 - 2;  // Clip height sans border
-    // DPRINTF("clipX=%d,clipY=%d,clipW=%d\n", clipX, clipY, clipW);
-    // DPRINTF("boundary.y1=%d, boundary.y2=%d, clipH=%d\n", boundary.y1, boundary.y2, clipH);
+    // Setup the clip rectangle to inside the boundary.
+    int16_t clipX = boundary.x1;
+    int16_t clipY = boundary.y1;
+    int16_t clipW = boundary.x2 - boundary.x1;  // Clip width sans border
+    int16_t clipH = boundary.y2 - boundary.y1;  // Clip height sans border
+    DPRINTF("Sans Border:  clipX=%d,clipY=%d,clipW=%d, clipH=%d\n", clipX, clipY, clipW, clipH);
+    DPRINTF("boundary.y1=%d, boundary.y2=%d\n", boundary.y1, boundary.y2);
 
-    // Now adjust the clip for the border if we have one.
+    // Now adjust the clip to allow room for the border if we have one
     if (hasBorder()) {  // Does list box have a border?
-        clipX++;        // Reserve another pixel on the left
-        clipY++;        // Reserve another pixel on the top
-        clipW -= 2;     // Width descreases by two
-        clipH -= 2;     // As does height
-        DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d\n", clipX, clipY, clipW, clipH);
+        // clipX+=1;        // Reserve space for border and one blank pixel
+        // clipY+=1;        // Reserve space for border and one blank pixel
+        // clipW -= 2;     // Width descreases to make room for border
+        // clipH -= 2;     // As does height to make room for border
+        DPRINTF("With Border:  clipX=%d,clipY=%d,clipW=%d,clipH=%d\n", clipX, clipY, clipW, clipH);
+        DPRINTF("boundary.y1=%d, boundary.y2=%d\n", boundary.y1, boundary.y2);
     }
-
-    // TODO:  Someday deal with ridiculous clip rectangle specifications.  For now, ask
-    // for garbage, get something smelly.
+    // TODO:  Someday deal with ridiculous clip rectangle specifications.  For now,
+    // garbage in, garbage out.
 
     // Setup the display clip rectangle for our list box (which better fit on the screen)
-    // DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d\n", clipX, clipY, clipW, clipH);
+    //drawRect(clipX, clipY, clipW, clipH,WHITE);       //Draw clip rectangle for debugging
+    DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d, leading=%d\n", clipX, clipY, clipW, clipH, leading);
     setClipRect(clipX, clipY, clipW, clipH);
 
     // Place the cursor where we wish to draw this char[] string
-    int16_t drawX = clipX + itemLen[nextItem];   // Place after existing text on this item line
-    int16_t drawY = clipY + nextItem * leading;  // Place on this item's line
-    DPRINTF("drawX=%d, drawY=%d\n", drawX, drawY);
+    int16_t drawX = clipX + 1 + itemLen[nextItem];   // Place after existing text on this item line
+    int16_t drawY = clipY + 1 + nextItem * leading;  // Place on this item's line
+    DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d, drawX=%d, drawY=%d\n", clipX, clipY, clipW, clipH, drawX, drawY);
     setCursor(drawX, drawY);
-    // DTRACE();
 
     // Draw the text item
-    setFont(txtFont);  // Config the font we're using in this AListBox
-    // DTRACE();
-    setTextColor(fgColor, bgColor);  // Foreground and background text colors
-    setTextWrap(false);              // Clip to screen if clip rectange extends offscreen
-    DPRINTF("buffer='%s', count=%d\n", buffer, count);
+    // setFont(&FreeSerif9pt7b);
+    setFont(txtFont);                                          // Config the AListBox font
+    setTextColor(fgColor, bgColor);                            // Foreground and background text colors
+    setTextWrap(false);                                        // Clip to screen if clip rectange extends offscreen
     size_t actualCount = writeText((uint8_t *)buffer, count);  // Write string to display
 
     // Recalculate the count of text pixels on this item
     int16_t x1, y1;  // Returned by getTextBounds() but not used
     uint16_t w, h;   // Width and height in pixels returned by getTextBounds()
     getTextBounds(buffer, (uint16_t)actualCount, drawX, drawY, &x1, &y1, &w, &h);
-    DPRINTF("x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
     itemLen[nextItem] += (w);  // Accumulated number of horizontal pixels in this item's line of text
 
     return actualCount;
@@ -295,7 +300,6 @@ size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
  * continue on the next line.
  */
 size_t AListBox::write(uint8_t c) {
-    DPRINTF("write(%c)\n", c);
     write(&c, 1);
     return 1;
 }  // write()

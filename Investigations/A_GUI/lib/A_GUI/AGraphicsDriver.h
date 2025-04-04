@@ -1,5 +1,9 @@
 #pragma once
 
+#include <SPI.h>
+
+#include "DEBUG.h"
+
 #include "AColor.h"
 #include "ACoord.h"
 #include "ARect.h"
@@ -9,6 +13,7 @@
 class AGraphicsDriver {
    public:
     // Constructors and initialization
+    AGraphicsDriver(void);
     void begin(HX8357_t3n *gfx);
 
     // Graphics methods
@@ -16,6 +21,8 @@ class AGraphicsDriver {
     void setClipRect(void);
     void fillRect(ACoord x, ACoord y, ACoord w, ACoord h, AColor color);
     void drawRect(ACoord x, ACoord y, ACoord w, ACoord h, AColor color);
+    void drawPixel(int16_t x, int16_t y, AColor color);
+
 
     // Text methods
     void setCursor(ACoord x, ACoord y);
@@ -23,7 +30,8 @@ class AGraphicsDriver {
     void setTextColor(AColor fg, AColor bg);
     void setTextWrap(boolean w);
     void setFont(const ILI9341_t3_font_t &f);
-    void setFont(const GFXfont *f = NULL);
+    void setFont(const GFXfont *f);
+    void setFont(void);
     ACoord getLeading(void);
     size_t writeText(const uint8_t *buffer, size_t size);
     void getTextBounds(const uint8_t *buffer, uint16_t len, int16_t x, int16_t y,
@@ -33,7 +41,7 @@ class AGraphicsDriver {
     void getTextBounds(const String &str, int16_t x, int16_t y,
                        int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
 
-    // Variables
-    static HX8357_t3n *gfx;  // Adafruit's GFX Library
-    const GFXfont *txtFont;  // Default font for this application
+    // Variables (all must be static or initialized in default constructor)
+     static HX8357_t3n *gfx;  // Adafruit's GFX Library
+     const static GFXfont *txtFont;  // Default font for this application
 };

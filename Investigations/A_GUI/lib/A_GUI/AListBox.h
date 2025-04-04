@@ -18,6 +18,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <SPI.h>
 
 #include "AGraphicsDriver.h"
 #include "ARect.h"

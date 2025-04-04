@@ -3704,7 +3704,6 @@ void HX8357_t3n::charBounds(char c, int16_t *x, int16_t *y,
         } else if (c != '\r') {  // Not a carriage return; is normal char
             uint32_t bitoffset;
             const uint8_t *data;
-
             if (c >= font->index1_first && c <= font->index1_last) {
                 bitoffset = c - font->index1_first;
                 bitoffset *= font->bits_index;
@@ -3825,10 +3824,8 @@ void HX8357_t3n::getTextBounds(const uint8_t *buffer, uint16_t len, int16_t x, i
 
     int16_t minx = _width, miny = _height, maxx = -1, maxy = -1;
 
-    while (len--) {
+    while (len--)
         charBounds(*buffer++, &x, &y, &minx, &miny, &maxx, &maxy);
-        DPRINTF("c='%c', x=%d, y=%d\n", *(buffer - 1), x, y);
-    }
 
     if (maxx >= minx) {
         *x1 = minx;
@@ -3850,10 +3847,8 @@ void HX8357_t3n::getTextBounds(const char *str, int16_t x, int16_t y,
 
     int16_t minx = _width, miny = _height, maxx = -1, maxy = -1;
 
-    while ((c = *str++)) {
+    while ((c = *str++))
         charBounds(c, &x, &y, &minx, &miny, &maxx, &maxy);
-        DPRINTF("c='%c', x=%d, y=%d\n", c, x, y);
-    }
 
     if (maxx >= minx) {
         *x1 = minx;
@@ -3942,6 +3937,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
 
     int16_t xo = glyph->xOffset;  // sic
     int16_t yo = glyph->yOffset + gfxFont->yAdvance / 2;
+    DPRINTF("xOffset=%d yOffset=%d\n", glyph->xOffset, glyph->yOffset);
 
     if (wrap && ((cursor_x + textsize_x * (xo + w)) > _width)) {
         cursor_x = 0;
@@ -3953,11 +3949,12 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
 
     uint16_t bo = glyph->bitmapOffset;
     uint8_t xx, yy, bits = 0, bit = 0;
-    // Serial.printf("DGFX_char: %c (%d,%d) : %u %u %u %u %d %d %x %x %d\n", c, cursor_x, cursor_y, w, h,
-    //			glyph->xAdvance, gfxFont->yAdvance, xo, yo, textcolor, textbgcolor, _use_fbtft);Serial.flush();
+    DPRINTF("drawGFXFontChar(%c): cursor=(%d,%d) w=%u h=%u xAdvance=%u yAdvance=%u xo=%d yo=%d textcolor=%x textbgcolor=%x _use_fbtft=%d\n", c, cursor_x, cursor_y, w, h,
+            glyph->xAdvance, gfxFont->yAdvance, xo, yo, textcolor, textbgcolor, _use_fbtft);
+    Serial.flush();
 
     if (textcolor == textbgcolor) {
-        // Serial.printf("DGFXChar: %c %u, %u, wh:%d %d o:%d %d\n", c, cursor_x, cursor_y, w, h, xo, yo);
+        DPRINTF("DGFXChar: c=%c %u, %u, wh:%d %d xo:%d yo%d\n", c, cursor_x, cursor_y, w, h, xo, yo);
         // Todo: Add character clipping here
 
         // NOTE: Adafruit GFX does not support Opaque font output as there
@@ -3976,6 +3973,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                 }
                 // Could try up to 8 bits at time, but start off trying up to 4
                 uint8_t xCount;
+                DPRINTF("xx=%d yy=%d bits=%0x%x w_left=%d textsize_x=%d textsize_y=%d\n", xx, yy, bits, w_left, textsize_x, textsize_y);
                 if ((w_left >= 8) && ((bits & 0xff) == 0xff)) {
                     xCount = 8;
                     // Serial.print("8");
@@ -4036,10 +4034,13 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
         }
 
         int16_t y_start = cursor_y + _originy + (_gfxFont_min_yOffset * textsize_y) + gfxFont->yAdvance * textsize_y / 2;  // UP to most negative value.
-        int16_t y_end = y_start + gfxFont->yAdvance * textsize_y;                                                          // how far we will update
+        y_start += 2;                                                                                                      // JRC ???
+        DPRINTF("y_start = %d + %d + %d*%d + %d*%d/2\n", cursor_y, _originy, _gfxFont_min_yOffset, textsize_y, gfxFont->yAdvance, textsize_y);
+        int16_t y_end = y_start + gfxFont->yAdvance * textsize_y;  // how far we will update
         int16_t y = y_start;
         // int8_t y_top_fill = (yo - _gfxFont_min_yOffset) * textsize_y;	 // both negative like -10 - -16 = 6...
         int8_t y_top_fill = (yo - gfxFont->yAdvance / 2 - _gfxFont_min_yOffset) * textsize_y;
+        DPRINTF("y_start=%d y_end=%d y=%d y_top_fill=%d\n", y_start, y_end, y, y_top_fill);
 
         // See if anything is within clip rectangle, if not bail
         if ((x_start >= _displayclipx2) ||  // Clip right
@@ -4047,6 +4048,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
             (x_end < _displayclipx1) ||     // Clip left
             (y_end < _displayclipy1))       // Clip top
         {
+            DTRACE();
             // But remember to first update the cursor position
             cursor_x += glyph->xAdvance * (int16_t)textsize_x;
             return;
@@ -4055,12 +4057,14 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
         // If our y_end > _displayclipy2 set it to _displayclipy2 as to not have to test both  Likewise X
         if (y_end > _displayclipy2) y_end = _displayclipy2;
         if (x_end > _displayclipx2) x_end = _displayclipx2;
+        // DPRINTF("x_end=%d y_end=%d\n", x_end, y_end);
 
         // If we get here and
         if (_gfx_last_cursor_y != (cursor_y + _originy)) _gfx_last_char_x_write = 0;
 
 #ifdef ENABLE_HX8357_FRAMEBUFFER
         if (_use_fbtft) {
+            DTRACE();
             // lets try to output the values directly...
             updateChangedRange(x_start, y_start);  // update the range of the screen that has been changed;
             updateChangedRange(x_end, y_end);      // update the range of the screen that has been changed;
@@ -4081,6 +4085,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                 pfbPixel_row += _width;
                 y++;
             }
+            DPRINTF("y=%d\n", y);
             // Now lets output all of the pixels for each of the rows..
             for (yy = 0; (yy < h) && (y < _displayclipy2); yy++) {
                 uint16_t bo_save = bo;
@@ -4151,20 +4156,22 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
         } else
 #endif
         {
-            // lets try to output text in one output rectangle
-            // Serial.printf("    SPI (%d %d) (%d %d)\n", x_start, y_start, x_end, y_end);Serial.flush();
-            // compute the actual region we will output given
+            // DTRACE();
+            //  lets try to output text in one output rectangle
+            //  Serial.printf("    SPI (%d %d) (%d %d)\n", x_start, y_start, x_end, y_end);Serial.flush();
+            //  compute the actual region we will output given
             beginSPITransaction(_SPI_CLOCK);
 
             setAddr((x_start >= _displayclipx1) ? x_start : _displayclipx1,
                     (y_start >= _displayclipy1) ? y_start : _displayclipy1,
                     x_end - 1, y_end - 1);
+            DPRINTF("y_start=%d y_end=%d, _displayclipy1=%d, _displayclipy2=%d, y=%d, h=%d\n", y_start, y_end, _displayclipy1, _displayclipy2, y, h);
             writecommand_cont(HX8357_RAMWR);
-            // Serial.printf("SetAddr: %u %u %u %u\n", (x_start >= _displayclipx1) ? x_start : _displayclipx1,
-            //		(y_start >= _displayclipy1) ? y_start : _displayclipy1,
-            //		x_end  - 1,  y_end - 1);
+            // DPRINTF("SetAddr: %u %u %u %u\n", (x_start >= _displayclipx1) ? x_start : _displayclipx1,
+            //         (y_start >= _displayclipy1) ? y_start : _displayclipy1,
+            //         x_end - 1, y_end - 1);
             //  First lets fill in the top parts above the actual rectangle...
-            // Serial.printf("    y_top_fill %d x_left_fill %d\n", y_top_fill, x_left_fill);
+            DPRINTF("    y_top_fill %d x_left_fill %d\n", y_top_fill, x_left_fill);
             while (y_top_fill--) {
                 if ((y >= _displayclipy1) && (y < _displayclipy2)) {
                     for (int16_t xx = x_start; xx < x_end; xx++) {
@@ -4175,9 +4182,10 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                     }
                 }
                 y++;
+                DPRINTF("y_start=%d y_end=%d, _displayclipy1=%d, _displayclipy2=%d, y=%d, h=%d\n", y_start, y_end, _displayclipy1, _displayclipy2, y, h);
             }
             // Serial.println("    After top fill"); Serial.flush();
-            //  Now lets output all of the pixels for each of the rows..
+            //  Now lets output all of the pixels for each of the rows.  yy is glyph row#???
             for (yy = 0; (yy < h) && (y < _displayclipy2); yy++) {
                 uint16_t bo_save = bo;
                 uint8_t bit_save = bit;
@@ -4188,10 +4196,12 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                     bit = bit_save;
                     bits = bits_save;
                     x = x_start;
+                    //Serial.printf(" y=%2d ", y);
                     if (y >= _displayclipy1) {
                         while (x < x_left_fill) {
                             if ((x >= _displayclipx1) && (x < _displayclipx2)) {
                                 // Don't need to check if we are in previous char as in this case x_left_fill is set to 0...
+                                // DPRINTF("yts=%d textsize_y=%d x=%d, y=%d, y_start=%d y_end=%d, yts=%d _displayclipy1=%d, _displayclipy2=%d\n", yts, textsize_y, x, y, y_start, y_end, yts, _displayclipy1, _displayclipy2);
                                 writedata16_cont(gfxFontLastCharPosFG(x, y) ? _gfx_last_char_textcolor : textbgcolor);
                             }
                             x++;
@@ -4200,13 +4210,18 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                             if (!(bit++ & 7)) {
                                 bits = bitmap[bo++];
                             }
+                            //if (xx == 0) DPRINTF("y=%2d h=%d yy=%2d bo-1=%02d bits=: ", y, h, yy, bo - 1);  //???
+
                             for (uint8_t xts = 0; xts < textsize_x; xts++) {
                                 if ((x >= _displayclipx1) && (x < _displayclipx2)) {
-                                    if (bits & 0x80)
-                                        writedata16_cont(textcolor);
-                                    else
+                                    if (bits & 0x80) {  // The bit in focus is shifted into leftmost position of bits
+                                        //Serial.printf("1 ");
+                                        writedata16_cont(textcolor);  // Display fg color if bit in focus is a 1
+                                    } else {
+                                        //Serial.printf("0 ");
                                         writedata16_cont(gfxFontLastCharPosFG(x, y) ? _gfx_last_char_textcolor : (x < x_offset_cursor) ? _gfx_last_char_textbgcolor
                                                                                                                                        : textbgcolor);
+                                    }
                                 }
                                 x++;  // remember our logical position...
                             }
@@ -4222,6 +4237,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                         }
                     }
                     y++;  // remember which row we just output
+                    //Serial.printf("\n");
                 }
             }
             // And output any more rows below us...
@@ -4230,6 +4246,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                 if (y >= _displayclipy1) {
                     for (int16_t xx = x_start; xx < x_end; xx++) {
                         if (xx >= _displayclipx1) {
+                            // DPRINTF("xx=%d y=%d\n", xx, y);
                             writedata16_cont(gfxFontLastCharPosFG(xx, y) ? _gfx_last_char_textcolor : (xx < x_offset_cursor) ? _gfx_last_char_textbgcolor
                                                                                                                              : textbgcolor);
                         }

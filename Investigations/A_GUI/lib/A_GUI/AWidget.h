@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <SPI.h>
 
 #include "AGraphicsDriver.h"
 // #include "AColor.h"
@@ -10,7 +11,7 @@
  * @brief This is the base class for all A_GUI widgets.
  *
  */
-class AWidget : virtual public AGraphicsDriver {
+class AWidget :  virtual public AGraphicsDriver {
    public:
     AWidget(void);
     ~AWidget(void);

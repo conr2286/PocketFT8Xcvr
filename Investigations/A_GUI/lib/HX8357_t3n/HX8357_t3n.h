@@ -86,7 +86,6 @@
 #ifdef __cplusplus
 #include <DMAChannel.h>
 #include <SPI.h>
-
 #include "Arduino.h"
 
 #endif
@@ -522,10 +521,10 @@ class HX8357_t3n : public Print {
         _displayclipy2 = max(0, min(_clipy2 + _originy, height()));
         _invisible = (_displayclipx1 == _displayclipx2 || _displayclipy1 == _displayclipy2);
         _standard = (_displayclipx1 == 0) && (_displayclipx2 == _width) && (_displayclipy1 == 0) && (_displayclipy2 == _height);
-        if (Serial) {
-            // Serial.printf("UDC (%d %d)-(%d %d) %d %d\n", _displayclipx1, _displayclipy1, _displayclipx2,
-            //	_displayclipy2, _invisible, _standard);
-        }
+        // if (Serial) {
+        //     Serial.printf("UDC (%d %d)-(%d %d) %d %d\n", _displayclipx1, _displayclipy1, _displayclipx2,
+        //             _displayclipy2, _invisible, _standard);
+        // }
     }
 
     int16_t scroll_x, scroll_y, scroll_width, scroll_height;
@@ -1078,7 +1077,7 @@ class HX8357_t3n : public Print {
 // Nothing in the above commented block is working with the versions of the current
 // versions of the libraries at KQ7B building with PlatformIO.  Adafruit_GFX defines
 // Adafruit_GFX_Button as a class, not a preprocessor symbol.  For now, let HX8357_Button
-// exist with its own name rather than masquerade as Adafruit_GFX_Button. 
+// exist with its own name rather than masquerade as Adafruit_GFX_Button.
 class HX8357_Button {
    public:
     HX8357_Button(void) { _gfx = NULL; }

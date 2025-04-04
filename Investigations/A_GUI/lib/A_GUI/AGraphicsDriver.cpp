@@ -9,11 +9,16 @@
  * While the isolation is not complete (fonts are a notable weakness), the task of switching
  * libraries is largely confined to changes in just this class.
  *
+ * IMPLEMENTATION
  * The original implementation of AGraphicsDriver was for a 480x320 TFT display using the
- * HX8357D controller attached to a Teensy 4.1 through an SPI bus.
+ * HX8357D controller attached to a Teensy 4.1 through an SPI bus.  The AGUI code was
+ * developed using Visual Studio Code, PlatformIO and many Arduino library dependencies
+ * on MacOS 15.3.2.
  *
  * DESIGN NOTES
- *  + The driver should probably be a singleton if multiple displays are forbidden
+ *  + This is a minimalist approach with an Adafruit accent for a GUI library.  Consider
+ *    LGVL for a more full-featured solution.
+ *  + This driver should probably become a singleton if multiple displays are forbidden
  *
  * DEPENDENCIES
  *  + https://github.com/adafruit/Adafruit_HX8357_Library
@@ -21,20 +26,35 @@
  *  + https://github.com/mjs513/HX8357_t3n
  *                          and
  *  + https://github.com/adafruit/Adafruit-GFX-Library
+ *
+ * REFERENCES
+ * While on-line tutorials are available for the Adafruit GFX library, I've found minimal
+ * complete documentation of the APIs and nothing but the source code for many versions on
+ * github.  As of March, 2025, this is the best almost-complete API description I've found:
+ * https://adafruit.github.io/Adafruit-GFX-Library/html/class_adafruit___g_f_x.html
+ * If the API you seek isn't in there, you'll have to resort to the your library's source.
  **/
 
 #include "AGraphicsDriver.h"
 
+#include <Fonts/FreeMono9pt7b.h>
+#include <Fonts/FreeSans9pt7b.h>
+#include <SPI.h>
+
 #include "Adafruit_GFX.h"  //HX8357_t3n requires you #include GFX before...
 #include "DEBUG.h"         //For printf-style debugging on a Teensy sans JTAG :(
 #include "HX8357_t3n.h"    //you #include the HX8357 variation.
-#include "ft8_font.h"
+#include "ft8_font.h"      //Include the default font
+#include "Fonts/FreeSans9pt7b.h"
 
 HX8357_t3n* AGraphicsDriver::gfx;
+const GFXfont* AGraphicsDriver::txtFont;  // Default font for this application
 
 //-----------------------------------------------------------------------------
 //  Initialization
 //-----------------------------------------------------------------------------
+
+AGraphicsDriver::AGraphicsDriver() { DTRACE(); }
 
 /**
  * @brief Bind the graphics driver to the HX8357_t3n version of the Adafruit GFX library
@@ -49,8 +69,11 @@ void AGraphicsDriver::begin(HX8357_t3n* gfx) {
     // Setup the default font for the widgets.  Given the memory requirements for each font,
     // we're assuming most applications will use just this one font which you can
     // change here.  Alternatively, you can select other fonts with setFont().
-    txtFont = &FT8Font;           // Record the default font
-    this->gfx->setFont(txtFont);  // Setup display for this font
+    txtFont = &FT8Font;  // Record the default font
+    //txtFont = &FreeMono9pt7b;
+    //txtFont = &FreeSans9pt7b;
+    // DPRINTF("txtFont=%lu\n", txtFont);
+    setFont(txtFont);  // Setup display for this font
 }
 
 //-----------------------------------------------------------------------------
@@ -58,7 +81,7 @@ void AGraphicsDriver::begin(HX8357_t3n* gfx) {
 //-----------------------------------------------------------------------------
 
 /**
- * @brief Define the display's clip rectangle
+ * @brief Define the display's clip window rectangle
  * @param clipX x-Screen coordinate
  * @param clipY y-Screen coordinate
  * @param clipW width in pixels
@@ -67,6 +90,7 @@ void AGraphicsDriver::begin(HX8357_t3n* gfx) {
  * @note GFX supports a single clip window
  */
 void AGraphicsDriver::setClipRect(ACoord clipX, ACoord clipY, ACoord clipW, ACoord clipH) {
+    DPRINTF("setClipRect(%d,%d,%d,%d)\n", clipX, clipY, clipW, clipH);
     gfx->setClipRect(clipX, clipY, clipW, clipH);
 }
 
@@ -75,6 +99,17 @@ void AGraphicsDriver::setClipRect(ACoord clipX, ACoord clipY, ACoord clipW, ACoo
  */
 void AGraphicsDriver::setClipRect() {
     gfx->setClipRect();
+}
+
+
+/**
+ * @brief Draw a single pixel of specified color
+ * @param x Coordinate
+ * @param y Coordinate
+ * @param color Specified color
+ */
+void AGraphicsDriver::drawPixel(int16_t x, int16_t y, AColor color){
+    gfx->drawPixel(x, y, color);
 }
 
 /**
@@ -111,6 +146,14 @@ void AGraphicsDriver::drawRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h,
  */
 void AGraphicsDriver::setFont(const GFXfont* f) {
     gfx->setFont(f);
+}
+
+/**
+ * @brief Select the specified GFX font
+ * @param f Pointer to the GFXfont struct
+ */
+void AGraphicsDriver::setFont(void) {
+    gfx->setFont();
 }
 
 /**

@@ -7,6 +7,7 @@
  * able to support different displays so long as its colors can be
  * expressed as the integer values of an enumeration.  
  */
+#include <SPI.h>
 #include <Adafruit_GFX.h>   //Must #include prior to HX8357
 #include "HX8357_t3n.h"
 
