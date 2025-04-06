@@ -59,9 +59,9 @@ class AListBox : public AWidget, public Print {
     size_t write(const uint8_t *buffer, size_t size) override;  // Write a char[] string possibly containing NL chars
 
    protected:
-    void doTouchWidget(ACoord xScreen, ACoord yScreen) override;  // AWidget::processTouch() notifies this callback function when this AListBox is touched
-    // virtual void doRepaintAListBox(void);                         // User overrides doRepaintAlistBox() to receive notifications of repaint events
-    virtual void doTouchItem(int item);  // User overrides doTouchItem() to receive notifications of touch events for items
+    void doTouchWidget(ACoord xScreen, ACoord yScreen) override;  // AWidget::processTouch() notifies our callback function when this AListBox is touched
+    virtual void doRepaintAListBox(void) {}                       // User overrides doRepaintAlistBox() to receive notifications of repaint events
+    virtual void doTouchItem(int item) {}                         // User overrides doTouchItem() to receive notifications of touch events for items
 
    private:
     AColor siColor;              // Selected item color

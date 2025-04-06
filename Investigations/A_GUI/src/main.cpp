@@ -37,17 +37,17 @@
 
 static HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 
-// class Foo : public AListBox {
-//    public:
-//     Foo(ARect rect, AColor c) : AListBox(rect, c) {};
-//     void doTouchItem(int item) override {
-//         DPRINTF("doTouchItem(%d)\n", item);
-//     }
-// };
+class Box : public AListBox {
+   public:
+    Box(ARect rect, AColor c) : AListBox(rect, c) {};
+    void doTouchItem(int item) override {
+        DPRINTF("doTouchItem(%d)\n", item);
+    }
+};
 
-void AListBox::doTouchItem(int item) {
-    DPRINTF("doTouchItem(%d)\n", item);
-}
+// void AListBox::doTouchItem(int item) {
+//     DPRINTF("doTouchItem(%d)\n", item);
+// }
 
 void setup() {
     // char msg[] = "AB0Q/P WA9ZXY RR73 S9";
@@ -74,7 +74,7 @@ void setup() {
     // Build the list box1
     // DPRINTF("&tft=%lu\n", &tft);
     DTRACE();
-    AListBox box1 = AListBox(ARect(0, 0, 280, 100), RED);
+    Box box1 = Box(ARect(0, 0, 280, 100), RED);
     DTRACE();
     box1.addItem(msg);
     box1.addItem(msg);
