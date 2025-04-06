@@ -2,8 +2,6 @@
 
 #include <SPI.h>
 
-#include "DEBUG.h"
-
 #include "AColor.h"
 #include "ACoord.h"
 #include "ARect.h"

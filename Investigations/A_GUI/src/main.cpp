@@ -50,8 +50,8 @@ class Box : public AListBox {
 // }
 
 void setup() {
-    // char msg[] = "AB0Q/P WA9ZXY RR73 S9";
-    char msg[] = "0";
+    char msg[] = "NW8ABC/P WA9ZXY RR73 S9";
+    //char msg[] = "0";
     // char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ0123456789,./";
 
     Serial.begin(9600);
@@ -78,23 +78,22 @@ void setup() {
     DTRACE();
     box1.addItem(msg);
     box1.addItem(msg);
-    // box1.addItem(msg);
-    //  box1.addItem(msg);
-    //  box1.addItem(msg);
+    box1.addItem(msg);
+    box1.addItem(msg);
+    box1.addItem(msg);
     DTRACE();
     AWidget::processTouch(10, 10);
     DTRACE();
 
-    // // Populate box2 with multiple items
-    // AListBox box2 = AListBox(ARect(0, 152, 479, 250), RED);
-    // box2.addItem(msg);
-    // box2.addItem("AB0ABC/P WA9ZXY RR73");
-    // box2.addItem("AG0E KQ7B DN15");
-    // box2.addItem("KQ7B AG0E -12");
-    // box2.addItem("AG0E KQ7B -3");
-    // box2.addItem("KQ7B AG0E RR73");
-    // box2.addItem("AG0E KQ7B 73");
-    // DTRACE();
+    // Populate box2 with multiple items
+    Box box2 = Box(ARect(0, 152, 280, 250), RED);
+    box2.addItem("AB0ABC/P WA9ZXY RR73");
+    box2.addItem("AG0E KQ7B DN15");
+    box2.addItem("KQ7B AG0E -12");
+    box2.addItem("AG0E KQ7B -3");
+    box2.addItem("KQ7B AG0E RR73");
+    box2.addItem("AG0E KQ7B 73");
+    DTRACE();
 
     // // Try mixing printf with addItem
     // AListBox box3 = AListBox(ARect(0, 151, 150, 320), RED);

@@ -42,7 +42,7 @@
 
 #include "AGraphicsDriver.h"
 #include "AWidget.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "ft8_font.h"  //Include the default font
 
 /**

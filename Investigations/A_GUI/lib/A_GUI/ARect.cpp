@@ -1,4 +1,6 @@
 #include "AGraphicsDriver.h"
+#include "NODEBUG.h"
+#include "ARect.h"
 
 /**
  * @brief Define the pixel corners of a rectangle

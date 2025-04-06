@@ -43,7 +43,7 @@
 #include <SPI.h>
 
 #include "Adafruit_GFX.h"  //HX8357_t3n requires you #include GFX before...
-#include "DEBUG.h"         //For printf-style debugging on a Teensy sans JTAG :(
+#include "NODEBUG.h"         //For printf-style debugging on a Teensy sans JTAG :(
 #include "Fonts/FreeSans9pt7b.h"
 #include "HX8357_t3n.h"  //you #include the HX8357 variation.
 #include "ft8_font.h"    //Include the default font
