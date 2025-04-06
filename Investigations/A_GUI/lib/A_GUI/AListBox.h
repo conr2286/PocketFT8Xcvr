@@ -34,7 +34,6 @@ class AListBox : public AWidget, public Print {
     AListBox(ARect boundary, AColor borderColor);
     AListBox(ARect boundary);
 
-
     // Public methods unique to AListBox
     int drawItem(const char *str);
     int addItem(int index, const char *str, AColor color);
@@ -42,6 +41,7 @@ class AListBox : public AWidget, public Print {
     int addItem(const char *str);
     int setItem(int index, const char *str, AColor fgColor, AColor bgColor);
 
+    void setSelection(void (*doSelection)(int index));    // Set user-supplied callback function for this AListBox
     int getSelectedItem(ACoord xScreen, ACoord yScreen);  // Returns index of item selected at xClick,yClick
 
     // int getSelection(unsigned xScreen, unsigned yScreen);
@@ -58,18 +58,19 @@ class AListBox : public AWidget, public Print {
     size_t write(uint8_t c) override;                           // Write a single char to AListBox
     size_t write(const uint8_t *buffer, size_t size) override;  // Write a char[] string possibly containing NL chars
 
+   protected:
+    void doTouchWidget(ACoord xScreen, ACoord yScreen) override;  // AWidget::processTouch() notifies this callback function when this AListBox is touched
+    // virtual void doRepaintAListBox(void);                         // User overrides doRepaintAlistBox() to receive notifications of repaint events
+    virtual void doTouchItem(int item);  // User overrides doTouchItem() to receive notifications of touch events for items
+
    private:
-    //HX8357_t3n *tft;                  // The underlying display
-    AColor siColor;                   // Selected item color
-    char *(*getItemText)(int index);  // User-supplied callback function to retrieve an item's text string
-    void *(*doSelection)(int index);  // User-supplied callback function notified when item is selected
-    uint16_t leading;                 // Space (pixels) between lines of text for this font
-    uint16_t itemLen[maxItems];       // Identifies #pixels in each item (or 0 for empty item)
-    bool isSelected[maxItems];        // True if indexed item is selected
-    uint8_t nextItem;                 // Index of where to place next unnumbered addition
+    AColor siColor;              // Selected item color
+    uint16_t leading;            // Space (pixels) between lines of text for this font
+    uint16_t itemLen[maxItems];  // Identifies #pixels in each item (or 0 for empty item)
+    bool isSelected[maxItems];   // True if indexed item is selected
+    uint8_t nextItem;            // Index of where to place next unnumbered addition
 
     // Helper methods
-    bool hasBorder();                                // Returns true if list box has a border
-    void selection(ACoord xScreen, ACoord yScreen);  // Implements selection for items in this AListBox
+    bool hasBorder();  // Returns true if list box has a border
 
 };  // AListBox

@@ -1,19 +1,18 @@
-// #include "AWidget.h"
-
-// #include <Adafruit_GFX.h>
-
-// #include "HX8357_t3n.h"
-#include "DEBUG.h"
 #include "AWidget.h"
 
 #include "AGraphicsDriver.h"
+#include "DEBUG.h"
 
 // Initialize the head of the unordered list of all AWidget objects.
 // The processTouch() class method uses the list to find the selected widget.
 AWidget* AWidget::allWidgets = NULL;
 
 /**
- * @brief Constructor for the AWidget base class
+ * @brief Default constructor for the AWidget base class
+ *
+ * Our primary responsibilities here are:
+ *  + Link this new widget into the list of all widgets
+ *  + Initialize the member variables
  */
 AWidget::AWidget() {
     DTRACE();
@@ -26,10 +25,9 @@ AWidget::AWidget() {
     this->fgColor = DEFAULT_FOREGROUND_COLOR;
     this->bdColor = DEFAULT_BORDER_COLOR;
 
-    // New widgets initially have no selection notification (callback) function
-    this->doSelection = NULL;
     // For now... we are leaving the boundary box uninitialized in the base class
 
+    // Reset font to default (at least for now)
     gfx->setFont();
 }
 
@@ -38,8 +36,12 @@ AWidget::AWidget() {
  *
  * The destructor's primary responsibility is to unlink this widget from the
  * unordered list of all widgets.  It also stomps some dangling pointers.
+ *
+ * If someday AGUI needs to deal with overlapping widgets, this is where we
+ * would notify widgets uncovered by this vanishing widget.
  */
 AWidget::~AWidget() {
+    DTRACE();
     // Special case handles this widget at the head of the list
     if (allWidgets == this) {
         // Unlink this widget from head of list
@@ -47,13 +49,12 @@ AWidget::~AWidget() {
 
         // Paranoia for dangling pointers
         this->next = NULL;
-        this->doSelection = NULL;
 
         // Finished
         return;
     }
 
-    // Scan the list searching for the widget preceding this widget
+    // Unlink this widget from the list of all widgets
     for (AWidget* scannedWidget = allWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
         // Does scannedWidget precede this widget?
         if (scannedWidget->next == this) {
@@ -62,7 +63,6 @@ AWidget::~AWidget() {
 
             // Paranoia for stale pointers
             this->next = NULL;
-            this->doSelection = NULL;
 
             break;  // Finished
         }
@@ -74,18 +74,24 @@ AWidget::~AWidget() {
  * @param xCoord Touch screen x-coordinate
  * @param yCoord Touch screen y-coordinate
  *
- * This is where all widget touch notifications begin in A_GUI.
+ * This is where all widget touch notifications begin in AGUI.
  *
- * Scans the list of all widgets to determine which, if any, were touched
- * and calls their notification method, if supplied.
+ * Scans the list of all widgets to determine which, if any, were touched.  When
+ * the app's loop() function detects a touch event, it should pass the touch coordinates
+ * to this static class method.
  *
  * Note:  We are not, at least for now, handling overlapping widgets on the
  * screen.  If overlapping widgets have been created and touched, we notify
  * only the first in the list.
  */
 void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
+    DTRACE();
     for (AWidget* scannedWidget = allWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
-        // If touch coords lie within scanned widget then call its notification method if provided
-        if (scannedWidget->boundary.isWithin(xCoord, yCoord) && (scannedWidget->doSelection != NULL)) scannedWidget->doSelection(xCoord, yCoord);
+        DTRACE();
+        // If touch coords lie within scanned widget and call its notification method if provided
+        if (scannedWidget->boundary.isWithin(xCoord, yCoord)) {
+            DTRACE();
+            scannedWidget->doTouchWidget(xCoord, yCoord);
+        }
     }
 }

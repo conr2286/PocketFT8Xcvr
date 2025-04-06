@@ -68,7 +68,6 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
     // Initialize some default text values for this new list box
     setFont(&FreeSerif9pt7b);
     leading = getLeading();  // Get the leading (in pixels) for this font
-    getItemText = NULL;      // Assume user can't resupply text strings for this box
 
     // Decorate the list box
     setClipRect();                    // Clear any existing clip
@@ -263,7 +262,7 @@ size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
     // garbage in, garbage out.
 
     // Setup the display clip rectangle for our list box (which better fit on the screen)
-    //drawRect(clipX, clipY, clipW, clipH,WHITE);       //Draw clip rectangle for debugging
+    // drawRect(clipX, clipY, clipW, clipH,WHITE);       //Draw clip rectangle for debugging
     DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d, leading=%d\n", clipX, clipY, clipW, clipH, leading);
     setClipRect(clipX, clipY, clipW, clipH);
 
@@ -355,12 +354,12 @@ size_t AListBox::write(const uint8_t *bfr, size_t count) {
  * @return index of selected item or -1 if none
  */
 int AListBox::getSelectedItem(ACoord xClick, ACoord yClick) {
-    // Perhaps this click lies outside this AListBox boundary
+    // Perhaps this click lies entirely outside this AListBox boundary
     if (!boundary.isWithin(xClick, yClick)) return -1;
 
     // Calculate index of clicked item
     unsigned index = (yClick - boundary.y1) / leading;
-    if (index >= maxItems) return -1;  // Validate index
+    if (index >= maxItems) return -1;  // Validate calculated index
 
     // Return this index if this item exists else -1
     if (itemLen[index] > 0) return index;
@@ -368,31 +367,33 @@ int AListBox::getSelectedItem(ACoord xClick, ACoord yClick) {
 }  // getSelection()
 
 /**
- * @brief Performs an item selection for the specified screen coordinates
+ * @brief Processes a touch event somewhere in this AListBox
  * @param xClick screen x-coord
  * @param yClick screen y-coord
  *
- * AWidget's doSelections() notifies this method when the user clicks in
+ * AWidget processTouch() notifies this method when the user clicks in
  * this AListBox.  Our job is to determine which, if any, item was selected
  * and process the selection for that item.
  */
-void AListBox::selection(ACoord xClick, ACoord yClick) {
+void AListBox::doTouchWidget(ACoord xClick, ACoord yClick) {
     DTRACE();
 
     // Find the selected item
-    int index = getSelectedItem(xClick, yClick);  // Which item was clicked?
-    if (index < 0) return;                        // None, nothing to do for this coordinate
+    int item = getSelectedItem(xClick, yClick);    // Which item was clicked?
+    if ((item < 0) || (item >= maxItems)) return;  // None, nothing to do for this coordinate
 
-    // If user hasn't supplied a callback, then there's nothing to do for this item
-    if (doSelection == NULL) return;
+    // User overrides doTouchItem() to receive touch notifications
+    // doTouchItem(item);     // Index is the item number
 
-    // Note the selection
-    isSelected[index] = true;
+    // Note that the item is selected
+    isSelected[item] = true;
 
     // // Highlight the selected item using siColor if user can resupply the item's text
     // if (getItemText != NULL) selectedText = getItemText(index);
     // addItem(index, selectedText, siColor);  // TODO:  this screws up nextItem.  Need setItem()???
 
     // Notify the user-supplied callback of the selected item
-    doSelection(index);
+    DTRACE();
+    doTouchItem(item);
+    DTRACE();
 }

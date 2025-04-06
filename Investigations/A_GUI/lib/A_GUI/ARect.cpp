@@ -25,7 +25,9 @@ void ARect::setCorners(ACoord x1, ACoord y1, ACoord x2, ACoord y2) {
  * @return true if coord lies within, else false
  */
 bool ARect::isWithin(ACoord x, ACoord y) {
+    DPRINTF("x=%d, y=%d) for (%d,%d) to (%d,%d)\n", x, y, x1,y1,x2,y2);
     if ((x < x1) || (x > x2)) return false;
     if ((y < y1) || (y > y2)) return false;
+    DTRACE();
     return true;
 }

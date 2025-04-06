@@ -6,9 +6,9 @@
  *  + Compare typefaces
  */
 
- #include <SPI.h>
 #include <Adafruit_GFX.h>  //Note:  GFX must include prior to HX8357
 #include <Arduino.h>
+#include <SPI.h>
 
 #include "AListBox.h"
 #include "DEBUG.h"
@@ -20,14 +20,14 @@
 #define TFT_DC 9
 #define TFT_CS 10
 
-//#include "ili9341_t3n_font_Arial.h"
-// #include "font_ArialBold.h"
-//  #include "font_ComicSansMS.h"
-//#include "ili9341_t3n_font_OpenSans.h"
-// #include "ili9341_t3n_font_DroidSans.h"
-//  #include "font_Michroma.h"
-//  #include "font_Crystal.h"
-//  #include "font_ChanceryItalic.h"
+// #include "ili9341_t3n_font_Arial.h"
+//  #include "font_ArialBold.h"
+//   #include "font_ComicSansMS.h"
+// #include "ili9341_t3n_font_OpenSans.h"
+//  #include "ili9341_t3n_font_DroidSans.h"
+//   #include "font_Michroma.h"
+//   #include "font_Crystal.h"
+//   #include "font_ChanceryItalic.h"
 #include <Fonts/FreeMono9pt7b.h>
 // #include <Fonts/FreeMonoBoldOblique12pt7b.h>
 // #include <Fonts/FreeSerif9pt7b.h>
@@ -37,10 +37,22 @@
 
 static HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 
+// class Foo : public AListBox {
+//    public:
+//     Foo(ARect rect, AColor c) : AListBox(rect, c) {};
+//     void doTouchItem(int item) override {
+//         DPRINTF("doTouchItem(%d)\n", item);
+//     }
+// };
+
+void AListBox::doTouchItem(int item) {
+    DPRINTF("doTouchItem(%d)\n", item);
+}
+
 void setup() {
-    //char msg[] = "AB0Q/P WA9ZXY RR73 S9";
+    // char msg[] = "AB0Q/P WA9ZXY RR73 S9";
     char msg[] = "0";
-    //char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ0123456789,./";
+    // char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ0123456789,./";
 
     Serial.begin(9600);
     Serial.println("Starting...");
@@ -57,18 +69,20 @@ void setup() {
 
     // Init display
     gfx.begin(&tft);
-    //DTRACE();
+    // DTRACE();
 
     // Build the list box1
-    //DPRINTF("&tft=%lu\n", &tft);
+    // DPRINTF("&tft=%lu\n", &tft);
     DTRACE();
-    AListBox box1 = AListBox(ARect(0, 0, 480, 100), RED);
+    AListBox box1 = AListBox(ARect(0, 0, 280, 100), RED);
     DTRACE();
     box1.addItem(msg);
     box1.addItem(msg);
     // box1.addItem(msg);
     //  box1.addItem(msg);
     //  box1.addItem(msg);
+    DTRACE();
+    AWidget::processTouch(10, 10);
     DTRACE();
 
     // // Populate box2 with multiple items

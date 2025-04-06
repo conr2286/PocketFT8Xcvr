@@ -4034,7 +4034,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
         }
 
         int16_t y_start = cursor_y + _originy + (_gfxFont_min_yOffset * textsize_y) + gfxFont->yAdvance * textsize_y / 2;  // UP to most negative value.
-        y_start += 2;                                                                                                      // JRC ???
+        y_start += 2;                                                                                                      // JRC to fix starting row
         DPRINTF("y_start = %d + %d + %d*%d + %d*%d/2\n", cursor_y, _originy, _gfxFont_min_yOffset, textsize_y, gfxFont->yAdvance, textsize_y);
         int16_t y_end = y_start + gfxFont->yAdvance * textsize_y;  // how far we will update
         int16_t y = y_start;

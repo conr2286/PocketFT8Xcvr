@@ -19,6 +19,7 @@
  *  + This is a minimalist approach with an Adafruit accent for a GUI library.  Consider
  *    LGVL for a more full-featured solution.
  *  + This driver should probably become a singleton if multiple displays are forbidden
+ *  + AGUI has a signle interface to the touchscreen system at AWidget::processTouch()
  *
  * DEPENDENCIES
  *  + https://github.com/adafruit/Adafruit_HX8357_Library
@@ -43,9 +44,9 @@
 
 #include "Adafruit_GFX.h"  //HX8357_t3n requires you #include GFX before...
 #include "DEBUG.h"         //For printf-style debugging on a Teensy sans JTAG :(
-#include "HX8357_t3n.h"    //you #include the HX8357 variation.
-#include "ft8_font.h"      //Include the default font
 #include "Fonts/FreeSans9pt7b.h"
+#include "HX8357_t3n.h"  //you #include the HX8357 variation.
+#include "ft8_font.h"    //Include the default font
 
 HX8357_t3n* AGraphicsDriver::gfx;
 const GFXfont* AGraphicsDriver::txtFont;  // Default font for this application
@@ -70,9 +71,9 @@ void AGraphicsDriver::begin(HX8357_t3n* gfx) {
     // we're assuming most applications will use just this one font which you can
     // change here.  Alternatively, you can select other fonts with setFont().
     txtFont = &FT8Font;  // Record the default font
-    //txtFont = &FreeMono9pt7b;
-    //txtFont = &FreeSans9pt7b;
-    // DPRINTF("txtFont=%lu\n", txtFont);
+    // txtFont = &FreeMono9pt7b;
+    // txtFont = &FreeSans9pt7b;
+    //  DPRINTF("txtFont=%lu\n", txtFont);
     setFont(txtFont);  // Setup display for this font
 }
 
@@ -101,14 +102,13 @@ void AGraphicsDriver::setClipRect() {
     gfx->setClipRect();
 }
 
-
 /**
  * @brief Draw a single pixel of specified color
  * @param x Coordinate
  * @param y Coordinate
  * @param color Specified color
  */
-void AGraphicsDriver::drawPixel(int16_t x, int16_t y, AColor color){
+void AGraphicsDriver::drawPixel(int16_t x, int16_t y, AColor color) {
     gfx->drawPixel(x, y, color);
 }
 
