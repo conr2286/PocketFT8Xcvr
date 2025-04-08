@@ -20,19 +20,21 @@
 #include <Arduino.h>
 #include <SPI.h>
 
-#include "AGraphicsDriver.h"
+#include "AGUI.h"
 #include "ARect.h"
 #include "AWidget.h"
 
-class AListBox : public AWidget, public Print {
+
+class AListBox : public Print, public AWidget {
    public:
     const static uint8_t maxItems = 24;  // Maximum number of items in a list
 
-    // Constructors
+    // Constructors/destructors
     AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h);  // No border
     AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor borderColor);
     AListBox(ARect boundary, AColor borderColor);
     AListBox(ARect boundary);
+    ~AListBox() {}
 
     // Public methods unique to AListBox
     int drawItem(const char *str);
@@ -40,18 +42,11 @@ class AListBox : public AWidget, public Print {
     int addItem(const char *str, AColor color);
     int addItem(const char *str);
     int setItem(int index, const char *str, AColor fgColor, AColor bgColor);
-
-    void setSelection(void (*doSelection)(int index));    // Set user-supplied callback function for this AListBox
     int getSelectedItem(ACoord xScreen, ACoord yScreen);  // Returns index of item selected at xClick,yClick
 
-    // int getSelection(unsigned xScreen, unsigned yScreen);
-
-    // void setDefaultColor(AColor color);
-    // void setBackgroundColor(AColor color);
     void clear(void);
     void clear(int index);
     int getCount(void);
-    // void setBorderColor(AColor color);
 
     // Override the Arduino Print interface's virtual methods
     size_t writeItem(const uint8_t *buffer, size_t count);      // Writes a char[] string sans NewLine (NL) chars
@@ -59,18 +54,17 @@ class AListBox : public AWidget, public Print {
     size_t write(const uint8_t *buffer, size_t size) override;  // Write a char[] string possibly containing NL chars
 
    protected:
-    void doTouchWidget(ACoord xScreen, ACoord yScreen) override;  // AWidget::processTouch() notifies our callback function when this AListBox is touched
-    virtual void doRepaintAListBox(void) {}                       // User overrides doRepaintAlistBox() to receive notifications of repaint events
-    virtual void doTouchItem(int item) {}                         // User overrides doTouchItem() to receive notifications of touch events for items
+    virtual void doRepaintAListBox(void) {}  // Application overrides doRepaintAlistBox() to receive notifications of repaint events
+    virtual void doTouchItem(int item) {}    // Application overrides doTouchItem() to receive notifications of touch events for items
 
    private:
-    AColor siColor;              // Selected item color
     uint16_t leading;            // Space (pixels) between lines of text for this font
     uint16_t itemLen[maxItems];  // Identifies #pixels in each item (or 0 for empty item)
     bool isSelected[maxItems];   // True if indexed item is selected
     uint8_t nextItem;            // Index of where to place next unnumbered addition
 
     // Helper methods
-    bool hasBorder();  // Returns true if list box has a border
+    bool hasBorder();                                                   // Returns true if list box has a border
+    void doTouchWidget(ACoord xScreen, ACoord yScreen) override final;  // AWidget notifies our callback when this AListBox is touched
 
 };  // AListBox

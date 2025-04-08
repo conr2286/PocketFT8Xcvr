@@ -10,6 +10,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 
+#include "AButton.h"
 #include "AListBox.h"
 #include "DEBUG.h"
 #include "HX8357_t3n.h"
@@ -28,95 +29,64 @@
 //   #include "font_Michroma.h"
 //   #include "font_Crystal.h"
 //   #include "font_ChanceryItalic.h"
-#include <Fonts/FreeMono9pt7b.h>
 // #include <Fonts/FreeMonoBoldOblique12pt7b.h>
 // #include <Fonts/FreeSerif9pt7b.h>
 // #include <Fonts/FreeSans9pt7b.h>
-#include "AGraphicsDriver.h"
+#include "AGUI.h"
 #include "ft8_font.h"
 
-static HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
+static HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Build Adafruit's HX8357 display object
+static AGUI agd(&tft, 3, &FT8Font);                                                         // Build hte app's GUI object
 
 class Box : public AListBox {
    public:
-    Box(ARect rect, AColor c) : AListBox(rect, c) {};
+    Box(ARect rect, AColor c) : AListBox(rect, c) { DTRACE(); };
     void doTouchItem(int item) override {
         DPRINTF("doTouchItem(%d)\n", item);
     }
 };
 
-// void AListBox::doTouchItem(int item) {
-//     DPRINTF("doTouchItem(%d)\n", item);
-// }
+Box box1 = Box(ARect(0, 0, 280, 100), RED);
+Box box2 = Box(ARect(0, 152, 280, 250), RED);
+
+AButton b1 = AButton("CQ", 0, 290, 42, 30);
+
+
 
 void setup() {
     char msg[] = "NW8ABC/P WA9ZXY RR73 S9";
-    //char msg[] = "0";
-    // char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ0123456789,./";
+    // char msg[] = "0";
+    //  char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ0123456789,./";
 
     Serial.begin(9600);
     Serial.println("Starting...");
 
-    tft.begin(30000000UL, 2000000UL);
-    delay(1000);
-    tft.setRotation(3);
-    tft.setFont(&FT8Font);
-    tft.fillScreen(HX8357_BLACK);
-    tft.setFont(&FreeMono9pt7b);
-    DPRINTF("&tft=%lu\n", &tft);
-
-    AGraphicsDriver gfx;
-
-    // Init display
-    gfx.begin(&tft);
-    // DTRACE();
-
     // Build the list box1
     // DPRINTF("&tft=%lu\n", &tft);
     DTRACE();
-    Box box1 = Box(ARect(0, 0, 280, 100), RED);
-    DTRACE();
     box1.addItem(msg);
     box1.addItem(msg);
     box1.addItem(msg);
     box1.addItem(msg);
     box1.addItem(msg);
-    DTRACE();
     AWidget::processTouch(10, 10);
-    DTRACE();
 
     // Populate box2 with multiple items
-    Box box2 = Box(ARect(0, 152, 280, 250), RED);
     box2.addItem("AB0ABC/P WA9ZXY RR73");
     box2.addItem("AG0E KQ7B DN15");
     box2.addItem("KQ7B AG0E -12");
     box2.addItem("AG0E KQ7B -3");
     box2.addItem("KQ7B AG0E RR73");
     box2.addItem("AG0E KQ7B 73");
-    DTRACE();
 
-    // // Try mixing printf with addItem
-    // AListBox box3 = AListBox(ARect(0, 151, 150, 320), RED);
-    // box3.addItem("text");
-    // box3.printf("foo ");
-    // box3.printf("bar\n");
-    // box3.addItem("More text");
-    // box3.printf("Good");
-    // box3.printf(" bye\n");
+    long m0 = micros();
+    for (int i = 0; i < 100; i++) {
+        box1.setItem(3, "test", GREEN, BLACK);
+    }
+    long m1 = micros();
+    DPRINTF( "time(setItem) = %f uS\n", (m1 - m0) / 100.0);
 
-    // // Check out pixel placement
-    // AListBox box4 = AListBox(ARect(360, 100, 479, 150), RED);
-    // box4.addItem("Oh");
-    // box4.addItem("Might clip");
-    // box4.addItem("Surely clipping somewhere");
-
-    // long m0 = micros();
-    // for (int i = 0; i < 100; i++) {
-    //     box1.setItem(3, "test", GREEN, BLACK);
-    // }
-    // long m1 = micros();
-    // DPRINTF( "time(setItem) = %f uS\n", (m1 - m0) / 100.0);
-
+    delay(5000);
     Serial.println("Finished setup()\n");
 }
 

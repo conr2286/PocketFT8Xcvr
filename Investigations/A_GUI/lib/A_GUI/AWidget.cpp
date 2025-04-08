@@ -1,7 +1,9 @@
 #include "AWidget.h"
 
-#include "AGraphicsDriver.h"
+#include "AGUI.h"
 #include "DEBUG.h"
+#include "ft8_font.h"
+
 
 // Initialize the head of the unordered list of all AWidget objects.
 // The processTouch() class method uses the list to find the selected widget.
@@ -15,34 +17,44 @@ AWidget* AWidget::allWidgets = NULL;
  *  + Initialize the member variables
  */
 AWidget::AWidget() {
-    DTRACE();
+    if (!Serial) Serial.begin(9600);
+    DPRINTF("AWidget()=0x%x\n", this);
     // Link this new widget into the unordered list of all widgets
     this->next = allWidgets;
     allWidgets = this;
 
-    // Setup default colors for new widget
-    this->bgColor = DEFAULT_BACKGROUND_COLOR;
-    this->fgColor = DEFAULT_FOREGROUND_COLOR;
-    this->bdColor = DEFAULT_BORDER_COLOR;
+    // Setup default colors for new widget using the application's defaults
+    // Each widget can change any of these colors if they wish, but initializing
+    // them here promotes consistency throughout the application.
+    this->bgColor = AGUI::bgColor;  // Background color
+    this->fgColor = AGUI::fgColor;  // Foreground color
+    this->bdColor = AGUI::bdColor;  // Border color
+    this->spColor = AGUI::spColor;  // Special color (e.g. selected item color)
 
-    // For now... we are leaving the boundary box uninitialized in the base class
-
-    // Reset font to default (at least for now)
-    gfx->setFont();
+    // Initially config the widget font to the application's default
+    DPRINTF("txtFont=%p\n", AGUI::appFont);
+    this->defaultFont = AGUI::appFont;
 }
 
 /**
  * @brief Destructor for the AWidget base class
  *
  * The destructor's primary responsibility is to unlink this widget from the
- * unordered list of all widgets.  It also stomps some dangling pointers.
+ * unordered list of all widgets, stomp some dangling pointers, and erase
+ * the widget from the display.
  *
  * If someday AGUI needs to deal with overlapping widgets, this is where we
  * would notify widgets uncovered by this vanishing widget.
  */
 AWidget::~AWidget() {
-    DTRACE();
-    // Special case handles this widget at the head of the list
+    DPRINTF("~AWidget()=0x%x\n", this);
+
+    // Erase this widget from the display
+    // DPRINTF("x1=%d y1=%d, x2=%d y2=%d\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2);
+    AGUI::gfx->setClipRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1);
+    AGUI::gfx->fillRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1, bgColor);
+
+    // Unlink this widget if at the head of the list of all widgets
     if (allWidgets == this) {
         // Unlink this widget from head of list
         allWidgets = this->next;
@@ -54,7 +66,7 @@ AWidget::~AWidget() {
         return;
     }
 
-    // Unlink this widget from the list of all widgets
+    // Unlink this widget from somewhere else in the list of all widgets
     for (AWidget* scannedWidget = allWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
         // Does scannedWidget precede this widget?
         if (scannedWidget->next == this) {
@@ -67,7 +79,7 @@ AWidget::~AWidget() {
             break;  // Finished
         }
     }
-}
+}  //~AWidget()
 
 /**
  * @brief Process touch/click at xCoord/yCoord

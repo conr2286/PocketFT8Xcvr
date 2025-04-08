@@ -14,7 +14,7 @@
 #include <stdint.h>
 #include <SPI.h>
 
-#include "AGraphicsDriver.h"
+#include "AGUI.h"
 
 class ARect {
    public:

@@ -1,5 +1,5 @@
 /**
- * AGraphicsDriver isolates the AGUI widgets from the various Adafruit GFX library variations:
+ * AGUI isolates the AGUI widgets from the various Adafruit GFX library variations:
  *  + Display types (e.g. TFT, etc)
  *  + Display controllers (e.g. HX8357, etc)
  *  + Display size (e.g. 480x320, etc)
@@ -10,7 +10,7 @@
  * libraries is largely confined to changes in just this class.
  *
  * IMPLEMENTATION
- * The original implementation of AGraphicsDriver was for a 480x320 TFT display using the
+ * The original implementation of AGUI was for a 480x320 TFT display using the
  * HX8357D controller attached to a Teensy 4.1 through an SPI bus.  The AGUI code was
  * developed using Visual Studio Code, PlatformIO and many Arduino library dependencies
  * on MacOS 15.3.2.
@@ -36,45 +36,41 @@
  * If the API you seek isn't in there, you'll have to resort to the your library's source.
  **/
 
-#include "AGraphicsDriver.h"
+#include "AGUI.h"
 
-#include <Fonts/FreeMono9pt7b.h>
-#include <Fonts/FreeSans9pt7b.h>
 #include <SPI.h>
 
 #include "Adafruit_GFX.h"  //HX8357_t3n requires you #include GFX before...
-#include "NODEBUG.h"         //For printf-style debugging on a Teensy sans JTAG :(
 #include "Fonts/FreeSans9pt7b.h"
 #include "HX8357_t3n.h"  //you #include the HX8357 variation.
+#include "NODEBUG.h"     //For printf-style debugging on a Teensy sans JTAG :(
 #include "ft8_font.h"    //Include the default font
 
-HX8357_t3n* AGraphicsDriver::gfx;
-const GFXfont* AGraphicsDriver::txtFont;  // Default font for this application
+//-----------------------------------------------------------------------------
+
+HX8357_t3n* AGUI::gfx;
+const GFXfont* AGUI::appFont;  // Default font for this application
 
 //-----------------------------------------------------------------------------
 //  Initialization
 //-----------------------------------------------------------------------------
 
-AGraphicsDriver::AGraphicsDriver() { DTRACE(); }
+AGUI::AGUI(HX8357_t3n* tft, uint8_t rotation, const GFXfont* font) {
+    if (!Serial) Serial.begin(9600);
+    Serial.print("AGUI()=");
 
-/**
- * @brief Bind the graphics driver to the HX8357_t3n version of the Adafruit GFX library
- * @param gfx Pointer to an object accessing the Adafruit Graphics Library
- *
- * You must invoke begin() prior to any other method in the graphics driver
- */
-void AGraphicsDriver::begin(HX8357_t3n* gfx) {
-    // Record the address of the object accessing Adafruit's graphics library
-    this->gfx = gfx;
+    // Record configuration params
+    gfx = tft;                  // Adafruit display object
+    appFont = font;             // Application's default font
+    screenRotation = rotation;  // See Adafruit HX8357 doc for values
 
-    // Setup the default font for the widgets.  Given the memory requirements for each font,
-    // we're assuming most applications will use just this one font which you can
-    // change here.  Alternatively, you can select other fonts with setFont().
-    txtFont = &FT8Font;  // Record the default font
-    // txtFont = &FreeMono9pt7b;
-    // txtFont = &FreeSans9pt7b;
-    //  DPRINTF("txtFont=%lu\n", txtFont);
-    setFont(txtFont);  // Setup display for this font
+    // Setup the Adafruit display and graphics library for use by our application
+    gfx->begin(30000000UL, 2000000UL);  // Configure SPI clock speeds
+    gfx->setRotation(rotation);         // Configure screen rotation
+    gfx->setFont(appFont);              // Configure the font
+    gfx->fillScreen(HX8357_BLACK);      // Erase the display
+
+    Serial.println("Exit AGUI\n");
 }
 
 //-----------------------------------------------------------------------------
@@ -90,7 +86,7 @@ void AGraphicsDriver::begin(HX8357_t3n* gfx) {
  *
  * @note GFX supports a single clip window
  */
-void AGraphicsDriver::setClipRect(ACoord clipX, ACoord clipY, ACoord clipW, ACoord clipH) {
+void AGUI::setClipRect(ACoord clipX, ACoord clipY, ACoord clipW, ACoord clipH) {
     DPRINTF("setClipRect(%d,%d,%d,%d)\n", clipX, clipY, clipW, clipH);
     gfx->setClipRect(clipX, clipY, clipW, clipH);
 }
@@ -98,7 +94,7 @@ void AGraphicsDriver::setClipRect(ACoord clipX, ACoord clipY, ACoord clipW, ACoo
 /**
  * @brief Set the clip window to the full-screen
  */
-void AGraphicsDriver::setClipRect() {
+void AGUI::setClipRect(void) {
     gfx->setClipRect();
 }
 
@@ -108,7 +104,7 @@ void AGraphicsDriver::setClipRect() {
  * @param y Coordinate
  * @param color Specified color
  */
-void AGraphicsDriver::drawPixel(int16_t x, int16_t y, AColor color) {
+void AGUI::drawPixel(int16_t x, int16_t y, AColor color) {
     gfx->drawPixel(x, y, color);
 }
 
@@ -120,8 +116,24 @@ void AGraphicsDriver::drawPixel(int16_t x, int16_t y, AColor color) {
  * @param h height of rectangle
  * @param color Specified color
  */
-void AGraphicsDriver::fillRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor color) {
+void AGUI::fillRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor color) {
+    DTRACE();
     gfx->fillRect(xCoord, yCoord, w, h, color);
+    DTRACE();
+}
+
+/**
+ * @brief Draws a filled, rounded rectangle on the screen with the specified color
+ * @param xCoord Upper-left corner of rectangle
+ * @param yCoord Upper-left corner of rectangle
+ * @param w Width of rectangle
+ * @param h Height of rectangle
+ * @param r Radius of the rounded corners
+ * @param color Fill color
+ */
+void AGUI::fillRoundRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, ACoord r,
+                         AColor color) {
+    gfx->fillRoundRect(xCoord, yCoord, w, h, r, color);
 }
 
 /**
@@ -132,8 +144,22 @@ void AGraphicsDriver::fillRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h,
  * @param h height of rectangle
  * @param color Specified color
  */
-void AGraphicsDriver::drawRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor color) {
+void AGUI::drawRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor color) {
     gfx->drawRect(xCoord, yCoord, w, h, color);
+}
+
+/**
+ * @brief Draw border of a rounded rectangle on the screen with the specified color
+ * @param xCoord Upper-left corner of rectangle
+ * @param yCoord Upper-left corner of rectangle
+ * @param w Width
+ * @param h Height
+ * @param r Radius of the rounded corners
+ * @param color Border color
+ */
+void AGUI::drawRoundRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, ACoord r,
+                         AColor color) {
+    gfx->drawRoundRect(xCoord, yCoord, w, h, r, color);
 }
 
 //-----------------------------------------------------------------------------
@@ -144,7 +170,7 @@ void AGraphicsDriver::drawRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h,
  * @brief Select the specified GFX font
  * @param f Pointer to the GFXfont struct
  */
-void AGraphicsDriver::setFont(const GFXfont* f) {
+void AGUI::setFont(const GFXfont* f) {
     gfx->setFont(f);
 }
 
@@ -152,7 +178,7 @@ void AGraphicsDriver::setFont(const GFXfont* f) {
  * @brief Select the specified GFX font
  * @param f Pointer to the GFXfont struct
  */
-void AGraphicsDriver::setFont(void) {
+void AGUI::setFont(void) {
     gfx->setFont();
 }
 
@@ -160,7 +186,7 @@ void AGraphicsDriver::setFont(void) {
  * @brief Select the specified ILI9341 font
  * @param f Pointer to an ILI9341_t3_font struct
  */
-void AGraphicsDriver::setFont(const ILI9341_t3_font_t& f) {
+void AGUI::setFont(const ILI9341_t3_font_t& f) {
     gfx->setFont(f);
 }
 
@@ -176,7 +202,8 @@ void AGraphicsDriver::setFont(const ILI9341_t3_font_t& f) {
  * you *really* don't want to do this, you could just cast-it-in-brass here if you're
  * only using a single font.
  */
-ACoord AGraphicsDriver::getLeading() {
+ACoord AGUI::getLeading() {
+    DTRACE();
     return gfx->getLeading();
 }
 
@@ -185,7 +212,7 @@ ACoord AGraphicsDriver::getLeading() {
  * @param xCoord coordinate
  * @param yCoord coordinate
  */
-void AGraphicsDriver::setCursor(ACoord xCoord, ACoord yCoord) {
+void AGUI::setCursor(ACoord xCoord, ACoord yCoord) {
     gfx->setCursor(xCoord, yCoord);
 }
 
@@ -195,7 +222,7 @@ void AGraphicsDriver::setCursor(ACoord xCoord, ACoord yCoord) {
  *
  * @note Subsequent text will be displayed in the specified color
  */
-void AGraphicsDriver::setTextColor(AColor fg) {
+void AGUI::setTextColor(AColor fg) {
     gfx->setTextColor(fg);
 }
 
@@ -206,7 +233,7 @@ void AGraphicsDriver::setTextColor(AColor fg) {
  *
  * @note Subsequent text will be displayed in the specified colors
  */
-void AGraphicsDriver::setTextColor(AColor fg, AColor bg) {
+void AGUI::setTextColor(AColor fg, AColor bg) {
     gfx->setTextColor(fg, bg);
 }
 
@@ -214,7 +241,7 @@ void AGraphicsDriver::setTextColor(AColor fg, AColor bg) {
  * @brief Specify whether text should wrap
  * @param w true==>wrap, false if not
  */
-void AGraphicsDriver::setTextWrap(bool w) {
+void AGUI::setTextWrap(bool w) {
     gfx->setTextWrap(w);
 }
 
@@ -227,7 +254,7 @@ void AGraphicsDriver::setTextWrap(bool w) {
  * We seem to be writing 7-bit ASCII chars, written left-to-write, starting
  * at the current cursor position.
  */
-size_t AGraphicsDriver::writeText(const uint8_t* buffer, size_t size) {
+size_t AGUI::writeText(const uint8_t* buffer, size_t size) {
     return gfx->write(buffer, size);
 }
 
@@ -242,9 +269,9 @@ size_t AGraphicsDriver::writeText(const uint8_t* buffer, size_t size) {
  * @param w Calculated width of the boundary rectangle
  * @param h Calculated height of the boundary rectangle
  */
-void AGraphicsDriver::getTextBounds(const uint8_t* buffer, uint16_t len, int16_t x, int16_t y,
-                                    int16_t* x1, int16_t* y1, uint16_t* w, uint16_t* h) {
-    gfx->getTextBounds(buffer, len, x, y, x1, y1, w, h);
+void AGUI::getTextBounds(const uint8_t* buffer, uint16_t len, ACoord x, ACoord y,
+                         ACoord* x1, ACoord* y1, ACoord* w, ACoord* h) {
+    gfx->getTextBounds(buffer, len, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
 }
 
 /**
@@ -257,9 +284,9 @@ void AGraphicsDriver::getTextBounds(const uint8_t* buffer, uint16_t len, int16_t
  * @param w Calculated width of the boundary rectangle
  * @param h Calculated height of the boundary rectangle
  */
-void AGraphicsDriver::getTextBounds(const char* string, int16_t x, int16_t y,
-                                    int16_t* x1, int16_t* y1, uint16_t* w, uint16_t* h) {
-    gfx->getTextBounds(string, x, y, x1, y1, w, h);
+void AGUI::getTextBounds(const char* string, ACoord x, ACoord y,
+                         ACoord* x1, ACoord* y1, ACoord* w, ACoord* h) {
+    gfx->getTextBounds(string, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
 }
 
 /**
@@ -273,7 +300,7 @@ void AGraphicsDriver::getTextBounds(const char* string, int16_t x, int16_t y,
  * @param h Calculated height of the boundary rectangle
  */
 
-void AGraphicsDriver::getTextBounds(const String& str, int16_t x, int16_t y,
-                                    int16_t* x1, int16_t* y1, uint16_t* w, uint16_t* h) {
-    gfx->getTextBounds(str, x, y, x1, y1, w, h);
-}
+void AGUI::getTextBounds(const String& str, ACoord x, ACoord y,
+                         ACoord* x1, ACoord* y1, ACoord* w, ACoord* h) {
+    gfx->getTextBounds(str, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
+}  // getTextBounds()

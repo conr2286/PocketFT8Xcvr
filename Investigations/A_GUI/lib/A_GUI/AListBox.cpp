@@ -10,23 +10,26 @@
  *  + Optional visible border
  *  + Optional background color
  *  + Optional foreground color for each item
- *  + Selections
+ *  + Item selections
  *
  * SIMPLIFICATIONS
  *  + AListBox does not store the item data
- *  + No repaint (it must be manually re-populated)
+ *  + Repaints handled by the application
+ *  + AListBox does not support scrolling
+ *  + AListBox does not support multiple selections
  *  + AListBox cannot be resized
  *  + Selections are polled (see getSelection() description)
- *  + For now, the text font is cast-in-brass as fonts are expensive and awkward in GFX
+ *  + The text font uses its widget's default
+ *
+ * USAGE
+ *  + An application should create a derived class from AListBox.
+ *  + The derived class should implement the doTouchItem() method to handle touch events for its items.
+ *  + The derived class may implement the doRepaintAListBox() method to handle repaint events.
  *
  * MISC
  * AListBox "is a" AWidget, and it implements the Print interface so you can print() to it.
  *
- * Items in AListBox are drawn with the display's current font, size and color.
- *
- * While AListBox cannot repaint itself, the user can supply an optional getItemText() callback
- * invoked when the user experience can be improved by redrawing the text.  For example, AListBox
- * invokes this function, if available, to highlight a selected item's text.
+ * Items in AListBox are drawn with the widget's current font, size and color.
  *
  * @note Items are not widgets or even objects.
  *
@@ -40,10 +43,12 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "AGraphicsDriver.h"
+#include "AGUI.h"
 #include "AWidget.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "ft8_font.h"  //Include the default font
+
+//using namespace agui;
 
 /**
  * @brief Build AListBox sans border line using width and height
@@ -54,24 +59,25 @@
  */
 AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
     if (!Serial) Serial.begin(9600);
+    DPRINTF("AListBox()=%08x\n", this);
     DPRINTF("x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
 
     // Remember location and extent of the boundary box
     boundary.setCorners(x1, y1, x1 + w, y1 + h);
     DTRACE();
 
-    // Initialize some default colors for this new list box
-    fgColor = WHITE;  // Text color
-    bgColor = BLACK;  // Text background
-    bdColor = BLACK;  // bdColor==bgColor ==> no border
-
     // Initialize some default text values for this new list box
-    setFont(&FreeSerif9pt7b);
-    leading = getLeading();  // Get the leading (in pixels) for this font
+    DPRINTF("defaultFont=0x%x\n", defaultFont);
+    //AGUI::setFont(defaultFont);
+    DTRACE();
+    leading = AGUI::getLeading();  // Get the leading (in pixels) for this font
+    DTRACE();
 
     // Decorate the list box
-    setClipRect();                    // Clear any existing clip
-    fillRect(x1, y1, w, h, bgColor);  // Background
+    AGUI::setClipRect();                    // Clear any existing clip
+    DTRACE();
+    AGUI::fillRect(x1, y1, w, h, bgColor);  // Background
+    DTRACE();
 
     // No items exist yet and none are selected
     for (int i = 0; i < maxItems; i++) {
@@ -100,8 +106,8 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor bdColor) : A
     this->bdColor = bdColor;  // Border color
 
     // Decorate the list box border
-    DPRINTF("Border:  x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
-    drawRect(x1, y1, w, h, bdColor);  // Draw the border (might be just background)
+    // DPRINTF("Border:  x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
+    AGUI::drawRect(x1, y1, w, h, bdColor);  // Draw the border (might be just background)
 
     // DTRACE();
 }  // AListBox()
@@ -112,8 +118,8 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor bdColor) : A
  * @param borderColor The border line color
  */
 AListBox::AListBox(ARect boundary, AColor borderColor) : AListBox(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1, borderColor) {
-    DTRACE();
-    // DPRINTF("x1=%d, y1=%d, x2=%d, y2=%d, bdColor=0x%x\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2, bdColor);
+    if (!Serial) Serial.begin(9600);
+    DPRINTF("x1=%d, y1=%d, x2=%d, y2=%d, bdColor=0x%x\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2, bdColor);
 }  // AListBox()
 
 /**
@@ -122,7 +128,7 @@ AListBox::AListBox(ARect boundary, AColor borderColor) : AListBox(boundary.x1, b
  * @param borderColor The border line color
  */
 AListBox::AListBox(ARect boundary) : AListBox(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1) {
-    DTRACE();
+    if (!Serial) Serial.begin(9600);
     DPRINTF("x1=%d, y1=%d, x2=%d, y2=%d, bdColor=0x%x\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2);
 }  // AListBox()
 
@@ -237,7 +243,7 @@ bool AListBox::hasBorder() {
  *
  */
 size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
-    DPRINTF("buffer='%s', count=%d\n", buffer, count);
+    //DPRINTF("buffer='%s', count=%d\n", buffer, count);
 
     if (count == 0) return 0;  // Perhaps there's nothing to do
 
@@ -246,8 +252,8 @@ size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
     int16_t clipY = boundary.y1;
     int16_t clipW = boundary.x2 - boundary.x1;  // Clip width sans border
     int16_t clipH = boundary.y2 - boundary.y1;  // Clip height sans border
-    DPRINTF("Sans Border:  clipX=%d,clipY=%d,clipW=%d, clipH=%d\n", clipX, clipY, clipW, clipH);
-    DPRINTF("boundary.y1=%d, boundary.y2=%d\n", boundary.y1, boundary.y2);
+    // DPRINTF("Sans Border:  clipX=%d,clipY=%d,clipW=%d, clipH=%d\n", clipX, clipY, clipW, clipH);
+    // DPRINTF("boundary.y1=%d, boundary.y2=%d\n", boundary.y1, boundary.y2);
 
     // Now adjust the clip to allow room for the border if we have one
     if (hasBorder()) {  // Does list box have a border?
@@ -255,34 +261,34 @@ size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
         // clipY+=1;        // Reserve space for border and one blank pixel
         // clipW -= 2;     // Width descreases to make room for border
         // clipH -= 2;     // As does height to make room for border
-        DPRINTF("With Border:  clipX=%d,clipY=%d,clipW=%d,clipH=%d\n", clipX, clipY, clipW, clipH);
-        DPRINTF("boundary.y1=%d, boundary.y2=%d\n", boundary.y1, boundary.y2);
+        // DPRINTF("With Border:  clipX=%d,clipY=%d,clipW=%d,clipH=%d\n", clipX, clipY, clipW, clipH);
+        // DPRINTF("boundary.y1=%d, boundary.y2=%d\n", boundary.y1, boundary.y2);
     }
     // TODO:  Someday deal with ridiculous clip rectangle specifications.  For now,
     // garbage in, garbage out.
 
     // Setup the display clip rectangle for our list box (which better fit on the screen)
     // drawRect(clipX, clipY, clipW, clipH,WHITE);       //Draw clip rectangle for debugging
-    DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d, leading=%d\n", clipX, clipY, clipW, clipH, leading);
-    setClipRect(clipX, clipY, clipW, clipH);
+    // DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d, leading=%d\n", clipX, clipY, clipW, clipH, leading);
+    AGUI::setClipRect(clipX, clipY, clipW, clipH);
 
     // Place the cursor where we wish to draw this char[] string
     int16_t drawX = clipX + 1 + itemLen[nextItem];   // Place after existing text on this item line
     int16_t drawY = clipY + 1 + nextItem * leading;  // Place on this item's line
-    DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d, drawX=%d, drawY=%d\n", clipX, clipY, clipW, clipH, drawX, drawY);
-    setCursor(drawX, drawY);
+    // DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d, drawX=%d, drawY=%d\n", clipX, clipY, clipW, clipH, drawX, drawY);
+    AGUI::setCursor(drawX, drawY);
 
     // Draw the text item
     // setFont(&FreeSerif9pt7b);
-    setFont(txtFont);                                          // Config the AListBox font
-    setTextColor(fgColor, bgColor);                            // Foreground and background text colors
-    setTextWrap(false);                                        // Clip to screen if clip rectange extends offscreen
-    size_t actualCount = writeText((uint8_t *)buffer, count);  // Write string to display
+    AGUI::setFont(defaultFont);                                      // Config the AListBox font
+    AGUI::setTextColor(fgColor, bgColor);                            // Foreground and background text colors
+    AGUI::setTextWrap(false);                                        // Clip to screen if clip rectange extends offscreen
+    size_t actualCount = AGUI::writeText((uint8_t *)buffer, count);  // Write string to display
 
     // Recalculate the count of text pixels on this item
     int16_t x1, y1;  // Returned by getTextBounds() but not used
-    uint16_t w, h;   // Width and height in pixels returned by getTextBounds()
-    getTextBounds(buffer, (uint16_t)actualCount, drawX, drawY, &x1, &y1, &w, &h);
+    ACoord w, h;     // Width and height in pixels returned by getTextBounds()
+    AGUI::getTextBounds(buffer, (uint16_t)actualCount, drawX, drawY, &x1, &y1, &w, &h);
     itemLen[nextItem] += (w);  // Accumulated number of horizontal pixels in this item's line of text
 
     return actualCount;
@@ -313,6 +319,8 @@ size_t AListBox::write(uint8_t c) {
  * to the next item line.
  */
 size_t AListBox::write(const uint8_t *bfr, size_t count) {
+    if (!Serial) Serial.begin(9600);
+
     DPRINTF("bfr='%s', count=%d\n", bfr, count);
     uint8_t *pSegment = (uint8_t *)bfr;  // Points to first char of current segment
     uint8_t *pScan = pSegment;           // Scans a segment in search of NL char
@@ -367,7 +375,7 @@ int AListBox::getSelectedItem(ACoord xClick, ACoord yClick) {
 }  // getSelection()
 
 /**
- * @brief Processes a touch event somewhere in this AListBox
+ * @brief This is our private callback from AWidget invoked when the user clicks in this AListBox
  * @param xClick screen x-coord
  * @param yClick screen y-coord
  *
@@ -382,15 +390,8 @@ void AListBox::doTouchWidget(ACoord xClick, ACoord yClick) {
     int item = getSelectedItem(xClick, yClick);    // Which item was clicked?
     if ((item < 0) || (item >= maxItems)) return;  // None, nothing to do for this coordinate
 
-    // User overrides doTouchItem() to receive touch notifications
-    // doTouchItem(item);     // Index is the item number
-
-    // Note that the item is selected
+    // Note that the item is selected.  TODO:  Is this necessary?
     isSelected[item] = true;
-
-    // // Highlight the selected item using siColor if user can resupply the item's text
-    // if (getItemText != NULL) selectedText = getItemText(index);
-    // addItem(index, selectedText, siColor);  // TODO:  this screws up nextItem.  Need setItem()???
 
     // Notify the user-supplied callback of the selected item
     DTRACE();

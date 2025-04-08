@@ -3860,8 +3860,7 @@ void HX8357_t3n::getTextBounds(const char *str, int16_t x, int16_t y,
     }
 }
 
-void HX8357_t3n::getTextBounds(const String &str, int16_t x, int16_t y,
-                               int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h) {
+void HX8357_t3n::getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h) {
     if (str.length() != 0) {
         getTextBounds(const_cast<char *>(str.c_str()), x, y, x1, y1, w, h);
     }

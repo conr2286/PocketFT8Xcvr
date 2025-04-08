@@ -18,7 +18,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 
-#include "AGraphicsDriver.h"
+#include "AGUI.h"
 #include "AWidget.h"
 
 class AButton : public AWidget {
@@ -27,14 +27,12 @@ class AButton : public AWidget {
     AButton(const char *str, ACoord x1, ACoord y1, ACoord w, ACoord h);
 
     // Public methods
-    int setCallback(void *(*callback)(bool stateOn));  // Set user's callback function
-    void enable(void);                                 // Enable this button
-    void disable(void);                                // Disable (grey) this button
-    void setState(bool onOff);                         // Set button state on or off
-    void setText(const char *str);                     // Set button text
+    void enable(void);   // Enable this button
+    void disable(void);  // Disable (grey) this button
 
    private:
     // Private variables
+    ACoord r;      // Radius of the rounded corners
     bool enabled;  // Enabled or disabled (greyed)
     bool stateOn;  // Button state (on or off)
 };  // AListBox
