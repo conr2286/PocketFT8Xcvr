@@ -21,28 +21,21 @@
 #define TFT_DC 9
 #define TFT_CS 10
 
-// #include "ili9341_t3n_font_Arial.h"
-//  #include "font_ArialBold.h"
-//   #include "font_ComicSansMS.h"
-// #include "ili9341_t3n_font_OpenSans.h"
-//  #include "ili9341_t3n_font_DroidSans.h"
-//   #include "font_Michroma.h"
-//   #include "font_Crystal.h"
-//   #include "font_ChanceryItalic.h"
-// #include <Fonts/FreeMonoBoldOblique12pt7b.h>
-// #include <Fonts/FreeSerif9pt7b.h>
-// #include <Fonts/FreeSans9pt7b.h>
 #include "AGUI.h"
 #include "ft8_font.h"
 
 static HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Build Adafruit's HX8357 display object
-static AGUI agd(&tft, 3, &FT8Font);                                                         // Build hte app's GUI object
+static AGUI app(&tft, 3, &FT8Font);                    // Build hte app's GUI object
+
+char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ_0123456789,./";
+
 
 class Box : public AListBox {
    public:
     Box(ARect rect, AColor c) : AListBox(rect, c) { DTRACE(); };
     void doTouchItem(int item) override {
         DPRINTF("doTouchItem(%d)\n", item);
+        setItem(item, msg, BLACK, YELLOW);
     }
 };
 
@@ -54,9 +47,8 @@ AButton b1 = AButton("CQ", 0, 290, 42, 30);
 
 
 void setup() {
-    char msg[] = "NW8ABC/P WA9ZXY RR73 S9";
+    //char msg[] = "NW8ABC/P WA9ZXY RR73 S9";
     // char msg[] = "0";
-    //  char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ0123456789,./";
 
     Serial.begin(9600);
     Serial.println("Starting...");
@@ -69,6 +61,7 @@ void setup() {
     box1.addItem(msg);
     box1.addItem(msg);
     box1.addItem(msg);
+    delay(5000);
     AWidget::processTouch(10, 10);
 
     // Populate box2 with multiple items
@@ -78,13 +71,6 @@ void setup() {
     box2.addItem("AG0E KQ7B -3");
     box2.addItem("KQ7B AG0E RR73");
     box2.addItem("AG0E KQ7B 73");
-
-    long m0 = micros();
-    for (int i = 0; i < 100; i++) {
-        box1.setItem(3, "test", GREEN, BLACK);
-    }
-    long m1 = micros();
-    DPRINTF( "time(setItem) = %f uS\n", (m1 - m0) / 100.0);
 
     delay(5000);
     Serial.println("Finished setup()\n");

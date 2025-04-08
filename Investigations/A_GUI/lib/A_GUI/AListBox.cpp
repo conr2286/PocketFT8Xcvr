@@ -48,7 +48,7 @@
 #include "DEBUG.h"
 #include "ft8_font.h"  //Include the default font
 
-//using namespace agui;
+// using namespace agui;
 
 /**
  * @brief Build AListBox sans border line using width and height
@@ -68,13 +68,13 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
 
     // Initialize some default text values for this new list box
     DPRINTF("defaultFont=0x%x\n", defaultFont);
-    //AGUI::setFont(defaultFont);
+    // AGUI::setFont(defaultFont);
     DTRACE();
     leading = AGUI::getLeading();  // Get the leading (in pixels) for this font
     DTRACE();
 
     // Decorate the list box
-    AGUI::setClipRect();                    // Clear any existing clip
+    AGUI::setClipRect();  // Clear any existing clip
     DTRACE();
     AGUI::fillRect(x1, y1, w, h, bgColor);  // Background
     DTRACE();
@@ -172,6 +172,8 @@ int AListBox::addItem(int index, const char *str, AColor fgColor) {
  * @return
  */
 int AListBox::setItem(int index, const char *str, AColor fgColor, AColor bgColor) {
+    DPRINTF("setItem(%d, %s, %04x, %04x)\n ", index, str, fgColor, bgColor);
+
     //  Sanity checks
     if (index >= maxItems) return -1;
     if (str == NULL) return -1;
@@ -243,7 +245,7 @@ bool AListBox::hasBorder() {
  *
  */
 size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
-    //DPRINTF("buffer='%s', count=%d\n", buffer, count);
+    DPRINTF("buffer='%s', count=%d\n", buffer, count);
 
     if (count == 0) return 0;  // Perhaps there's nothing to do
 
@@ -257,12 +259,10 @@ size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
 
     // Now adjust the clip to allow room for the border if we have one
     if (hasBorder()) {  // Does list box have a border?
-        // clipX+=1;        // Reserve space for border and one blank pixel
-        // clipY+=1;        // Reserve space for border and one blank pixel
-        // clipW -= 2;     // Width descreases to make room for border
-        // clipH -= 2;     // As does height to make room for border
-        // DPRINTF("With Border:  clipX=%d,clipY=%d,clipW=%d,clipH=%d\n", clipX, clipY, clipW, clipH);
-        // DPRINTF("boundary.y1=%d, boundary.y2=%d\n", boundary.y1, boundary.y2);
+                        // clipX+=1;        // Reserve space for border and one blank pixel
+                        // clipY+=1;        // Reserve space for border and one blank pixel
+        clipW -= 2;     // Width descreases to make room for border
+        clipH -= 2;     // As does height to make room for border
     }
     // TODO:  Someday deal with ridiculous clip rectangle specifications.  For now,
     // garbage in, garbage out.

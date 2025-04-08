@@ -18,7 +18,9 @@ AButton::AButton(const char *str, ACoord x1, ACoord y1, ACoord w, ACoord h) {
     boundary.setCorners(x1, y1, x1 + w, y1 + h);
 
     // Define a suitable radius for the corners
-    r = 2;
+    r = 5;
+
+    bgColor = CL(70, 70, 70);
 
     // Decorate the button
     AGUI::setClipRect(x1, y1, w, h);                                        // Set the clipping rectangle w/o consideration for rounded corners

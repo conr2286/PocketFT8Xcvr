@@ -42,7 +42,7 @@ class AListBox : public Print, public AWidget {
     int addItem(const char *str, AColor color);
     int addItem(const char *str);
     int setItem(int index, const char *str, AColor fgColor, AColor bgColor);
-    int getSelectedItem(ACoord xScreen, ACoord yScreen);  // Returns index of item selected at xClick,yClick
+    int getSelectedItem(ACoord xScreen, ACoord yScreen);  // Returns index of item at xClick,yClick
 
     void clear(void);
     void clear(int index);
