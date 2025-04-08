@@ -24,7 +24,6 @@
 #include "ARect.h"
 #include "AWidget.h"
 
-
 class AListBox : public Print, public AWidget {
    public:
     const static uint8_t maxItems = 24;  // Maximum number of items in a list
@@ -49,9 +48,10 @@ class AListBox : public Print, public AWidget {
     int getCount(void);
 
     // Override the Arduino Print interface's virtual methods
-    size_t writeItem(const uint8_t *buffer, size_t count);      // Writes a char[] string sans NewLine (NL) chars
-    size_t write(uint8_t c) override;                           // Write a single char to AListBox
-    size_t write(const uint8_t *buffer, size_t size) override;  // Write a char[] string possibly containing NL chars
+    size_t writeItem(const uint8_t *buffer, size_t count);                                  // Writes a char[] string sans NewLine (NL) chars
+    size_t writeItem(const uint8_t *buffer, size_t count, AColor fgColor, AColor bgColor);  // Writes a char[] string sans NewLine (NL) chars
+    size_t write(uint8_t c) override;                                                       // Write a single char to AListBox
+    size_t write(const uint8_t *buffer, size_t size) override;                              // Write a char[] string possibly containing NL chars
 
    protected:
     virtual void doRepaintAListBox(void) {}  // Application overrides doRepaintAlistBox() to receive notifications of repaint events

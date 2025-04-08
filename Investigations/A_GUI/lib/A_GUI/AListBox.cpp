@@ -187,8 +187,9 @@ int AListBox::setItem(int index, const char *str, AColor fgColor, AColor bgColor
     itemLen[nextItem] = 0;  // Reset count of pixels previously written to this item line
 
     // Display the text for nextItem line
-    writeItem((uint8_t *)str, strlen(str));  // Output the text
-    return index;                            // Return index of item just written
+    //writeItem((uint8_t *)str, strlen(str));  // Output the text
+    writeItem((uint8_t *)str, strlen(str), fgColor, bgColor);
+    return index;  // Return index of item just written
 }
 
 /**
@@ -230,6 +231,10 @@ bool AListBox::hasBorder() {
     return bdColor != bgColor;
 }
 
+size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
+    return writeItem(buffer, count, fgColor, bgColor);
+}
+
 /**
  * @brief Write a NL-free buffer to an instance of AListBox
  * @param buffer Data to be written
@@ -244,7 +249,7 @@ bool AListBox::hasBorder() {
  * modified.
  *
  */
-size_t AListBox::writeItem(const uint8_t *buffer, size_t count) {
+size_t AListBox::writeItem(const uint8_t *buffer, size_t count, AColor fgColor, AColor bgColor) {
     DPRINTF("buffer='%s', count=%d\n", buffer, count);
 
     if (count == 0) return 0;  // Perhaps there's nothing to do
