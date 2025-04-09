@@ -1,15 +1,15 @@
 /**
- * AButton --- An Arduino-friendly GUI Button
+ * AToggleButton --- An Arduino-friendly GUI Button
  *
  * @author Jim Conrad, KQ7B
  *
  * @license MIT License
  * @copyright 2025 Jim Conrad, All rights reserved.
  *
- * AButton implements a very simple button
+ * AToggleButton implements a very simple button
  * AListBox is a AWidget
  *
- * AButton uses a callBack function for clicks.
+ * AToggleButton uses a callBack function for clicks.
  *
  */
 
@@ -21,18 +21,25 @@
 #include "AGUI.h"
 #include "AWidget.h"
 
-class AButton : public AWidget {
+class AToggleButton : public AWidget {
    public:
     // Constructors
-    AButton(const char *str, ACoord x1, ACoord y1, ACoord w, ACoord h);
+    AToggleButton(const char* str, ACoord x1, ACoord y1, ACoord w, ACoord h);
 
     // Public methods
     void enable(void);   // Enable this button
     void disable(void);  // Disable (grey) this button
+    void repaint(void);  // Repaint this button
+
+    // Protected
+    virtual void touchedButton(void) {}  // Application overrides to receive notifications of touch events for this AToggleButton
 
    private:
+    void doTouchWidget(ACoord xScreen, ACoord yScreen) override final;  // AWidget notifies our callback when this AToggleButton is touched
+
     // Private variables
-    ACoord r;      // Radius of the rounded corners
-    bool enabled;  // Enabled or disabled (greyed)
-    bool stateOn;  // Button state (on or off)
-};  // AListBox
+    ACoord r;         // Radius of the rounded corners
+    bool enabled;     // Enabled or disabled (greyed)
+    bool state;       // Button state (on or off)
+    const char* txt;  // Pointer to button's text string (it's not a copy!!!)
+};  // AToggleButton

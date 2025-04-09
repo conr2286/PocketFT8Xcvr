@@ -99,10 +99,10 @@ AWidget::~AWidget() {
 void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
     DTRACE();
     for (AWidget* scannedWidget = allWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
-        DTRACE();
+        //DTRACE();
         // If touch coords lie within scanned widget and call its notification method if provided
         if (scannedWidget->boundary.isWithin(xCoord, yCoord)) {
-            DTRACE();
+            //DTRACE();
             scannedWidget->doTouchWidget(xCoord, yCoord);
         }
     }

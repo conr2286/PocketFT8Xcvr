@@ -42,6 +42,7 @@ class AListBox : public Print, public AWidget {
     int addItem(const char *str);
     int setItem(int index, const char *str, AColor fgColor, AColor bgColor);
     int getSelectedItem(ACoord xScreen, ACoord yScreen);  // Returns index of item at xClick,yClick
+    void deselect(int item); 
 
     void clear(void);
     void clear(int index);
@@ -55,7 +56,7 @@ class AListBox : public Print, public AWidget {
 
    protected:
     virtual void doRepaintAListBox(void) {}  // Application overrides doRepaintAlistBox() to receive notifications of repaint events
-    virtual void doTouchItem(int item) {}    // Application overrides doTouchItem() to receive notifications of touch events for items
+    virtual void touchedItem(int item, bool selected) {}    // Application overrides touchedItem() to receive notifications of touch events for items
 
    private:
     uint16_t leading;            // Space (pixels) between lines of text for this font
