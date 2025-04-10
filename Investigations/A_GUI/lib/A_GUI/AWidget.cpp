@@ -4,7 +4,6 @@
 #include "DEBUG.h"
 #include "ft8_font.h"
 
-
 // Initialize the head of the unordered list of all AWidget objects.
 // The processTouch() class method uses the list to find the selected widget.
 AWidget* AWidget::allWidgets = NULL;
@@ -33,7 +32,10 @@ AWidget::AWidget() {
 
     // Initially config the widget font to the application's default
     DPRINTF("txtFont=%p\n", AGUI::appFont);
-    this->defaultFont = AGUI::appFont;
+    this->defaultFont = AGUI::appFont;  // Widget's font
+
+    //TODO:  Refactor such that radius==0 ==> squared corners rather than rounded
+    this->radius = 5;                   // Radius of rounded corners in this widget
 }
 
 /**
@@ -99,11 +101,11 @@ AWidget::~AWidget() {
 void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
     DTRACE();
     for (AWidget* scannedWidget = allWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
-        //DTRACE();
-        // If touch coords lie within scanned widget and call its notification method if provided
+        // DTRACE();
+        //  If touch coords lie within scanned widget and call its notification method if provided
         if (scannedWidget->boundary.isWithin(xCoord, yCoord)) {
-            //DTRACE();
-            scannedWidget->doTouchWidget(xCoord, yCoord);
+            // DTRACE();
+            scannedWidget->touchWidget(xCoord, yCoord);
         }
     }
 }

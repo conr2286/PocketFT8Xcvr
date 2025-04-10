@@ -27,18 +27,18 @@ class AToggleButton : public AWidget {
     AToggleButton(const char* str, ACoord x1, ACoord y1, ACoord w, ACoord h);
 
     // Public methods
-    void enable(void);   // Enable this button
-    void disable(void);  // Disable (grey) this button
-    void repaint(void);  // Repaint this button
+    void enable(void);                  // Enable this button
+    void disable(void);                 // Disable (grey) this button
+    void repaintWidget(void) override;  // Repaint this button
 
     // Protected
-    virtual void touchedButton(void) {}  // Application overrides to receive notifications of touch events for this AToggleButton
+    virtual void touchButton(void) {}  // Application overrides to receive notifications of touch events for this AToggleButton
 
    private:
-    void doTouchWidget(ACoord xScreen, ACoord yScreen) override final;  // AWidget notifies our callback when this AToggleButton is touched
+    void touchWidget(ACoord xScreen, ACoord yScreen) override final;  // We override AWidget touchWidget() to receive touch notifications
 
     // Private variables
-    ACoord r;         // Radius of the rounded corners
+    // ACoord r;         // Radius of the rounded corners
     bool enabled;     // Enabled or disabled (greyed)
     bool state;       // Button state (on or off)
     const char* txt;  // Pointer to button's text string (it's not a copy!!!)

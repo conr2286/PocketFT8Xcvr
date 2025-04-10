@@ -42,7 +42,7 @@ class AListBox : public Print, public AWidget {
     int addItem(const char *str);
     int setItem(int index, const char *str, AColor fgColor, AColor bgColor);
     int getSelectedItem(ACoord xScreen, ACoord yScreen);  // Returns index of item at xClick,yClick
-    void deselect(int item); 
+    void deselect(int item);
 
     void clear(void);
     void clear(int index);
@@ -55,8 +55,8 @@ class AListBox : public Print, public AWidget {
     size_t write(const uint8_t *buffer, size_t size) override;                              // Write a char[] string possibly containing NL chars
 
    protected:
-    virtual void doRepaintAListBox(void) {}  // Application overrides doRepaintAlistBox() to receive notifications of repaint events
-    virtual void touchedItem(int item, bool selected) {}    // Application overrides touchedItem() to receive notifications of touch events for items
+    //virtual void repaint(void) {}               // Application overrides to receive notifications of repaint events
+    virtual void touchItem(int item, bool selected) {}  // Application overrides touchItem() to receive notifications of touch events for items
 
    private:
     uint16_t leading;            // Space (pixels) between lines of text for this font
@@ -65,7 +65,7 @@ class AListBox : public Print, public AWidget {
     uint8_t nextItem;            // Index of where to place next unnumbered addition
 
     // Helper methods
-    bool hasBorder();                                                   // Returns true if list box has a border
-    void doTouchWidget(ACoord xScreen, ACoord yScreen) override final;  // AWidget notifies our callback when this AListBox is touched
+    bool hasBorder();                                                 // Returns true if list box has a border
+    void touchWidget(ACoord xScreen, ACoord yScreen) override final;  // We override AWidget touchWidget() to receive touch notifications
 
 };  // AListBox

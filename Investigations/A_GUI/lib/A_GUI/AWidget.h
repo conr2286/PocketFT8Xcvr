@@ -10,7 +10,7 @@
  * @brief This is the base class for all A_GUI widgets.
  *
  */
-class AWidget  {
+class AWidget {
    public:
     AWidget(void);
     virtual ~AWidget(void);
@@ -20,12 +20,13 @@ class AWidget  {
     static AWidget* allWidgets;  // Head of the unordered list of all widgets
     AWidget* next;               // Next widget in the unordered list of all widgets
     ARect boundary;              // Widget boundary rectangle coordinates
+    ACoord radius;               // Rounded corner radius
     AColor bdColor;              // Border color
     AColor bgColor;              // Background color
     AColor fgColor;              // Foreground color
     AColor spColor;              // Special color (e.g. selected item color)
     const GFXfont* defaultFont;  // Default font
 
-    virtual void doTouchWidget(ACoord screenX, ACoord screenY) {}  // Derived class must overide doTouchWidget() to process its touch event
-    virtual void doRepaintWidget(void) {}                          // Derived class must overide doRepaintWidget() to repaint itself
+    virtual void touchWidget(ACoord screenX, ACoord screenY) {}  // Derived classes must overide touchWidget() to receive touch events
+    virtual void repaintWidget(void) {}                            // Derived classes must overide doRepaintWidget() to repaint themselves
 };

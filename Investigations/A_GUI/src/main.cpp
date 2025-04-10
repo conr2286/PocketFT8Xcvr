@@ -12,6 +12,7 @@
 
 #include "AButton.h"
 #include "AListBox.h"
+#include "APixelBox.h"
 #include "DEBUG.h"
 #include "HX8357_t3n.h"
 #include "SPI.h"
@@ -32,8 +33,8 @@ char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ_0123456789,./";
 class Box : public AListBox {
    public:
     Box(ARect rect, AColor c) : AListBox(rect, c) { DTRACE(); };
-    void touchedItem(int item, bool selected) override {
-        DPRINTF("touchedItem(%d,%d)\n", item, selected);
+    void touchItem(int item, bool selected) override {
+        DPRINTF("touchItem(%d,%d)\n", item, selected);
         if (selected) {
             setItem(item, msg, BLACK, DEFAULT_SPECIAL_COLOR);
         } else {
@@ -48,12 +49,23 @@ Box box2 = Box(ARect(0, 152, 280, 250), RED);
 class Button : public AToggleButton {
    public:
     Button(const char *str, ACoord x1, ACoord y1, ACoord w, ACoord h) : AToggleButton(str, x1, y1, w, h) { DTRACE(); }
-    void touchedButton() {
-        DPRINTF("touchedButton()\n");
+    void touchButton() {
+        DPRINTF("touchButton()\n");
     }
 };
 
 Button b1 = Button("CQ", 0, 290, 42, 29);
+
+class Raster : public APixelBox {
+   public:
+    Raster(ACoord x1, ACoord y1, APixelPos nRows, ACoord nCols) : APixelBox(x1, y1, nRows, nCols) { DTRACE(); }
+    void touchPixel(APixelPos row, APixelPos col) {
+        DTRACE();
+        drawPixel(row, col, YELLOW);
+    }
+};
+
+Raster r1 = Raster(290, 0, 150, 150);
 
 void setup() {
     // char msg[] = "NW8ABC/P WA9ZXY RR73 S9";
@@ -84,10 +96,19 @@ void setup() {
     box2.addItem("AG0E KQ7B 73");
 
     delay(1000);
-    AWidget::processTouch(10, 300); //On
+    AWidget::processTouch(10, 300);  // On
     delay(2000);
-    AWidget::processTouch(10, 300); //Off
-    delay(5000);
+    AWidget::processTouch(10, 300);  // Off
+    delay(2000);
+
+    for (APixelPos n = 0; n < 300; n++) {
+        r1.drawPixel(n, 50, WHITE);
+        r1.drawPixel(100, n, BLUE);
+        r1.drawPixel(n, n, GREEN);
+    }
+
+    AWidget::processTouch(300, 100);
+    delay(2000);
     Serial.println("Finished setup()\n");
 }
 
