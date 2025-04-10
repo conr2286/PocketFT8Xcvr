@@ -1,7 +1,7 @@
 Archive member included to satisfy reference by file (symbol)
 
 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
-                              .pio/build/teensy41/src/main.cpp.o (HX8357_t3n::HX8357_t3n(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char))
+                              .pio/build/teensy41/src/TestAGUI.cpp.o (HX8357_t3n::HX8357_t3n(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char))
 .pio/build/teensy41/lib849/libHX8357_t3n.a(glcdfont.c.o)
                               .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o) (glcdfont)
 .pio/build/teensy41/liba08/libA_GUI.a(AButton.cpp.o)
@@ -9,9 +9,13 @@ Archive member included to satisfy reference by file (symbol)
 .pio/build/teensy41/liba08/libA_GUI.a(AGUI.cpp.o)
                               .pio/build/teensy41/src/main.cpp.o (AGUI::AGUI(HX8357_t3n*, unsigned char, GFXfont const*))
 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+<<<<<<< Updated upstream
                               .pio/build/teensy41/src/main.cpp.o (AListBox::write(unsigned char))
 .pio/build/teensy41/liba08/libA_GUI.a(APixelBox.cpp.o)
                               .pio/build/teensy41/src/main.cpp.o (APixelBox::touchWidget(short, short))
+=======
+                              .pio/build/teensy41/src/TestAGUI.cpp.o (AListBox::AListBox(HX8357_t3n*, ARect, AColor))
+>>>>>>> Stashed changes
 .pio/build/teensy41/liba08/libA_GUI.a(ARect.cpp.o)
                               .pio/build/teensy41/liba08/libA_GUI.a(AButton.cpp.o) (ARect::setCorners(short, short, short, short))
 .pio/build/teensy41/liba08/libA_GUI.a(AWidget.cpp.o)
@@ -19,13 +23,13 @@ Archive member included to satisfy reference by file (symbol)
 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
                               .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o) (DMAChannel::begin(bool))
 .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
-                              .pio/build/teensy41/src/main.cpp.o (Print::println())
+                              .pio/build/teensy41/src/TestAGUI.cpp.o (Print::println())
 .pio/build/teensy41/libFrameworkArduino.a(WString.cpp.o)
                               .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o) (String::String(char const*))
 .pio/build/teensy41/libFrameworkArduino.a(bootdata.c.o)
                               (ImageVectorTable)
 .pio/build/teensy41/libFrameworkArduino.a(delay.c.o)
-                              .pio/build/teensy41/src/main.cpp.o (delay)
+                              .pio/build/teensy41/src/TestAGUI.cpp.o (delay)
 .pio/build/teensy41/libFrameworkArduino.a(digital.c.o)
                               .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o) (digitalWrite)
 .pio/build/teensy41/libFrameworkArduino.a(main.cpp.o)
@@ -45,11 +49,11 @@ Archive member included to satisfy reference by file (symbol)
 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
                               .pio/build/teensy41/libFrameworkArduino.a(usb.c.o) (usb_init_serialnumber)
 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                              .pio/build/teensy41/src/main.cpp.o (Serial)
+                              .pio/build/teensy41/src/TestAGUI.cpp.o (Serial)
 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
                               .pio/build/teensy41/libFrameworkArduino.a(usb.c.o) (usb_serial_reset)
 .pio/build/teensy41/libFrameworkArduino.a(yield.cpp.o)
-                              .pio/build/teensy41/src/main.cpp.o (yield)
+                              .pio/build/teensy41/src/TestAGUI.cpp.o (yield)
 .pio/build/teensy41/libFrameworkArduino.a(EventResponder.cpp.o)
                               .pio/build/teensy41/libFrameworkArduino.a(startup.c.o) (pendablesrvreq_isr)
 .pio/build/teensy41/libFrameworkArduino.a(HardwareSerial.cpp.o)
@@ -65,7 +69,7 @@ Archive member included to satisfy reference by file (symbol)
 .pio/build/teensy41/libFrameworkArduino.a(sm_pool.c.o)
                               .pio/build/teensy41/libFrameworkArduino.a(startup.c.o) (sm_set_pool)
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libstdc++.a(atexit_arm.o)
-                              .pio/build/teensy41/src/main.cpp.o (__aeabi_atexit)
+                              .pio/build/teensy41/src/TestAGUI.cpp.o (__aeabi_atexit)
 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
                               .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o) (SPIClass::begin())
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/libgcc.a(_aeabi_uldivmod.o)
@@ -287,6 +291,7 @@ Discarded input sections
  .debug_str     0x0000000000000000       0xf8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o
  .ARM.attributes
                 0x0000000000000000       0x1c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o
+<<<<<<< Updated upstream
  .group         0x0000000000000000        0x8 .pio/build/teensy41/src/main.cpp.o
  .group         0x0000000000000000        0x8 .pio/build/teensy41/src/main.cpp.o
  .group         0x0000000000000000        0x8 .pio/build/teensy41/src/main.cpp.o
@@ -304,6 +309,12 @@ Discarded input sections
  .text          0x0000000000000000        0x0 .pio/build/teensy41/src/main.cpp.o
  .data          0x0000000000000000        0x0 .pio/build/teensy41/src/main.cpp.o
  .bss           0x0000000000000000        0x0 .pio/build/teensy41/src/main.cpp.o
+=======
+ .group         0x0000000000000000        0xc .pio/build/teensy41/src/TestAGUI.cpp.o
+ .text          0x0000000000000000        0x0 .pio/build/teensy41/src/TestAGUI.cpp.o
+ .data          0x0000000000000000        0x0 .pio/build/teensy41/src/TestAGUI.cpp.o
+ .bss           0x0000000000000000        0x0 .pio/build/teensy41/src/TestAGUI.cpp.o
+>>>>>>> Stashed changes
  .group         0x0000000000000000        0x8 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .group         0x0000000000000000        0x8 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .group         0x0000000000000000        0xc .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
@@ -1672,8 +1683,13 @@ Linker script and memory map
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o
+<<<<<<< Updated upstream
                 0x0000000067f72c70                __rtc_localtime = 0x67f72c70
 LOAD .pio/build/teensy41/src/main.cpp.o
+=======
+                0x0000000067f73bd1                __rtc_localtime = 0x67f73bd1
+LOAD .pio/build/teensy41/src/TestAGUI.cpp.o
+>>>>>>> Stashed changes
 START GROUP
 LOAD .pio/build/teensy41/lib672/libWire.a
 LOAD .pio/build/teensy41/lib060/libSPI.a
@@ -1745,12 +1761,13 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000060001e80                __init_array_start = .
  *(.init_array)
  .init_array    0x0000000060001e80        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
- .init_array    0x0000000060001e84        0x4 .pio/build/teensy41/src/main.cpp.o
+ .init_array    0x0000000060001e84        0x4 .pio/build/teensy41/src/TestAGUI.cpp.o
                 0x0000000060001e88                __init_array_end = .
                 0x0000000060001e88                . = ALIGN (0x4)
 
 .text.progmem   0x0000000060001e88      0x760
  *(.progmem*)
+<<<<<<< Updated upstream
  .progmem       0x0000000060001e88      0x658 .pio/build/teensy41/src/main.cpp.o
  .progmem       0x00000000600024e0      0x106 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
                 0x00000000600024e0                usb_string_product_name
@@ -1762,6 +1779,20 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000060002578                usb_config_descriptor_480
                 0x00000000600025e8                . = ALIGN (0x4)
  *fill*         0x00000000600025e6        0x2 
+=======
+ .progmem       0x0000000060001e88      0x658 .pio/build/teensy41/src/TestAGUI.cpp.o
+ .progmem       0x00000000600024e0      0x654 .pio/build/teensy41/liba08/libA_GUI.a(AListBox.cpp.o)
+ .progmem       0x0000000060002b34      0x106 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+                0x0000000060002b34                usb_string_product_name
+                0x0000000060002b34                usb_string_product_name_default
+                0x0000000060002b4c                usb_string_manufacturer_name_default
+                0x0000000060002b4c                usb_string_manufacturer_name
+                0x0000000060002b64                string0
+                0x0000000060002b68                usb_config_descriptor_12
+                0x0000000060002bcc                usb_config_descriptor_480
+                0x0000000060002c3c                . = ALIGN (0x4)
+ *fill*         0x0000000060002c3a        0x2 
+>>>>>>> Stashed changes
 
 .text.itcm      0x0000000000000000    0x10f60 load address 0x00000000600025e8
                 0x0000000000000020                . = (. + 0x20)
@@ -1772,6 +1803,19 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000000000020       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
  .text.frame_dummy
                 0x0000000000000044       0x24 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
+<<<<<<< Updated upstream
+=======
+ .text._ZN10HX8357_t3nD2Ev
+                0x0000000000000068       0x18 .pio/build/teensy41/src/TestAGUI.cpp.o
+                0x0000000000000068                HX8357_t3n::~HX8357_t3n()
+                0x0000000000000068                HX8357_t3n::~HX8357_t3n()
+ .text.setup    0x0000000000000080      0x200 .pio/build/teensy41/src/TestAGUI.cpp.o
+                0x0000000000000080                setup
+ .text.loop     0x0000000000000280        0x4 .pio/build/teensy41/src/TestAGUI.cpp.o
+                0x0000000000000280                loop
+ .text.startup._GLOBAL__sub_I_tft
+                0x0000000000000284       0x3c .pio/build/teensy41/src/TestAGUI.cpp.o
+>>>>>>> Stashed changes
  .text._ZN5Print17availableForWriteEv
                 0x0000000000000068        0x4 .pio/build/teensy41/src/main.cpp.o
                 0x0000000000000068                Print::availableForWrite()
@@ -2714,8 +2758,12 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
  *fill*         0x0000000020001487        0x1 
  .rodata.p05.0  0x0000000020001488        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mprec.o)
  .rodata.setup.str1.4
+<<<<<<< Updated upstream
                 0x0000000020001494       0x8e .pio/build/teensy41/src/main.cpp.o
  *fill*         0x0000000020001522        0x2 
+=======
+                0x00000000200012c4       0xa0 .pio/build/teensy41/src/TestAGUI.cpp.o
+>>>>>>> Stashed changes
  .rodata.str1.4
                 0x0000000020001524       0x48 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
                                          0x4c (size before relaxing)
@@ -2809,7 +2857,13 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000020002560       0x20 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
                 0x0000000020002560                endpoint0_transfer_data
  .bss.rx_transfer
+<<<<<<< Updated upstream
                 0x0000000020002580      0x100 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+=======
+                0x0000000020002300      0x100 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
+ .bss.tft       0x0000000020002400      0x280 .pio/build/teensy41/src/TestAGUI.cpp.o
+                0x0000000020002400                tft
+>>>>>>> Stashed changes
  .bss.tx_transfer
                 0x0000000020002680       0x80 .pio/build/teensy41/libFrameworkArduino.a(usb_serial.c.o)
  .bss.endpoint0_setupdata
@@ -3057,7 +3111,7 @@ LOAD linker stubs
  .ARM.attributes
                 0x000000000000001e       0x32 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
  .ARM.attributes
-                0x0000000000000050       0x32 .pio/build/teensy41/src/main.cpp.o
+                0x0000000000000050       0x32 .pio/build/teensy41/src/TestAGUI.cpp.o
  .ARM.attributes
                 0x0000000000000082       0x32 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .ARM.attributes
@@ -3242,7 +3296,7 @@ LOAD linker stubs
 .comment        0x0000000000000000       0x33
  .comment       0x0000000000000000       0x33 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
                                          0x34 (size before relaxing)
- .comment       0x0000000000000033       0x34 .pio/build/teensy41/src/main.cpp.o
+ .comment       0x0000000000000033       0x34 .pio/build/teensy41/src/TestAGUI.cpp.o
  .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib849/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib849/libHX8357_t3n.a(glcdfont.c.o)
  .comment       0x0000000000000033       0x34 .pio/build/teensy41/liba08/libA_GUI.a(AButton.cpp.o)
