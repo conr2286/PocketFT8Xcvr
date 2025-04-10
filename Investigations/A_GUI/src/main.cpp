@@ -8,8 +8,11 @@
 
 #include <Adafruit_GFX.h>  //Note:  GFX must include prior to HX8357
 #include <Arduino.h>
+#include <SPI.h>
 
+#include "AButton.h"
 #include "AListBox.h"
+#include "APixelBox.h"
 #include "DEBUG.h"
 #include "HX8357_t3n.h"
 #include "SPI.h"
@@ -19,73 +22,93 @@
 #define TFT_DC 9
 #define TFT_CS 10
 
-#include "ili9341_t3n_font_Arial.h"
-// #include "font_ArialBold.h"
-//  #include "font_ComicSansMS.h"
-#include "ili9341_t3n_font_OpenSans.h"
-// #include "ili9341_t3n_font_DroidSans.h"
-//  #include "font_Michroma.h"
-//  #include "font_Crystal.h"
-//  #include "font_ChanceryItalic.h"
-// #include <Fonts/FreeMono9pt7b.h>
-// #include <Fonts/FreeMonoBoldOblique12pt7b.h>
-// #include <Fonts/FreeSerif9pt7b.h>
-// #include <Fonts/FreeSans9pt7b.h>
+#include "AGUI.h"
 #include "ft8_font.h"
 
-HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
+static HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Build Adafruit's HX8357 display object
+static AGUI app(&tft, 3, &FT8Font);                                                         // Build hte app's GUI object
+
+char msg[] = "$%&()?[]()@ABCDEKLMNOQRYZ_0123456789,./";
+
+class Box : public AListBox {
+   public:
+    Box(ARect rect, AColor c) : AListBox(rect, c) { DTRACE(); };
+    void touchItem(int item, bool selected) override {
+        DPRINTF("touchItem(%d,%d)\n", item, selected);
+        if (selected) {
+            setItem(item, msg, BLACK, DEFAULT_SPECIAL_COLOR);
+        } else {
+            setItem(item, msg, fgColor, bgColor);
+        }
+    }
+};
+
+Box box1 = Box(ARect(0, 0, 280, 100), RED);
+Box box2 = Box(ARect(0, 152, 280, 250), RED);
+
+class Button : public AToggleButton {
+   public:
+    Button(const char *str, ACoord x1, ACoord y1, ACoord w, ACoord h) : AToggleButton(str, x1, y1, w, h) { DTRACE(); }
+    void touchButton() {
+        DPRINTF("touchButton()\n");
+    }
+};
+
+Button b1 = Button("CQ", 0, 290, 42, 29);
+
+class Raster : public APixelBox {
+   public:
+    Raster(ACoord x1, ACoord y1, APixelPos nRows, ACoord nCols) : APixelBox(x1, y1, nRows, nCols) { DTRACE(); }
+    void touchPixel(APixelPos row, APixelPos col) {
+        DTRACE();
+        drawPixel(row, col, YELLOW);
+    }
+};
+
+Raster r1 = Raster(290, 0, 150, 150);
 
 void setup() {
-    char msg[] = "AB0ABC/P WA9ZXY RR73 S9";
+    // char msg[] = "NW8ABC/P WA9ZXY RR73 S9";
+    //  char msg[] = "0";
 
     Serial.begin(9600);
     Serial.println("Starting...");
 
-
-    tft.begin(30000000UL, 2000000UL);
-    delay(1000);
-    tft.setRotation(3);
-    tft.setFont(&FT8Font);
-    tft.fillScreen(HX8357_BLACK);
-    delay(1000);
-
     // Build the list box1
-    AListBox box1 = AListBox(&tft, ARect(0, 100, 256, 250), RED);
+    // DPRINTF("&tft=%lu\n", &tft);
+    DTRACE();
     box1.addItem(msg);
+    box1.addItem(msg);
+    box1.addItem(msg);
+    box1.addItem(msg);
+    box1.addItem(msg);
+    delay(5000);
+    AWidget::processTouch(10, 10);
+    delay(2000);
+    AWidget::processTouch(10, 10);
 
-    // // Populate box2 with multiple items
-    // AListBox box2 = AListBox(&tft, ARect(257, 100, 479, 250), RED);
-    // box2.addItem("AB0ABC/P WA9ZXY RR73");
-    // box2.addItem("AG0E KQ7B DN15");
-    // box2.addItem("KQ7B AG0E -12");
-    // box2.addItem("AG0E KQ7B -3");
-    // box2.addItem("KQ7B AG0E RR73");
-    // box2.addItem("AG0E KQ7B 73");
+    // Populate box2 with multiple items
+    box2.addItem("AB0ABC/P WA9ZXY RR73");
+    box2.addItem("AG0E KQ7B DN15");
+    box2.addItem("KQ7B AG0E -12");
+    box2.addItem("AG0E KQ7B -3");
+    box2.addItem("KQ7B AG0E RR73");
+    box2.addItem("AG0E KQ7B 73");
 
-    // Try mixing printf with addItem
-    AListBox box3 = AListBox(&tft, ARect(0, 151, 150, 320), RED);
-    // box3.printf("Hello world\n");
-    // box3.addItem("Oh... hi");
-    box3.addItem("text");
-    box3.printf("foo ");
-    box3.printf("bar\n");
-    box3.addItem("More text");
-    box3.printf("Good");
-    box3.printf(" bye\n");
+    delay(1000);
+    AWidget::processTouch(10, 300);  // On
+    delay(2000);
+    AWidget::processTouch(10, 300);  // Off
+    delay(2000);
 
-    // Check out pixel placement
-    AListBox box4 = AListBox(&tft, ARect(360, 100, 479, 150), RED);
-    box4.addItem("Oh");
-    box4.addItem("_Too much__________");
-    box4.addItem("Might clip");
-    box4.addItem("Surely clipped");
-    // tft.setClipRect();
-    // tft.fillRect(361, 101, 479-361-1, 150-101-1, GREEN);
+    for (APixelPos n = 0; n < 300; n++) {
+        r1.drawPixel(n, 50, WHITE);
+        r1.drawPixel(100, n, BLUE);
+        r1.drawPixel(n, n, GREEN);
+    }
 
-    // // Test selections
-    // Serial.printf("box2.getSelection(0,0)=%d\n", box2.getSelectedItem(0, 0));
-    // Serial.printf("box2.getSelection(255,105)=%u\n", box2.getSelectedItem(255, 105));
-
+    AWidget::processTouch(300, 100);
+    delay(2000);
     Serial.println("Finished setup()\n");
 }
 

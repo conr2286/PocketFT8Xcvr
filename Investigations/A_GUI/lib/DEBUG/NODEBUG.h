@@ -16,6 +16,8 @@ ATTRIBUTION
 
 */
 
+#pragma once
+
 #define DPRINTF(...) 
 #define DFPRINTF(...)
 #define DTRACE()   
