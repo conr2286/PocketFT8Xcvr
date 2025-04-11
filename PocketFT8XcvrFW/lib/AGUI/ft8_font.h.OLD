@@ -1,14 +1,5 @@
-#pragma once
-/**
- * FT8Font is a derivative of the GNU FreeFont FreeMono9pt7b.h packaged with the
- * Adafruit GFX Library
- *
- * The sole modification places a slash through the digit 0 as is conventional in
- * amateur radio callsigns.
- *
- * Modification was made with https://tchapi.github.io/Adafruit-GFX-Font-Customiser/
- *
- */
+
+
 const uint8_t FT8Bitmaps[] PROGMEM = {
     0xAA, 0xA8, 0x0C, 0xAA, 0xA8, 0x0C, 0xED, 0x24, 0x92, 0x48, 0x24, 0x48,
     0x91, 0x2F, 0xE4, 0x89, 0x7F, 0x28, 0x51, 0x22, 0x40, 0x08, 0x3E, 0x62,
@@ -180,7 +171,7 @@ const GFXglyph FT8Glyphs[] PROGMEM = {
     {845, 7, 3, 11, 2, -6}     // 0x7E '~'
 };
 
-const GFXfont PROGMEM FT8Font = {
+const GFXfont PROGMEM FT8Font  = {
     (uint8_t *)FT8Bitmaps,
     (GFXglyph *)FT8Glyphs, 0x20, 0x7E, 18};
 

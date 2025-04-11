@@ -4,19 +4,19 @@ Archive member included to satisfy reference by file (symbol)
                               .pio/build/teensy41/src/TestAGUI.cpp.o (HX8357_t3n::HX8357_t3n(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char))
 .pio/build/teensy41/lib90c/libHX8357_t3n.a(glcdfont.c.o)
                               .pio/build/teensy41/lib90c/libHX8357_t3n.a(HX8357_t3n.cpp.o) (glcdfont)
-.pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+.pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                               .pio/build/teensy41/src/TestAGUI.cpp.o (AGUI::AGUI(HX8357_t3n*, unsigned char, GFXfont const*))
-.pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+.pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                               .pio/build/teensy41/src/TestAGUI.cpp.o (AListBox::write(unsigned char))
-.pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+.pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
                               .pio/build/teensy41/src/TestAGUI.cpp.o (APixelBox::touchWidget(unsigned short, unsigned short))
-.pio/build/teensy41/libb62/libA_GUI.a(ARect.cpp.o)
-                              .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o) (ARect::setCorners(unsigned short, unsigned short, unsigned short, unsigned short))
-.pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
+.pio/build/teensy41/lib80c/libAGUI.a(ARect.cpp.o)
+                              .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o) (ARect::setCorners(unsigned short, unsigned short, unsigned short, unsigned short))
+.pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
                               .pio/build/teensy41/src/TestAGUI.cpp.o (ATextBox::ATextBox(char const*, unsigned short, unsigned short, unsigned short, unsigned short, bool))
-.pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
+.pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
                               .pio/build/teensy41/src/TestAGUI.cpp.o (AToggleButton::repaintWidget())
-.pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+.pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                               .pio/build/teensy41/src/TestAGUI.cpp.o (AWidget::~AWidget())
 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
                               .pio/build/teensy41/lib90c/libHX8357_t3n.a(HX8357_t3n.cpp.o) (DMAChannel::begin(bool))
@@ -115,7 +115,7 @@ Archive member included to satisfy reference by file (symbol)
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-memset.o)
                               /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o (memset)
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strchr.o)
-                              .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o) (strchr)
+                              .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o) (strchr)
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strncmp.o)
                               .pio/build/teensy41/libFrameworkArduino.a(WString.cpp.o) (strncmp)
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strncpy.o)
@@ -149,7 +149,7 @@ Archive member included to satisfy reference by file (symbol)
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-lock.o)
                               /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o) (__retarget_lock_init_recursive)
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-strlen.o)
-                              .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o) (strlen)
+                              .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o) (strlen)
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-ctype_.o)
                               /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o) (__set_ctype)
 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-__atexit.o)
@@ -439,71 +439,71 @@ Discarded input sections
  .text          0x0000000000000000        0x0 .pio/build/teensy41/lib90c/libHX8357_t3n.a(glcdfont.c.o)
  .data          0x0000000000000000        0x0 .pio/build/teensy41/lib90c/libHX8357_t3n.a(glcdfont.c.o)
  .bss           0x0000000000000000        0x0 .pio/build/teensy41/lib90c/libHX8357_t3n.a(glcdfont.c.o)
- .text          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
- .data          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
- .bss           0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+ .text          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
+ .data          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
+ .bss           0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
  .text._ZN4AGUI7setFontEv
-                0x0000000000000000       0x10 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000000000       0x10 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
  .text._ZN4AGUI7setFontERK17ILI9341_t3_font_t
-                0x0000000000000000       0x10 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000000000       0x10 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
  .text._ZN4AGUI12setTextColorE6AColor
-                0x0000000000000000       0x10 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000000000       0x10 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
  .text._ZN4AGUI13getTextBoundsEPKcttPtS2_S2_S2_
-                0x0000000000000000       0x28 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
- .group         0x0000000000000000       0x14 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
- .text          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
- .data          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
- .bss           0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000000       0x28 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
+ .group         0x0000000000000000       0x14 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
+ .text          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
+ .data          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
+ .bss           0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .text._ZN5Print17availableForWriteEv
-                0x0000000000000000        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000000        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .text._ZN5Print5flushEv
-                0x0000000000000000        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000000        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .text._ZN7AWidget13repaintWidgetEv
-                0x0000000000000000        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000000        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .text._ZN8AListBox7addItemEiPKc6AColor
-                0x0000000000000000       0x20 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000000       0x20 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .text._ZN8AListBox7addItemEPKc6AColor
-                0x0000000000000000       0x30 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000000       0x30 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .text._ZN8AListBox9writeItemEPKhj6AColorS2_
-                0x0000000000000000       0x1c .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000000       0x1c .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .text._ZN8AListBox15getSelectedItemEtt
-                0x0000000000000000       0x34 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000000       0x34 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .rodata._ZN8AListBox8deselectEi.str1.4
-                0x0000000000000000        0xe .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000000        0xe .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .text._ZN8AListBox8deselectEi
-                0x0000000000000000       0x40 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
- .group         0x0000000000000000       0x14 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
- .text          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
- .data          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
- .bss           0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x0000000000000000       0x40 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
+ .group         0x0000000000000000       0x14 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
+ .text          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
+ .data          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
+ .bss           0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
  .text._ZN7AWidget13repaintWidgetEv
-                0x0000000000000000        0x4 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
- .text          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(ARect.cpp.o)
- .data          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(ARect.cpp.o)
- .bss           0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(ARect.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
- .group         0x0000000000000000       0x14 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
- .text          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
- .data          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
- .bss           0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
- .group         0x0000000000000000       0x14 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
- .text          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
- .data          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
- .bss           0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
- .group         0x0000000000000000        0x8 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
- .text          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
- .data          0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
- .bss           0x0000000000000000        0x0 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000000000000        0x4 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
+ .text          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(ARect.cpp.o)
+ .data          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(ARect.cpp.o)
+ .bss           0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(ARect.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
+ .group         0x0000000000000000       0x14 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
+ .text          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
+ .data          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
+ .bss           0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
+ .group         0x0000000000000000       0x14 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
+ .text          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
+ .data          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
+ .bss           0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
+ .group         0x0000000000000000        0x8 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
+ .text          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
+ .data          0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
+ .bss           0x0000000000000000        0x0 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
  .text._ZN7AWidget13repaintWidgetEv
-                0x0000000000000000        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000000000000        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
  .text          0x0000000000000000        0x0 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
  .data          0x0000000000000000        0x0 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
  .bss           0x0000000000000000        0x0 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
@@ -1649,7 +1649,7 @@ Linker script and memory map
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o
-                0x0000000067f88502                __rtc_localtime = 0x67f88502
+                0x0000000067f8856f                __rtc_localtime = 0x67f8856f
 LOAD .pio/build/teensy41/src/TestAGUI.cpp.o
 START GROUP
 LOAD .pio/build/teensy41/lib672/libWire.a
@@ -1657,7 +1657,7 @@ LOAD .pio/build/teensy41/lib060/libSPI.a
 LOAD .pio/build/teensy41/lib14c/libAdafruit BusIO.a
 LOAD .pio/build/teensy41/lib33f/libAdafruit GFX Library.a
 LOAD .pio/build/teensy41/lib90c/libHX8357_t3n.a
-LOAD .pio/build/teensy41/libb62/libA_GUI.a
+LOAD .pio/build/teensy41/lib80c/libAGUI.a
 LOAD .pio/build/teensy41/libFrameworkArduino.a
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libstdc++.a
@@ -1915,186 +1915,186 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000000007534       0x28 .pio/build/teensy41/lib90c/libHX8357_t3n.a(HX8357_t3n.cpp.o)
                 0x0000000000007534                HX8357_t3n::getLeading()
  .text._ZN4AGUIC2EP10HX8357_t3nhPK7GFXfont
-                0x000000000000755c       0xf4 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x000000000000755c       0xf4 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x000000000000755c                AGUI::AGUI(HX8357_t3n*, unsigned char, GFXfont const*)
                 0x000000000000755c                AGUI::AGUI(HX8357_t3n*, unsigned char, GFXfont const*)
  .text._ZN4AGUI11setClipRectEtttt
-                0x0000000000007650       0xa4 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000007650       0xa4 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000000007650                AGUI::setClipRect(unsigned short, unsigned short, unsigned short, unsigned short)
  .text._ZN4AGUI11setClipRectEv
-                0x00000000000076f4       0x98 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x00000000000076f4       0x98 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x00000000000076f4                AGUI::setClipRect()
  .text._ZN4AGUI9drawPixelEss6AColor
-                0x000000000000778c       0x18 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x000000000000778c       0x18 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x000000000000778c                AGUI::drawPixel(short, short, AColor)
  .text._ZN4AGUI8fillRectEtttt6AColor
-                0x00000000000077a4       0x24 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x00000000000077a4       0x24 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x00000000000077a4                AGUI::fillRect(unsigned short, unsigned short, unsigned short, unsigned short, AColor)
  .text._ZN4AGUI13fillRoundRectEttttt6AColor
-                0x00000000000077c8       0x2c .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x00000000000077c8       0x2c .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x00000000000077c8                AGUI::fillRoundRect(unsigned short, unsigned short, unsigned short, unsigned short, unsigned short, AColor)
  .text._ZN4AGUI8drawRectEtttt6AColor
-                0x00000000000077f4       0x24 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x00000000000077f4       0x24 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x00000000000077f4                AGUI::drawRect(unsigned short, unsigned short, unsigned short, unsigned short, AColor)
  .text._ZN4AGUI13drawRoundRectEttttt6AColor
-                0x0000000000007818       0x2c .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000007818       0x2c .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000000007818                AGUI::drawRoundRect(unsigned short, unsigned short, unsigned short, unsigned short, unsigned short, AColor)
  .text._ZN4AGUI7setFontEPK7GFXfont
-                0x0000000000007844       0x10 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000007844       0x10 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000000007844                AGUI::setFont(GFXfont const*)
  .text._ZN4AGUI10getLeadingEv
-                0x0000000000007854        0xc .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000007854        0xc .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000000007854                AGUI::getLeading()
  .text._ZN4AGUI9setCursorEtt
-                0x0000000000007860       0x18 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000007860       0x18 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000000007860                AGUI::setCursor(unsigned short, unsigned short)
  .text._ZN4AGUI12setTextColorE6AColorS0_
-                0x0000000000007878       0x10 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000007878       0x10 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000000007878                AGUI::setTextColor(AColor, AColor)
  .text._ZN4AGUI11setTextWrapEb
-                0x0000000000007888       0x10 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000007888       0x10 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000000007888                AGUI::setTextWrap(bool)
  .text._ZN4AGUI9writeTextEPKhj
-                0x0000000000007898       0x1c .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000007898       0x1c .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000000007898                AGUI::writeText(unsigned char const*, unsigned int)
  .text._ZN4AGUI9writeTextE6String
-                0x00000000000078b4       0x30 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x00000000000078b4       0x30 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x00000000000078b4                AGUI::writeText(String)
  .text._ZN4AGUI13getTextBoundsEPKhtttPtS2_S2_S2_
-                0x00000000000078e4       0x30 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x00000000000078e4       0x30 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x00000000000078e4                AGUI::getTextBounds(unsigned char const*, unsigned short, unsigned short, unsigned short, unsigned short*, unsigned short*, unsigned short*, unsigned short*)
  .text._ZN4AGUI13getTextBoundsERK6StringttPtS3_S3_S3_
-                0x0000000000007914       0x28 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000000007914       0x28 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000000007914                AGUI::getTextBounds(String const&, unsigned short, unsigned short, unsigned short*, unsigned short*, unsigned short*, unsigned short*)
  .text._ZN8AListBox9touchItemEib
-                0x000000000000793c        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x000000000000793c        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x000000000000793c                AListBox::touchItem(int, bool)
  .text._ZN8AListBox5writeEh
-                0x0000000000007940       0x20 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007940       0x20 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007940                AListBox::write(unsigned char)
  .text._ZN8AListBoxD2Ev
-                0x0000000000007960       0x40 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007960       0x40 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007960                AListBox::~AListBox()
                 0x0000000000007960                AListBox::~AListBox()
                 0x0000000000007980                non-virtual thunk to AListBox::~AListBox()
  .text._ZN8AListBoxD0Ev
-                0x00000000000079a0       0x50 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x00000000000079a0       0x50 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x00000000000079a0                AListBox::~AListBox()
                 0x00000000000079c8                non-virtual thunk to AListBox::~AListBox()
  .text._ZN8AListBox9writeItemEPKhj6AColorS2_.part.0
-                0x00000000000079f0       0xe4 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x00000000000079f0       0xe4 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .text._ZN8AListBox11touchWidgetEtt
-                0x0000000000007ad4       0x7c .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007ad4       0x7c .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007ad4                AListBox::touchWidget(unsigned short, unsigned short)
  .text._ZThn8_N8AListBox11touchWidgetEtt
-                0x0000000000007b50        0x8 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007b50        0x8 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007b50                non-virtual thunk to AListBox::touchWidget(unsigned short, unsigned short)
  .text._ZN8AListBoxC2Etttt
-                0x0000000000007b58       0xf0 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007b58       0xf0 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007b58                AListBox::AListBox(unsigned short, unsigned short, unsigned short, unsigned short)
                 0x0000000000007b58                AListBox::AListBox(unsigned short, unsigned short, unsigned short, unsigned short)
  .text._ZN8AListBoxC2Etttt6AColor
-                0x0000000000007c48       0xe0 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007c48       0xe0 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007c48                AListBox::AListBox(unsigned short, unsigned short, unsigned short, unsigned short, AColor)
                 0x0000000000007c48                AListBox::AListBox(unsigned short, unsigned short, unsigned short, unsigned short, AColor)
  .text._ZN8AListBoxC2E5ARect6AColor
-                0x0000000000007d28       0xb0 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007d28       0xb0 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007d28                AListBox::AListBox(ARect, AColor)
                 0x0000000000007d28                AListBox::AListBox(ARect, AColor)
  .text._ZN8AListBox7setItemEiPKc6AColorS2_
-                0x0000000000007dd8       0x6c .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007dd8       0x6c .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007dd8                AListBox::setItem(int, char const*, AColor, AColor)
  .text._ZN8AListBox7addItemEPKc
-                0x0000000000007e44       0x30 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007e44       0x30 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007e44                AListBox::addItem(char const*)
  .text._ZN8AListBox9writeItemEPKhj
-                0x0000000000007e74       0x50 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007e74       0x50 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007e74                AListBox::writeItem(unsigned char const*, unsigned int)
  .text._ZN8AListBox5writeEPKhj
-                0x0000000000007ec4      0x140 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000007ec4      0x140 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x0000000000007ec4                AListBox::write(unsigned char const*, unsigned int)
  .text._ZN9APixelBox10touchPixelEtt
-                0x0000000000008004        0x4 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x0000000000008004        0x4 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
                 0x0000000000008004                APixelBox::touchPixel(unsigned short, unsigned short)
  .text._ZN9APixelBoxD2Ev
-                0x0000000000008008       0x14 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x0000000000008008       0x14 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
                 0x0000000000008008                APixelBox::~APixelBox()
                 0x0000000000008008                APixelBox::~APixelBox()
  .text._ZN9APixelBoxD0Ev
-                0x000000000000801c       0x1c .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x000000000000801c       0x1c .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
                 0x000000000000801c                APixelBox::~APixelBox()
  .text._ZN9APixelBox11touchWidgetEtt
-                0x0000000000008038       0x84 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x0000000000008038       0x84 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
                 0x0000000000008038                APixelBox::touchWidget(unsigned short, unsigned short)
  .text._ZN9APixelBoxC2Etttt
-                0x00000000000080bc       0xc4 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x00000000000080bc       0xc4 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
                 0x00000000000080bc                APixelBox::APixelBox(unsigned short, unsigned short, unsigned short, unsigned short)
                 0x00000000000080bc                APixelBox::APixelBox(unsigned short, unsigned short, unsigned short, unsigned short)
  .text._ZN9APixelBox9drawPixelEtt6AColor
-                0x0000000000008180       0x40 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x0000000000008180       0x40 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
                 0x0000000000008180                APixelBox::drawPixel(unsigned short, unsigned short, AColor)
  .text._ZN5ARect10setCornersEtttt
-                0x00000000000081c0       0x1c .pio/build/teensy41/libb62/libA_GUI.a(ARect.cpp.o)
+                0x00000000000081c0       0x1c .pio/build/teensy41/lib80c/libAGUI.a(ARect.cpp.o)
                 0x00000000000081c0                ARect::setCorners(unsigned short, unsigned short, unsigned short, unsigned short)
  .text._ZN5ARect8isWithinEtt
-                0x00000000000081dc       0x24 .pio/build/teensy41/libb62/libA_GUI.a(ARect.cpp.o)
+                0x00000000000081dc       0x24 .pio/build/teensy41/lib80c/libAGUI.a(ARect.cpp.o)
                 0x00000000000081dc                ARect::isWithin(unsigned short, unsigned short)
  .text._ZN8ATextBox11touchWidgetEtt
-                0x0000000000008200        0x4 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
+                0x0000000000008200        0x4 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
                 0x0000000000008200                ATextBox::touchWidget(unsigned short, unsigned short)
  .text._ZN8ATextBox13repaintWidgetEv
-                0x0000000000008204       0xfc .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
+                0x0000000000008204       0xfc .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
                 0x0000000000008204                ATextBox::repaintWidget()
  .text._ZN8ATextBoxD2Ev
-                0x0000000000008300       0x1c .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
+                0x0000000000008300       0x1c .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
                 0x0000000000008300                ATextBox::~ATextBox()
                 0x0000000000008300                ATextBox::~ATextBox()
  .text._ZN8ATextBoxD0Ev
-                0x000000000000831c       0x24 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
+                0x000000000000831c       0x24 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
                 0x000000000000831c                ATextBox::~ATextBox()
  .text._ZN8ATextBoxC2EPKcttttb
-                0x0000000000008340      0x190 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
+                0x0000000000008340      0x190 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
                 0x0000000000008340                ATextBox::ATextBox(char const*, unsigned short, unsigned short, unsigned short, unsigned short, bool)
                 0x0000000000008340                ATextBox::ATextBox(char const*, unsigned short, unsigned short, unsigned short, unsigned short, bool)
  .text._ZN13AToggleButton11touchButtonEv
-                0x00000000000084d0        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
+                0x00000000000084d0        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
                 0x00000000000084d0                AToggleButton::touchButton()
  .text._ZN13AToggleButton13repaintWidgetEv
-                0x00000000000084d4       0xdc .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
+                0x00000000000084d4       0xdc .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
                 0x00000000000084d4                AToggleButton::repaintWidget()
  .text._ZN13AToggleButtonD2Ev
-                0x00000000000085b0       0x1c .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
+                0x00000000000085b0       0x1c .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
                 0x00000000000085b0                AToggleButton::~AToggleButton()
                 0x00000000000085b0                AToggleButton::~AToggleButton()
  .text._ZN13AToggleButton11touchWidgetEtt
-                0x00000000000085cc       0x30 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
+                0x00000000000085cc       0x30 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
                 0x00000000000085cc                AToggleButton::touchWidget(unsigned short, unsigned short)
  .text._ZN13AToggleButtonD0Ev
-                0x00000000000085fc       0x24 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
+                0x00000000000085fc       0x24 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
                 0x00000000000085fc                AToggleButton::~AToggleButton()
  .text._ZN13AToggleButtonC2EPKcttttb
-                0x0000000000008620      0x1e0 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
+                0x0000000000008620      0x1e0 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
                 0x0000000000008620                AToggleButton::AToggleButton(char const*, unsigned short, unsigned short, unsigned short, unsigned short, bool)
                 0x0000000000008620                AToggleButton::AToggleButton(char const*, unsigned short, unsigned short, unsigned short, unsigned short, bool)
  .text._ZN7AWidget11touchWidgetEtt
-                0x0000000000008800        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000000008800        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                 0x0000000000008800                AWidget::touchWidget(unsigned short, unsigned short)
  .text._ZN7AWidgetD2Ev
-                0x0000000000008804      0x140 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000000008804      0x140 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                 0x0000000000008804                AWidget::~AWidget()
                 0x0000000000008804                AWidget::~AWidget()
  .text._ZN7AWidgetD0Ev
-                0x0000000000008944       0x14 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000000008944       0x14 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                 0x0000000000008944                AWidget::~AWidget()
  .text._ZN7AWidgetC2Ev
-                0x0000000000008958      0x100 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000000008958      0x100 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                 0x0000000000008958                AWidget::AWidget()
                 0x0000000000008958                AWidget::AWidget()
  .text._ZN7AWidget12processTouchEtt
-                0x0000000000008a58       0x64 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000000008a58       0x64 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                 0x0000000000008a58                AWidget::processTouch(unsigned short, unsigned short)
  .text._ZN7AWidget9hasBorderEv
-                0x0000000000008abc        0xc .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000000008abc        0xc .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                 0x0000000000008abc                AWidget::hasBorder()
  .text._ZN10DMAChannel5beginEb
                 0x0000000000008ac8       0xb4 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
@@ -2619,7 +2619,7 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x00000000200004e0       0x12 .pio/build/teensy41/src/TestAGUI.cpp.o
  *fill*         0x00000000200004f2        0x2 
  .rodata._ZN4AGUIC2EP10HX8357_t3nhPK7GFXfont.str1.4
-                0x00000000200004f4       0x13 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x00000000200004f4       0x13 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
  *fill*         0x0000000020000507        0x1 
  .rodata._ZN6Button11touchButtonEv.str1.4
                 0x0000000020000508       0x2b .pio/build/teensy41/src/TestAGUI.cpp.o
@@ -2628,29 +2628,29 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000020000534       0x17 .pio/build/teensy41/src/TestAGUI.cpp.o
  *fill*         0x000000002000054b        0x1 
  .rodata._ZN7AWidget12processTouchEtt.str1.4
-                0x000000002000054c        0xd .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x000000002000054c        0xd .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                                          0x19 (size before relaxing)
  *fill*         0x0000000020000559        0x3 
  .rodata._ZN7AWidgetC2Ev.str1.4
-                0x000000002000055c       0x1c .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x000000002000055c       0x1c .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
  .rodata._ZN7AWidgetD2Ev.str1.4
-                0x0000000020000578       0x29 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000020000578       0x29 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                                          0x31 (size before relaxing)
  *fill*         0x00000000200005a1        0x3 
  .rodata._ZN8AListBox11touchWidgetEtt.str1.4
-                0x00000000200005a4       0x24 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x00000000200005a4       0x24 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                                          0x30 (size before relaxing)
  .rodata._ZN8AListBox5writeEPKhj.str1.4
-                0x00000000200005c8       0x22 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x00000000200005c8       0x22 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  *fill*         0x00000000200005ea        0x2 
  .rodata._ZN8AListBox9writeItemEPKhj.str1.4
-                0x00000000200005ec       0x27 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x00000000200005ec       0x27 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  *fill*         0x0000000020000613        0x1 
  .rodata._ZN8AListBoxC2Etttt6AColor.str1.4
-                0x0000000020000614       0x28 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000020000614       0x28 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                                          0x30 (size before relaxing)
  .rodata._ZN8ATextBoxC2EPKcttttb.str1.4
-                0x000000002000063c       0x36 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
+                0x000000002000063c       0x36 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
                                          0x3e (size before relaxing)
  *fill*         0x0000000020000672        0x2 
  .rodata._ZN8SPIClass24spiclass_lpspi1_hardwareE
@@ -2663,14 +2663,14 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000020000754       0x70 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
                 0x0000000020000754                SPIClass::spiclass_lpspi4_hardware
  .rodata._ZN9APixelBox11touchWidgetEtt.str1.4
-                0x00000000200007c4       0x2a .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x00000000200007c4       0x2a .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
                                          0x4a (size before relaxing)
  *fill*         0x00000000200007ee        0x2 
  .rodata._ZTV10HX8357_t3n
                 0x00000000200007f0       0x18 .pio/build/teensy41/lib90c/libHX8357_t3n.a(HX8357_t3n.cpp.o)
                 0x00000000200007f0                vtable for HX8357_t3n
  .rodata._ZTV13AToggleButton
-                0x0000000020000808       0x1c .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
+                0x0000000020000808       0x1c .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
                 0x0000000020000808                vtable for AToggleButton
  .rodata._ZTV16usb_serial_class
                 0x0000000020000824       0x28 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
@@ -2688,16 +2688,16 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x00000000200008c0       0x1c .pio/build/teensy41/src/TestAGUI.cpp.o
                 0x00000000200008c0                vtable for Raster
  .rodata._ZTV7AWidget
-                0x00000000200008dc       0x18 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x00000000200008dc       0x18 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                 0x00000000200008dc                vtable for AWidget
  .rodata._ZTV8AListBox
-                0x00000000200008f4       0x40 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x00000000200008f4       0x40 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
                 0x00000000200008f4                vtable for AListBox
  .rodata._ZTV8ATextBox
-                0x0000000020000934       0x18 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
+                0x0000000020000934       0x18 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
                 0x0000000020000934                vtable for ATextBox
  .rodata._ZTV9APixelBox
-                0x000000002000094c       0x1c .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x000000002000094c       0x1c .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
                 0x000000002000094c                vtable for APixelBox
  .rodata._ZZN8SPIClass16beginTransactionE11SPISettingsE7clk_sel
                 0x0000000020000968       0x10 .pio/build/teensy41/lib90c/libHX8357_t3n.a(HX8357_t3n.cpp.o)
@@ -2857,13 +2857,13 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x000000002000271c       0x20 .pio/build/teensy41/libFrameworkArduino.a(HardwareSerial.cpp.o)
                 0x000000002000271c                HardwareSerialIMXRT::s_serials_with_serial_events
  .bss._ZN4AGUI3gfxE
-                0x000000002000273c        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x000000002000273c        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x000000002000273c                AGUI::gfx
  .bss._ZN4AGUI7appFontE
-                0x0000000020002740        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x0000000020002740        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
                 0x0000000020002740                AGUI::appFont
  .bss._ZN7AWidget10allWidgetsE
-                0x0000000020002744        0x4 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000020002744        0x4 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
                 0x0000000020002744                AWidget::allWidgets
  .bss.__atexit  0x0000000020002748        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-__call_atexit.o)
                 0x0000000020002748                __atexit
@@ -3090,19 +3090,19 @@ LOAD linker stubs
  .ARM.attributes
                 0x00000000000000b4       0x32 .pio/build/teensy41/lib90c/libHX8357_t3n.a(glcdfont.c.o)
  .ARM.attributes
-                0x00000000000000e6       0x32 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
+                0x00000000000000e6       0x32 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
  .ARM.attributes
-                0x0000000000000118       0x32 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
+                0x0000000000000118       0x32 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
  .ARM.attributes
-                0x000000000000014a       0x32 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
+                0x000000000000014a       0x32 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
  .ARM.attributes
-                0x000000000000017c       0x32 .pio/build/teensy41/libb62/libA_GUI.a(ARect.cpp.o)
+                0x000000000000017c       0x32 .pio/build/teensy41/lib80c/libAGUI.a(ARect.cpp.o)
  .ARM.attributes
-                0x00000000000001ae       0x32 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
+                0x00000000000001ae       0x32 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
  .ARM.attributes
-                0x00000000000001e0       0x32 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
+                0x00000000000001e0       0x32 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
  .ARM.attributes
-                0x0000000000000212       0x32 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+                0x0000000000000212       0x32 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
  .ARM.attributes
                 0x0000000000000244       0x32 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
  .ARM.attributes
@@ -3278,13 +3278,13 @@ LOAD linker stubs
  .comment       0x0000000000000033       0x34 .pio/build/teensy41/src/TestAGUI.cpp.o
  .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib90c/libHX8357_t3n.a(HX8357_t3n.cpp.o)
  .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib90c/libHX8357_t3n.a(glcdfont.c.o)
- .comment       0x0000000000000033       0x34 .pio/build/teensy41/libb62/libA_GUI.a(AGUI.cpp.o)
- .comment       0x0000000000000033       0x34 .pio/build/teensy41/libb62/libA_GUI.a(AListBox.cpp.o)
- .comment       0x0000000000000033       0x34 .pio/build/teensy41/libb62/libA_GUI.a(APixelBox.cpp.o)
- .comment       0x0000000000000033       0x34 .pio/build/teensy41/libb62/libA_GUI.a(ARect.cpp.o)
- .comment       0x0000000000000033       0x34 .pio/build/teensy41/libb62/libA_GUI.a(ATextBox.cpp.o)
- .comment       0x0000000000000033       0x34 .pio/build/teensy41/libb62/libA_GUI.a(AToggleButton.cpp.o)
- .comment       0x0000000000000033       0x34 .pio/build/teensy41/libb62/libA_GUI.a(AWidget.cpp.o)
+ .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib80c/libAGUI.a(AGUI.cpp.o)
+ .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib80c/libAGUI.a(AListBox.cpp.o)
+ .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib80c/libAGUI.a(APixelBox.cpp.o)
+ .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib80c/libAGUI.a(ARect.cpp.o)
+ .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib80c/libAGUI.a(ATextBox.cpp.o)
+ .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib80c/libAGUI.a(AToggleButton.cpp.o)
+ .comment       0x0000000000000033       0x34 .pio/build/teensy41/lib80c/libAGUI.a(AWidget.cpp.o)
  .comment       0x0000000000000033       0x34 .pio/build/teensy41/libFrameworkArduino.a(DMAChannel.cpp.o)
  .comment       0x0000000000000033       0x34 .pio/build/teensy41/libFrameworkArduino.a(Print.cpp.o)
  .comment       0x0000000000000033       0x34 .pio/build/teensy41/libFrameworkArduino.a(WString.cpp.o)

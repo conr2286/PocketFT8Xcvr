@@ -58,8 +58,7 @@
 ** REFERENCES
 **  Franke, Somerville, and Taylor.  "The FT4 and FT8 Communication Protocols." QEX. Jul/Aug 2020.
 */
-
-#include <Adafruit_GFX.h>
+#include <Adafruit_GFX.h>  //WARNING:  Must #include ADAfruit_GFX.h prior to HX8357_t3n.h
 #include <Arduino.h>
 #include <Audio.h>
 #include <AudioStream.h>
@@ -70,10 +69,12 @@
 #include <TimeLib.h>
 #include <gfxfont.h>
 
+#include "AGUI.h"
+#include "AListBox.h"
 #include "DEBUG.h"
 #include "FT8Font.h"
 #include "GPShelper.h"
-#include "HX8357_t3n.h"
+#include "HX8357_t3n.h"  //WARNING:  Adafruit_GFX.h must include prior to HX8357_t3n.h
 #include "LogFactory.h"
 #include "MCP342x.h"
 #include "Process_DSP.h"
@@ -142,6 +143,7 @@ struct Config {
 // Adafruit 480x320 touchscreen configuration
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
+AGUI gui(&tft, 3, &FT8Font);
 
 /// Build the VFO clock
 Si5351 si5351;
@@ -269,7 +271,7 @@ FLASHMEM void setup(void) {
     // For helping with GUI design work, draw outlines of the text boxes
     tft.drawRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLUE);
     tft.drawRect(DISPLAY_CALLING_X, DISPLAY_CALLING_Y, 480 - DISPLAY_CALLING_X, 320 - DISPLAY_DECODED_H, HX8357_BLUE);
-    tft.drawRect(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y-4, DISPLAY_DECODED_W, 24, HX8357_BLUE);
+    tft.drawRect(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y - 4, DISPLAY_DECODED_W, 24, HX8357_BLUE);
 
     // Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
     // won't run at the standard Teensy sample rate.  In the best-of-all-possible-worlds, we'd implement this check at
