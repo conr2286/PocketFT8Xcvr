@@ -16,10 +16,13 @@
  * on MacOS 15.3.2.
  *
  * DESIGN NOTES
+ *  + AGUI is heavily dependent upon the Arduino environment including the data types,
+ *    classes and functions defined in Arduino.h 
  *  + This is a minimalist approach with an Adafruit accent for a GUI library.  Consider
  *    LGVL for a more full-featured solution.
  *  + This driver should probably become a singleton if multiple displays are forbidden
  *  + AGUI has a signle interface to the touchscreen system at AWidget::processTouch()
+ *    but no dependency upon specific touch hardware. 
  *
  * DEPENDENCIES
  *  + https://github.com/adafruit/Adafruit_HX8357_Library
@@ -258,6 +261,15 @@ void AGUI::setTextWrap(bool w) {
  */
 size_t AGUI::writeText(const uint8_t* buffer, size_t size) {
     return gfx->write(buffer, size);
+}
+
+/**
+ * @brief Write Arduino String to the display
+ * @param str The String to write
+ * @return #chars actually written
+ */
+size_t AGUI::writeText(String str) {
+    return gfx->write((const uint8_t*)str.c_str(), str.length());
 }
 
 /**

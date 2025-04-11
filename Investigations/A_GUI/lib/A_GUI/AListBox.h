@@ -65,7 +65,6 @@ class AListBox : public Print, public AWidget {
     uint8_t nextItem;            // Index of where to place next unnumbered addition
 
     // Helper methods
-    bool hasBorder();                                                 // Returns true if list box has a border
     void touchWidget(ACoord xScreen, ACoord yScreen) override final;  // We override AWidget touchWidget() to receive touch notifications
 
 };  // AListBox

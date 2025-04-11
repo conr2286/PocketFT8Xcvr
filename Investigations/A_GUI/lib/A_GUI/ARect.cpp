@@ -6,17 +6,19 @@
  * @brief Define the pixel corners of a rectangle
  * @param x1 Upper-left x-coord
  * @param y1 Upper-left y-coord
- * @param x2 Lower-right x-coord
- * @param y2 Lower-right x-coord
+ * @param w Width
+ * @param h Height
  *
  * Defines the upper-left and lower-right corners of a rectangle using
  * screen coordinates.
  */
-void ARect::setCorners(ACoord x1, ACoord y1, ACoord x2, ACoord y2) {
+void ARect::setCorners(ACoord x1, ACoord y1, ALength w, ALength h) {
     this->x1 = x1;
     this->y1 = y1;
-    this->x2 = x2;
-    this->y2 = y2;
+    this->w = w;
+    this->h = h;
+    this->x2 = x1 + w;
+    this->y2 = y1 + h;
     // DPRINTF("boundary.x1=%d, boundary.x2=%d\n", x1, x2);
 }
 

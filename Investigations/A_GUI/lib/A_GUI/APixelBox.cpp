@@ -53,9 +53,9 @@ APixelBox::APixelBox(ACoord x1, ACoord y1, APixelPos nRows, APixelPos nCols) {
         AGUI::drawRect(x1, y1, w, h, bdColor);  // Box has squared corners
     }
 
-    // Remember location and extent of the boundary box and bitmap
-    boundary.setCorners(x1, y1, x1 + w, y1 + h);
-    bitmap.setCorners(xBitMap, yBitMap, xBitMap + wBitMap, yBitMap + hBitMap);
+    // Remember location and extent of the boundary box and the enclosed bitmap
+    boundary.setCorners(x1, y1, w, h);
+    bitmap.setCorners(xBitMap, yBitMap, wBitMap, hBitMap);
 }
 
 /**

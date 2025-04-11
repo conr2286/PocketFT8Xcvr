@@ -109,3 +109,14 @@ void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
         }
     }
 }
+
+
+/**
+ * @brief Determine if a widget has a drawn border
+ * @return true if has a border, else false
+ *
+ * A widget has a border if its border color != its background color
+ */
+bool AWidget::hasBorder() {
+    return bdColor != bgColor;
+}

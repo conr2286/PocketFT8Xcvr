@@ -15,6 +15,7 @@ class AWidget {
     AWidget(void);
     virtual ~AWidget(void);
     static void processTouch(uint16_t xCoord, uint16_t yCoord);  // All touch events pass through processTouch()
+    bool hasBorder(void);
 
    protected:
     static AWidget* allWidgets;  // Head of the unordered list of all widgets

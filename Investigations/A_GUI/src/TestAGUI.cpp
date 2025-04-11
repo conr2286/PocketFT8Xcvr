@@ -13,6 +13,7 @@
 #include "AButton.h"
 #include "AListBox.h"
 #include "APixelBox.h"
+#include "ATextBox.h"
 #include "DEBUG.h"
 #include "HX8357_t3n.h"
 #include "SPI.h"
@@ -44,7 +45,7 @@ class Box : public AListBox {
 };
 
 Box box1 = Box(ARect(0, 0, 280, 100), RED);
-Box box2 = Box(ARect(0, 152, 280, 250), RED);
+Box box2 = Box(ARect(0, 152, 280, 100), RED);
 
 class Button : public AToggleButton {
    public:
@@ -108,6 +109,11 @@ void setup() {
     }
 
     AWidget::processTouch(300, 100);
+    delay(2000);
+
+    ATextBox* txt1 = new ATextBox("ATextBox",290, 155, 100, AGUI::getLeading());
+    ATextBox* txt2 = new ATextBox("No border", 290, 180, 100, AGUI::getLeading(), false);
+
     delay(2000);
     Serial.println("Finished setup()\n");
 }

@@ -20,23 +20,16 @@ class ARect {
    public:
     // Constructors
     ARect() {}
-    ARect(ACoord x1, ACoord y1, ACoord x2, ACoord y2) {
+    ARect(ACoord x1, ACoord y1, ALength w, ALength h) {
         this->x1 = x1;
         this->y1 = y1;
-        this->x2 = x2;
-        this->y2 = y2;
+        this->w = w;
+        this->h = h;
+        this->x2 = x1 + w;
+        this->y2 = y1 + h;
     }
 
-    /**
-     * @brief Defines the upper-left and lower-right corners of this rectangle
-     *
-     * @param x1 Upper-left corner x
-     * @param y1 Upper-left corner y
-     * @param x2 Lower-right corner x
-     * @param y2 Lower-right corner y
-     *
-     */
-    void setCorners(ACoord x1, ACoord y1, ACoord x2, ACoord y2);  // Defines the upper-left and lower-right corners of the rectangle
+    void setCorners(ACoord x1, ACoord y1, ALength w, ALength h);  // Defines the upper-left and lower-right corners of the rectangle
 
     /**
      * @brief Determines if the specified coordinates lie within this rectangle
@@ -49,4 +42,5 @@ class ARect {
     // Purposefully and perhaps foolishly left public
     ACoord x1, y1;  // Upper left corner
     ACoord x2, y2;  // Lower right corner
+    ALength w, h;   // Width and height
 };

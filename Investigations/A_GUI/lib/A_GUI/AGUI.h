@@ -38,6 +38,7 @@ class AGUI {
      static void setFont(void);
      static ACoord getLeading(void);
      static size_t writeText(const uint8_t *buffer, size_t size);
+     static size_t writeText(String str);
      static void getTextBounds(const uint8_t *buffer, uint16_t len, ACoord x, ACoord y,
                                ACoord *x1, ACoord *y1, ACoord *w, ACoord *h);
      static void getTextBounds(const char *string, ACoord x, ACoord y,
