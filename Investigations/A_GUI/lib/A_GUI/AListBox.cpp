@@ -122,15 +122,7 @@ AListBox::AListBox(ARect boundary, AColor borderColor) : AListBox(boundary.x1, b
     // DPRINTF("x1=%d, y1=%d, x2=%d, y2=%d, bdColor=0x%x\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2, bdColor);
 }  // AListBox()
 
-// /**
-//  * @brief Build AListBox using a bounding-rectangle sans border
-//  * @param boundary The bounding-rectangle
-//  * @param borderColor The border line color
-//  */
-// AListBox::AListBox(ARect boundary) : AListBox(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1) {
-//     if (!Serial) Serial.begin(9600);
-//     DPRINTF("x1=%d, y1=%d, x2=%d, y2=%d, bdColor=0x%x\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2);
-// }  // AListBox()
+
 
 /**
  * @brief Add an item to the list box and increment nextItem

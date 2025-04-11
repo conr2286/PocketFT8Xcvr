@@ -10,10 +10,10 @@
 #include <Arduino.h>
 #include <SPI.h>
 
-#include "AButton.h"
 #include "AListBox.h"
 #include "APixelBox.h"
 #include "ATextBox.h"
+#include "AToggleButton.h"
 #include "DEBUG.h"
 #include "HX8357_t3n.h"
 #include "SPI.h"
@@ -49,13 +49,14 @@ Box box2 = Box(ARect(0, 152, 280, 100), RED);
 
 class Button : public AToggleButton {
    public:
-    Button(const char *str, ACoord x1, ACoord y1, ACoord w, ACoord h) : AToggleButton(str, x1, y1, w, h) { DTRACE(); }
+    Button(const char* str, ACoord x1, ACoord y1, ACoord w, ACoord h, bool border = true) : AToggleButton(str, x1, y1, w, h, border) { DTRACE(); }
     void touchButton() {
         DPRINTF("touchButton()\n");
     }
 };
 
 Button b1 = Button("CQ", 0, 290, 42, 29);
+Button b2 = Button("X", 45, 290, 42, 29, false);
 
 class Raster : public APixelBox {
    public:
@@ -83,9 +84,9 @@ void setup() {
     box1.addItem(msg);
     box1.addItem(msg);
     box1.addItem(msg);
-    delay(5000);
+    delay(1000);
     AWidget::processTouch(10, 10);
-    delay(2000);
+    delay(1000);
     AWidget::processTouch(10, 10);
 
     // Populate box2 with multiple items
@@ -101,6 +102,9 @@ void setup() {
     delay(2000);
     AWidget::processTouch(10, 300);  // Off
     delay(2000);
+    AWidget::processTouch(50, 300);  // On
+    delay(2000);
+    AWidget::processTouch(50, 300);  // On
 
     for (APixelPos n = 0; n < 300; n++) {
         r1.drawPixel(n, 50, WHITE);
@@ -111,8 +115,11 @@ void setup() {
     AWidget::processTouch(300, 100);
     delay(2000);
 
-    ATextBox* txt1 = new ATextBox("ATextBox",290, 155, 100, AGUI::getLeading());
+    ATextBox* txt1 = new ATextBox("ATextBox", 290, 155, 100, AGUI::getLeading());
     ATextBox* txt2 = new ATextBox("No border", 290, 180, 100, AGUI::getLeading(), false);
+
+    txt1->repaintWidget();
+    txt2->repaintWidget();
 
     delay(2000);
     Serial.println("Finished setup()\n");

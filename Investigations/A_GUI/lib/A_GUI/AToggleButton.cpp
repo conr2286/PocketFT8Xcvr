@@ -6,13 +6,13 @@
  *
  */
 
-#include "AButton.h"
+#include "AToggleButton.h"
 
 #include <Arduino.h>
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "ft8_font.h"  //Include the default font
 
 /**
@@ -29,7 +29,7 @@
  * itself.  Applications must not unintentionally modify or destroy that char[] string as
  * it's used to repaint the button.
  */
-AToggleButton::AToggleButton(const char *txt, ACoord x1, ACoord y1, ALength w, ALength h) {
+AToggleButton::AToggleButton(const char *txt, ACoord x1, ACoord y1, ALength w, ALength h, bool border) {
     if (!Serial) Serial.begin(9600);
     DPRINTF("str='%s', x1=%d, y1=%d, w=%d, h=%d\n", str, x1, y1, w, h);
 
@@ -40,13 +40,19 @@ AToggleButton::AToggleButton(const char *txt, ACoord x1, ACoord y1, ALength w, A
     str = String(txt);  // NUL-terminated char[] string pointer
     state = false;      // State
 
+    // Eliminate the border if unwanted
+    if (!border) {
+        bgColor = ALT_BACKGROUND_COLOR;  // Make button visible w/o border
+        bdColor = bgColor;               // Eliminate border
+    }
+
     // Decorate the button
     AGUI::setClipRect(x1, y1, w, h);  // Set the clipping rectangle w/o consideration for rounded corners
     if (radius > 0) {
         AGUI::fillRoundRect(x1, y1, w, h, radius, bgColor);                          // Erase background
         if (bdColor != bgColor) AGUI::drawRoundRect(x1, y1, w, h, radius, bdColor);  // Draw rounder border if we need it
     } else {
-        AGUI::fillRect(x1, y1, w, h,bgColor);                                   // Erase background
+        AGUI::fillRect(x1, y1, w, h, bgColor);                          // Erase background
         if (bdColor != bgColor) AGUI::drawRect(x1, y1, w, h, bdColor);  // Draw squared border if we need it
     }
     AGUI::setFont(defaultFont);            // Use the widget's default font
@@ -56,18 +62,20 @@ AToggleButton::AToggleButton(const char *txt, ACoord x1, ACoord y1, ALength w, A
     AGUI::setTextWrap(false);                                                      // We don't wrap button text
     ACoord tx, ty, tw, th;                                                         // Lower-right coordinates, text width and text height
     AGUI::getTextBounds((uint8_t *)txt, strlen(txt), x1, y1, &tx, &ty, &tw, &th);  // Get the text bounds
-    AGUI::setCursor(x1 + tw / 2, y1 + th / 2);                                     // Center the text in the button
-    AGUI::writeText((uint8_t *)txt, strlen(txt));                                  // Output text to button
-}
+    DPRINTF("x1=%d y1=%d tx=%d ty=%d tw=%d th=%d leading=%d\n", x1, y1, tx, ty, tw, th, AGUI::getLeading());
+    AGUI::setCursor(boundary.x1 - 1 + (w - tw) / 2, boundary.y1 - 1 + (h - th) / 2);  // Center the text in the button
+    AGUI::writeText((uint8_t *)txt, strlen(txt));                                     // Output text to button
+}  //AToggleButton
 
-/**
- * @brief This is our private callback inherited from AWidget invoked when user clicks in this AToggleButton
- * @param xClick screen x-coord
- * @param yClick screen y-coord
- *
- * Note:  AWidget processTouch() notifies this method when the user clicks in this AToggleButton.
- */
-void AToggleButton::touchWidget(ACoord xClick, ACoord yClick) {
+    /**
+     * @brief This is our private callback inherited from AWidget invoked when user clicks in this AToggleButton
+     * @param xClick screen x-coord
+     * @param yClick screen y-coord
+     *
+     * Note:  AWidget processTouch() notifies this method when the user clicks in this AToggleButton.
+     */
+    void
+    AToggleButton::touchWidget(ACoord xClick, ACoord yClick) {
     DTRACE();
 
     // Toggle this button's state and repaint it to reflect its toggled state
@@ -76,7 +84,7 @@ void AToggleButton::touchWidget(ACoord xClick, ACoord yClick) {
 
     // Notify the user-supplied callback of the selected item
     touchButton();
-}
+}  // touchWIdget()
 
 /**
  * @brief Repaint this toggle button
@@ -107,8 +115,8 @@ void AToggleButton::repaintWidget() {
     AGUI::setTextColor(fgCurrent, bgCurrent);                                                      // Use toggle button's current state colors
 
     // Re-label the button
-    ACoord tx, ty, tw, th;                                                   // Lower-right coordinates, text width and text height
-    AGUI::getTextBounds(str, boundary.x1, boundary.y1, &tx, &ty, &tw, &th);  // Get the text bounds
-    AGUI::setCursor(boundary.x1 + tw / 2, boundary.y1 + th / 2);             // Center the text in the button
-    AGUI::writeText(str);                                                    // Output text to button
+    ACoord tx, ty, tw, th;                                                            // Lower-right coordinates, text width and text height
+    AGUI::getTextBounds(str, boundary.x1, boundary.y1, &tx, &ty, &tw, &th);           // Get the text bounds
+    AGUI::setCursor(boundary.x1 - 1 + (w - tw) / 2, boundary.y1 - 1 + (h - th) / 2);  // Center the text in the button
+    AGUI::writeText(str);                                                             // Output text to button
 }  // repaintWidget()

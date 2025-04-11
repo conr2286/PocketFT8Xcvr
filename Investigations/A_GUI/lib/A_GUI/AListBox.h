@@ -32,7 +32,6 @@ class AListBox : public Print, public AWidget {
     AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h);  // No border
     AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor borderColor);
     AListBox(ARect boundary, AColor borderColor);
-    AListBox(ARect boundary);
     ~AListBox() {}
 
     // Public methods unique to AListBox
