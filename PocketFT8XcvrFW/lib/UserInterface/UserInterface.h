@@ -21,6 +21,18 @@ static const ACoord WaterfallY = 0;          // Upper-left corner of Waterfall
 static const APixelPos WaterfallRows = 100;  // #Pixel rows inside Waterfall widget
 static const APixelPos WaterfallCols = 353;  // #Pixel cols inside Waterfall widget
 
+// Define the Decoded Messages widget's boundary and extent
+static const ACoord DecodedMsgsX = 0;     // Upper-left corner
+static const ACoord DecodedMsgsY = 106;   // Upper-left corner
+static const ALength DecodedMsgsW = 260;  // Width
+static const ALength DecodedMsgsH = 110;  // Height
+
+// Define the Station Messages widget's boundary and extent
+static const ACoord StationMsgsX = 262;   // Upper-left corner
+static const ACoord StationMsgsY = 106;   // Upper-left corner
+static const ALength StationMsgsW = 218;  // Width
+static const ALength StationMsgsH = 110;  // Height
+
 // Define the UTC Date widget's boundary and extent
 static const ACoord DateX = 360;   // Upper-left corner of UTC Date
 static const ACoord DateY = 0;     // Upper-left corner of UTC Date
@@ -38,6 +50,15 @@ static const ACoord StationX = 360;   // Upper-left corner of Station
 static const ACoord StationY = 40;    // Upper-left corner of Station
 static const ALength StationW = 120;  // Width
 static const ALength StationH = 20;   // Height
+
+// Define the Button widgets' boundaries and extents
+static const ALength BTW = 55;
+static const ALength BTH = 30;
+static const ACoord BTY = 290;
+static const ACoord B1X = 0;
+static const ACoord B2X = 60;
+static const ACoord B3X = 120;
+static const ACoord B4X = 180;
 
 class Waterfall : public APixelBox {
    public:
@@ -59,6 +80,14 @@ class UserInterface {
     // ATextBox dateBox = ATextBox("04/11/2025", DateX, DateY, DateW, 40);
     // ATextBox timeBox = ATextBox("20:49:58", TimeX, TimeY, TimeW, TimeH);
     AListBox* infoBox;
+    AListBox* decodedMsgs;
+    AListBox* stationMsgs;
+
+    //And the buttons
+    AToggleButton* b1;
+    AToggleButton* b2;
+    AToggleButton* b3;
+    AToggleButton* b4;
 
    private:
 };

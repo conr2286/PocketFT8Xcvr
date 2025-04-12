@@ -34,10 +34,36 @@ void UserInterface::begin() {
     gui = new AGUI(tft, 3, &FT8Font);
     ts = new TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);  // 282 ohms is the measured x-Axis resistance of my Adafruit 2050 touchscreen
 
-    // Build the Pocket FT8 Revisited widgets
+    // Build the Waterfall
     waterfallBox = new Waterfall();
-    infoBox = new AListBox(DateX, DateY, DateW, 100, A_RED);
+
+    // Build the infoBox
+    infoBox = new AListBox(DateX, DateY, DateW, 104, A_DARK_GREY);
     infoBox->setItem(0, "04/11/25", A_GREEN, A_BLACK);
-    DTRACE();
-    // infoBox.setItem(1, "20:54:58", A_WHITE, A_BLACK);
+    infoBox->setItem(1, "21:44:04", A_GREEN, A_BLACK);
+    infoBox->setItem(2, "DN15", A_GREEN, A_BLACK);
+    infoBox->setItem(3, "WN8ABC/P", A_WHITE, A_BLACK);
+    infoBox->setItem(4, "7074 kHz", A_WHITE, A_BLACK);
+
+    // Build the decoded messages box
+    decodedMsgs = new AListBox(DecodedMsgsX, DecodedMsgsY, DecodedMsgsW, DecodedMsgsH, A_DARK_GREY);
+    decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
+    decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
+    decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
+    decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
+    decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
+    decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
+
+    // Build the station messages box
+    stationMsgs = new AListBox(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
+    stationMsgs->addItem("CQ WN8ABC DN15");
+    stationMsgs->addItem("WN8ABC KA0XYZ DN14");
+    stationMsgs->addItem("KA0XYZ WN8ABC -5", A_YELLOW);
+
+    //Build the buttons
+    b1 = new AToggleButton("CQ", B1X, BTY, BTW, BTH);
+    b2 = new AToggleButton("AB", B2X, BTY, BTW, BTH);
+    b3 = new AToggleButton("M1", B3X, BTY, BTW, BTH);
+    b4 = new AToggleButton("M2", B4X, BTY, BTW, BTH);
+
 }

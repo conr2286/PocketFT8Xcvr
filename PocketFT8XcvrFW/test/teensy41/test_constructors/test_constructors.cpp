@@ -28,7 +28,7 @@ void setup() {
 
     ui.begin();
 
-    ATextBox foo = ATextBox("foo", 0, 200, 100, 100);
+    //ATextBox foo = ATextBox("foo", 0, 200, 100, 100);
     //delay(1000);
 
     // Run the tests

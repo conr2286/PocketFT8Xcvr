@@ -48,7 +48,7 @@ class AGUI {
     const static GFXfont *appFont;                  // Default font for this application
     const static AColor bgColor = AColor::A_BLACK;  // Application background color
     const static AColor fgColor = AColor::A_WHITE;  // Application foreground color
-    const static AColor bdColor = AColor::A_RED;    // Application border color
+    const static AColor bdColor = AColor::A_DARK_GREY;    // Application border color
     const static AColor spColor = AColor::A_GREY;   // Application special color
 
     // Etc variables (all must be static or initialized in default constructor)
