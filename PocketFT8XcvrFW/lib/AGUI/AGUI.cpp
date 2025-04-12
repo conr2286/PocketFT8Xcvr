@@ -67,7 +67,7 @@ const GFXfont* AGUI::appFont;  // Default font for this application
  */
 AGUI::AGUI(HX8357_t3n* tft, uint8_t rotation, const GFXfont* font) {
     if (!Serial) Serial.begin(9600);
-    //Serial.print("AGUI()=");
+    Serial.print("AGUI()=");
 
     // Record configuration params
     gfx = tft;                  // Adafruit display object

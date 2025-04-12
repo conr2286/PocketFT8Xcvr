@@ -1,0 +1,43 @@
+/**
+ * @brief The Pocket FT8 Revisited (PFR) User Interface
+ *
+ * @note UserInterface.cpp attempts to consolodate all user interface decisions and objects
+ * in this single location facilitating future tweeks to the hardware and design.
+ */
+
+#include "UserInterface.h"
+
+#include <Adafruit_GFX.h>  //WARNING:  #include Adafruit_GFX prior to HX8357_t3n
+#include <Arduino.h>       //We use many Arduino classes and data types
+
+#include "AColor.h"           //AGUI colors
+#include "ACoord.h"           // Screen coordinate data types
+#include "AGUI.h"             //The adapter for Adafruit GFX libraries
+#include "AListBox.h"         //Interactive text box
+#include "APixelBox.h"        //Interactive raster box
+#include "ATextBox.h"         //Non-interactive text
+#include "AToggleButton.h"    //Stateful button
+#include "DEBUG.h"            //USB Serial debugging on the Teensy 4.1
+#include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
+#include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
+#include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
+#include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
+
+/**
+ * @brief Start-up the Adafruit Display, GFX adapter and library, and the resistive touchscreen
+ */
+void UserInterface::begin() {
+    DTRACE();
+
+    // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
+    tft = new HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // These are PFR Teensy pin assignments
+    gui = new AGUI(tft, 3, &FT8Font);
+    ts = new TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);  // 282 ohms is the measured x-Axis resistance of my Adafruit 2050 touchscreen
+
+    // Build the Pocket FT8 Revisited widgets
+    waterfallBox = new Waterfall();
+    infoBox = new AListBox(DateX, DateY, DateW, 100, A_RED);
+    infoBox->setItem(0, "04/11/25", A_GREEN, A_BLACK);
+    DTRACE();
+    // infoBox.setItem(1, "20:54:58", A_WHITE, A_BLACK);
+}

@@ -46,7 +46,7 @@
 #include "AGUI.h"
 #include "AWidget.h"
 #include "DEBUG.h"
-//#include "FT8Font.h"  //Include the default font
+// #include "FT8Font.h"  //Include the default font
 
 // using namespace agui;
 
@@ -59,8 +59,8 @@
  */
 AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
     if (!Serial) Serial.begin(9600);
-    // DPRINTF("AListBox()=%08x\n", this);
-    // DPRINTF("x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
+    DPRINTF("AListBox()=%08x\n", this);
+    DPRINTF("x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
 
     // Remember location and extent of the boundary box
     boundary.setCorners(x1, y1, w, h);
@@ -71,13 +71,13 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
     // AGUI::setFont(defaultFont);
     // DTRACE();
     leading = AGUI::getLeading();  // Get the leading (in pixels) for this font
-    // DTRACE();
+    DTRACE();
 
     // Decorate the list box
     AGUI::setClipRect();  // Clear any existing clip
-    // DTRACE();
+    DTRACE();
     AGUI::fillRoundRect(x1, y1, w, h, radius, bgColor);  // Background
-    // DTRACE();
+    DTRACE();
 
     // No items exist yet and none are selected
     for (int i = 0; i < maxItems; i++) {
@@ -87,7 +87,7 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
 
     // The first item will be item 0
     nextItem = 0;  // Index of where addItem() places unnumbered additions
-    // DTRACE();
+    DTRACE();
 }  // AListBox()
 
 /**
@@ -106,10 +106,10 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor bdColor) : A
     this->bdColor = bdColor;  // Border color
 
     // Decorate the list box border
-    // DPRINTF("Border:  x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
+    DPRINTF("Border:  x1=%d, y1=%d, w=%d, h=%d\n", x1, y1, w, h);
     AGUI::drawRoundRect(x1, y1, w, h, radius, bdColor);  // Draw the border (might be just background)
 
-    // DTRACE();
+    DTRACE();
 }  // AListBox()
 
 /**
@@ -144,7 +144,7 @@ AListBox::AListBox(ARect boundary, AColor borderColor) : AListBox(boundary.x1, b
  * Advances nextItem index to the following line.
  */
 int AListBox::addItem(int index, const char *txt, AColor fgColor) {
-    // DPRINTF("addItem(%d,%p,%04x) bgColor=%04x", index, str, fgColor, bgColor);
+    DPRINTF("addItem(%d,%p,%04x) bgColor=%04x", index, txt, fgColor, bgColor);
 
     // Display the item
     int result = setItem(index, txt, fgColor, bgColor);
@@ -164,7 +164,7 @@ int AListBox::addItem(int index, const char *txt, AColor fgColor) {
  * @return
  */
 int AListBox::setItem(int index, const char *txt, AColor fgColor, AColor bgColor) {
-    // DPRINTF("setItem(%d, %s, %04x, %04x)\n ", index, str, fgColor, bgColor);
+    DPRINTF("setItem(%d, %s, %04x, %04x)\n ", index, txt, fgColor, bgColor);
 
     //  Sanity checks
     if (index >= maxItems) return -1;
@@ -175,13 +175,15 @@ int AListBox::setItem(int index, const char *txt, AColor fgColor, AColor bgColor
     if (pNL != NULL) *pNL = 0;
 
     // Overwrite any existing item at index
+    DTRACE();
     nextItem = index;              // Informs writeItem() where to write
     itemPixelCount[nextItem] = 0;  // Reset count of pixels previously written to this item line
-    items[index] = String(txt);     // Record the text String for repaints
+    items[index] = String(txt);    // Record the text String for repaints
 
     // Display the text for nextItem line
-    // writeItem((uint8_t *)str, strlen(str));  // Output the text
+    DTRACE();
     writeItem((uint8_t *)txt, strlen(txt), fgColor, bgColor);
+    DTRACE();
     return index;  // Return index of item just written
 }
 

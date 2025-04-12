@@ -64,7 +64,7 @@ class AListBox : public Print, public AWidget {
     uint16_t itemPixelCount[maxItems];  // Identifies #pixels in each item (or 0 for empty item)
     bool isSelected[maxItems];          // True if indexed item is selected
     uint8_t nextItem;                   // Index of where to place next unnumbered addition
-    std::vector<String> items;
+    String items[maxItems];
 
     // Helper methods
     void touchWidget(ACoord xScreen, ACoord yScreen) override final;  // We override AWidget touchWidget() to receive touch notifications
