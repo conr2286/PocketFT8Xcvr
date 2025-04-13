@@ -23,20 +23,20 @@ static const APixelPos WaterfallCols = 353;  // #Pixel cols inside Waterfall wid
 
 // Define the Decoded Messages widget's boundary and extent
 static const ACoord DecodedMsgsX = 0;     // Upper-left corner
-static const ACoord DecodedMsgsY = 106;   // Upper-left corner
+static const ACoord DecodedMsgsY = 108;   // Upper-left corner
 static const ALength DecodedMsgsW = 260;  // Width
 static const ALength DecodedMsgsH = 110;  // Height
 
 // Define the Station Messages widget's boundary and extent
 static const ACoord StationMsgsX = 262;   // Upper-left corner
-static const ACoord StationMsgsY = 106;   // Upper-left corner
+static const ACoord StationMsgsY = 108;   // Upper-left corner
 static const ALength StationMsgsW = 218;  // Width
 static const ALength StationMsgsH = 110;  // Height
 
 // Define the UTC Date widget's boundary and extent
-static const ACoord DateX = 360;   // Upper-left corner of UTC Date
+static const ACoord DateX = 361;   // Upper-left corner of UTC Date
 static const ACoord DateY = 0;     // Upper-left corner of UTC Date
-static const ALength DateW = 120;  // Width
+static const ALength DateW = 119;  // Width
 static const ALength DateH = 20;   // Height
 
 // Define the UTC Time widget's boundary and extent
@@ -51,14 +51,17 @@ static const ACoord StationY = 40;    // Upper-left corner of Station
 static const ALength StationW = 120;  // Width
 static const ALength StationH = 20;   // Height
 
+//Define Application Message boundary and extent
+static const ACoord AppMsgX = 0;  //Upper-left corner
+static const ACoord AppMsgY = 220; //Upper-left corner
+static const ALength AppMsgW = 480; //Width
+static const ALength AppMsgH = 40; //Height
+
 // Define the Button widgets' boundaries and extents
-static const ALength BTW = 55;
-static const ALength BTH = 30;
-static const ACoord BTY = 290;
-static const ACoord B1X = 0;
-static const ACoord B2X = 60;
-static const ACoord B3X = 120;
-static const ACoord B4X = 180;
+static const ALength ButtonSpacing = 60;  // Button grid spacing
+static const ALength ButtonWidth = 50;    // Width in pixels
+static const ALength ButtonHeight = 30;   // Height in pixels
+static const ACoord ButtonY = 290;        // All buttons in one row at screen bottom
 
 class Waterfall : public APixelBox {
    public:
@@ -75,19 +78,22 @@ class UserInterface {
    public:
     void begin(void);
 
-    // Declare the Pocket FT8 widgets
-    Waterfall* waterfallBox;
-    // ATextBox dateBox = ATextBox("04/11/2025", DateX, DateY, DateW, 40);
-    // ATextBox timeBox = ATextBox("20:49:58", TimeX, TimeY, TimeW, TimeH);
-    AListBox* infoBox;
+    // The widgets for displaying station info, traffic and info about the rig
+    Waterfall* theWaterfall;
+    AListBox* stationInfo;
     AListBox* decodedMsgs;
     AListBox* stationMsgs;
+    ATextBox* appMessage;
 
-    //And the buttons
+    // The button widgets
+    AToggleButton* b0;
     AToggleButton* b1;
     AToggleButton* b2;
     AToggleButton* b3;
     AToggleButton* b4;
+    AToggleButton* b5;
+    AToggleButton* b6;
+    AToggleButton* b7;
 
    private:
 };

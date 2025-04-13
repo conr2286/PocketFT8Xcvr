@@ -24,26 +24,26 @@
 #include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
 
 /**
- * @brief Start-up the Adafruit Display, GFX adapter and library, and the resistive touchscreen
+ * @brief Start-up the Adafruit Display, GFX adapter and library, the resistive touchscreen, and widgets
  */
 void UserInterface::begin() {
     DTRACE();
 
     // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
     tft = new HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // These are PFR Teensy pin assignments
-    gui = new AGUI(tft, 3, &FT8Font);
-    ts = new TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);  // 282 ohms is the measured x-Axis resistance of my Adafruit 2050 touchscreen
+    gui = new AGUI(tft, 3, &FT8Font);                                             // Graphics adapter insulation from the multitude of Adafruit GFX libraries
+    ts = new TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                    // 282 ohms is the measured x-Axis resistance of my Adafruit 2050 touchscreen
 
     // Build the Waterfall
-    waterfallBox = new Waterfall();
+    theWaterfall = new Waterfall();
 
-    // Build the infoBox
-    infoBox = new AListBox(DateX, DateY, DateW, 104, A_DARK_GREY);
-    infoBox->setItem(0, "04/11/25", A_GREEN, A_BLACK);
-    infoBox->setItem(1, "21:44:04", A_GREEN, A_BLACK);
-    infoBox->setItem(2, "DN15", A_GREEN, A_BLACK);
-    infoBox->setItem(3, "WN8ABC/P", A_WHITE, A_BLACK);
-    infoBox->setItem(4, "7074 kHz", A_WHITE, A_BLACK);
+    // Build the stationInfo
+    stationInfo = new AListBox(DateX, DateY, DateW, 107, A_DARK_GREY);
+    stationInfo->setItem(0, "04/11/25", A_GREEN, A_BLACK);
+    stationInfo->setItem(1, "21:44:04", A_GREEN, A_BLACK);
+    stationInfo->setItem(2, "DN15", A_GREEN, A_BLACK);
+    stationInfo->setItem(3, "WN8ABC/P", A_WHITE, A_BLACK);
+    stationInfo->setItem(4, "7074 kHz", A_WHITE, A_BLACK);
 
     // Build the decoded messages box
     decodedMsgs = new AListBox(DecodedMsgsX, DecodedMsgsY, DecodedMsgsW, DecodedMsgsH, A_DARK_GREY);
@@ -58,12 +58,21 @@ void UserInterface::begin() {
     stationMsgs = new AListBox(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
     stationMsgs->addItem("CQ WN8ABC DN15");
     stationMsgs->addItem("WN8ABC KA0XYZ DN14");
-    stationMsgs->addItem("KA0XYZ WN8ABC -5", A_YELLOW);
+    int n=stationMsgs->addItem("KA0XYZ WN8ABC -5");
 
-    //Build the buttons
-    b1 = new AToggleButton("CQ", B1X, BTY, BTW, BTH);
-    b2 = new AToggleButton("AB", B2X, BTY, BTW, BTH);
-    b3 = new AToggleButton("M1", B3X, BTY, BTW, BTH);
-    b4 = new AToggleButton("M2", B4X, BTY, BTW, BTH);
+    // Application message box
+    appMessage = new ATextBox("Logged #42",AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
 
+    // Build the buttons
+    b0 = new AToggleButton("CQ", 0 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b1 = new AToggleButton("Ab", 1 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b2 = new AToggleButton("Tu", 2 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b3 = new AToggleButton("Tx", 3 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b4 = new AToggleButton("M0", 4 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b5 = new AToggleButton("M1", 5 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b6 = new AToggleButton("M2", 6 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b7 = new AToggleButton("Sy", 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+
+    delay(2000);
+    //stationMsgs->setItemColor(n, A_YELLOW);
 }

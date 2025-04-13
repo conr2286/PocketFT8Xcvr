@@ -69,7 +69,7 @@ void setAutoReplyToCQ(bool);
 int Beacon_State;
 
 #define numButtons 9
-#define button_height BUTTON_BAR_H  //TODO:  Clean-up old definitions for height and top line location
+#define button_height BUTTON_BAR_H  // TODO:  Clean-up old definitions for height and top line location
 #define button_line BUTTON_BAR_Y
 #define button_width 42
 

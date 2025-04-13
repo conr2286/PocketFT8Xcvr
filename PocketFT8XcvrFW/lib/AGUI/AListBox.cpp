@@ -13,8 +13,6 @@
  *  + Item selections
  *
  * SIMPLIFICATIONS
- *  + AListBox does not store the item data
- *  + Repaints handled by the application
  *  + AListBox does not support scrolling
  *  + AListBox does not support multiple selections
  *  + AListBox cannot be resized
@@ -24,7 +22,6 @@
  * USAGE
  *  + An application should create a derived class from AListBox overriding its virtual methods.
  *  + The derived class should implement the touchItem() method to handle touch events for its items.
- *  + The derived class may implement the doRepaintAListBox() method to handle repaintWidget events.
  *
  * MISC
  * AListBox "is a" AWidget, and it implements the Print interface so you can print() to it.
@@ -38,7 +35,6 @@
 #include "AListBox.h"
 
 #include <Arduino.h>
-// #include <Fonts/FreeSerif9pt7b.h>
 #include <SPI.h>
 #include <stdint.h>
 #include <string.h>
@@ -46,9 +42,6 @@
 #include "AGUI.h"
 #include "AWidget.h"
 #include "DEBUG.h"
-// #include "FT8Font.h"  //Include the default font
-
-// using namespace agui;
 
 /**
  * @brief Build AListBox sans border line using width and height
@@ -67,8 +60,6 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
     // DTRACE();
 
     // Initialize some default text values for this new list box
-    // DPRINTF("defaultFont=0x%x\n", defaultFont);
-    // AGUI::setFont(defaultFont);
     // DTRACE();
     leading = AGUI::getLeading();  // Get the leading (in pixels) for this font
     DTRACE();
@@ -82,10 +73,12 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h) {
     // No items exist yet and none are selected
     for (int i = 0; i < maxItems; i++) {
         itemPixelCount[i] = 0;
-        isSelected[i] = false;
+        itemSelected[i] = false;
+        itemTxt[i] = NULL;
+        itemColor[i] = bgColor;
     }
 
-    // The first item will be item 0
+    // The first item added to the list will be item 0
     nextItem = 0;  // Index of where addItem() places unnumbered additions
     DTRACE();
 }  // AListBox()
@@ -113,16 +106,6 @@ AListBox::AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor bdColor) : A
 }  // AListBox()
 
 /**
- * @brief Build AListBox using a bounding-rectangle with a border
- * @param boundary The bounding-rectangle
- * @param borderColor The border line color
- */
-AListBox::AListBox(ARect boundary, AColor borderColor) : AListBox(boundary.x1, boundary.y1, boundary.w, boundary.h, borderColor) {
-    if (!Serial) Serial.begin(9600);
-    // DPRINTF("x1=%d, y1=%d, x2=%d, y2=%d, bdColor=0x%x\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2, bdColor);
-}  // AListBox()
-
-/**
  * @brief Add an item to the list box and increment nextItem
  * @param index Specifies which item in the list
  * @param txt NUL-terminated char[] string text to draw at the list item
@@ -141,7 +124,7 @@ AListBox::AListBox(ARect boundary, AColor borderColor) : AListBox(boundary.x1, b
  * Text strings are written left..right and clipped at the list box's
  * righthand border.
  *
- * Advances nextItem index to the following line.
+ * Advances the nextItem index to the following line.
  */
 int AListBox::addItem(int index, const char *txt, AColor fgColor) {
     DPRINTF("addItem(%d,%p,%04x) bgColor=%04x", index, txt, fgColor, bgColor);
@@ -156,36 +139,61 @@ int AListBox::addItem(int index, const char *txt, AColor fgColor) {
 }  // addItem()
 
 /**
- * @brief Places an item at index without incrementing nextItem
+ * @brief Places an item at index
  * @param index Specifies index of item
  * @param txt Nul-terminated string to place
  * @param fgColor Foreground color of the item's text
  * @param bgColor Background color of the item's text
- * @return
+ * @return index of item or -1 if error
+ *
+ * @note A successful return leaves nextItem = index.  Note that nextItem is not incremented
+ *
+ * @note The text must not contain a NL --- an item is a single line of text
+ * @note setItem() will  *not* increment nextItem!!!
+ *
  */
 int AListBox::setItem(int index, const char *txt, AColor fgColor, AColor bgColor) {
     DPRINTF("setItem(%d, %s, %04x, %04x)\n ", index, txt, fgColor, bgColor);
 
     //  Sanity checks
-    if (index >= maxItems) return -1;
+    if ((index < 0) || (index >= maxItems)) return -1;
     if (txt == NULL) return -1;
 
-    // Truncate text containing a NL
-    char *pNL = strchr(txt, '\n');
-    if (pNL != NULL) *pNL = 0;
+    // Truncate text containing a NL --- An item is *one* line of text or at least will be soon!!!
+    char *pNL = strchr(txt, '\n');  // TODO:  we really should loop to catch multiple NL chars
+    if (pNL != NULL) *pNL = 0;      // Replace NL with a NUL
 
-    // Overwrite any existing item at index
+    // Remove an existing item, if any, at this index
     DTRACE();
+    removeItem(index);
+
+    // Create entries for this item
     nextItem = index;              // Informs writeItem() where to write
     itemPixelCount[nextItem] = 0;  // Reset count of pixels previously written to this item line
-    items[index] = String(txt);    // Record the text String for repaints
+    itemColor[index] = fgColor;    // Remember the fgColor for repaints
+    itemSelected[index] = false;   // This item is not yet selected
+    itemTxt[index] = new String(txt);  // Remember the text String for repaints
 
     // Display the text for nextItem line
     DTRACE();
     writeItem((uint8_t *)txt, strlen(txt), fgColor, bgColor);
     DTRACE();
     return index;  // Return index of item just written
-}
+
+}  // setItem()
+
+/**
+ * @brief Repaint a specific item in this AListBox
+ * @param index Specifies the item
+ * @return Index of repainted item or -1 if error
+ */
+int AListBox::repaint(int index) {
+    DTRACE();
+    if ((index < 0) || (index >= maxItems)) return -1;
+    const char *txt = itemTxt[index]->c_str();
+    writeItem((uint8_t *)txt, itemTxt[index]->length(), itemColor[index], bgColor);
+    return index;
+}  // repaint()
 
 /**
  * @brief Appends an item to the bottom of the list box
@@ -217,15 +225,20 @@ int AListBox::addItem(const char *txt) {
 }
 
 /**
- * @brief Write item
- * @param bfr char[] to write
- * @param count #chars to write
- * @return #chars actually written
+ * @brief Sets an item's color and repaints that item
+ * @param index Specifies the item number
+ * @param fgColor New foreground color
+ * @return Index of modified item or -1 if error
  */
-size_t AListBox::writeItem(const uint8_t *bfr, size_t count) {
-    DPRINTF("buffer=%s, fgColor=%04x, bgColor=%04x\n", bfr, fgColor, bgColor);
-    return writeItem(bfr, count, fgColor, bgColor);
+int AListBox::setItemColor(int index, AColor fgColor) {
+    // Sanity checks
+    if ((index < 0) || (index >= maxItems)) return -1;
+    if (itemTxt[index] == NULL) return -1;
+    itemColor[index] = fgColor;
+    repaint(index);
+    return index;
 }
+
 
 /**
  * @brief Write a NL-free buffer to an instance of AListBox
@@ -285,70 +298,10 @@ size_t AListBox::writeItem(const uint8_t *bfr, size_t count, AColor fgColor, ACo
 
     return actualCount;
 
-}  // write()
+}  // writeItem()
 
 /**
- * @brief Write the specified character to an instance of AListBox
- * @param c The character to write
- * @return Number of bytes actually written
- *
- * The character is appended to the existing text, if any, at nextItem.  Successive
- * write(c) will continue on the same line.  Writing a NL advances nextItem to
- * continue on the next line.
- */
-size_t AListBox::write(uint8_t c) {
-    write(&c, 1);
-    return 1;
-}  // write()
-
-/**
- * @brief Write bfr to nextItem in the list box
- * @param bfr The unsigned char[] of chars to write
- * @param count #chars to write
- * @return Number chars actually written
- *
- * The NUL terminator in bfr, if any, is ignored.  NL chars will advance nextItem
- * to the next item line.
- */
-size_t AListBox::write(const uint8_t *bfr, size_t count) {
-    if (!Serial) Serial.begin(9600);
-
-    DPRINTF("bfr='%s', count=%d\n", bfr, count);
-    uint8_t *pSegment = (uint8_t *)bfr;  // Points to first char of current segment
-    uint8_t *pScan = pSegment;           // Scans a segment in search of NL char
-    size_t n = 0;                        // Count used to terminate loop after processing count chars
-
-    // Perhaps there's nothing to do
-    if (count == 0) return 0;
-
-    // Loop breaks bfr into segments terminated by a NL-or-NUL.
-    while (n < count) {
-        DPRINTF("bfr[%d]='%c'\n", n, bfr[n]);
-        // Have we found a NL char in this segment?
-        if (*pScan == '\n') {
-            // Yes, write the current segment to the display
-            size_t nSegment = pScan - pSegment;  // Number chars in this segment sans NL
-            writeItem(pSegment, nSegment);       // Write chars in this segment to display
-            pSegment += nSegment;                // Advance segment pointer past NL
-            nextItem++;                          // Advance index to next item
-        }
-        pScan++;  // Advance scan pointer to next char
-        n++;      // And advance the count of chars processed from bfr[]
-    }  // while
-
-    // If bfr[] isn't terminated with a NL then we need to write the final segment
-    if (bfr[n - 1] != '\n') {
-        size_t nLastSegment = pScan - pSegment;  // Number chars in final segment
-        writeItem(pSegment, nLastSegment);       // Write chars in final segment to display
-        // Note that we don't advance nextItem since bfr[] didn't end with a NL
-    }
-
-    return count;
-
-}  // write()
-
-/**
- * @brief Determine which item is clicked at the given screen coordinates
+ * @brief Determine index of item touched at the given screen coordinates
  * @param xClick Screen x-Coord
  * @param yClick Screen y-Coord
  * @return index of selected item or -1 if none
@@ -366,10 +319,10 @@ int AListBox::getSelectedItem(ACoord xClick, ACoord yClick) {
     return -1;  // No such item in this list
 }  // getSelection()
 
-void AListBox::deselect(int index) {
+void AListBox::deselectItem(int index) {
     if ((index < 0) || (index >= maxItems)) return;  // Garbage?
-    DPRINTF("deselect(%d)\n", index);
-    isSelected[index] = false;
+    DPRINTF("deselectItem(%d)\n", index);
+    itemSelected[index] = false;
 }
 
 /**
@@ -389,8 +342,30 @@ void AListBox::touchWidget(ACoord xClick, ACoord yClick) {
     if ((item < 0) || (item >= maxItems)) return;  // None, nothing to do for this coordinate
 
     // Toggle status of selected item
-    isSelected[item] = !isSelected[item];
+    itemSelected[item] = !itemSelected[item];
 
     // Notify the user-supplied callback of the selected item
-    touchItem(item, isSelected[item]);
+    touchItem(item, itemSelected[item]);
+}
+
+int AListBox::removeItem(int index) {
+    // Sanity check
+    if ((index < 0) || (index >= maxItems)) return -1;
+
+    // Delete the item's data and nullify its dangling pointer
+    delete itemTxt[index];
+    itemTxt[index] = NULL;
+    itemColor[index] = bgColor;
+    itemPixelCount[index] = 0;
+    itemSelected[index] = false;
+
+    // TODO:  Need to erase display where item was
+
+    return index;
+}
+
+void AListBox::reset(void) {
+    for (int i = 0; i < maxItems; i++) {
+        removeItem(i);
+    }
 }

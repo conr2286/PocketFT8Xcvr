@@ -2,7 +2,7 @@
 
 #include "AGUI.h"
 #include "DEBUG.h"
-//#include "ft8_font.h"
+// #include "ft8_font.h"
 
 // Initialize the head of the unordered list of all AWidget objects.
 // The processTouch() class method uses the list to find the selected widget.
@@ -34,8 +34,8 @@ AWidget::AWidget() {
     DPRINTF("txtFont=%p\n", AGUI::appFont);
     this->defaultFont = AGUI::appFont;  // Widget's font
 
-    //TODO:  Refactor such that radius==0 ==> squared corners rather than rounded
-    this->radius = 5;                   // Radius of rounded corners in this widget
+    // TODO:  Refactor such that radius==0 ==> squared corners rather than rounded
+    this->radius = 7;  // Radius of rounded corners in this widget
 }
 
 /**
@@ -109,7 +109,6 @@ void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
         }
     }
 }
-
 
 /**
  * @brief Determine if a widget has a drawn border
