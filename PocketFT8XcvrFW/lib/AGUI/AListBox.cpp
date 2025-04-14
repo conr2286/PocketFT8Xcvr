@@ -37,7 +37,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <stdint.h>
-#include <string.h>
+//#include <string.h>
 
 #include "AGUI.h"
 #include "AWidget.h"

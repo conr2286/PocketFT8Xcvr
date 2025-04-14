@@ -1,6 +1,6 @@
 /**
- * AGUI isolates the widget implementations from the various Adafruit GFX library variations. 
- * There's some minor added functionality but it's mostly an adapter to glue widgets to GFX. 
+ * AGUI isolates the widget implementations from the various Adafruit GFX library variations.
+ * There's some minor added functionality but it's mostly an adapter to glue widgets to GFX.
  *  + Display types (e.g. TFT, etc)
  *  + Display controllers (e.g. HX8357, etc)
  *  + Display size (e.g. 480x320, etc)
@@ -22,7 +22,7 @@
  *    LGVL for a more full-featured solution.
  *  + This driver should probably become a singleton if multiple displays are forbidden
  *  + There is no dependency on nor interaction with the touchscreen system here.  See
- *    AWidget's static processTouch() method. 
+ *    AWidget's static processTouch() method.
  *  + Not every GFX method is adapted here.
  *
  * DEPENDENCIES
@@ -45,10 +45,10 @@
 #include <SPI.h>
 
 #include "Adafruit_GFX.h"  //HX8357_t3n requires you #include GFX before...
-//#include "Fonts/FreeSans9pt7b.h"
+// #include "Fonts/FreeSans9pt7b.h"
 #include "HX8357_t3n.h"  //you #include the HX8357 variation.
 #include "NODEBUG.h"     //For printf-style debugging on a Teensy sans JTAG :(
-//#include "ft8_font.h"    //Include a default font
+// #include "ft8_font.h"    //Include a default font
 
 //-----------------------------------------------------------------------------
 
@@ -80,10 +80,8 @@ AGUI::AGUI(HX8357_t3n* tft, uint8_t rotation, const GFXfont* font) {
     gfx->setFont(appFont);              // Configure the font
     gfx->fillScreen(HX8357_BLACK);      // Erase the display
 
-    //Serial.println("Exit AGUI\n");
+    // Serial.println("Exit AGUI\n");
 }
-
-
 
 //-----------------------------------------------------------------------------
 //  Graphical methods
@@ -320,8 +318,55 @@ void AGUI::getTextBounds(const char* string, ACoord x, ACoord y,
  * @param w Calculated width of the boundary rectangle
  * @param h Calculated height of the boundary rectangle
  */
-
 void AGUI::getTextBounds(const String& str, ACoord x, ACoord y,
                          ACoord* x1, ACoord* y1, ACoord* w, ACoord* h) {
     gfx->getTextBounds(str, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
 }  // getTextBounds()
+
+/**
+ * @brief Set the scrollable text area rectangle
+ */
+void AGUI::setScrollTextArea(ACoord x, ACoord y, ALength w, ALength h) {
+    gfx->setScrollTextArea(x, y, w, h);
+}
+
+/**
+ * @brief Fills the scroll text area with the specified color
+ * @param color Background
+ */
+void AGUI::setScrollBackgroundColor(AColor color) {
+    gfx->setScrollBackgroundColor(color);
+}
+
+/**
+ * @brief Enable text scrolling
+ */
+void AGUI::enableScroll() {
+    gfx->enableScroll();
+}
+
+/**
+ * @brief Disable text scrolling
+ */
+void AGUI::disableScroll() {
+    gfx->disableScroll();
+}
+
+/**
+ * @brief Scroll the previously defined text area rectangle
+ * @param scrollSize Number of pixel rows to scroll
+ *
+ * @note HX8357_t3n implements scrolling by reading and re-writing rows of pixels
+ * and filling in rows of scroll background color below.
+ */
+void AGUI::scrollTextArea(uint8_t scrollSize) {
+    gfx->scrollTextArea(scrollSize);
+}
+
+/**
+ * @brief Reconfigures the scroll area's background color but doesn't draw anything
+ * @param color The new color configuration
+ */
+void AGUI::resetScrollBackgroundColor(AColor color) {
+    gfx->resetScrollBackgroundColor(color);
+}

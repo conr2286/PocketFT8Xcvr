@@ -20,7 +20,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 
-#include <vector>
+//#include <vector>
 
 #include "AGUI.h"
 #include "ARect.h"

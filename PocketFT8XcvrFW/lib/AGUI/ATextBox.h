@@ -7,7 +7,7 @@
 
 #include <Arduino.h>
 
-#include <string>
+//#include <string>
 
 #include "AGUI.h"
 #include "AWidget.h"

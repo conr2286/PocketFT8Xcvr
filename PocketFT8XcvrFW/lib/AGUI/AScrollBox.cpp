@@ -1,0 +1,256 @@
+/**
+ * @brief AScrollBox is an interactive widget displaying scrolling lines of text
+ *
+ * New items (lines of text) are added to AScrollBox starting at the top, and then
+ * downward.  Long lines are clipped; each item occupies a single line of text.
+ * When a newly added item won't fit at the bottom of the box, existing lines are
+ * scrolled up to make room for the new item at the bottom.
+ *
+ */
+
+#include "AScrollBox.h"
+
+#include <Arduino.h>
+
+#include "AGUI.h"
+#include "AWidget.h"
+#include "DEBUG.h"
+
+/**
+ * @brief Build an item for AScrollBox
+ * @param s Text String
+ * @param fg Foreground color
+ * @param bg Background color
+ *
+ * @note The text string, s, must not contain a NL character
+ */
+AScrollBoxItem::AScrollBoxItem(String s, AColor fg, AColor bg) {
+    str = s;                 // Item's text String
+    str.replace('\n', ' ');  // We really can't tolerate NL chars in the String
+    fgColor = fg;            // Item's foreground color
+    bgColor = bg;            // Item's background color
+    selected = false;        // Item is not selected
+}  // AScrollBoxItem()
+
+/**
+ * @brief Build AScrollBox with the specified location, extent and default colors
+ * @param x Upper-left corner
+ * @param y Upper-left corner
+ * @param w Width
+ * @param h Height
+ */
+AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h) {
+    DTRACE();
+
+    // Initialize the member variables
+    boundary.setCorners(x, y, w, h);  // Our boundary box
+    leading = AGUI::getLeading();     // Get the leading (in pixels) for our font
+    nDisplayedItems = 0;              // There are no items in this AScrollBox
+    xOffset = 2;                      // Pixel offset between left boundary and start of text
+
+    // Reset the items[] arrays
+    for (int i = 0; i < maxItems; i++) {
+        displayedItems[i] = nullptr;  // No items yet
+    }
+
+    // Draw the empty box
+    repaint();
+}  // AScrollBox()
+
+/**
+ * @brief Add an item to the bottom of this AListBox
+ * @param str The item's text String
+ * @return Pointer to the newly added item
+ *
+ */
+AScrollBoxItem* AScrollBox::addItem(String str) {
+    DTRACE();
+
+    // Too many items for our simple data structs?
+    if (nDisplayedItems >= maxItems) return nullptr;
+
+    // Build the new Item
+    AScrollBoxItem* pNewItem = new AScrollBoxItem(str, fgColor, bgColor);  // Build item using widget's default colors
+
+    // Scroll the displayed items up if the added item won't fit within widget's boundary box
+    if (itemWillFit(nDisplayedItems + 1)) {
+        nDisplayedItems++;  // If we don't scroll then increase count of displayed items
+    } else {
+        scrollUpOneLine();  // If we must scroll then retain existing count of displayed items
+    }
+
+    // Record the new item
+    int newItemIndex = nDisplayedItems - 1;  // Calculate index into items[] where new item will reside
+    displayedItems[newItemIndex] = pNewItem;
+
+    // Paint the new item
+    repaint(pNewItem);
+
+    // Return pointer to the new item
+    return pNewItem;
+}  // addItem()
+
+/**
+ * @brief Repaint the entire AScrollBox
+ *
+ * Erases our widget's screen and then repaints each item individually
+ */
+void AScrollBox::repaint() {
+    DTRACE();
+
+    // Paint the entire background first, erasing whatever gibberish preceded us
+    AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);        // Configure clip window to our boundary
+    AGUI::fillRect(boundary.x1, boundary.y1, boundary.w, boundary.h, bgColor);  // Erase everything within boundary box
+
+    // Paint the boundary box
+    if (radius > 0) {
+        AGUI::drawRoundRect(boundary.x1, boundary.y1, boundary.w, boundary.h, radius, bdColor);  // Draw boundary Box  rounded corners
+    } else {
+        AGUI::drawRect(boundary.x1, boundary.y1, boundary.w, boundary.h, bdColor);  // Draw boundary box  squared corners
+    }
+
+    // Paint the list of items
+    for (int i = 0; i < nDisplayedItems; i++) {
+        repaint(i);  // Repaint item indexed by i
+    }
+}  // repaint()
+
+/**
+ * @brief Repaint item at the specified position index
+ * @param index The specified item indes (not a token)
+ * @param erase true to also erase existing text at this item
+ * @return Index of repainted item or -1 if error
+ *
+ * @note Change the colors, if desired, before calling repaint()
+ */
+int AScrollBox::repaint(int index) {
+    DTRACE();
+
+    // Sanity checks
+    if ((index < 0) || (index >= maxItems)) return -1;  // Bad index?
+    if (displayedItems[index] == NULL) return -1;       // Non-existant item?
+
+    // Repaint item
+    repaint(displayedItems[index]);
+    return index;
+}  // repaint()
+
+/**
+ * @brief Repaint the specified item given its pointer
+ * @param pItem Pointer to the item
+ * @return Pointer to the item or nullptr if error
+ */
+AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
+    DTRACE();
+
+    // Configure app for writing text in this widget
+    AGUI::setFont(defaultFont);                                           // Use the widget's font
+    AGUI::setTextColor(fgColor, bgColor);                                 // Use the widget's colors
+    AGUI::setTextWrap(false);                                             // No wrapping, we clip 'em
+    AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);  // Widget's clip rectangle... see, told ya
+
+    // Find the item
+    int index = getItemIndex(pItem);
+
+    // Calculate where to place the item
+    int x1 = boundary.x1 + xOffset;
+    int y1 = boundary.y1 + index * leading;
+
+    // Write the item's text to display
+    AGUI::setCursor(x1, y1);      // Text position
+    AGUI::writeText(pItem->str);  // Output text
+
+    return pItem;
+}  // repaint()
+
+/**
+ * @brief Determine if nItems could fit in the boundary box
+ * @param nItems #items
+ * @return true if they fit, else false
+ */
+bool AScrollBox::itemWillFit(int nItems) {
+    DTRACE();
+
+    // Does the box have room for anything at all?
+    int nLinesAvailable = boundary.h / leading;  // Leading is pixel distance from top of one line to next
+    if (nLinesAvailable <= 0) return false;      // No
+
+    // Do count items fit within the box?
+    if (nItems <= nLinesAvailable) return true;  // Yes
+    return false;                                // No
+}  // itemWillFit()
+
+/**
+ * @brief Scroll all of the items up a text line, leaving one blank line at the bottom of the boundary box
+ *
+ * @note Depending upon the capabilities of the underlying display system, this can be accomplished
+ * either by redrawing all but the top line, or by having the hardware perform a real scroll.  No matter
+ * how accomplished, the top line will be removed from items[] and the bottom line vanishes.
+ */
+void AScrollBox::scrollUpOneLine() {
+    DTRACE();
+
+    // Calculate pixel locations of the text to be scrolled
+    ACoord x = boundary.x1 + 1;  // Upper left corner of scrolled region
+    ACoord y = boundary.y1 + 1;  // Upper left corner of scrolled region
+    ALength w = boundary.w - 2;  // Width
+    ALength h = boundary.h - 2;  // Height
+
+    // Configure scrolling parameters
+    AGUI::enableScroll();                       // TODO:  Is this really necessary?
+    AGUI::resetScrollBackgroundColor(bgColor);  // Config color of empty space created at bottom of scroll rectangle
+    AGUI::setScrollTextArea(x, y, w, h);        // Configure location/extent of scroll rectangle
+
+    // Scroll the display
+    AGUI::scrollTextArea(leading);  // Scroll-up one line of pixels
+    AGUI::disableScroll();          // TODO:  Not sure we need to enable/disable
+
+    // Update displayItems[] to reflect how the items moved up a line
+    if (nDisplayedItems <= 0) return;  // Sanity check
+    delete displayedItems[0];          // The top item is "gone" (scrolled off the top)
+    for (int i = 1; i < nDisplayedItems; i++) {
+        displayedItems[i - 1] = displayedItems[i];  // Move remaining items up one line
+    }
+    displayedItems[nDisplayedItems - 1] = nullptr;  // The bottom line moved up
+
+    // Update count of displayed items
+    nDisplayedItems--;
+
+}  // scrollUpOneLine()
+
+/**
+ * @brief Set an item's foreground and background colors
+ * @param pItem Identifies the item
+ * @param fgColor New foreground color
+ * @param bgColor New background color
+ * @return Pointer to modified item or nullptr if error
+ */
+AScrollBoxItem* AScrollBox::setItemColors(AScrollBoxItem* pItem, AColor fgColor, AColor bgColor) {
+    DTRACE();
+
+    // Sanity check
+    if (pItem == nullptr) return nullptr;  // Bad token
+
+    // Reconfigure and repaint the item
+    pItem->fgColor = fgColor;
+    pItem->bgColor = bgColor;
+    repaint(pItem);
+    return pItem;
+}
+
+/**
+ * @brief Get the index of the specified item
+ * @param pItem Pointer to item
+ * @return Item's index into items[] array or -1 if not found
+ */
+int AScrollBox::getItemIndex(AScrollBoxItem* pItem) {
+    DTRACE();
+    // Sanity check
+    if (pItem == nullptr) return -1;
+
+    // Find it
+    for (int index = 0; index < maxItems; index++) {
+        if (pItem == displayedItems[index]) return index;
+    }
+    return -1;
+}
