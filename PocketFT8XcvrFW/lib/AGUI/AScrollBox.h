@@ -14,15 +14,13 @@ typedef int AScrollBoxToken;
 class AScrollBoxItem {
    public:
     AScrollBoxItem(String str, AColor fgColor, AColor bgColor);
-    String str;      // This item's text string
-    AColor fgColor;  // This item's foreground color
-    AColor bgColor;  // This item's background color
-    // AScrollBoxToken token;  // This item's unique, persistent token
-    bool selected = false;  // Is this item selected?
+    String str;              // This item's text string
+    AColor fgColor;          // This item's foreground color
+    AColor bgColor;          // This item's background color
+    bool selected = false;   // Is this item selected?
+    void repaint(void);      // Repaint this item
 
    private:
-    // AScrollBoxToken generateNewToken();  // Generate a new token value
-    // static AScrollBoxToken seedToken;    // The token value to be assigned to the next item added to this AScrollBox
 };
 
 /**
@@ -33,26 +31,27 @@ class AScrollBox : public AWidget {
     // Public methods
     AScrollBox(ACoord xCoord, ACoord yCoord, ALength w, ALength h);                        // Build AScrollBox with default colors
     AScrollBoxItem* addItem(String str);                                                   // Add item to bottom of this AScrollBox
-    AScrollBoxItem* setItemColors(AScrollBoxItem* token, AColor fgColor, AColor bgColor);  // Change specified item's colors
+    AScrollBoxItem* setItemColors(AScrollBoxItem* pItem, AColor fgColor, AColor bgColor);  // Change specified item's colors
     int getCount(void);                                                                    // Get count of displayed items in this AScrollBox
     void reset(void);                                                                      // Remove all items from this AScrollBox
-    void repaint();                                                                        // Repaint all items in this AScrollBox
+    int getItemIndex(AScrollBoxItem* pItem);                                               // Get items[] index (line number) of specified item
 
     // Public member variables
-    const static int maxItems = 24;  // Maximum number of items allowed in AScrollBox
+    const static int maxItems = 16;  // Maximum number of items allowed in AScrollBox
 
    protected:
-    int repaint(int index);                         // Repaint item with specified index (not token) in this AScrollBox
-    AScrollBoxItem* repaint(AScrollBoxItem* item);  // Repaint item specified by pointer
+    virtual void touchItem(AScrollBoxItem* pItem) {}  // Application overrides touchItem() to receive notifications of touch events for items
+    AScrollBoxItem* repaint(AScrollBoxItem* pItem);   // Repaint item specified by pointer
 
    private:
     // Our private methods
-    void touchWidget(ACoord screenX, ACoord screenY) override;  // Overrides AWidget to receive touch events for this AScrollBox
-    void repaintWidget(void) override;                          // Overrides AWidget to receive repaint events for this AScrollBox
-    void scrollUpOneLine();                                     // Scroll all existing items up (by one entry)
-    AScrollBoxItem* findItem(AScrollBoxToken token);            // Returns the items[] index of the specified token value
-    int getItemIndex(AScrollBoxItem* pItem);                    // Get items[] index of specified item
-    bool itemWillFit(int nItems);                               // Helper determines if count items will fit within boundary box
+    void touchWidget(ACoord screenX, ACoord screenY) override;        // Overrides AWidget to receive touch events for this AScrollBox
+    AScrollBoxItem* getSelectedItem(ACoord screenX, ACoord screenY);  // Return pointer to selected item
+    void repaintWidget(void) override;                                // Overrides AWidget to receive repaint events for this AScrollBox
+    void scrollUpOneLine();                                           // Scroll all existing items up (by one entry)
+    bool itemWillFit(int nItems);                                     // Helper determines if count items will fit within boundary box
+    int removeItem(int index);                                        // Remove specified item from displayedItems[]
+    int repaint(int index);                                           // Repaint item specified by index
 
     // Our private member variables
     AScrollBoxItem* displayedItems[maxItems];  // Pointer to items displayed in this AScrollBox indexed by their position

@@ -6,6 +6,10 @@
  * When a newly added item won't fit at the bottom of the box, existing lines are
  * scrolled up to make room for the new item at the bottom.
  *
+ * DESIGN:  Why isn't repaint(item) a member of AScrollBoxItem?  Much of the data
+ * required to repaint an item seems to belong to the AScrollBox containing the
+ * item. If this changes, then consider refactoring repaint.
+ *
  */
 
 #include "AScrollBox.h"
@@ -18,6 +22,7 @@
 
 /**
  * @brief Build an item for AScrollBox
+ * @param pContainer Pointer to AScrollBox containing this item
  * @param s Text String
  * @param fg Foreground color
  * @param bg Background color
@@ -54,7 +59,8 @@ AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h) {
     }
 
     // Draw the empty box
-    repaint();
+    repaintWidget();
+
 }  // AScrollBox()
 
 /**
@@ -95,7 +101,7 @@ AScrollBoxItem* AScrollBox::addItem(String str) {
  *
  * Erases our widget's screen and then repaints each item individually
  */
-void AScrollBox::repaint() {
+void AScrollBox::repaintWidget() {
     DTRACE();
 
     // Paint the entire background first, erasing whatever gibberish preceded us
@@ -117,7 +123,7 @@ void AScrollBox::repaint() {
 
 /**
  * @brief Repaint item at the specified position index
- * @param index The specified item indes (not a token)
+ * @param index The specified item index
  * @param erase true to also erase existing text at this item
  * @return Index of repainted item or -1 if error
  *
@@ -229,7 +235,7 @@ AScrollBoxItem* AScrollBox::setItemColors(AScrollBoxItem* pItem, AColor fgColor,
     DTRACE();
 
     // Sanity check
-    if (pItem == nullptr) return nullptr;  // Bad token
+    if (pItem == nullptr) return nullptr;
 
     // Reconfigure and repaint the item
     pItem->fgColor = fgColor;
@@ -254,3 +260,92 @@ int AScrollBox::getItemIndex(AScrollBoxItem* pItem) {
     }
     return -1;
 }
+
+/**
+ * @brief Get count of displayed items
+ * @return count
+ */
+int AScrollBox::getCount() {
+    return nDisplayedItems;
+}
+
+/**
+ * @brief Reset this AScrollBox
+ *
+ * All items are removed and an empty box is displayed
+ */
+void AScrollBox::reset() {
+    // Remove all the items
+    for (int i = 0; i < nDisplayedItems; i++) {
+        removeItem(i);
+    }
+
+    // Update members
+    nDisplayedItems = 0;
+
+    // Repaint this box
+    repaintWidget();
+}  // reset()
+
+/**
+ * @brief Removes the specified item from the AScrollBox data structures
+ * @param index Specifies which item
+ * @return index of removed item or -1 if error
+ *
+ * Does not update the display
+ */
+int AScrollBox::removeItem(int index) {
+    DTRACE();
+
+    // Sanity checks
+    if ((index < 0) || (index >= nDisplayedItems)) return -1;
+
+    // Delete the item and its reference in displayedItems[]
+    delete displayedItems[index];
+    displayedItems[index] = nullptr;
+    return index;
+}
+
+/**
+ * @brief Override AWidgetvto receive touch events for this AScrollBox
+ * @param xTouch Screen coordinate of touch event
+ * @param yTouch Screen coordinate of touch event
+ *
+ * @brief AWidget notifies us when a touch event occurs inside this AScrollBox
+ *
+ * @note The coordinates are those of the screen, not offsets within this AScrollBox
+ */
+void AScrollBox::touchWidget(ACoord xTouch, ACoord yTouch) {
+    DTRACE();
+
+    // Find the selected item
+    AScrollBoxItem* item = getSelectedItem(xTouch, yTouch);  // Which item was touched?
+    if (item == nullptr) return;                             // Not an item
+
+    // Toggle selection state
+    item->selected = !item->selected;
+
+    // Notify application of touched item
+    touchItem(item);  // Application overrides touchItem() to receive notifications of touch events for items
+}
+
+/**
+ * @brief Get a pointer to the touched item
+ * @param xClick Screen x-Coord
+ * @param yClick Screen y-Coord
+ * @return Pointer to the AScrollBoxItem or nullptr if none
+ */
+AScrollBoxItem* AScrollBox::getSelectedItem(ACoord xClick, ACoord yClick) {
+    DTRACE();
+
+    // Perhaps this click lies entirely outside this widget's boundary
+    if (!boundary.isWithin(xClick, yClick)) return nullptr;
+
+    // Calculate index of clicked item
+    unsigned index = (yClick - boundary.y1) / leading;
+    if (index >= maxItems) return nullptr;  // Validate calculated index
+
+    // Return pointer or null
+    return (displayedItems[index]);
+
+}  // getSelectedItem()
