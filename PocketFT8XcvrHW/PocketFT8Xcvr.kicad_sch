@@ -9959,13 +9959,19 @@
 		)
 	)
 	(junction
+		(at 95.25 58.42)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "054825ce-ec64-4a34-9e3c-8d3db830fce2")
+	)
+	(junction
 		(at 69.85 194.31)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "1746ec6d-1434-411f-9283-b706eba2e112")
 	)
 	(junction
-		(at 99.06 58.42)
+		(at 96.52 58.42)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "1e780993-10ef-4996-9ba1-2b1e499a09a7")
@@ -10059,6 +10065,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "762bfd05-9739-4b42-afa3-a0df937a0d4c")
+	)
+	(junction
+		(at 83.82 52.07)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "77825caa-4387-4d90-a7f1-fc81057f3764")
 	)
 	(junction
 		(at 238.76 93.98)
@@ -10419,10 +10431,6 @@
 	(no_connect
 		(at 223.52 52.07)
 		(uuid "9fabf85b-becd-494b-a1b0-3ded00eb6684")
-	)
-	(no_connect
-		(at 104.14 64.77)
-		(uuid "a0fa0040-097e-4967-9937-295eb310f422")
 	)
 	(no_connect
 		(at 160.02 119.38)
@@ -11034,7 +11042,7 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 52.07) (xy 99.06 58.42)
+			(xy 96.52 52.07) (xy 96.52 58.42)
 		)
 		(stroke
 			(width 0)
@@ -11224,7 +11232,7 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 58.42) (xy 99.06 59.69)
+			(xy 96.52 58.42) (xy 96.52 59.69)
 		)
 		(stroke
 			(width 0)
@@ -11354,7 +11362,7 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 52.07) (xy 99.06 52.07)
+			(xy 81.28 52.07) (xy 83.82 52.07)
 		)
 		(stroke
 			(width 0)
@@ -11431,6 +11439,16 @@
 			(type default)
 		)
 		(uuid "85989d72-19d6-405b-9a68-157b4cc08d06")
+	)
+	(wire
+		(pts
+			(xy 83.82 52.07) (xy 96.52 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "86a9aa9a-919c-48cc-b33b-1186e44a8ce9")
 	)
 	(wire
 		(pts
@@ -11584,7 +11602,7 @@
 	)
 	(wire
 		(pts
-			(xy 95.25 58.42) (xy 99.06 58.42)
+			(xy 92.71 58.42) (xy 95.25 58.42)
 		)
 		(stroke
 			(width 0)
@@ -11674,6 +11692,16 @@
 	)
 	(wire
 		(pts
+			(xy 95.25 58.42) (xy 96.52 58.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a3c57639-c0a3-4f4a-be79-8bdf8899a658")
+	)
+	(wire
+		(pts
 			(xy 162.56 40.64) (xy 167.64 40.64)
 		)
 		(stroke
@@ -11701,6 +11729,16 @@
 			(type default)
 		)
 		(uuid "a8eb2595-a903-415d-99b2-9557051ae99c")
+	)
+	(wire
+		(pts
+			(xy 101.6 52.07) (xy 104.14 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a9943fda-fcdc-46cf-b725-67ccc5e5b261")
 	)
 	(wire
 		(pts
@@ -12689,7 +12727,7 @@
 		(uuid "5d6fc5b4-23c4-482f-9565-383aab477622")
 	)
 	(label "PPS"
-		(at 104.14 52.07 180)
+		(at 101.6 52.07 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -13006,6 +13044,17 @@
 			(justify left bottom)
 		)
 		(uuid "c07ca048-5cad-4230-ba48-8e67151adfd7")
+	)
+	(label "XCLK"
+		(at 104.14 64.77 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "caa82562-3a5d-42ba-bcd0-3a4f0721de15")
 	)
 	(label "SDA"
 		(at 215.9 64.77 0)
@@ -21972,7 +22021,7 @@
 			)
 		)
 		(property "Value" "0.1UF"
-			(at 95.504 54.864 0)
+			(at 90.932 61.722 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -25694,7 +25743,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 99.06 59.69 0)
+		(at 96.52 59.69 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -25703,7 +25752,7 @@
 		(fields_autoplaced yes)
 		(uuid "e8d6208d-d60c-449d-847d-bc28e613a154")
 		(property "Reference" "#PWR050"
-			(at 99.06 66.04 0)
+			(at 96.52 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25712,7 +25761,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 99.06 64.77 0)
+			(at 96.52 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25720,7 +25769,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 99.06 59.69 0)
+			(at 96.52 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25729,7 +25778,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 99.06 59.69 0)
+			(at 96.52 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25738,7 +25787,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 99.06 59.69 0)
+			(at 96.52 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
