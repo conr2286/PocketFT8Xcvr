@@ -11,14 +11,14 @@ typedef int AScrollBoxToken;
 /**
  * @brief Declare the content of a single scroll box item
  */
-class AScrollBoxItem {
+class AScrollBoxItem final {
    public:
     AScrollBoxItem(String str, AColor fgColor, AColor bgColor);
-    String str;              // This item's text string
-    AColor fgColor;          // This item's foreground color
-    AColor bgColor;          // This item's background color
-    bool selected = false;   // Is this item selected?
-    void repaint(void);      // Repaint this item
+    String str;             // This item's text string
+    AColor fgColor;         // This item's foreground color
+    AColor bgColor;         // This item's background color
+    bool selected = false;  // Is this item selected?
+    void repaint(void);     // Repaint this item
 
    private:
 };
@@ -29,18 +29,19 @@ class AScrollBoxItem {
 class AScrollBox : public AWidget {
    public:
     // Public methods
-    AScrollBox(ACoord xCoord, ACoord yCoord, ALength w, ALength h);                        // Build AScrollBox with default colors
-    AScrollBoxItem* addItem(String str);                                                   // Add item to bottom of this AScrollBox
-    AScrollBoxItem* setItemColors(AScrollBoxItem* pItem, AColor fgColor, AColor bgColor);  // Change specified item's colors
-    int getCount(void);                                                                    // Get count of displayed items in this AScrollBox
-    void reset(void);                                                                      // Remove all items from this AScrollBox
-    int getItemIndex(AScrollBoxItem* pItem);                                               // Get items[] index (line number) of specified item
+    AScrollBox(ACoord xCoord, ACoord yCoord, ALength w, ALength h);              // Build AScrollBox with default colors
+    virtual ~AScrollBox();                                                       // Destructor purges data struct and erases displayed items
+    AScrollBoxItem* addItem(String str);                                         // Add item to bottom of this AScrollBox
+    AScrollBoxItem* setItemColors(AScrollBoxItem* pItem, AColor fg, AColor bg);  // Change specified item's colors
+    int getCount(void);                                                          // Get count of displayed items in this AScrollBox
+    void reset(void);                                                            // Remove all items from this AScrollBox
+    int getItemIndex(AScrollBoxItem* pItem);                                     // Get items[] index (line number) of specified item
 
-    // Public member variables
-    const static int maxItems = 16;  // Maximum number of items allowed in AScrollBox
+    // Public constants
+    constexpr static int maxItems = 16;  // Maximum number of items allowed in AScrollBox
 
    protected:
-    virtual void touchItem(AScrollBoxItem* pItem) {}  // Application overrides touchItem() to receive notifications of touch events for items
+    virtual void touchItem(AScrollBoxItem* pItem) {}  // Application overrides touchItem() to receive notifications of touch events
     AScrollBoxItem* repaint(AScrollBoxItem* pItem);   // Repaint item specified by pointer
 
    private:
@@ -57,5 +58,5 @@ class AScrollBox : public AWidget {
     AScrollBoxItem* displayedItems[maxItems];  // Pointer to items displayed in this AScrollBox indexed by their position
     unsigned leading;                          // The leading (text line spacing in pixels) for this AScrollBox's font
     int nDisplayedItems;                       // Number of *displayed* items
-    uint8_t xOffset;                           // #pixels between boundary and text
+    constexpr static uint8_t xOffset = 2;      // xOffset==n provides n-1 blank pixels between boundary and text
 };

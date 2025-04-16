@@ -51,7 +51,7 @@ AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h) {
     boundary.setCorners(x, y, w, h);  // Our boundary box
     leading = AGUI::getLeading();     // Get the leading (in pixels) for our font
     nDisplayedItems = 0;              // There are no items in this AScrollBox
-    xOffset = 2;                      // Pixel offset between left boundary and start of text
+    // xOffset = 2;                      // Pixel offset between left boundary and start of text
 
     // Reset the items[] arrays
     for (int i = 0; i < maxItems; i++) {
@@ -149,6 +149,9 @@ int AScrollBox::repaint(int index) {
 AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
     DTRACE();
 
+    // Sanity checks
+    if (pItem == nullptr) return nullptr;
+
     // Configure app for writing text in this widget
     AGUI::setFont(defaultFont);                                           // Use the widget's font
     AGUI::setTextColor(fgColor, bgColor);                                 // Use the widget's colors
@@ -157,6 +160,7 @@ AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
 
     // Find the item
     int index = getItemIndex(pItem);
+    if (index < 0) return nullptr;
 
     // Calculate where to place the item
     int x1 = boundary.x1 + xOffset;
@@ -287,12 +291,27 @@ void AScrollBox::reset() {
     repaintWidget();
 }  // reset()
 
+AScrollBox::~AScrollBox() {
+    DTRACE();
+    
+    // Purge the items
+    reset();
+
+    // Also erase the widget's border
+    AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);        // Configure clip window to our boundary
+    AGUI::fillRect(boundary.x1, boundary.y1, boundary.w, boundary.h, bgColor);  // Erase everything within boundary box
+    AGUI::setClipRect();                                                        // Default clip window
+}
+
 /**
  * @brief Removes the specified item from the AScrollBox data structures
  * @param index Specifies which item
  * @return index of removed item or -1 if error
  *
- * Does not update the display
+ * @note Does not update the display.
+ *
+ * @note WARNING:  nullptr replaces the removed AScrollBoxItem pointer
+ *
  */
 int AScrollBox::removeItem(int index) {
     DTRACE();
@@ -345,7 +364,7 @@ AScrollBoxItem* AScrollBox::getSelectedItem(ACoord xClick, ACoord yClick) {
     unsigned index = (yClick - boundary.y1) / leading;
     if (index >= maxItems) return nullptr;  // Validate calculated index
 
-    // Return pointer or null
+    // Return pointer or null (empty indices of displayedItems[] are nullptr)
     return (displayedItems[index]);
 
 }  // getSelectedItem()
