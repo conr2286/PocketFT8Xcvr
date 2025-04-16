@@ -15,7 +15,7 @@
 class ATextBox : public AWidget {
    public:
     // Constructors/Destructors
-    ATextBox(const char* txt, ACoord x1, ACoord y1, ALength w, ALength h, bool border=true);
+    ATextBox(const char* txt, ACoord x1, ACoord y1, ALength w, ALength h, AColor border);
 
     // Public methods
     void setText(const char* str);

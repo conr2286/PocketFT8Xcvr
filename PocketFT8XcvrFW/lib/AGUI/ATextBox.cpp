@@ -30,17 +30,13 @@
  * @param w Width
  * @param h Height
  */
-ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, bool border) {
+ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AColor border) {
     DPRINTF("txt='%s' x=%d y=%d w=%d h=%d\n", txt, x, y, w, h);
 
     // Initialize member variables
     boundary.setCorners(x, y, w, h);
     str = String(txt);
-
-    // Eliminate the border if unwanted
-    if (!border) {
-        bdColor = bgColor;
-    }
+    bdColor = border;
 
     // Setup clipping rectangle without regard for rounded vs. squared corners
     AGUI::setClipRect(x, y, w, h);

@@ -14,6 +14,7 @@
 #include "ACoord.h"           // Screen coordinate data types
 #include "AGUI.h"             //The adapter for Adafruit GFX libraries
 #include "AListBox.h"         //Interactive text box
+#include "AScrollBox.h"         //Scrolling interactive text box
 #include "APixelBox.h"        //Interactive raster box
 #include "ATextBox.h"         //Non-interactive text
 #include "AToggleButton.h"    //Stateful button
@@ -46,7 +47,7 @@ void UserInterface::begin() {
     stationInfo->setItem(4, "7074 kHz", A_WHITE, A_BLACK);
 
     // Build the decoded messages box
-    decodedMsgs = new AListBox(DecodedMsgsX, DecodedMsgsY, DecodedMsgsW, DecodedMsgsH, A_DARK_GREY);
+    decodedMsgs = new AScrollBox(DecodedMsgsX, DecodedMsgsY, DecodedMsgsW, DecodedMsgsH, A_DARK_GREY);
     decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
     decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
     decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
@@ -55,10 +56,10 @@ void UserInterface::begin() {
     decodedMsgs->addItem("WN9ABC/P KA0XYZ RR73 S3");
 
     // Build the station messages box
-    stationMsgs = new AListBox(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
+    stationMsgs = new AScrollBox(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
     stationMsgs->addItem("CQ WN8ABC DN15");
     stationMsgs->addItem("WN8ABC KA0XYZ DN14");
-    int n=stationMsgs->addItem("KA0XYZ WN8ABC -5");
+    stationMsgs->addItem("KA0XYZ WN8ABC -5");
 
     // Application message box
     appMessage = new ATextBox("Logged #42",AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);

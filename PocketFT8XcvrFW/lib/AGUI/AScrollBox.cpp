@@ -44,14 +44,14 @@ AScrollBoxItem::AScrollBoxItem(String s, AColor fg, AColor bg) {
  * @param w Width
  * @param h Height
  */
-AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h) {
+AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
     DTRACE();
 
     // Initialize the member variables
     boundary.setCorners(x, y, w, h);  // Our boundary box
     leading = AGUI::getLeading();     // Get the leading (in pixels) for our font
     nDisplayedItems = 0;              // There are no items in this AScrollBox
-    // xOffset = 2;                      // Pixel offset between left boundary and start of text
+    this->bdColor = bdColor;          // Border color
 
     // Reset the items[] arrays
     for (int i = 0; i < maxItems; i++) {
@@ -293,7 +293,7 @@ void AScrollBox::reset() {
 
 AScrollBox::~AScrollBox() {
     DTRACE();
-    
+
     // Purge the items
     reset();
 

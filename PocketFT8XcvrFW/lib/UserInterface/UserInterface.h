@@ -6,6 +6,7 @@
 #include "ACoord.h"           // Screen coordinate data types
 #include "AGUI.h"             //The adapter for Adafruit GFX libraries
 #include "AListBox.h"         //Interactive text box
+#include "AScrollBox.h"       //Scrolling interactive text box
 #include "APixelBox.h"        //Interactive raster box
 #include "ATextBox.h"         //Non-interactive text
 #include "AToggleButton.h"    //Stateful button
@@ -81,8 +82,8 @@ class UserInterface {
     // The widgets for displaying station info, traffic and info about the rig
     Waterfall* theWaterfall;
     AListBox* stationInfo;
-    AListBox* decodedMsgs;
-    AListBox* stationMsgs;
+    AScrollBox* decodedMsgs;
+    AScrollBox* stationMsgs;
     ATextBox* appMessage;
 
     // The button widgets
