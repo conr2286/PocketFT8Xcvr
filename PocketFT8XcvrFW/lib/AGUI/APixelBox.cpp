@@ -72,6 +72,7 @@ void APixelBox::drawPixel(APixelPos row, APixelPos col, AColor color) {
     // Setup the clip rectangle
     AGUI::setClipRect(bitmap.x1, bitmap.y1, bitmap.x2 - bitmap.x1 + 1, bitmap.y2 - bitmap.y1 + 1);
     AGUI::drawPixel(bitmap.x1 + row, bitmap.y1 + col, color);
+    AGUI::setClipRect();
 }
 
 /**

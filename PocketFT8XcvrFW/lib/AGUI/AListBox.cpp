@@ -296,6 +296,7 @@ size_t AListBox::writeItem(const uint8_t *bfr, size_t count, AColor fgColor, ACo
     AGUI::getTextBounds(bfr, (uint16_t)actualCount, drawX, drawY, &x, &y, &w, &h);
     itemPixelCount[nextItem] += (w);  // Accumulated number of horizontal pixels in this item's line of text
 
+    AGUI::setClipRect();
     return actualCount;
 
 }  // writeItem()

@@ -65,6 +65,7 @@ AToggleButton::AToggleButton(const char *txt, ACoord x1, ACoord y1, ALength w, A
     DPRINTF("x1=%d y1=%d tx=%d ty=%d tw=%d th=%d leading=%d\n", x1, y1, tx, ty, tw, th, AGUI::getLeading());
     AGUI::setCursor(boundary.x1 - 1 + (w - tw) / 2, boundary.y1 - 1 + (h - th) / 2);  // Center the text in the button
     AGUI::writeText((uint8_t *)txt, strlen(txt));                                     // Output text to button
+    AGUI::setClipRect();
 }  // AToggleButton
 
 /**
@@ -118,4 +119,5 @@ void AToggleButton::repaintWidget() {
     AGUI::getTextBounds(str, boundary.x1, boundary.y1, &tx, &ty, &tw, &th);           // Get the text bounds
     AGUI::setCursor(boundary.x1 - 1 + (w - tw) / 2, boundary.y1 - 1 + (h - th) / 2);  // Center the text in the button
     AGUI::writeText(str);                                                             // Output text to button
+    AGUI::setClipRect();
 }  // repaintWidget()

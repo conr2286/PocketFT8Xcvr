@@ -6,8 +6,8 @@
 #include "ACoord.h"           // Screen coordinate data types
 #include "AGUI.h"             //The adapter for Adafruit GFX libraries
 #include "AListBox.h"         //Interactive text box
-#include "AScrollBox.h"       //Scrolling interactive text box
 #include "APixelBox.h"        //Interactive raster box
+#include "AScrollBox.h"       //Scrolling interactive text box
 #include "ATextBox.h"         //Non-interactive text
 #include "AToggleButton.h"    //Stateful button
 #include "DEBUG.h"            //USB Serial debugging on the Teensy 4.1
@@ -26,13 +26,13 @@ static const APixelPos WaterfallCols = 353;  // #Pixel cols inside Waterfall wid
 static const ACoord DecodedMsgsX = 0;     // Upper-left corner
 static const ACoord DecodedMsgsY = 108;   // Upper-left corner
 static const ALength DecodedMsgsW = 260;  // Width
-static const ALength DecodedMsgsH = 110;  // Height
+static const ALength DecodedMsgsH = 112;  // Height
 
 // Define the Station Messages widget's boundary and extent
 static const ACoord StationMsgsX = 262;   // Upper-left corner
 static const ACoord StationMsgsY = 108;   // Upper-left corner
 static const ALength StationMsgsW = 218;  // Width
-static const ALength StationMsgsH = 110;  // Height
+static const ALength StationMsgsH = 112;  // Height
 
 // Define the UTC Date widget's boundary and extent
 static const ACoord DateX = 361;   // Upper-left corner of UTC Date
@@ -52,16 +52,17 @@ static const ACoord StationY = 40;    // Upper-left corner of Station
 static const ALength StationW = 120;  // Width
 static const ALength StationH = 20;   // Height
 
-//Define Application Message boundary and extent
-static const ACoord AppMsgX = 0;  //Upper-left corner
-static const ACoord AppMsgY = 220; //Upper-left corner
-static const ALength AppMsgW = 480; //Width
-static const ALength AppMsgH = 40; //Height
+// Define Application Message boundary and extent
+static const ACoord AppMsgX = 0;     // Upper-left corner
+static const ACoord AppMsgY = 222;   // Upper-left corner
+static const ALength AppMsgW = 480;  // Width
+static const ALength AppMsgH = 65;   // Height
 
 // Define the Button widgets' boundaries and extents
-static const ALength ButtonSpacing = 60;  // Button grid spacing
+static const ALength ButtonSpacing = 61;  // Button grid spacing
 static const ALength ButtonWidth = 50;    // Width in pixels
 static const ALength ButtonHeight = 30;   // Height in pixels
+static const ACoord ButtonX = 1;          // Button row left-side inset
 static const ACoord ButtonY = 290;        // All buttons in one row at screen bottom
 
 class Waterfall : public APixelBox {
@@ -85,6 +86,13 @@ class UserInterface {
     AScrollBox* decodedMsgs;
     AScrollBox* stationMsgs;
     ATextBox* appMessage;
+
+    // The stationInfo items
+    AScrollBoxItem* itemDate;
+    AScrollBoxItem* itemTime;
+    AScrollBoxItem* itemLocator;
+    AScrollBoxItem* itemCallsign;
+    AScrollBoxItem* itemFrequency;
 
     // The button widgets
     AToggleButton* b0;

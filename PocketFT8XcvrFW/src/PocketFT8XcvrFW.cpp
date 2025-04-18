@@ -93,6 +93,7 @@
 #include "pins.h"
 #include "si5351.h"
 #include "traffic_manager.h"
+#include "UserInterface.h"
 
 // Forward references (required to build on PlatformIO)
 void loadSSB();

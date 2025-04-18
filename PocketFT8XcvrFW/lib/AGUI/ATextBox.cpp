@@ -73,6 +73,7 @@ ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AC
     int16_t drawY = clipY + 1;  // Y-coord
     AGUI::setCursor(drawX, drawY);
     AGUI::writeText((uint8_t *)txt, strlen(txt));  // Output text to box
+    AGUI::setClipRect();
 }
 
 void ATextBox::repaintWidget(void) {
@@ -111,6 +112,7 @@ void ATextBox::repaintWidget(void) {
     int16_t drawY = clipY + 1;  // Y-coord
     AGUI::setCursor(drawX, drawY);
     AGUI::writeText(str);  // Output text to box
+    AGUI::setClipRect();
 
 }  // repaintWidget()
 

@@ -76,27 +76,30 @@ AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor)
 
 /**
  * @brief Add an item to the bottom of this AListBox
+ * @param pAScrollBox Pointer to scroll box container for this item
  * @param str The item's text String
+ * @param fg Text color
  * @return Pointer to the newly added item
  *
  */
-AScrollBoxItem* AScrollBox::addItem(AScrollBox* pAScrollBox, String str) {
+AScrollBoxItem* AScrollBox::addItem(AScrollBox* pAScrollBox, String str, AColor fg) {
     DPRINTF("str='%s'\n", str.c_str());
 
     // Too many items for our simple data structs?
     if (nDisplayedItems >= maxItems) return nullptr;
 
     // Build the new Item
+    fgColor = fg;
     AScrollBoxItem* pNewItem = new AScrollBoxItem(str, fgColor, bgColor, pAScrollBox);  // Build item using widget's default colors
 
     // Scroll the displayed items up if the added item won't fit within widget's boundary box
-    if (itemWillFit(nDisplayedItems + 1)) {
-        nDisplayedItems++;  // If we don't scroll then increase count of displayed items
-    } else {
-        scrollUpOneLine();  // If we must scroll then retain existing count of displayed items
+    if (!itemWillFit(nDisplayedItems + 1)) {
+        DPRINTF("Scroll with nDisplayedItems=%d\n", nDisplayedItems);
+        scrollUpOneLine();  // Scrolling reduces nDisplayedItems by one, making room for new item
     }
 
     // Record the new item
+    nDisplayedItems++;                       // Bump count of displayed items
     int newItemIndex = nDisplayedItems - 1;  // Calculate index into items[] where new item will reside
     displayedItems[newItemIndex] = pNewItem;
 
@@ -130,6 +133,7 @@ void AScrollBox::repaintWidget() {
     for (int i = 0; i < nDisplayedItems; i++) {
         repaint(i);  // Repaint item indexed by i
     }
+    AGUI::setClipRect();
 }  // repaint()
 
 /**
@@ -166,7 +170,7 @@ AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
 
     // Configure app for writing text in this widget
     AGUI::setFont(defaultFont);                                           // Use the widget's font
-    AGUI::setTextColor(pItem->fgColor, pItem->bgColor);                                 // Use the item's colors
+    AGUI::setTextColor(pItem->fgColor, pItem->bgColor);                   // Use the item's colors
     AGUI::setTextWrap(false);                                             // No wrapping, we clip 'em
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);  // Widget's clip rectangle... see, told ya
 
@@ -191,11 +195,11 @@ AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
  * @return true if they fit, else false
  */
 bool AScrollBox::itemWillFit(int nItems) {
-    DTRACE();
+    // DTRACE();
 
     // Does the box have room for anything at all?
-    int nLinesAvailable = boundary.h / leading;  // Leading is pixel distance from top of one line to next
-    if (nLinesAvailable <= 0) return false;      // No
+    int nLinesAvailable = (boundary.h - 2 * yOffset) / leading;  // Leading is pixel distance from top of one line to next
+    if (nLinesAvailable <= 0) return false;                      // No
 
     // Do count items fit within the box?
     if (nItems <= nLinesAvailable) return true;  // Yes
@@ -213,10 +217,10 @@ void AScrollBox::scrollUpOneLine() {
     DTRACE();
 
     // Calculate pixel locations of the text to be scrolled
-    ACoord x = boundary.x1 + 1;  // Upper left corner of scrolled region
-    ACoord y = boundary.y1 + 1;  // Upper left corner of scrolled region
-    ALength w = boundary.w - 2;  // Width
-    ALength h = boundary.h - 2;  // Height
+    ACoord x = boundary.x1 + xOffset;      // Upper left corner of scrolled region
+    ACoord y = boundary.y1 + yOffset;      // Upper left corner of scrolled region
+    ALength w = boundary.w - 2 * xOffset;  // Width
+    ALength h = boundary.h - 2 * yOffset;  // Height
 
     // Configure scrolling parameters
     AGUI::enableScroll();                       // TODO:  Is this really necessary?
@@ -225,7 +229,8 @@ void AScrollBox::scrollUpOneLine() {
 
     // Scroll the display
     AGUI::scrollTextArea(leading);  // Scroll-up one line of pixels
-    AGUI::disableScroll();          // TODO:  Not sure we need to enable/disable
+    delay(2000);
+    AGUI::disableScroll();  // TODO:  Not sure we need to enable/disable
 
     // Update displayItems[] to reflect how the items moved up a line
     if (nDisplayedItems <= 0) return;  // Sanity check
@@ -237,6 +242,8 @@ void AScrollBox::scrollUpOneLine() {
 
     // Update count of displayed items
     nDisplayedItems--;
+    DPRINTF("After scrolling, nDisplayedItems = %d\n", nDisplayedItems);
+    delay(2000);
 
 }  // scrollUpOneLine()
 
