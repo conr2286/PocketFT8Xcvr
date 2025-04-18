@@ -26,6 +26,7 @@ class APixelBox : public AWidget {
    public:
     // Constructors
     APixelBox(ACoord x1, ACoord y1, APixelPos nRows, APixelPos nCols);
+    virtual ~APixelBox() {}
 
     // Methods
     void drawPixel(APixelPos row, APixelPos col, AColor color);

@@ -29,13 +29,23 @@
  *
  * @note The text string, s, must not contain a NL character
  */
-AScrollBoxItem::AScrollBoxItem(String s, AColor fg, AColor bg) {
-    str = s;                 // Item's text String
-    str.replace('\n', ' ');  // We really can't tolerate NL chars in the String
-    fgColor = fg;            // Item's foreground color
-    bgColor = bg;            // Item's background color
-    selected = false;        // Item is not selected
+AScrollBoxItem::AScrollBoxItem(String s, AColor fg, AColor bg, AScrollBox* pBox) {
+    if (!Serial) Serial.begin(9600);
+    Serial.println("AScrollBoxItem()");
+    str = s;                    // Item's text String
+    str.replace('\n', ' ');     // We really can't tolerate NL chars in the String
+    fgColor = fg;               // Item's foreground color
+    bgColor = bg;               // Item's background color
+    selected = false;           // Item is not selected
+    scrollBoxContainer = pBox;  // Backlink from item to Scroll box container
 }  // AScrollBoxItem()
+
+void AScrollBoxItem::setColors(AColor fg, AColor bg) {
+    DTRACE();
+    fgColor = fg;
+    bgColor = bg;
+    scrollBoxContainer->repaint(this);
+}
 
 /**
  * @brief Build AScrollBox with the specified location, extent and default colors
@@ -45,7 +55,8 @@ AScrollBoxItem::AScrollBoxItem(String s, AColor fg, AColor bg) {
  * @param h Height
  */
 AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
-    DTRACE();
+    if (!Serial) Serial.begin(9600);
+    Serial.println("AScrollBox()");
 
     // Initialize the member variables
     boundary.setCorners(x, y, w, h);  // Our boundary box
@@ -69,14 +80,14 @@ AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor)
  * @return Pointer to the newly added item
  *
  */
-AScrollBoxItem* AScrollBox::addItem(String str) {
-    DTRACE();
+AScrollBoxItem* AScrollBox::addItem(AScrollBox* pAScrollBox, String str) {
+    DPRINTF("str='%s'\n", str.c_str());
 
     // Too many items for our simple data structs?
     if (nDisplayedItems >= maxItems) return nullptr;
 
     // Build the new Item
-    AScrollBoxItem* pNewItem = new AScrollBoxItem(str, fgColor, bgColor);  // Build item using widget's default colors
+    AScrollBoxItem* pNewItem = new AScrollBoxItem(str, fgColor, bgColor, pAScrollBox);  // Build item using widget's default colors
 
     // Scroll the displayed items up if the added item won't fit within widget's boundary box
     if (itemWillFit(nDisplayedItems + 1)) {
@@ -147,24 +158,25 @@ int AScrollBox::repaint(int index) {
  * @return Pointer to the item or nullptr if error
  */
 AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
-    DTRACE();
+    if (!Serial) Serial.begin(9600);
+    Serial.print("repaint(pTem)\n");
 
     // Sanity checks
     if (pItem == nullptr) return nullptr;
 
     // Configure app for writing text in this widget
     AGUI::setFont(defaultFont);                                           // Use the widget's font
-    AGUI::setTextColor(fgColor, bgColor);                                 // Use the widget's colors
+    AGUI::setTextColor(pItem->fgColor, pItem->bgColor);                                 // Use the item's colors
     AGUI::setTextWrap(false);                                             // No wrapping, we clip 'em
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);  // Widget's clip rectangle... see, told ya
 
-    // Find the item
+    // Find the item's index (i.e. what line is it on?)
     int index = getItemIndex(pItem);
     if (index < 0) return nullptr;
 
     // Calculate where to place the item
     int x1 = boundary.x1 + xOffset;
-    int y1 = boundary.y1 + index * leading;
+    int y1 = boundary.y1 + index * leading + yOffset;
 
     // Write the item's text to display
     AGUI::setCursor(x1, y1);      // Text position

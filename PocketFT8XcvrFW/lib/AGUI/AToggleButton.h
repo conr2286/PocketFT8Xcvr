@@ -24,6 +24,7 @@ class AToggleButton : public AWidget {
    public:
     // Constructors
     AToggleButton(const char* str, ACoord x1, ACoord y1, ALength w, ALength h, bool border=true);
+    virtual ~AToggleButton() {}
 
     // Public methods
     void enable(void);                  // Enable this button

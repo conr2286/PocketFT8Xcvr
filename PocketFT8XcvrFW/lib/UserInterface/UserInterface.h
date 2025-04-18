@@ -81,7 +81,7 @@ class UserInterface {
 
     // The widgets for displaying station info, traffic and info about the rig
     Waterfall* theWaterfall;
-    AListBox* stationInfo;
+    AScrollBox* stationInfo;
     AScrollBox* decodedMsgs;
     AScrollBox* stationMsgs;
     ATextBox* appMessage;

@@ -12,6 +12,7 @@ class AGUI {
    public:
     // Constructors and initialization
     AGUI(HX8357_t3n *gfx, uint8_t rotation, const GFXfont *font);
+    virtual ~AGUI() {}
 
     // AGUI really should have been a singleton
     AGUI(const AGUI &) = delete;

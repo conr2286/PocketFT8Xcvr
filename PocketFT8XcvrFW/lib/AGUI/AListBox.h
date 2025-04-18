@@ -33,7 +33,7 @@ class AListBox : public AWidget {
     // Constructors/destructors
     AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h);  // No border
     AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor borderColor);
-    ~AListBox() {}
+    virtual ~AListBox() {}
 
     // Public methods unique to AListBox
     int addItem(const char *txt, AColor fgColor);                             // Add a new item with specified foreground color

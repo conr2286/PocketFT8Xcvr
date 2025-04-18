@@ -32,4 +32,7 @@ class AWidget {
 
     virtual void touchWidget(ACoord screenX, ACoord screenY) {}  // Derived classes must overide touchWidget() to receive touch events
     virtual void repaintWidget(void) {}                          // Derived classes must overide doRepaintWidget() to repaint themselves
+
+    private:
+
 };
