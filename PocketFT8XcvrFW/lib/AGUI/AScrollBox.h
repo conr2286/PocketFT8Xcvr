@@ -16,12 +16,13 @@ class AScrollBox;
 class AScrollBoxItem final {
    public:
     AScrollBoxItem(String str, AColor fgColor, AColor bgColor, AScrollBox* box);
-    String str;                            // This item's text string
-    AColor fgColor;                        // This item's foreground color
-    AColor bgColor;                        // This item's background color
-    bool selected = false;                 // Is this item selected?
-    void repaint(void);                    // Repaint this item
-    void setColors(AColor fg, AColor bg);  // Change colors
+    String str;                                         // This item's text string
+    AColor fgColor;                                     // This item's foreground color
+    AColor bgColor;                                     // This item's background color
+    bool selected = false;                              // Is this item selected?
+    void repaint(void);                                 // Repaint this item
+    void setItemColors(AColor fg, AColor bg);           // Change colors
+    void setItemText(String str, AColor fg = A_WHITE);  // Change specified item's text string
 
    private:
     AScrollBox* scrollBoxContainer;

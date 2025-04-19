@@ -80,6 +80,7 @@
 #include "Sequencer.h"
 #include "Timer.h"
 #include "TouchScreen_I2C.h"
+#include "UserInterface.h"
 #include "WF_Table.h"
 #include "arm_math.h"
 #include "button.h"
@@ -93,7 +94,6 @@
 #include "pins.h"
 #include "si5351.h"
 #include "traffic_manager.h"
-#include "UserInterface.h"
 
 // Forward references (required to build on PlatformIO)
 void loadSSB();
@@ -141,8 +141,9 @@ struct Config {
 #define DEFAULT_QSO_TIMEOUT 180               // Number seconds Sequencer will retry transmission without a response
 
 // Adafruit 480x320 touchscreen configuration
-HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
-TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
+// HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
+// TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
+UserInterface ui;
 
 /// Build the VFO clock
 Si5351 si5351;
@@ -208,9 +209,9 @@ int ft8_xmit_counter;
 
 int master_decoded;
 
-uint16_t cursor_freq;
-uint16_t cursor_line;
-int offset_freq;
+// uint16_t cursor_freq;
+// uint16_t cursor_line;
+// int offset_freq;
 int tune_flag;
 
 int log_flag, logging_on;
@@ -247,7 +248,7 @@ static void gpsCallback(unsigned seconds) {
  ** The FLASHMEM qualifier places the setup() function in the Teensy 4.1 flash memory, thereby
  ** saving RAM1 for high performance code/data.
  **/
-FLASHMEM void setup(void) {
+void setup(void) {
     // Get the USB serial port running before something else goes wrong
     Serial.begin(9600);
     DTRACE();
@@ -258,19 +259,22 @@ FLASHMEM void setup(void) {
         delay(5000);
     }
 
-    // Initialize the Adafruit 480x320 TFT display
-    tft.begin(30000000UL, 20000000Ul);
-    tft.fillScreen(HX8357_BLACK);
-    tft.setRotation(3);
-    tft.setFont(&FT8Font);
-    tft.setTextColor(HX8357_WHITE);
-    displayInfoMsg("Starting...");
-    delay(100);
+    // // Initialize the Adafruit 480x320 TFT display
+    // tft.begin(30000000UL, 20000000Ul);
+    // tft.fillScreen(HX8357_BLACK);
+    // tft.setRotation(3);
+    // tft.setFont(&FT8Font);
+    // tft.setTextColor(HX8357_WHITE);
+    // displayInfoMsg("Starting...");
+    // delay(100);
 
-    // For helping with GUI design work, draw outlines of the text boxes
-    tft.drawRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLUE);
-    tft.drawRect(DISPLAY_CALLING_X, DISPLAY_CALLING_Y, 480 - DISPLAY_CALLING_X, 320 - DISPLAY_DECODED_H, HX8357_BLUE);
-    tft.drawRect(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y - 4, DISPLAY_DECODED_W, 24, HX8357_BLUE);
+    // // For helping with GUI design work, draw outlines of the text boxes
+    // tft.drawRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLUE);
+    // tft.drawRect(DISPLAY_CALLING_X, DISPLAY_CALLING_Y, 480 - DISPLAY_CALLING_X, 320 - DISPLAY_DECODED_H, HX8357_BLUE);
+    // tft.drawRect(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y - 4, DISPLAY_DECODED_W, 24, HX8357_BLUE);
+
+    // Get the UI running
+    ui.begin();
 
     // Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
     // won't run at the standard Teensy sample rate.  In the best-of-all-possible-worlds, we'd implement this check at
@@ -349,14 +353,6 @@ FLASHMEM void setup(void) {
     config.qsoTimeout = doc["qsoTimeout"] | DEFAULT_QSO_TIMEOUT;
     configFile.close();
 
-    // When debugging, print contents of the config file
-    // DPRINTF("config[callsign]=%s\n", config.callsign);
-    // DPRINTF("config[frequency]=%u\n", config.frequency);
-    // DPRINTF("config[locator]=%s\n", config.locator);
-    // DPRINTF("config[audioRecordingDuration]=%lu\n", config.audioRecordingDuration);
-    // DPRINTF("config[enableAVC]=%u\n", config.enableAVC);
-    // DPRINTF("config[gpsTimeout]=%u\n", config.gpsTimeout);
-
     // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)
     strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
 
@@ -407,13 +403,19 @@ FLASHMEM void setup(void) {
     // Set operating frequency
     set_startup_freq();
     delay(10);
-    display_frequency(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
 
-    // Sync MCU clock with battery-backed RTC (either UTC via GPS or the Teensy loader time if no GPS)
+    // display_frequency(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
+    ui.displayFrequency(currentFrequency);
+
+    // Sync MCU clock with battery-backed RTC
     setSyncProvider(getTeensy3Time);
+    ui.displayDate();  // Likely not yet GPS disciplined
+    ui.displayTime();  //...and thus displayed in YELLOW
 
     // Misc initialization
-    set_Station_Coordinates(Locator);
+    set_Station_Coordinates(Locator);              // Configure the Maidenhead Locator library with grid square
+    ui.displayLocator(String(Locator), A_YELLOW);  // Display the locator with caution yellow until we get GPS fix
+    ui.displayCallsign(String(config.callsign));   // Display station callsigne
 
     // Start the QSO Sequencer (RoboOp)
     DTRACE();
@@ -434,7 +436,7 @@ unsigned oldFlags = 0;  // Used only for debugging the flags
  *
  * Note:  Placing the loop() code in FLASHMEM saves RAM1 memory for more time-sensitive activities
  */
-FLASHMEM void loop() {
+void loop() {
     // Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
     // unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
     // if (newFlags != oldFlags) {
@@ -472,8 +474,11 @@ FLASHMEM void loop() {
         }  // xmit_flag
 
         DSP_Flag = 0;
-        display_time(DISPLAY_TIME_X, DISPLAY_TIME_Y);
-        display_date(DISPLAY_DATE_X, DISPLAY_DATE_Y);
+        ui.displayDate();
+        ui.displayTime();
+
+        // display_time(DISPLAY_TIME_X, DISPLAY_TIME_Y);
+        // display_date(DISPLAY_DATE_X, DISPLAY_DATE_Y);
     }  // DSP_Flag
 
     // Apparently:  Have we acquired all of the timeslot's receiver time-domain data?
@@ -508,13 +513,13 @@ FLASHMEM void loop() {
             // Use the GPS-derived locator unless config.json hardwired it to something else
             if (strlen(config.locator) == 0) {
                 strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
-                // DPRINTF("GPS derived Locator = %s\n", Locator);
+                ui.displayLocator(Locator, A_GREEN);
             }
 
             // Arrange for the Teensy battery-backed RTC (UTC) to keep the MCU time accurate
             setSyncProvider(getTeensy3Time);
 
-            // Record the locator gridsquare
+            // Record the locator gridsquare for logging
             set_Station_Coordinates(Locator);
 
             // Wait for an FT8 timeslot to begin (this updates start_time)

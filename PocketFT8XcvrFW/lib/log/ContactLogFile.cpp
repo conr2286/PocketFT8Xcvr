@@ -36,7 +36,7 @@ void ContactLogFile::buildListOfKnownCallsigns() {
     // The known callsign table has 0..callsignTableSize-1 boolean entries, indexed by
     // a hash key.  true implies we've seen this hash before, false implies we have not.
     knownCallsigns = new bool[callsignTableSize];
-    for (int i = 0; i < callsignTableSize; i++) knownCallsigns[i] = false;
+    for (unsigned i = 0; i < callsignTableSize; i++) knownCallsigns[i] = false;
 
     // If it exists, open the log file for reading
     bool err = logFileAdapter.open(this->fileName, MODE_READ_FILE);

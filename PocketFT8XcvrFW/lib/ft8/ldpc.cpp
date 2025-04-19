@@ -156,8 +156,8 @@ void bp_decode(float codeword[], int max_iters, uint8_t plain[], int *ok) {
 
   int min_errors = M;
 
-  int nclast = 0;
-  int ncnt = 0;
+  //int nclast = 0;
+  //int ncnt = 0;
 
   // initialize messages to checks
   for (int i = 0; i < M; ++i) {

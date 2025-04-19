@@ -84,6 +84,7 @@ typedef enum {
 } IndicatorIconType;
 
 char* strlpad(char* str, unsigned size, char c);
+char* strlpad(char* dst, char* src, char c, unsigned size);
 
 void display_frequency(int x, int y, int value);
 // void erase_value(int x, int y);

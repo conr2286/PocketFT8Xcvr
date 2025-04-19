@@ -16,6 +16,8 @@
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
 
+
+
 // Define the Waterfall widget's boundary and extent
 static const ACoord WaterfallX = 0;          // Upper-left corner of Waterfall
 static const ACoord WaterfallY = 0;          // Upper-left corner of Waterfall
@@ -70,15 +72,27 @@ class Waterfall : public APixelBox {
     Waterfall() : APixelBox(WaterfallX, WaterfallY, WaterfallRows, WaterfallCols) {}
 };
 
-class UserInterface {
-   private:
-    // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
-    HX8357_t3n* tft;
-    AGUI* gui;
-    TouchScreen* ts;
+// Let this be visible for compatibility with legacy code
+//HX8357_t3n tft;
 
-   public:
+class UserInterface {
+   //private:
+    // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
+    // HX8357_t3n* tft;
+    //static AGUI* gui;
+    //static TouchScreen* ts;
+
+    public:
+    // Initialization methods
     void begin(void);
+
+    // StationInfo methods
+    void displayFrequency(unsigned kHz);
+    void displayLocator(String grid, AColor fgColor);
+    void displayDate(void);
+    void displayTime(void);
+    void displayCallsign(String callSign);
+    void displayMode(String mode, AColor fg);
 
     // The widgets for displaying station info, traffic and info about the rig
     Waterfall* theWaterfall;
@@ -88,21 +102,22 @@ class UserInterface {
     ATextBox* appMessage;
 
     // The stationInfo items
-    AScrollBoxItem* itemDate;
-    AScrollBoxItem* itemTime;
-    AScrollBoxItem* itemLocator;
-    AScrollBoxItem* itemCallsign;
-    AScrollBoxItem* itemFrequency;
+     AScrollBoxItem* itemDate;
+     AScrollBoxItem* itemTime;
+     AScrollBoxItem* itemLocator;
+     AScrollBoxItem* itemCallsign;
+     AScrollBoxItem* itemFrequency;
+     AScrollBoxItem* itemMode;
 
-    // The button widgets
-    AToggleButton* b0;
-    AToggleButton* b1;
-    AToggleButton* b2;
-    AToggleButton* b3;
-    AToggleButton* b4;
-    AToggleButton* b5;
-    AToggleButton* b6;
-    AToggleButton* b7;
+     // The button widgets
+     static AToggleButton* b0;
+     static AToggleButton* b1;
+     static AToggleButton* b2;
+     static AToggleButton* b3;
+     static AToggleButton* b4;
+     static AToggleButton* b5;
+     static AToggleButton* b6;
+     static AToggleButton* b7;
 
-   private:
 };
+

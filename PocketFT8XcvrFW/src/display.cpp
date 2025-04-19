@@ -8,6 +8,7 @@
 
 #include "GPShelper.h"
 #include "HX8357_t3n.h"
+#include "UserInterface.h"
 
 char log_filename[] = "FT8_Traffic.txt";
 File Log_File;
@@ -21,6 +22,7 @@ extern int log_flag, logging_on;
 extern GPShelper gpsHelper;  // Public data acquired by GPShelper
 
 extern HX8357_t3n tft;
+extern UserInterface ui;
 
 /**
  * Helper function to pad a char[] to a specified length
@@ -66,7 +68,7 @@ char* strlpad(char* str, unsigned size, char c) {
  * including the NUL terminator, will occupy no more than size chars in dst[].
  *
  **/
-static char* strlpad(char* dst, char* src, char c, unsigned size) {
+char* strlpad(char* dst, char* src, char c, unsigned size) {
     const char NUL = 0;
     bool paddingUnderway = false;
     int i;
@@ -86,58 +88,59 @@ static char* strlpad(char* dst, char* src, char c, unsigned size) {
 
 }  // strlpad()
 
-/**
- * @brief Set the GUI's Transmit/Receive/Pending icon color
- * @param indicator Specifies what we're doing
- */
-void setXmitRecvIndicator(IndicatorIconType indicator) {
-    unsigned short color;  // Indicator icon color
-    char* string;
-    char paddedString[9];
+// /**
+//  * @brief Set the GUI's Transmit/Receive/Pending icon color
+//  * @param indicator Specifies what we're doing
+//  */
+// void setXmitRecvIndicator(IndicatorIconType indicator) {
+//     unsigned short color;  // Indicator icon color
+//     char* string;
+//     char paddedString[9];
 
-    switch (indicator) {
-        // We are receiving
-        case INDICATOR_ICON_RECEIVE:
-            color = HX8357_GREEN;
-            string = "RECEIVE";
-            break;
-        // Transmission pending for next appropriate timeslot
-        case INDICATOR_ICON_PENDING:
-            color = HX8357_YELLOW;
-            string = "PENDING";
-            break;
-        // Transmission in progress
-        case INDICATOR_ICON_TRANSMIT:
-            color = HX8357_RED;
-            string = "TRANSMIT";
-            break;
-        // Tuning in progress
-        case INDICATOR_ICON_TUNING:
-            color = HX8357_ORANGE;
-            string = "TUNING";
-            break;
-        // Lost in the ozone again
-        default:
-            color = HX8357_BLACK;
-            string = " ";
-            break;
-    }
+//     switch (indicator) {
+//         // We are receiving
+//         case INDICATOR_ICON_RECEIVE:
+//             color = HX8357_GREEN;
+//             string = "RECEIVE";
+//             break;
+//         // Transmission pending for next appropriate timeslot
+//         case INDICATOR_ICON_PENDING:
+//             color = HX8357_YELLOW;
+//             string = "PENDING";
+//             break;
+//         // Transmission in progress
+//         case INDICATOR_ICON_TRANSMIT:
+//             color = HX8357_RED;
+//             string = "TRANSMIT";
+//             break;
+//         // Tuning in progress
+//         case INDICATOR_ICON_TUNING:
+//             color = HX8357_ORANGE;
+//             string = "TUNING";
+//             break;
+//         // Lost in the ozone again
+//         default:
+//             color = HX8357_BLACK;
+//             string = " ";
+//             break;
+//     }
 
-    tft.setTextColor(color, HX8357_BLACK);
-    //tft.setTextSize(2);
-    tft.setCursor(DISPLAY_XMIT_RECV_INDICATOR_X, DISPLAY_XMIT_RECV_INDICATOR_Y);
-    strlpad(paddedString, string, ' ', sizeof(paddedString));
-    tft.print(paddedString);
-}  // setIndicatorIcon()
+//     // tft.setTextColor(color, HX8357_BLACK);
+//     // // tft.setTextSize(2);
+//     // tft.setCursor(DISPLAY_XMIT_RECV_INDICATOR_X, DISPLAY_XMIT_RECV_INDICATOR_Y);
+//     strlpad(paddedString, string, ' ', sizeof(paddedString));
+//     //tft.print(paddedString);
+//     ui.displayMode(String(string), color);
+// }  // setIndicatorIcon()
 
-void display_frequency(int x, int y, int value) {
-    char string[9];  // print format stuff
-    sprintf(string, "F=%i", value);
-    tft.setTextColor(HX8357_WHITE, HX8357_BLACK);
-    //tft.setTextSize(2);
-    tft.setCursor(x, y);
-    tft.print(string);
-}
+// void display_frequency(int x, int y, int value) {
+//     char string[9];  // print format stuff
+//     sprintf(string, "F=%i", value);
+//     tft.setTextColor(HX8357_WHITE, HX8357_BLACK);
+//     //tft.setTextSize(2);
+//     tft.setCursor(x, y);
+//     tft.print(string);
+// }
 
 void display_time(int x, int y) {
     getTeensy3Time();
@@ -148,7 +151,7 @@ void display_time(int x, int y) {
     } else {
         tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
     }
-    //tft.setTextSize(2);
+    // tft.setTextSize(2);
     tft.setCursor(x, y);
     tft.print(string);
 }
@@ -167,7 +170,7 @@ void display_date(int x, int y) {
     } else {
         tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
     }
-    //tft.setTextSize(2);
+    // tft.setTextSize(2);
     tft.setCursor(x, y);
     tft.print(string);
 }
@@ -199,10 +202,7 @@ void displayInfoMsg(const char* msg, uint16_t color) {
     char bfr[24];
     strlpad(bfr, msg, ' ', sizeof(bfr));
     tft.setTextColor(color, HX8357_BLACK);
-    //tft.setTextSize(2);
+    // tft.setTextSize(2);
     tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
     tft.print(bfr);
 }  // displayMsg()
-
-
-

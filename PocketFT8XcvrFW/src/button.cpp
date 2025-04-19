@@ -53,7 +53,7 @@ extern uint16_t cursor_line;
 extern int offset_freq;
 
 const float ft8_shift = 6.25;  // FT8 Hz/bin???
-int start_up_offset_freq;
+// int start_up_offset_freq;
 extern int log_flag, logging_on;
 
 // Get a reference to the Sequencer singleton
@@ -383,14 +383,14 @@ void check_WF_Touch(void) {
 }  // check_WF_Touch()
 
 //?????
-void set_startup_freq(void) {
-    cursor_line = 100;
-    // start_up_offset_freq = EEPROMReadInt(10);     //Charlie
-    start_up_offset_freq = 0;  // KQ7B
-    cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-    offset_freq = start_up_offset_freq;
-    // DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
-}  // set_startup_freq()
+// void set_startup_freq(void) {
+//     cursor_line = 100;
+//     // start_up_offset_freq = EEPROMReadInt(10);     //Charlie
+//     //start_up_offset_freq = 0;  // KQ7B
+//     cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
+//     //offset_freq = start_up_offset_freq;
+//     // DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
+// }  // set_startup_freq()
 
 void process_touch(void) {
     pi = ts.getPoint();

@@ -40,10 +40,17 @@ AScrollBoxItem::AScrollBoxItem(String s, AColor fg, AColor bg, AScrollBox* pBox)
     scrollBoxContainer = pBox;  // Backlink from item to Scroll box container
 }  // AScrollBoxItem()
 
-void AScrollBoxItem::setColors(AColor fg, AColor bg) {
+void AScrollBoxItem::setItemColors(AColor fg, AColor bg) {
     DTRACE();
     fgColor = fg;
     bgColor = bg;
+    scrollBoxContainer->repaint(this);
+}
+
+void AScrollBoxItem::setItemText(String s, AColor fg) {
+    DTRACE();
+    fgColor = fg;
+    str = s;
     scrollBoxContainer->repaint(this);
 }
 
