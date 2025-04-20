@@ -11,18 +11,19 @@
 #include <Arduino.h>       //We use many Arduino classes and data types
 #include <TimeLib.h>       //Teensy time
 
-#include "AColor.h"           //AGUI colors
-#include "ACoord.h"           // Screen coordinate data types
-#include "AGUI.h"             //The adapter for Adafruit GFX libraries
-#include "AListBox.h"         //Interactive text box
-#include "APixelBox.h"        //Interactive raster box
-#include "AScrollBox.h"       //Scrolling interactive text box
-#include "ATextBox.h"         //Non-interactive text
-#include "AToggleButton.h"    //Stateful button
-#include "DEBUG.h"            //USB Serial debugging on the Teensy 4.1
-#include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
-#include "GPShelper.h"        //Decorator for Adafruit_GPS library
-#include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
+#include "AColor.h"         //AGUI colors
+#include "ACoord.h"         // Screen coordinate data types
+#include "AGUI.h"           //The adapter for Adafruit GFX libraries
+#include "AListBox.h"       //Interactive text box
+#include "APixelBox.h"      //Interactive raster box
+#include "AScrollBox.h"     //Scrolling interactive text box
+#include "ATextBox.h"       //Non-interactive text
+#include "AToggleButton.h"  //Stateful button
+#include "DEBUG.h"          //USB Serial debugging on the Teensy 4.1
+#include "FT8Font.h"        //Customized font for the Pocket FT8 Revisited
+#include "GPShelper.h"      //Decorator for Adafruit_GPS library
+#include "HX8357_t3n.h"     //WARNING:  #include HX8357_t3n following Adafruit_GFX
+#include "Sequencer.h"
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "display.h"
 #include "lexical.h"  //String helpers
@@ -31,6 +32,11 @@
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 static AGUI* gui;
+
+// Define externals required to build the application (as opposed to unit test)
+#ifndef UNIT_TEST
+static Sequencer& seq = Sequencer::getSequencer();  // Get a reference to the Sequencer (RoboOp)
+#endif
 
 extern char* Station_Call;
 
@@ -75,14 +81,14 @@ void UserInterface::begin() {
     applicationMsgs = new ATextBox("Starting", AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
 
     // Build the buttons
-    b0 = new AToggleButton("CQ", ButtonX + 0 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    b1 = new AToggleButton("Ab", ButtonX + 1 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    b2 = new AToggleButton("Tu", ButtonX + 2 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    b3 = new AToggleButton("Tx", ButtonX + 3 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    b4 = new AToggleButton("M0", ButtonX + 4 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    b5 = new AToggleButton("M1", ButtonX + 5 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    b6 = new AToggleButton("M2", ButtonX + 6 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    b7 = new AToggleButton("Sy", ButtonX + 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b0 = new MenuButton("CQ", ButtonX + 0 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 0);
+    b1 = new MenuButton("Ab", ButtonX + 1 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 1);
+    b2 = new MenuButton("Tu", ButtonX + 2 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 2);
+    b3 = new MenuButton("Tx", ButtonX + 3 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 3);
+    b4 = new MenuButton("M0", ButtonX + 4 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 4);
+    b5 = new MenuButton("M1", ButtonX + 5 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 5);
+    b6 = new MenuButton("M2", ButtonX + 6 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 6);
+    b7 = new MenuButton("Sy", ButtonX + 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 7);
 }
 
 /**
@@ -94,7 +100,6 @@ void UserInterface::displayFrequency(unsigned kHz) {
     String s = String(kHz) + " kHz";
     itemFrequency->setItemText(s, A_GREEN);
 }  // displayFrequency()
-
 
 /**
  * @brief Display 4-letter Maidenhead Grid Locator
@@ -161,10 +166,19 @@ void UserInterface::displayTime() {
     }
 }  // displayTime
 
+/**
+ * @brief Display station callsign
+ * @param callSign Station's callsign
+ */
 void UserInterface::displayCallsign(String callSign) {
     itemCallsign->setItemText(callSign, A_GREEN);
 }  // displayCallSign
 
+/**
+ * @brief Displays specified String in the Station's operating mode (e.g. RECEIVE, TUNE, XMIT...)
+ * @param str String to display
+ * @param fg Text color
+ */
 void UserInterface::displayMode(String str, AColor fg) {
     itemMode->setItemText(str, fg);
 }
@@ -213,3 +227,83 @@ void UserInterface::setXmitRecvIndicator(IndicatorIconType indicator) {
     // tft.print(paddedString);
     ui.displayMode(String(paddedString), (AColor)color);
 }  // setIndicatorIcon()
+
+/**
+ * @brief Poll for and process touch events
+ */
+// This is calibration data for the raw touch data to the screen coordinates
+// using 510 Ohm resistors to reduce the driven voltage to Y+ and X-
+#define TS_MINX 123
+#define TS_MINY 104
+#define TS_MAXX 1715
+#define TS_MAXY 1130
+#define MINPRESSURE 120
+static unsigned long lastTime = millis();  // For simple touchscreen debouncing
+void process_touch() {
+    TSPoint pi, pw;
+    uint16_t draw_x, draw_y, touch_x, touch_y;
+
+    unsigned long thisTime = millis();  // Milliseconds
+
+    // DPRINTF("thisTime=%lu, lastTime=%lu\n", thisTime, lastTime);
+
+    if ((thisTime - lastTime) >= 200) {  // Try to avoid touch bounces
+        pi = ts.getPoint();              // Read the screen
+
+        if (pi.z > MINPRESSURE) {  // Has screen been touched?
+            DTRACE();
+            pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
+            pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
+
+            DPRINTF("pi.x=%d pi.y=%d pi.z=%d\n", pi.x, pi.y, pi.z);
+
+            AWidget::processTouch(pw.x, pw.y);  // Notify widgets that something has been touched
+
+            // checkButton();
+            // check_FT8_Touch();
+            // check_WF_Touch();
+            lastTime = thisTime;
+        }
+    }
+}
+
+/**
+ * @brief Callback function notified when this MenuButton is touched
+ */
+void MenuButton::touchButton(int buttonId) {
+    DPRINTF("touchButton #%d\n", buttonId);
+
+#ifndef UNIT_TEST
+    // Dispatch touch event into the application program
+    switch (buttonId) {
+        // CQ button
+        case 0:
+            DPRINTF("CQ\n");
+            // If state=false then begin calling CQ, else cancel existing CQ
+            // seq.cqButtonEvent();
+            break;
+
+        // Abort button
+        case 1:
+            DPRINTF("Ab\n");
+            break;
+
+        // Tune button
+        case 2:
+            DPRINTF("Tu\n");
+            seq.tuneButtonEvent();
+            break;
+
+        // Enable transmit button
+        case 3:
+            DPRINTF("Tx\n");
+            break;
+
+        // Ignore unknown button identifiers
+        default:
+            DPRINTF("Unknown button\n");
+            break;
+    }
+#endif
+
+}  // touchButton()

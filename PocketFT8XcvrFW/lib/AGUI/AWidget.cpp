@@ -108,6 +108,7 @@ void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
             scannedWidget->touchWidget(xCoord, yCoord);
         }
     }
+    //delay(50);  //Cheap debounce
 }
 
 /**

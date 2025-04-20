@@ -10,7 +10,6 @@
 #include "AScrollBox.h"       //Scrolling interactive text box
 #include "ATextBox.h"         //Non-interactive text
 #include "AToggleButton.h"    //Stateful button
-#include "DEBUG.h"            //USB Serial debugging on the Teensy 4.1
 #include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
 #include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
@@ -77,6 +76,13 @@ class DecodedMsgsBox : public AListBox {
     void setMsg(int index, char* msg);
 };
 
+// The application's menu buttons
+class MenuButton : public AToggleButton {
+   public:
+    MenuButton(const char* str, ACoord x1, ACoord y1, ALength w, ALength h, int userData) : AToggleButton(str, x1, y1, w, h, userData, true) {}
+    void touchButton(int userData) override;  // We override AToggleButton to receive notifications of touch events
+};
+
 class UserInterface {
     // private:
     //  Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
@@ -113,12 +119,12 @@ class UserInterface {
     AScrollBoxItem* itemMode;
 
     // The button widgets
-    AToggleButton* b0;
-    AToggleButton* b1;
-    AToggleButton* b2;
-    AToggleButton* b3;
-    AToggleButton* b4;
-    AToggleButton* b5;
-    AToggleButton* b6;
-    AToggleButton* b7;
+    MenuButton* b0;
+    MenuButton* b1;
+    MenuButton* b2;
+    MenuButton* b3;
+    MenuButton* b4;
+    MenuButton* b5;
+    MenuButton* b6;
+    MenuButton* b7;
 };

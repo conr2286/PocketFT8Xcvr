@@ -58,6 +58,40 @@ void test_AppMessage() {
     ui.applicationMsgs->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 }
 
+void test_CQButton() {
+    TEST_MESSAGE("test_CQButton\n");
+    TEST_ASSERT(ui.b0->getUserData() == 0);
+    TEST_ASSERT_FALSE(ui.b0->getState());
+    AWidget::processTouch(30, 300);  // Toggle button "on"
+    TEST_ASSERT(ui.b0->getState());
+    delay(1000);                     // Wait a bit
+    AWidget::processTouch(30, 300);  // Toggle button "off"
+    TEST_ASSERT_FALSE(ui.b0->getState());
+}
+
+void test_AbortButton() {
+    char s[256];
+    TEST_MESSAGE("test_AbortButton\n");
+    sprintf(s, "userData=%d\n", ui.b1->getUserData());
+    TEST_ASSERT(ui.b1->getUserData() == 1);
+    TEST_ASSERT_FALSE(ui.b1->getState());
+    AWidget::processTouch(90, 300);  // Toggle button "on"
+    TEST_ASSERT(ui.b1->getState());
+    delay(1000);                     // Wait a bit
+    AWidget::processTouch(90, 300);  // Toggle button "off"
+    TEST_ASSERT_FALSE(ui.b1->getState());
+}
+
+extern void process_touch(void);
+void test_TouchScreen() {
+    TEST_MESSAGE("Touch any displayed button in the next 15 seconds");
+    for (int i = 0; i < 150; i++) {
+        process_touch();
+        delay(100);
+    }
+    TEST_MESSAGE("Finished\n");
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_StationInfo);
@@ -65,6 +99,9 @@ int runUnityTests(void) {
     RUN_TEST(test_Waterfall);
     RUN_TEST(test_StationMsgs);
     RUN_TEST(test_AppMessage);
+    RUN_TEST(test_CQButton);
+    RUN_TEST(test_AbortButton);
+    RUN_TEST(test_TouchScreen);
     return UNITY_END();
 }
 
@@ -74,7 +111,6 @@ UserInterface ui;
 
 void setup() {
     Serial.begin(9600);
-    // Serial.println("Starting...");
 
     ui.begin();
 

@@ -114,7 +114,7 @@
 
 #include <string.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "LogFactory.h"
 #include "SequencerStates.h"
 #include "button.h"
@@ -460,7 +460,7 @@ void Sequencer::cqMsgEvent(Decode* msg) {
  * @brief Operator clicked the TUNE button
  */
 void Sequencer::tuneButtonEvent() {
-    DTRACE();
+    //DTRACE();
 
     switch (state) {
         // Stop TUNING in-progress
@@ -496,7 +496,7 @@ void Sequencer::tuneButtonEvent() {
             // displayInfoMsg("TUNING");
 
             // Start a Timer to terminate TUNING if operator forgets
-            DTRACE();
+            //DTRACE();
             startTimer();
             break;
     }

@@ -170,15 +170,15 @@ void drawButton(uint16_t i) {
 }
 
 void display_all_buttons(void) {
-    drawButton(BUTTON_CQ);
-    drawButton(BUTTON_AB);
-    drawButton(BUTTON_M1);
-    drawButton(BUTTON_M2);
-    drawButton(BUTTON_TU);
-    drawButton(BUTTON_TX);
-    drawButton(BUTTON_M3);
-    drawButton(BUTTON_M4);
-    drawButton(BUTTON_SY);
+    // drawButton(BUTTON_CQ);
+    // drawButton(BUTTON_AB);
+    // drawButton(BUTTON_M1);
+    // drawButton(BUTTON_M2);
+    // drawButton(BUTTON_TU);
+    // drawButton(BUTTON_TX);
+    // drawButton(BUTTON_M3);
+    // drawButton(BUTTON_M4);
+    // drawButton(BUTTON_SY);
 
     for (int i = 0; i < numButtons; i++) sButtonData[i].active_state = true;
 }
@@ -392,23 +392,23 @@ void check_WF_Touch(void) {
 //     // DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);
 // }  // set_startup_freq()
 
-void process_touch(void) {
-    pi = ts.getPoint();
+// void process_touch(void) {
+//     pi = ts.getPoint();
 
-    if (pi.z > MINPRESSURE) {
-        // DTRACE();
-        pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
-        pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
-        // tft.fillCircle(pw.x, pw.y, PENRADIUS, HX8357_YELLOW);
+//     if (pi.z > MINPRESSURE) {
+//         // DTRACE();
+//         pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
+//         pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
+//         // tft.fillCircle(pw.x, pw.y, PENRADIUS, HX8357_YELLOW);
 
-        draw_x = pw.x;
-        draw_y = pw.y;
+//         draw_x = pw.x;
+//         draw_y = pw.y;
 
-        checkButton();
-        check_FT8_Touch();
-        check_WF_Touch();
-    }
-}
+//         checkButton();
+//         check_FT8_Touch();
+//         check_WF_Touch();
+//     }
+// }
 
 void process_serial(void) {
     int incoming_byte;
