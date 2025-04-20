@@ -37,11 +37,11 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <stdint.h>
-//#include <string.h>
+// #include <string.h>
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  * @brief Build AListBox sans border line using width and height
@@ -168,10 +168,10 @@ int AListBox::setItem(int index, const char *txt, AColor fgColor, AColor bgColor
     removeItem(index);
 
     // Create entries for this item
-    nextItem = index;              // Informs writeItem() where to write
-    itemPixelCount[nextItem] = 0;  // Reset count of pixels previously written to this item line
-    itemColor[index] = fgColor;    // Remember the fgColor for repaints
-    itemSelected[index] = false;   // This item is not yet selected
+    nextItem = index;                  // Informs writeItem() where to write
+    itemPixelCount[nextItem] = 0;      // Reset count of pixels previously written to this item line
+    itemColor[index] = fgColor;        // Remember the fgColor for repaints
+    itemSelected[index] = false;       // This item is not yet selected
     itemTxt[index] = new String(txt);  // Remember the text String for repaints
 
     // Display the text for nextItem line
@@ -238,7 +238,6 @@ int AListBox::setItemColor(int index, AColor fgColor) {
     repaint(index);
     return index;
 }
-
 
 /**
  * @brief Write a NL-free buffer to an instance of AListBox
@@ -350,8 +349,44 @@ void AListBox::touchWidget(ACoord xClick, ACoord yClick) {
 }
 
 int AListBox::removeItem(int index) {
+    DPRINTF("removeItem(%d) getCount()=%d\n", index,getCount());
     // Sanity check
-    if ((index < 0) || (index >= maxItems)) return -1;
+    if ((index < 0) || (index >= getCount())) return -1;
+    if (itemTxt[index] == nullptr) return -1;
+    DTRACE();
+
+    // Setup the clip rectangle to inside the boundary.
+    int16_t clipX = boundary.x1 + 1;
+    int16_t clipY = boundary.y1 + 1;
+    int16_t clipW = boundary.x2 - boundary.x1 - 1;  // Clip width sans border
+    int16_t clipH = boundary.y2 - boundary.y1 - 1;  // Clip height sans border
+
+    // Now adjust the clip to allow room for the border if we have one
+    if (hasBorder()) {  // Does list box have a border?
+                        // clipX+=1;        // Reserve space for border and one blank pixel
+                        // clipY+=1;        // Reserve space for border and one blank pixel
+        clipW -= 2;     // Width descreases to make room for border
+        clipH -= 2;     // As does height to make room for border
+    }
+
+    // Setup the display clip rectangle for our list box (which better fit on the screen)
+    // DPRINTF("clipX=%d,clipY=%d,clipW=%d,clipH=%d, leading=%d\n", clipX, clipY, clipW, clipH, leading);
+    AGUI::setClipRect(clipX, clipY, clipW, clipH);
+
+    // Place the cursor where we wish to erase this char[] string
+    int16_t drawX = clipX + 1;                    // Place after existing text on this item line
+    int16_t drawY = clipY + 1 + index * leading;  // Place on this item's line
+
+    // Recalculate the count of text pixels on this item (so we can later append text to this item)
+    ACoord x, y;  // Returned by getTextBounds() but not used
+    ACoord w, h;  // Width and height in pixels returned by getTextBounds()
+    AGUI::getTextBounds((const uint8_t *)itemTxt[index]->c_str(), itemTxt[index]->length(), drawX, drawY, &x, &y, &w, &h);
+    DTRACE();
+    // Erase display
+    AGUI::fillRect(x, y, w, h, bgColor);
+    DTRACE();
+    // Restore default clip
+    AGUI::setClipRect();
 
     // Delete the item's data and nullify its dangling pointer
     delete itemTxt[index];
@@ -360,13 +395,21 @@ int AListBox::removeItem(int index) {
     itemPixelCount[index] = 0;
     itemSelected[index] = false;
 
-    // TODO:  Need to erase display where item was
-
     return index;
 }
 
 void AListBox::reset(void) {
+    DTRACE();
     for (int i = 0; i < maxItems; i++) {
         removeItem(i);
     }
+    nextItem = 0;
+}
+
+/**
+ * @brief Get count of items in list
+ * @return count
+ */
+int AListBox::getCount() {
+    return nextItem;  // Index of where next item will be placed
 }

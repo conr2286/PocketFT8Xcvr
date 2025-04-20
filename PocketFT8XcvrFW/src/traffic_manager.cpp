@@ -11,6 +11,7 @@
 #include "gen_ft8.h"
 #include "pins.h"
 #include "si5351.h"
+#include "UserInterface.h"
 
 #define FT8_TONE_SPACING 625
 
@@ -32,6 +33,8 @@ extern int offset_freq;
 uint64_t F_Long, F_FT8, F_Offset;
 
 extern int tune_flag;
+
+extern UserInterface ui;
 
 /**
  * Turn-on the transmitter at the carrier frequency, F_Long
@@ -61,7 +64,7 @@ void transmit_sequence(void) {
     pinMode(PIN_PTT, OUTPUT);
     digitalWrite(PIN_PTT, HIGH);
 
-    setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);
 }
 
 /**
@@ -88,7 +91,7 @@ void receive_sequence(void) {
     // Receive
     si4735.setVolume(50);
     clearOutboundMessageDisplay();
-    setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 
 }  // receive_sequence()
 
@@ -122,7 +125,7 @@ void tune_On_sequence(void) {
 
     // Let loop() know we are tuning
     tune_flag = 1;
-    setXmitRecvIndicator(INDICATOR_ICON_TUNING);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_TUNING);
 
     // DPRINTF("TUNE\n");
 
@@ -152,7 +155,7 @@ void tune_Off_sequence(void) {
 
     // Finished tuning
     tune_flag = 0;
-    setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 
     // DPRINTF("TUNE OFF\n");
 

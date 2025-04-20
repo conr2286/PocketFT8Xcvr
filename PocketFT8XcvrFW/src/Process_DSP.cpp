@@ -9,6 +9,7 @@
 #include "decode_ft8.h"
 #include "display.h"
 #include "traffic_manager.h"
+#include "UserInterface.h"
 
 extern HX8357_t3n tft;
 extern q15_t dsp_buffer[] __attribute__((aligned(4)));
@@ -25,7 +26,9 @@ extern int num_decoded_msg;
 
 // The follow two externs added to support timing investigation (only used for debugging)
 //extern int xmit_flag;
-//extern int Transmit_Armned;  
+//extern int Transmit_Armned;
+
+extern UserInterface ui;
 
 int master_offset, offset_step;
 //extern int CQ_Flag;
@@ -147,8 +150,11 @@ void update_offset_waterfall(int offset) {
 
   // Draw waterfall pixels
   for (int k = ft8_min_bin; k < ft8_buffer; k++) {
-    tft.drawPixel(k - ft8_min_bin, WF_counter, WFPalette[WF_index[k]]);
-    if (k - ft8_min_bin == cursor_line) tft.drawPixel(k - ft8_min_bin, WF_counter, HX8357_RED);
+    //tft.drawPixel(k - ft8_min_bin, WF_counter, WFPalette[WF_index[k]]);
+    ui.theWaterfall->drawPixel(k - ft8_min_bin, WF_counter, (AColor) WFPalette[WF_index[k]]);
+    //if (k - ft8_min_bin == cursor_line) tft.drawPixel(k - ft8_min_bin, WF_counter, HX8357_RED);
+    if (k - ft8_min_bin == cursor_line) ui.theWaterfall->drawPixel(k - ft8_min_bin, WF_counter, A_RED);
+
   }
 
   // At the beginning(!!!) of a timeslot, display recvd messages, and prepare to send CQ or respond to calls

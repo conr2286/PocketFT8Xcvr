@@ -1,7 +1,7 @@
 #include "AWidget.h"
 
 #include "AGUI.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 // #include "ft8_font.h"
 
 // Initialize the head of the unordered list of all AWidget objects.

@@ -123,6 +123,7 @@
 #include "gen_ft8.h"
 #include "msgTypes.h"
 #include "traffic_manager.h"
+#include "UserInterface.h"
 
 // Many externals in the legacy C code.  TODO:  See if we can simplify these externals.
 extern int Transmit_Armned;        // (Maybe) Transmit message pending in next timeslot
@@ -131,6 +132,7 @@ extern char Station_Call[];        // Our station's callsign
 extern char Target_Call[];         // Displayed station's callsign
 extern int Target_RSL;             // Remote station's RSL
 extern uint16_t currentFrequency;  // Nominal frequency (sans offset) in kHz
+extern UserInterface ui;            // The application's user interface
 
 // Our statics
 static bool autoReplyToCQ;  // RoboOp automatically transmits reply to CQ
@@ -162,7 +164,7 @@ void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
     // DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
     contactLog = LogFactory::buildADIFlog(logfileName);
     setAutoReplyToCQ(false);  // Disable auto reply to CQ and clear button
-    setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 }  // begin()
 
 /**
@@ -443,7 +445,7 @@ void Sequencer::cqMsgEvent(Decode* msg) {
             displayInfoMsg(get_message(), HX8357_YELLOW);  // Display pending call in yellow
             startTimer();                                  // Start the Timer to terminate a run-on QSO
             state = LOC_PENDING;                           // Await appropriate timeslot to transmit to Target_Call
-            setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
         // Automatic responses are disabled if we are calling CQ or otherwise engaged in a QSO
@@ -524,7 +526,7 @@ void Sequencer::cqButtonEvent() {
             state = CQ_PENDING;                            // Await the next timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);  // Display pending CQ message in yellow
             startTimer();                                  // Start the Timer to terminate run-on CQ transmissions
-            setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
         // Abort CQ transmission (even if it's in progress)
@@ -538,7 +540,7 @@ void Sequencer::cqButtonEvent() {
             clearOutboundMessageDisplay();  // Clears displayed outbound message as we're now idle
             stopTimer();                    // Stop the Timer
             resetButton(BUTTON_CQ);         // Reset highlighted button
-            setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
+            ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
             break;
 
             // The CQ button is ignored during most states
@@ -585,7 +587,7 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
                 startTimer();                                  // Start the Timer to terminate a run-on QSO
                 resetButton(BUTTON_CQ);                        // No longer calling CQ
                 state = LOC_PENDING;                           // Await appropriate timeslot to transmit to Target_Call
-                setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+                ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
                 break;
 
                 // Message clicks are ignored during most states
@@ -694,7 +696,7 @@ void Sequencer::abortButtonEvent() {
     DTRACE();
     setAutoReplyToCQ(false);  // Reset the RoboOp
     timerEvent(NULL);         // TODO:  refactor so we don't need to pass a NULL Timer pointer
-    setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 }  // abortButtonEvent()
 
 /**
@@ -716,7 +718,7 @@ void Sequencer::rslEvent(Decode* msg) {
             set_message(MSG_RRR);                  // Prepare an RRR message
             state = RRR_PENDING;                   // We must await an appropriate even/odd timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);
-            setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
         // Remote station sent our RSL and we should respond with their RRSL
@@ -728,7 +730,7 @@ void Sequencer::rslEvent(Decode* msg) {
             set_message(MSG_RRSL);                 // Prepare to send their signal report to remote station
             state = RRSL_PENDING;                  // Await an appropriate even/odd timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);
-            setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
         // We were expecting a LOC but received a signal report.  We likely were calling CQ
@@ -744,7 +746,7 @@ void Sequencer::rslEvent(Decode* msg) {
             set_message(MSG_RRSL);  // Roger our RSL and send their RSL to remote station
             state = RRSL_PENDING;   // Transmit their RSL in next appropriate timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);
-            setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
         // Ignore non-sense
@@ -818,7 +820,7 @@ void Sequencer::eotReplyEvent(Decode* msg) {
             set_message(MSG_73);                   // Prepare an RRR message
             state = M73_PENDING;                   // We must await an appropriate even/odd timeslot
             displayInfoMsg(get_message(), HX8357_YELLOW);
-            setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             // TODO:  qso.end()???
             break;
 
@@ -870,7 +872,7 @@ void Sequencer::locatorEvent(Decode* msg) {
             set_message(MSG_RSL);  // Prepare to transmit RSL to responder
             state = RSL_PENDING;   // Must await an appropriate timeslot when responder is listening
             displayInfoMsg(get_message(), HX8357_YELLOW);
-            setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
         // Something is wrong and we don't know why we apparently received their locator.  Maybe we should reset everything???
@@ -953,9 +955,9 @@ void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
         Transmit_Armned = 1;                            // Yes, transmit in the next slot
         setup_to_transmit_on_next_DSP_Flag();           // loop() begins modulation in next timeslot
         state = newState;                               // Advance state machine to new state after arming the transmitter
-        setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);  // Transmission will begin in loop()
+        ui.setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);  // Transmission will begin in loop()
     } else {
-        setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Transmission pending appropriate time slot
+        ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Transmission pending appropriate time slot
     }
 
 }  // pendXmit()
@@ -1060,7 +1062,7 @@ void Sequencer::endQSO() {
 
     // We are finished with this contact whether we had enough data to log it or not
     contact.reset();
-    setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // We are receiving again
+    ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // We are receiving again
 }
 
 /**

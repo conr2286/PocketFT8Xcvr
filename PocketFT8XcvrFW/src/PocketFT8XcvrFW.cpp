@@ -690,6 +690,9 @@ void update_synchronization() {
         }
         nextTimeSlot = current_time + 15000;
 
+        // Update the displayed date
+        ui.displayDate(true);   //Force an update so display will change from yellow to green if GPS is acquired
+
         // Debug timeslot and sequencer problems
         DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s', autoReplyToCQ=%u -------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message(), getAutoReplyToCQ());
     }
@@ -744,7 +747,8 @@ void sync_FT8(void) {
 void waitForFT8timeslot(void) {
     // DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
 
-    displayInfoMsg("Waiting for timeslot");
+    //displayInfoMsg("Waiting for timeslot");
+    ui.appMessage->setText("Waiting for timeslot");
 
     // If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
     if (gpsHelper.validGPSdata) {
@@ -775,7 +779,8 @@ void waitForFT8timeslot(void) {
 
     // Update display
     // displayInfoMsg("RECV");
-    displayInfoMsg(" ");
+    //displayInfoMsg(" ");
+    ui.appMessage->setText(" ");
 
     DPRINTF("-----Timeslot %lu: second()=%u, millis()=%lu ---------------------\n", seq.getSequenceNumber(), millis());
 

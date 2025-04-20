@@ -18,7 +18,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  * @brief Build an item for AScrollBox
@@ -170,7 +170,7 @@ int AScrollBox::repaint(int index) {
  */
 AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
     if (!Serial) Serial.begin(9600);
-    Serial.print("repaint(pTem)\n");
+    //Serial.print("repaint(pTem)\n");
 
     // Sanity checks
     if (pItem == nullptr) return nullptr;

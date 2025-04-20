@@ -25,7 +25,8 @@
 #include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "display.h"
-#include "pins.h"  //Pocket FT8 pin assignments for Teensy 4.1 MCU
+#include "lexical.h"  //String helpers
+#include "pins.h"     //Pocket FT8 pin assignments for Teensy 4.1 MCU
 
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
@@ -50,19 +51,9 @@ extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
 
 extern UserInterface ui;
 
-// Touchable scroll box
-class AppScrollBox : public AScrollBox {
-   public:
-    AppScrollBox(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {
-    }
-    AScrollBoxItem* addItem(AScrollBox* pBox, String str) {
-        return addItem(pBox, str);
-    }
-    void touchItem(AScrollBoxItem* pItem) {
-        DTRACE();
-        pItem->setItemColors(A_BLACK, A_YELLOW);
-    }
-};
+void DecodedMsgsBox::displayMsg(int index, char* msg) {
+    setItem(index, msg, A_WHITE, bgColor);
+}
 
 /**
  * @brief Start-up the Adafruit Display, GFX adapter and library, the resistive touchscreen, and widgets
@@ -76,38 +67,25 @@ void UserInterface::begin() {
     // ts = new TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                    // 282 ohms is the measured x-Axis resistance of my Adafruit 2050 touchscreen
 
     // Build the Waterfall
-    // theWaterfall = new Waterfall();
+    theWaterfall = new Waterfall();
 
     // Build the stationInfo
-    stationInfo = new AScrollBox(DateX, DateY, DateW, /*107*/ 112, A_DARK_GREY);
+    stationInfo = new AScrollBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
     itemDate = stationInfo->addItem(stationInfo, "", A_RED);
     itemTime = stationInfo->addItem(stationInfo, "", A_RED);
     itemLocator = stationInfo->addItem(stationInfo, "", A_RED);
     itemCallsign = stationInfo->addItem(stationInfo, "");
     itemFrequency = stationInfo->addItem(stationInfo, "");
-    itemMode = stationInfo->addItem(stationInfo, "STARTING");
+    itemMode = stationInfo->addItem(stationInfo, "");
 
     // Build the decoded messages box
-    // decodedMsgs = new AppScrollBox(DecodedMsgsX, DecodedMsgsY, DecodedMsgsW, DecodedMsgsH, A_DARK_GREY);
-    // decodedMsgs->addItem(decodedMsgs, "WN1ABC/P KA1XYZ RR73 S3");
-    // decodedMsgs->addItem(decodedMsgs, "WN2ABC/P KA0XYZ RR73 S3");
-    // decodedMsgs->addItem(decodedMsgs, "WN3ABC/P KA0XYZ RR73 S3");
-    // decodedMsgs->addItem(decodedMsgs, "WN4ABC/P KA0XYZ RR73 S3");
-    // decodedMsgs->addItem(decodedMsgs, "WN5ABC/P KA0XYZ RR73 S3");
-    // decodedMsgs->addItem(decodedMsgs, "WN6ABC/P KA0XYZ RR73 S3");
-    // decodedMsgs->addItem(decodedMsgs, "KQ7B AG0E DM14");
-    // delay(1000);
-    // AWidget::processTouch(DecodedMsgsX + 2, DecodedMsgsY + 2);
+    decodedMsgs = new DecodedMsgsBox(DecodedMsgsX, DecodedMsgsY, DecodedMsgsW, DecodedMsgsH, A_DARK_GREY);
 
     // Build the station messages box
-    // stationMsgs = new AScrollBox(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
-    // AScrollBoxItem* pCQ = stationMsgs->addItem(stationMsgs, "CQ WN8ABC DN15");
-    // stationMsgs->addItem(stationMsgs, "WN8ABC KA0XYZ DN14");
-    // stationMsgs->addItem(stationMsgs, "KA0XYZ WN8ABC -5");
-    // pCQ->setItemColors(A_YELLOW, A_BLACK);
+    stationMsgs = new AScrollBox(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
 
     // // Application message box
-    // appMessage = new ATextBox("Logged #42", AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
+    appMessage = new ATextBox("Starting...", AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
 
     // // Build the buttons
     // b0 = new AToggleButton("CQ", ButtonX + 0 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
@@ -118,8 +96,6 @@ void UserInterface::begin() {
     // b5 = new AToggleButton("M1", ButtonX + 5 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
     // b6 = new AToggleButton("M2", ButtonX + 6 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
     // b7 = new AToggleButton("Sy", ButtonX + 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-
-    delay(2000);
 }
 
 /**
@@ -143,44 +119,57 @@ void UserInterface::displayLocator(String grid, AColor fg) {
 /**
  * @brief Display UTC date
  *
- * Displayed in green if GPS disciplined, else yellow
+ * @param forceUpdate Allows app to force an update to the display
+ *
+ * Displayed in green if GPS disciplined, else yellow.
+ *
+ * We only update the display when day() changes
  */
-void UserInterface::displayDate() {
-    DTRACE();
+static int lastDay = -1;
+void UserInterface::displayDate(bool forceUpdate) {
+    // DTRACE();
     Teensy3Clock.get();  // Sync MCU clock with RTC
     char str[13];        // print format stuff
     AColor fg;           // Text color
-
-    // We can display UTC date in two possible formatts
+    int thisDay = day();
+    if ((thisDay != lastDay) || forceUpdate) {
+        // We can display UTC date in two possible formatts
 #if DISPLAY_DATE == MMDDYY
-    snprintf(str, sizeof(str), "%02i/%02i/%02i", month(), day(), year() % 1000);  // MM:DD:YY
+        snprintf(str, sizeof(str), "%02i/%02i/%02i", month(), day(), year() % 1000);  // MM:DD:YY
 #else
-    snprintf(str, sizeof(str), "%02i/%02i/%02i", year() % 1000, month(), day());  // YY:MM:DD
+        snprintf(str, sizeof(str), "%02i/%02i/%02i", year() % 1000, month(), day());  // YY:MM:DD
 #endif
-    if (gpsHelper.validGPSdata) {
-        fg = A_GREEN;
-    } else {
-        fg = A_YELLOW;
+        if (gpsHelper.validGPSdata) {
+            fg = A_GREEN;
+        } else {
+            fg = A_YELLOW;
+        }
+        itemDate->setItemText(String(str), fg);  // Green if GPS Disciplined
     }
-    itemDate->setItemText(String(str), fg);  // Green if GPS Disciplined
 }  // displayDate()
 
 /**
  * @brief Display UTC time
  *
- * Displayed in green if GPS disciplined else yellow
+ * Displayed in green if GPS disciplined else yellow.
+ *
+ * We only update the display when the second() changes.
  */
+static int lastSecond = -1;
 void UserInterface::displayTime() {
     Teensy3Clock.get();  // Sync MCU clock with RTC
     char str[13];        // print format stuff
     AColor fg;
-    snprintf(str, sizeof(str), "%02i:%02i:%02i", hour(), minute(), second());
-    if (gpsHelper.validGPSdata) {
-        fg = A_GREEN;
-    } else {
-        fg = A_YELLOW;
+    int thisSecond = second();
+    if (thisSecond != lastSecond) {
+        snprintf(str, sizeof(str), "%02i:%02i:%02i", hour(), minute(), second());
+        if (gpsHelper.validGPSdata) {
+            fg = A_GREEN;
+        } else {
+            fg = A_YELLOW;
+        }
+        itemTime->setItemText(String(str), fg);  // Green if GPS Disciplined
     }
-    itemTime->setItemText(String(str), fg);  // Green if GPS Disciplined
 }  // displayTime
 
 void UserInterface::displayCallsign(String callSign) {
@@ -195,7 +184,7 @@ void UserInterface::displayMode(String str, AColor fg) {
  * @brief Set the GUI's Transmit/Receive/Pending icon color
  * @param indicator Specifies what we're doing
  */
-void setXmitRecvIndicator(IndicatorIconType indicator) {
+void UserInterface::setXmitRecvIndicator(IndicatorIconType indicator) {
     unsigned short color;  // Indicator icon color
     char* string;
     char paddedString[9];

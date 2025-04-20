@@ -20,7 +20,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  * @brief Build and display ATextBox object

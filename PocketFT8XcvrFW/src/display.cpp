@@ -55,38 +55,38 @@ char* strlpad(char* str, unsigned size, char c) {
 
 }  // strlpad()
 
-/**
- * Local helper function to pad a char[] to a specified length
- *
- * @param dst  Pointer to the destination char[] string
- * @param src  Pointer to the source char[] string
- * @param c    The pad character (e.g. ' ')
- * @param size sizeof(dst) including the NUL terminator
- *
- * strlpad() copies chars from src[] to dst[], padding dst[] with c to ensure
- * it's filled (including the NUL terminator).  The resulting dst string,
- * including the NUL terminator, will occupy no more than size chars in dst[].
- *
- **/
-char* strlpad(char* dst, char* src, char c, unsigned size) {
-    const char NUL = 0;
-    bool paddingUnderway = false;
-    int i;
+// /**
+//  * Local helper function to pad a char[] to a specified length
+//  *
+//  * @param dst  Pointer to the destination char[] string
+//  * @param src  Pointer to the source char[] string
+//  * @param c    The pad character (e.g. ' ')
+//  * @param size sizeof(dst) including the NUL terminator
+//  *
+//  * strlpad() copies chars from src[] to dst[], padding dst[] with c to ensure
+//  * it's filled (including the NUL terminator).  The resulting dst string,
+//  * including the NUL terminator, will occupy no more than size chars in dst[].
+//  *
+//  **/
+// char* strlpad(char* dst, char* src, char c, unsigned size) {
+//     const char NUL = 0;
+//     bool paddingUnderway = false;
+//     int i;
 
-    for (i = 0; i < size - 1; i++) {
-        if (src[i] == NUL) paddingUnderway = true;
-        if (paddingUnderway) {
-            dst[i] = c;
-        } else {
-            dst[i] = src[i];
-        }
-    }
+//     for (i = 0; i < size - 1; i++) {
+//         if (src[i] == NUL) paddingUnderway = true;
+//         if (paddingUnderway) {
+//             dst[i] = c;
+//         } else {
+//             dst[i] = src[i];
+//         }
+//     }
 
-    dst[size - 1] = NUL;
+//     dst[size - 1] = NUL;
 
-    return dst;
+//     return dst;
 
-}  // strlpad()
+// }  // strlpad()
 
 // /**
 //  * @brief Set the GUI's Transmit/Receive/Pending icon color
@@ -200,9 +200,9 @@ void displayInfoMsg(const char* msg) {
  **/
 void displayInfoMsg(const char* msg, uint16_t color) {
     char bfr[24];
-    strlpad(bfr, msg, ' ', sizeof(bfr));
-    tft.setTextColor(color, HX8357_BLACK);
-    // tft.setTextSize(2);
-    tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
-    tft.print(bfr);
+    // strlpad(bfr, msg, ' ', sizeof(bfr));
+    // tft.setTextColor(color, HX8357_BLACK);
+    // // tft.setTextSize(2);
+    // tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
+    // tft.print(bfr);
 }  // displayMsg()

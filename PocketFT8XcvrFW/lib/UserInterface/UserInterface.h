@@ -16,43 +16,49 @@
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
 
-
+// Transmit/Receive/Pending indicator icon
+typedef enum {
+    INDICATOR_ICON_RECEIVE = 0,
+    INDICATOR_ICON_PENDING = 1,
+    INDICATOR_ICON_TRANSMIT = 2,
+    INDICATOR_ICON_TUNING = 3
+} IndicatorIconType;
 
 // Define the Waterfall widget's boundary and extent
 static const ACoord WaterfallX = 0;          // Upper-left corner of Waterfall
 static const ACoord WaterfallY = 0;          // Upper-left corner of Waterfall
-static const APixelPos WaterfallRows = 100;  // #Pixel rows inside Waterfall widget
+static const APixelPos WaterfallRows = 105;  // #Pixel rows inside Waterfall widget
 static const APixelPos WaterfallCols = 353;  // #Pixel cols inside Waterfall widget
 
 // Define the Decoded Messages widget's boundary and extent
 static const ACoord DecodedMsgsX = 0;     // Upper-left corner
-static const ACoord DecodedMsgsY = 108;   // Upper-left corner
+static const ACoord DecodedMsgsY = 114;   // Upper-left corner
 static const ALength DecodedMsgsW = 260;  // Width
 static const ALength DecodedMsgsH = 112;  // Height
 
 // Define the Station Messages widget's boundary and extent
 static const ACoord StationMsgsX = 262;   // Upper-left corner
-static const ACoord StationMsgsY = 108;   // Upper-left corner
+static const ACoord StationMsgsY = 114;   // Upper-left corner
 static const ALength StationMsgsW = 218;  // Width
 static const ALength StationMsgsH = 112;  // Height
 
-// Define the UTC Date widget's boundary and extent
-static const ACoord DateX = 361;   // Upper-left corner of UTC Date
-static const ACoord DateY = 0;     // Upper-left corner of UTC Date
-static const ALength DateW = 119;  // Width
-static const ALength DateH = 20;   // Height
+// Define the Info widget's boundary and extent
+static const ACoord InfoX = 361;   // Upper-left corner of UTC Date
+static const ACoord InfoY = 0;     // Upper-left corner of UTC Date
+static const ALength InfoW = 119;  // Width
+static const ALength InfoH = 112;   // Height
 
-// Define the UTC Time widget's boundary and extent
-static const ACoord TimeX = 360;   // Upper-left corner of UTC Time
-static const ACoord TimeY = 20;    // Upper-left corner of UTC Time
-static const ALength TimeW = 120;  // Width
-static const ALength TimeH = 20;   // Height
+// // Define the UTC Time widget's boundary and extent
+// static const ACoord TimeX = 360;   // Upper-left corner of UTC Time
+// static const ACoord TimeY = 20;    // Upper-left corner of UTC Time
+// static const ALength TimeW = 120;  // Width
+// static const ALength TimeH = 20;   // Height
 
-// Define the Station widget's boundary and extent
-static const ACoord StationX = 360;   // Upper-left corner of Station
-static const ACoord StationY = 40;    // Upper-left corner of Station
-static const ALength StationW = 120;  // Width
-static const ALength StationH = 20;   // Height
+// // Define the Station widget's boundary and extent
+// static const ACoord StationX = 360;   // Upper-left corner of Station
+// static const ACoord StationY = 40;    // Upper-left corner of Station
+// static const ALength StationW = 120;  // Width
+// static const ALength StationH = 20;   // Height
 
 // Define Application Message boundary and extent
 static const ACoord AppMsgX = 0;     // Upper-left corner
@@ -73,51 +79,58 @@ class Waterfall : public APixelBox {
 };
 
 // Let this be visible for compatibility with legacy code
-//HX8357_t3n tft;
+// HX8357_t3n tft;
+
+// The interactive box displaying decoded messages
+class DecodedMsgsBox : public AListBox {
+   public:
+    DecodedMsgsBox(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AListBox(x, y, w, h, c) {}
+
+    void displayMsg(int index, char* msg);
+};
 
 class UserInterface {
-   //private:
-    // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
-    // HX8357_t3n* tft;
-    //static AGUI* gui;
-    //static TouchScreen* ts;
+    // private:
+    //  Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
+    //  HX8357_t3n* tft;
+    // static AGUI* gui;
+    // static TouchScreen* ts;
 
-    public:
+   public:
     // Initialization methods
     void begin(void);
 
     // StationInfo methods
     void displayFrequency(unsigned kHz);
     void displayLocator(String grid, AColor fgColor);
-    void displayDate(void);
+    void displayDate(bool forceUpdate = false);
     void displayTime(void);
     void displayCallsign(String callSign);
     void displayMode(String mode, AColor fg);
+    void setXmitRecvIndicator(IndicatorIconType indicator);
 
     // The widgets for displaying station info, traffic and info about the rig
     Waterfall* theWaterfall;
     AScrollBox* stationInfo;
-    AScrollBox* decodedMsgs;
+    DecodedMsgsBox* decodedMsgs;
     AScrollBox* stationMsgs;
     ATextBox* appMessage;
 
     // The stationInfo items
-     AScrollBoxItem* itemDate;
-     AScrollBoxItem* itemTime;
-     AScrollBoxItem* itemLocator;
-     AScrollBoxItem* itemCallsign;
-     AScrollBoxItem* itemFrequency;
-     AScrollBoxItem* itemMode;
+    AScrollBoxItem* itemDate;
+    AScrollBoxItem* itemTime;
+    AScrollBoxItem* itemLocator;
+    AScrollBoxItem* itemCallsign;
+    AScrollBoxItem* itemFrequency;
+    AScrollBoxItem* itemMode;
 
-     // The button widgets
-     static AToggleButton* b0;
-     static AToggleButton* b1;
-     static AToggleButton* b2;
-     static AToggleButton* b3;
-     static AToggleButton* b4;
-     static AToggleButton* b5;
-     static AToggleButton* b6;
-     static AToggleButton* b7;
-
+    // The button widgets
+    static AToggleButton* b0;
+    static AToggleButton* b1;
+    static AToggleButton* b2;
+    static AToggleButton* b3;
+    static AToggleButton* b4;
+    static AToggleButton* b5;
+    static AToggleButton* b6;
+    static AToggleButton* b7;
 };
-
