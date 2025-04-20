@@ -25,26 +25,37 @@ void test_StationInfo(void) {
 
 void test_DecodedMsgs(void) {
     TEST_MESSAGE("test_DecodedMsgs()\n");
-    ui.decodedMsgs->setItem(0, "KQ7B AG0E -13 S3", A_WHITE, A_BLACK);
+    ui.decodedMsgs->setMsg(0, "WA0ABC AG0E -13 S3");
+    ui.decodedMsgs->setMsg(1, "WA1ABC AG0E -13 S3");
+    ui.decodedMsgs->setMsg(2, "WA2ABC AG0E -13 S3");
+    ui.decodedMsgs->setMsg(3, "WA3ABC AG0E -13 S3");
+    ui.decodedMsgs->setMsg(4, "WA4ABC AG0E -13 S3");
+    ui.decodedMsgs->setMsg(5, "WA5ABC AG0E -13 S3");
 }
 
 void test_StationMsgs(void) {
     TEST_MESSAGE("test_StationMsgs\n");
     AScrollBoxItem* pCQ = ui.stationMsgs->addItem(ui.stationMsgs, "CQ KQ7B DN15");
     pCQ->setItemColors(A_YELLOW, A_BLACK);
+    ui.stationMsgs->addItem(ui.stationMsgs, "WN0XYZ KW9ABC RR73");
     ui.stationMsgs->addItem(ui.stationMsgs, "KQ7B KA0XYZ DN14");
     AScrollBoxItem* pReply = ui.stationMsgs->addItem(ui.stationMsgs, "KA0XYZ KQ7B -5");
     delay(2000);
     pReply->setItemColors(A_RED, A_BLACK);
-}
+}  // test_StationMsgs()
 
 void test_Waterfall() {
     TEST_MESSAGE("test_Waterfall()\n");
-    for (int y = 0; y < 100;y++) {
+    for (int y = 0; y < 100; y++) {
         for (int x = 0; x < 350; x++) {
-            ui.theWaterfall->drawPixel(x,y,A_BLUE);
+            ui.theWaterfall->drawPixel(x, y, A_BLUE);
         }
     }
+}  // test_Waterfall()
+
+void test_AppMessage() {
+    TEST_MESSAGE("test_AppMessage\n");
+    ui.applicationMsgs->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 }
 
 int runUnityTests(void) {
@@ -53,6 +64,7 @@ int runUnityTests(void) {
     RUN_TEST(test_DecodedMsgs);
     RUN_TEST(test_Waterfall);
     RUN_TEST(test_StationMsgs);
+    RUN_TEST(test_AppMessage);
     return UNITY_END();
 }
 
@@ -62,19 +74,18 @@ UserInterface ui;
 
 void setup() {
     Serial.begin(9600);
-    Serial.println("Starting...");
+    // Serial.println("Starting...");
 
     ui.begin();
 
-    //ATextBox foo = ATextBox("foo", 0, 200, 100, 100);
-    //delay(1000);
+    // ATextBox foo = ATextBox("foo", 0, 200, 100, 100);
+    // delay(1000);
 
     // Run the tests
-    //delay(1000);
+    // delay(1000);
     runUnityTests();
     delay(1000);
 }
-
 
 void tearDown(void) {
     Serial.println("Finished");

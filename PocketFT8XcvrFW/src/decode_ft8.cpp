@@ -271,14 +271,14 @@ void display_messages(int decoded_messages) {
     // field3 is an RSL or locator or ???.
     // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);                     // Currently... all messages are the same color
     // tft.setTextSize(2);                                                // 10X16 pixels per AdaFruit
-    if (decoded_messages > 0) ui.decodedMsgs->reset();                 // Clear all the old messages
-    for (int i = 0; i < decoded_messages && i < message_limit; i++) {  // Charlie's leading handled 6 rows of text
-        snprintf(message, sizeof(message), "%6s %6s %4s S%c", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, rsl2s(new_decoded[i].snr));
+    if (decoded_messages > 0) ui.decodedMsgs->reset();                  // Clear all the old messages
+    for (int i = 0; i < decoded_messages && i <= message_limit; i++) {  // Charlie's leading handled 6 rows of text
+        snprintf(message, sizeof(message), "%s %s %4s S%c", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, rsl2s(new_decoded[i].snr));
         // DPRINTF("display_message %u = '%s' loc='%s'\n", i, message, new_decoded[i].locator);
         strlpad(message, sizeof(message), ' ');  // Padding is faster than fillRect()
         // tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
         // tft.print(message);
-        ui.decodedMsgs->addItem(message, A_WHITE);  //Item will be added at position i
+        ui.decodedMsgs->addItem(message, A_WHITE);  // Item will be added at position i
     }
 
     // Erase messages lines from the previous timeslot that weren't overwritten above

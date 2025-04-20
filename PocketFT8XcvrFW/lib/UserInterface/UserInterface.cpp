@@ -34,24 +34,12 @@ static AGUI* gui;
 
 extern char* Station_Call;
 
-// C++ requires static member variables defined here in cpp so linker can resolve them
-// AScrollBox* UserInterface::stationInfo;
-// Waterfall* UserInterface::theWaterfall;
-// AScrollBox* UserInterface::decodedMsgs;
-// AScrollBox* UserInterface::stationMsgs;
-// ATextBox* UserInterface::appMessage;
-// AScrollBoxItem* UserInterface::itemDate;
-// AScrollBoxItem* UserInterface::itemTime;
-// AScrollBoxItem* UserInterface::itemLocator;
-// AScrollBoxItem* UserInterface::itemCallsign;
-// AScrollBoxItem* UserInterface::itemFrequency;
-
 // GPS Access
 extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
 
 extern UserInterface ui;
 
-void DecodedMsgsBox::displayMsg(int index, char* msg) {
+void DecodedMsgsBox::setMsg(int index, char* msg) {
     setItem(index, msg, A_WHITE, bgColor);
 }
 
@@ -62,7 +50,6 @@ void UserInterface::begin() {
     DTRACE();
 
     // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
-    // tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // These are PFR Teensy pin assignments
     gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
     // ts = new TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                    // 282 ohms is the measured x-Axis resistance of my Adafruit 2050 touchscreen
 
@@ -85,17 +72,17 @@ void UserInterface::begin() {
     stationMsgs = new AScrollBox(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
 
     // // Application message box
-    appMessage = new ATextBox("Starting...", AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
+    applicationMsgs = new ATextBox("Starting", AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
 
-    // // Build the buttons
-    // b0 = new AToggleButton("CQ", ButtonX + 0 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    // b1 = new AToggleButton("Ab", ButtonX + 1 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    // b2 = new AToggleButton("Tu", ButtonX + 2 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    // b3 = new AToggleButton("Tx", ButtonX + 3 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    // b4 = new AToggleButton("M0", ButtonX + 4 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    // b5 = new AToggleButton("M1", ButtonX + 5 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    // b6 = new AToggleButton("M2", ButtonX + 6 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
-    // b7 = new AToggleButton("Sy", ButtonX + 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    // Build the buttons
+    b0 = new AToggleButton("CQ", ButtonX + 0 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b1 = new AToggleButton("Ab", ButtonX + 1 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b2 = new AToggleButton("Tu", ButtonX + 2 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b3 = new AToggleButton("Tx", ButtonX + 3 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b4 = new AToggleButton("M0", ButtonX + 4 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b5 = new AToggleButton("M1", ButtonX + 5 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b6 = new AToggleButton("M2", ButtonX + 6 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
+    b7 = new AToggleButton("Sy", ButtonX + 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight);
 }
 
 /**
@@ -104,8 +91,10 @@ void UserInterface::begin() {
  * @param fg Foreground color
  */
 void UserInterface::displayFrequency(unsigned kHz) {
-    itemFrequency->setItemText(String(kHz), A_GREEN);
+    String s = String(kHz) + " kHz";
+    itemFrequency->setItemText(s, A_GREEN);
 }  // displayFrequency()
+
 
 /**
  * @brief Display 4-letter Maidenhead Grid Locator

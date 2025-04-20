@@ -36,7 +36,7 @@ static const ACoord DecodedMsgsY = 114;   // Upper-left corner
 static const ALength DecodedMsgsW = 260;  // Width
 static const ALength DecodedMsgsH = 112;  // Height
 
-// Define the Station Messages widget's boundary and extent
+// Define our Station Messages widget's boundary and extent
 static const ACoord StationMsgsX = 262;   // Upper-left corner
 static const ACoord StationMsgsY = 114;   // Upper-left corner
 static const ALength StationMsgsW = 218;  // Width
@@ -46,25 +46,13 @@ static const ALength StationMsgsH = 112;  // Height
 static const ACoord InfoX = 361;   // Upper-left corner of UTC Date
 static const ACoord InfoY = 0;     // Upper-left corner of UTC Date
 static const ALength InfoW = 119;  // Width
-static const ALength InfoH = 112;   // Height
-
-// // Define the UTC Time widget's boundary and extent
-// static const ACoord TimeX = 360;   // Upper-left corner of UTC Time
-// static const ACoord TimeY = 20;    // Upper-left corner of UTC Time
-// static const ALength TimeW = 120;  // Width
-// static const ALength TimeH = 20;   // Height
-
-// // Define the Station widget's boundary and extent
-// static const ACoord StationX = 360;   // Upper-left corner of Station
-// static const ACoord StationY = 40;    // Upper-left corner of Station
-// static const ALength StationW = 120;  // Width
-// static const ALength StationH = 20;   // Height
+static const ALength InfoH = 112;  // Height
 
 // Define Application Message boundary and extent
 static const ACoord AppMsgX = 0;     // Upper-left corner
-static const ACoord AppMsgY = 222;   // Upper-left corner
+static const ACoord AppMsgY = 228;   // Upper-left corner
 static const ALength AppMsgW = 480;  // Width
-static const ALength AppMsgH = 65;   // Height
+static const ALength AppMsgH = 60;   // Height
 
 // Define the Button widgets' boundaries and extents
 static const ALength ButtonSpacing = 61;  // Button grid spacing
@@ -86,7 +74,7 @@ class DecodedMsgsBox : public AListBox {
    public:
     DecodedMsgsBox(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AListBox(x, y, w, h, c) {}
 
-    void displayMsg(int index, char* msg);
+    void setMsg(int index, char* msg);
 };
 
 class UserInterface {
@@ -114,7 +102,7 @@ class UserInterface {
     AScrollBox* stationInfo;
     DecodedMsgsBox* decodedMsgs;
     AScrollBox* stationMsgs;
-    ATextBox* appMessage;
+    ATextBox* applicationMsgs;
 
     // The stationInfo items
     AScrollBoxItem* itemDate;
@@ -125,12 +113,12 @@ class UserInterface {
     AScrollBoxItem* itemMode;
 
     // The button widgets
-    static AToggleButton* b0;
-    static AToggleButton* b1;
-    static AToggleButton* b2;
-    static AToggleButton* b3;
-    static AToggleButton* b4;
-    static AToggleButton* b5;
-    static AToggleButton* b6;
-    static AToggleButton* b7;
+    AToggleButton* b0;
+    AToggleButton* b1;
+    AToggleButton* b2;
+    AToggleButton* b3;
+    AToggleButton* b4;
+    AToggleButton* b5;
+    AToggleButton* b6;
+    AToggleButton* b7;
 };
