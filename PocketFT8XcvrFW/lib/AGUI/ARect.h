@@ -20,6 +20,7 @@ class ARect {
    public:
     // Constructors
     ARect() {}
+    virtual ~ARect() {}
     ARect(ACoord x1, ACoord y1, ALength w, ALength h) {
         this->x1 = x1;
         this->y1 = y1;

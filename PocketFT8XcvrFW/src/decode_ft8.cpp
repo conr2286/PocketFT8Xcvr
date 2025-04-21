@@ -33,6 +33,7 @@
 
 // #include <HX8357_t3.h>
 #include "HX8357_t3n.h"
+#include "UserInterface.h"
 #include "display.h"
 
 extern HX8357_t3n tft;
@@ -63,6 +64,8 @@ extern int K;
 extern int M;
 
 extern int K_BYTES;
+
+extern UserInterface ui;
 
 // extern void write_log_data(char *data);
 
@@ -266,23 +269,25 @@ void display_messages(int decoded_messages) {
 
     // Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
     // field3 is an RSL or locator or ???.
-    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);                     // Currently... all messages are the same color
-    //tft.setTextSize(2);                                                // 10X16 pixels per AdaFruit
-    for (int i = 0; i < decoded_messages && i < message_limit; i++) {  // Charlie's leading handled 6 rows of text
+    // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);                     // Currently... all messages are the same color
+    // tft.setTextSize(2);                                                // 10X16 pixels per AdaFruit
+    if (decoded_messages > 0) ui.decodedMsgs->reset();                  // Clear all the old messages
+    for (int i = 0; i < decoded_messages && i <= message_limit; i++) {  // Charlie's leading handled 6 rows of text
         snprintf(message, sizeof(message), "%s %s %4s S%c", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, rsl2s(new_decoded[i].snr));
         // DPRINTF("display_message %u = '%s' loc='%s'\n", i, message, new_decoded[i].locator);
         strlpad(message, sizeof(message), ' ');  // Padding is faster than fillRect()
-        tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
-        tft.print(message);
+        // tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
+        // tft.print(message);
+        ui.decodedMsgs->addItem(message, A_WHITE);  // Item will be added at position i
     }
 
     // Erase messages lines from the previous timeslot that weren't overwritten above
-    message[0] = 0;                          // An empty line
-    strlpad(message, sizeof(message), ' ');  // A line of spaces
-    for (int i = decoded_messages; i < previousMessageCount; i++) {
-        tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
-        tft.print(message);  // A line of spaces to clear previous timeslot's messages
-    }
+    message[0] = 0;  // An empty line
+    // strlpad(message, sizeof(message), ' ');  // A line of spaces
+    // for (int i = decoded_messages; i < previousMessageCount; i++) {
+    //     tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
+    //     tft.print(message);  // A line of spaces to clear previous timeslot's messages
+    // }
     previousMessageCount = decoded_messages;  // Remember for next timeslot
     // DTRACE();
 
@@ -297,7 +302,7 @@ void display_selected_call(int index) {
     snprintf(selected_station, sizeof(selected_station), "%7s %3i", Target_Call, Target_RSL);
     // DPRINTF("display_selected_call(%d) '%s'\n", index, selected_station);
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    //tft.setTextSize(2);
+    // tft.setTextSize(2);
     tft.setCursor(DISPLAY_SELECTED_X, DISPLAY_SELECTED_Y);
     tft.print(blank);
     tft.setCursor(DISPLAY_SELECTED_X, DISPLAY_SELECTED_Y);
@@ -400,10 +405,11 @@ int Check_Calling_Stations(int num_decoded) {
             // Display details of received message addressed to our station
             getTeensy3Time();
             snprintf(big_gulp, sizeof(message), "%02i/%02i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
-            tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-            //tft.setTextSize(2);
-            tft.setCursor(DISPLAY_CALLING_X, DISPLAY_CALLING_Y + i * 25);
-            tft.print(message);
+            // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
+            // tft.setTextSize(2);
+            // tft.setCursor(DISPLAY_CALLING_X, DISPLAY_CALLING_Y + i * 25);
+            // tft.print(message);
+            ui.stationMsgs->addItem(ui.stationMsgs, String(message));
 
             // Log details from this message to us (TODO:  prune retired TXT file logging code)
             // if (logging_on == 1) write_log_data(big_gulp);

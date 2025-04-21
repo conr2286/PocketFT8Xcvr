@@ -5,7 +5,7 @@
  * interactively processing touch events on those pixels.
  *
  * Method parameters in this class using screen coordinates refer to them as xScreen/yScreen of type
- * ACoord while those referring to pixel positions within APixelBox refer to row/col of type APixelPos.
+ * ACoord while those referring to pixel positions within APixelBox refer to y/x of type APixelPos.
  *
  * Similar to many AGUI classes, the intended usage is for the application to inherit APixelBox
  * overriding its virtual methods.
@@ -60,18 +60,20 @@ APixelBox::APixelBox(ACoord x1, ACoord y1, APixelPos nRows, APixelPos nCols) {
 
 /**
  * @brief Draw a single pixel at the specified position and color in APixelBox
- * @param row Pixel row position
- * @param col Pixel column position
+ * @param x Pixel row
+ * @param y Pixel col
  * @param color Pixel color
  *
- * The row and column positions are relative to the location of the APixelBox.  Thus,
+ * The y and column positions are relative to the location of the APixelBox.  Thus,
  * position (0,0) refers to the upper-left *visible* pixel of the box (inside of the
  * border, if any;).
  */
-void APixelBox::drawPixel(APixelPos row, APixelPos col, AColor color) {
+void APixelBox::drawPixel(APixelPos x, APixelPos y, AColor color) {
     // Setup the clip rectangle
-    AGUI::setClipRect(bitmap.x1, bitmap.y1, bitmap.x2 - bitmap.x1 + 1, bitmap.y2 - bitmap.y1 + 1);
-    AGUI::drawPixel(bitmap.x1 + row, bitmap.y1 + col, color);
+    AGUI::setClipRect();
+    // AGUI::setClipRect(bitmap.x1, bitmap.y1, bitmap.x2 - bitmap.x1 + 1, bitmap.y2 - bitmap.y1 + 1);
+    AGUI::drawPixel(bitmap.x1 + x, bitmap.y1 + y, color);
+    //AGUI::setClipRect();
 }
 
 /**
@@ -80,6 +82,9 @@ void APixelBox::drawPixel(APixelPos row, APixelPos col, AColor color) {
  * @param yScreen Screen touch coordinate
  *
  * Our job is to determine which pixel was touched and notify the application
+ *
+ * @note The touch coordinate passed to application's touchPixel are the pixel coordinates
+ * inside the box (relative to bitmap location), not the screen coordinates.
  */
 void APixelBox::touchWidget(ACoord xScreen, ACoord yScreen) {
     DTRACE();

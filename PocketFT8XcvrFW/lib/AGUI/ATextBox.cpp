@@ -16,11 +16,11 @@
 
 #include <Arduino.h>
 
-#include <string>
+//#include <string>
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  * @brief Build and display ATextBox object
@@ -30,17 +30,13 @@
  * @param w Width
  * @param h Height
  */
-ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, bool border) {
+ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AColor border) {
     DPRINTF("txt='%s' x=%d y=%d w=%d h=%d\n", txt, x, y, w, h);
 
     // Initialize member variables
     boundary.setCorners(x, y, w, h);
     str = String(txt);
-
-    // Eliminate the border if unwanted
-    if (!border) {
-        bdColor = bgColor;
-    }
+    bdColor = border;
 
     // Setup clipping rectangle without regard for rounded vs. squared corners
     AGUI::setClipRect(x, y, w, h);
@@ -77,6 +73,7 @@ ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, bo
     int16_t drawY = clipY + 1;  // Y-coord
     AGUI::setCursor(drawX, drawY);
     AGUI::writeText((uint8_t *)txt, strlen(txt));  // Output text to box
+    AGUI::setClipRect();
 }
 
 void ATextBox::repaintWidget(void) {
@@ -115,6 +112,7 @@ void ATextBox::repaintWidget(void) {
     int16_t drawY = clipY + 1;  // Y-coord
     AGUI::setCursor(drawX, drawY);
     AGUI::writeText(str);  // Output text to box
+    AGUI::setClipRect();
 
 }  // repaintWidget()
 
@@ -122,7 +120,8 @@ void ATextBox::repaintWidget(void) {
  * @brief Change the display text in this ATextBox
  * @param txt NUL-terminated char[] string
  */
-void ATextBox::setText(const char *txt) {
+void ATextBox::setText(const char *txt, AColor fg) {
+    fgColor = fg;
     str = String(txt);
     repaintWidget();
 }

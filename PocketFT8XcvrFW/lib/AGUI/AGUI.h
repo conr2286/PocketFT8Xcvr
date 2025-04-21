@@ -12,6 +12,7 @@ class AGUI {
    public:
     // Constructors and initialization
     AGUI(HX8357_t3n *gfx, uint8_t rotation, const GFXfont *font);
+    virtual ~AGUI() {}
 
     // AGUI really should have been a singleton
     AGUI(const AGUI &) = delete;
@@ -43,13 +44,19 @@ class AGUI {
                               ACoord *x1, ACoord *y1, ACoord *w, ACoord *h);
     static void getTextBounds(const String &str, ACoord x, ACoord y,
                               ACoord *x1, ACoord *y1, ACoord *w, ACoord *h);
+    static void setScrollTextArea(ACoord x, ACoord y, ALength w, ALength h);
+    static void setScrollBackgroundColor(AColor color);
+    static void enableScroll(void);
+    static void disableScroll(void);
+    static void scrollTextArea(uint8_t scrollSize);
+    static void resetScrollBackgroundColor(AColor color);
 
     // Let's define some defaults for this application
-    const static GFXfont *appFont;                  // Default font for this application
-    const static AColor bgColor = AColor::A_BLACK;  // Application background color
-    const static AColor fgColor = AColor::A_WHITE;  // Application foreground color
-    const static AColor bdColor = AColor::A_RED;    // Application border color
-    const static AColor spColor = AColor::A_GREY;   // Application special color
+    const static GFXfont *appFont;                      // Default font for this application
+    const static AColor bgColor = AColor::A_BLACK;      // Application background color
+    const static AColor fgColor = AColor::A_WHITE;      // Application foreground color
+    const static AColor bdColor = AColor::A_DARK_GREY;  // Application border color
+    const static AColor spColor = AColor::A_GREY;       // Application special color
 
     // Etc variables (all must be static or initialized in default constructor)
     static HX8357_t3n *gfx;  // Adafruit's GFX Library

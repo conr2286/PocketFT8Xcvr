@@ -75,15 +75,16 @@
 // #define LSB_WIDE 2
 // #define LSB_NARROW 3
 
-// Transmit/Receive/Pending indicator icon
-typedef enum {
-    INDICATOR_ICON_RECEIVE = 0,
-    INDICATOR_ICON_PENDING = 1,
-    INDICATOR_ICON_TRANSMIT = 2,
-    INDICATOR_ICON_TUNING = 3
-} IndicatorIconType;
+// // Transmit/Receive/Pending indicator icon
+// typedef enum {
+//     INDICATOR_ICON_RECEIVE = 0,
+//     INDICATOR_ICON_PENDING = 1,
+//     INDICATOR_ICON_TRANSMIT = 2,
+//     INDICATOR_ICON_TUNING = 3
+// } IndicatorIconType;
 
 char* strlpad(char* str, unsigned size, char c);
+//char* strlpad(char* dst, char* src, char c, unsigned size);
 
 void display_frequency(int x, int y, int value);
 // void erase_value(int x, int y);
@@ -93,4 +94,4 @@ void display_date(int x, int y);
 void displayInfoMsg(const char* msg);
 void displayInfoMsg(const char* msg, uint16_t color);
 
-void setXmitRecvIndicator(IndicatorIconType indicator);
+//void setXmitRecvIndicator(IndicatorIconType indicator);

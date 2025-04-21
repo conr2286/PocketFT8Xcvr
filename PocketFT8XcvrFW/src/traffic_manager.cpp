@@ -11,6 +11,7 @@
 #include "gen_ft8.h"
 #include "pins.h"
 #include "si5351.h"
+#include "UserInterface.h"
 
 #define FT8_TONE_SPACING 625
 
@@ -33,6 +34,8 @@ uint64_t F_Long, F_FT8, F_Offset;
 
 extern int tune_flag;
 
+extern UserInterface ui;
+
 /**
  * Turn-on the transmitter at the carrier frequency, F_Long
  *
@@ -40,7 +43,7 @@ extern int tune_flag;
 void transmit_sequence(void) {
     DTRACE();
 
-    displayInfoMsg(get_message(), RED);
+    ui.applicationMsgs->setText(get_message(), RED);
 
     // Program the transmitter clock at F_Long
     set_Xmit_Freq();
@@ -61,7 +64,7 @@ void transmit_sequence(void) {
     pinMode(PIN_PTT, OUTPUT);
     digitalWrite(PIN_PTT, HIGH);
 
-    setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);
 }
 
 /**
@@ -71,7 +74,7 @@ void transmit_sequence(void) {
 void receive_sequence(void) {
     DTRACE();
 
-    displayInfoMsg(" ");
+    ui.applicationMsgs->setText(" ");
 
     // Turn off the transmitter's clock -- this should stop the xmit RF chain
     si5351.output_enable(SI5351_CLK0, 0);
@@ -88,7 +91,7 @@ void receive_sequence(void) {
     // Receive
     si4735.setVolume(50);
     clearOutboundMessageDisplay();
-    setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 
 }  // receive_sequence()
 
@@ -99,7 +102,7 @@ void receive_sequence(void) {
 void tune_On_sequence(void) {
     DTRACE();
 
-    //displayInfoMsg("TUNE");
+    //ui.applicationMsgs->setText("TUNE");
 
     // Program the transmitter clock to F_Long
     uint64_t tuneFreq = currentFrequency * 1000ULL * 100ULL;  // KQ7B tuning at FT8 base subband freq (e.g. 7074)
@@ -122,7 +125,7 @@ void tune_On_sequence(void) {
 
     // Let loop() know we are tuning
     tune_flag = 1;
-    setXmitRecvIndicator(INDICATOR_ICON_TUNING);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_TUNING);
 
     // DPRINTF("TUNE\n");
 
@@ -134,7 +137,7 @@ void tune_On_sequence(void) {
 void tune_Off_sequence(void) {
     DTRACE();
 
-    displayInfoMsg(" ");
+    ui.applicationMsgs->setText(" ");
 
     // Turn-off the transmitter's clock
     si5351.output_enable(SI5351_CLK0, 0);
@@ -152,7 +155,7 @@ void tune_Off_sequence(void) {
 
     // Finished tuning
     tune_flag = 0;
-    setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
+    ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 
     // DPRINTF("TUNE OFF\n");
 
@@ -195,5 +198,5 @@ void setup_to_transmit_on_next_DSP_Flag(void) {
     transmit_sequence();   // Turns-on the transmitter carrier at current F_Long ??
     // set_Xmit_Freq();                         //Recalculates F_long and reprograms SI5351 ??
     xmit_flag = 1;                              // This flag appears to trigger loop() to modulate the carrier
-    displayInfoMsg(get_message(), HX8357_RED);  // Display transmitted message
+    ui.applicationMsgs->setText(get_message(), HX8357_RED);  // Display transmitted message
 }

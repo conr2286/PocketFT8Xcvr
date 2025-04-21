@@ -18,18 +18,21 @@ class AWidget {
     bool hasBorder(void);
     inline ALength width(void) { return boundary.w; }
     inline ALength height(void) { return boundary.h; }
+    ARect boundary;              // Widget boundary rectangle coordinates
+    const GFXfont* defaultFont;  // Default font
 
    protected:
     static AWidget* allWidgets;  // Head of the unordered list of all widgets
     AWidget* next;               // Next widget in the unordered list of all widgets
-    ARect boundary;              // Widget boundary rectangle coordinates
     ACoord radius;               // Rounded corner radius
     AColor bdColor;              // Border color
     AColor bgColor;              // Background color
     AColor fgColor;              // Foreground color
     AColor spColor;              // Special color (e.g. selected item color)
-    const GFXfont* defaultFont;  // Default font
 
     virtual void touchWidget(ACoord screenX, ACoord screenY) {}  // Derived classes must overide touchWidget() to receive touch events
-    virtual void repaintWidget(void) {}                            // Derived classes must overide doRepaintWidget() to repaint themselves
+    virtual void repaintWidget(void) {}                          // Derived classes must overide doRepaintWidget() to repaint themselves
+
+    private:
+
 };

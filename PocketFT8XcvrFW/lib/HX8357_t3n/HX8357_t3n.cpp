@@ -4195,7 +4195,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                     bit = bit_save;
                     bits = bits_save;
                     x = x_start;
-                    //Serial.printf(" y=%2d ", y);
+                    // Serial.printf(" y=%2d ", y);
                     if (y >= _displayclipy1) {
                         while (x < x_left_fill) {
                             if ((x >= _displayclipx1) && (x < _displayclipx2)) {
@@ -4209,15 +4209,15 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                             if (!(bit++ & 7)) {
                                 bits = bitmap[bo++];
                             }
-                            //if (xx == 0) DPRINTF("y=%2d h=%d yy=%2d bo-1=%02d bits=: ", y, h, yy, bo - 1);  //???
+                            // if (xx == 0) DPRINTF("y=%2d h=%d yy=%2d bo-1=%02d bits=: ", y, h, yy, bo - 1);  //???
 
                             for (uint8_t xts = 0; xts < textsize_x; xts++) {
                                 if ((x >= _displayclipx1) && (x < _displayclipx2)) {
                                     if (bits & 0x80) {  // The bit in focus is shifted into leftmost position of bits
-                                        //Serial.printf("1 ");
+                                        // Serial.printf("1 ");
                                         writedata16_cont(textcolor);  // Display fg color if bit in focus is a 1
                                     } else {
-                                        //Serial.printf("0 ");
+                                        // Serial.printf("0 ");
                                         writedata16_cont(gfxFontLastCharPosFG(x, y) ? _gfx_last_char_textcolor : (x < x_offset_cursor) ? _gfx_last_char_textbgcolor
                                                                                                                                        : textbgcolor);
                                     }
@@ -4236,7 +4236,7 @@ void HX8357_t3n::drawGFXFontChar(unsigned int c) {
                         }
                     }
                     y++;  // remember which row we just output
-                    //Serial.printf("\n");
+                    // Serial.printf("\n");
                 }
             }
             // And output any more rows below us...
