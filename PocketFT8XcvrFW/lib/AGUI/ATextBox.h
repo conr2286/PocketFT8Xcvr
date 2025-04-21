@@ -19,7 +19,7 @@ class ATextBox : public AWidget {
     virtual ~ATextBox() {}
 
     // Public methods
-    void setText(const char* str);
+    void setText(const char* str,AColor=A_WHITE);
     void repaintWidget(void) override;  // Repaint this ATextBox
 
 

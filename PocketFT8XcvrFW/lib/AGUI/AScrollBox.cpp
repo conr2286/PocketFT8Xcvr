@@ -192,6 +192,7 @@ AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
     // Write the item's text to display
     AGUI::setCursor(x1, y1);      // Text position
     AGUI::writeText(pItem->str);  // Output text
+    AGUI::setClipRect();        //Restore clip
 
     return pItem;
 }  // repaint()

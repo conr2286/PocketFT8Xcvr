@@ -28,6 +28,7 @@
 #include "display.h"
 #include "lexical.h"  //String helpers
 #include "pins.h"     //Pocket FT8 pin assignments for Teensy 4.1 MCU
+#include "traffic_manager.h"
 
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
@@ -78,7 +79,7 @@ void UserInterface::begin() {
     stationMsgs = new AScrollBox(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
 
     // // Application message box
-    applicationMsgs = new ATextBox("Starting", AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
+    applicationMsgs = new ATextBox("", AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
 
     // Build the buttons
     b0 = new MenuButton("CQ", ButtonX + 0 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 0);
@@ -247,14 +248,14 @@ void process_touch() {
 
     // DPRINTF("thisTime=%lu, lastTime=%lu\n", thisTime, lastTime);
 
-    if ((thisTime - lastTime) >= 200) {  // Try to avoid touch bounces
+    if ((thisTime - lastTime) >= 250) {  // Try to avoid touch bounces
         pi = ts.getPoint();              // Read the screen
 
         if (pi.z > MINPRESSURE) {  // Has screen been touched?
             DTRACE();
             pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
             pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
-
+            DPRINTF("dT=%d ", thisTime - lastTime);
             DPRINTF("pi.x=%d pi.y=%d pi.z=%d\n", pi.x, pi.y, pi.z);
 
             AWidget::processTouch(pw.x, pw.y);  // Notify widgets that something has been touched
@@ -272,20 +273,24 @@ void process_touch() {
  */
 void MenuButton::touchButton(int buttonId) {
     DPRINTF("touchButton #%d\n", buttonId);
+    ui.applicationMsgs->setText("");            // Clear existing application message, if any
 
-#ifndef UNIT_TEST
+#ifndef UNIT_TEST  // Omit application product code when compiling tests
     // Dispatch touch event into the application program
     switch (buttonId) {
         // CQ button
         case 0:
             DPRINTF("CQ\n");
             // If state=false then begin calling CQ, else cancel existing CQ
-            // seq.cqButtonEvent();
+            seq.cqButtonEvent();
             break;
 
         // Abort button
         case 1:
             DPRINTF("Ab\n");
+            seq.abortButtonEvent();  // Ask Sequencer to abort transmissions
+            ui.b1->setState(false);  // Turn button "off" (it doesn't really toggle)
+            ui.b1->repaintWidget(); // Repaint the now "off" button
             break;
 
         // Tune button
@@ -294,9 +299,16 @@ void MenuButton::touchButton(int buttonId) {
             seq.tuneButtonEvent();
             break;
 
-        // Enable transmit button
+        // Control RoboOp to automagically reply to a received CQ message
         case 3:
             DPRINTF("Tx\n");
+            if (getState()) {
+                setAutoReplyToCQ(true);  // If button is on then enable RoboOp
+                ui.applicationMsgs->setText("RoboOp is enabled and will automatically\nreply to first CQ from an unlogged station");
+            } else {
+                setAutoReplyToCQ(false);  // Else disable RoboOp
+                ui.applicationMsgs->setText("RoboOp is disabled");
+            }
             break;
 
         // Ignore unknown button identifiers
@@ -307,3 +319,30 @@ void MenuButton::touchButton(int buttonId) {
 #endif
 
 }  // touchButton()
+
+
+/**
+ * @brief Override APixelBox to receive notifications of touch events
+ * @param x X-Coord
+ * @param y Y-Coord
+ * 
+ * @note The coordinates received from APixelBox are inside the bitmap, not
+ * screen coordinates.
+ */
+extern uint16_t cursor_freq;      // Frequency of cursor line
+extern uint16_t cursor_line;      // Pixel location of cursor line
+#define ft8_min_bin 48
+#define FFT_Resolution 6.25
+const float ft8_shift = 6.25;  // FT8 Hz/bin???
+
+
+void Waterfall::touchPixel(ACoord x, ACoord y) {
+
+        // cursor_line = draw_x;
+        // cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
+        // DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
+        cursor_line = x;
+        cursor_freq = ((float)cursor_line + (float)ft8_min_bin) * ft8_shift;
+        set_Xmit_Freq();
+
+} //touchPixel()

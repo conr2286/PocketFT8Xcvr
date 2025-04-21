@@ -37,8 +37,8 @@ AToggleButton::AToggleButton(const char *txt, ACoord x1, ACoord y1, ALength w, A
     boundary.setCorners(x1, y1, w, h);
 
     // Some initialization of member variables
-    str = String(txt);          // NUL-terminated char[] string pointer
-    state = false;              // State
+    str = String(txt);         // NUL-terminated char[] string pointer
+    state = false;             // State
     this->userData = userDat;  // User-defined data
 
     // Eliminate the border if unwanted
@@ -124,15 +124,41 @@ void AToggleButton::repaintWidget() {
     AGUI::setClipRect();                                                              // Restore clip default
 }  // repaintWidget()
 
-
 /**
  * @brief Retrieve button state (i.e. on/off)
  * @return state
  */
 bool AToggleButton::getState() const {
     return state;
-} //getState()
+}  // getState()
 
+/**
+ * @brief Set new state (i.e. on/off) value
+ * @param newState
+ */
+void AToggleButton::setState(bool newState) {
+    state = newState;
+}  // setState()
+
+/**
+ * @brief Retrieve the value of userData
+ * @return userData
+ */
 int AToggleButton::getUserData() const {
     return userData;
-}
+}  // getUserData()
+
+
+/**
+ * @brief Reset partial button state
+ * 
+ * Resets state, enabled, colors, but not text str nor user data.  Repaints
+ * the button.
+ */
+void AToggleButton::reset() {
+    state = false;
+    enabled = true;
+    fgColor = AGUI::fgColor;
+    bgColor = AGUI::bgColor;
+    repaintWidget();
+}  // reset()

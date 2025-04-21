@@ -29,6 +29,7 @@ extern HX8357_t3n tft;
 // #include "log_file.h"
 #include "msgTypes.h"
 #include "traffic_manager.h"
+#include "UserInterface.h"
 
 char Your_Call[] = "W5XXX";
 char Your_Locator[] = "AA00";
@@ -54,6 +55,8 @@ extern time_t getTeensy3Time();
 extern char Station_Call[];
 extern char Locator[];
 char ft8_time_string[] = "15:44:15";
+
+extern UserInterface ui; 
 
 int max_displayed_messages = 8;
 
@@ -161,7 +164,7 @@ void set_message(uint16_t index) {
     // tft.print(message);
 
     // TODO:  Check for empty message???
-    displayInfoMsg(message);
+    ui.applicationMsgs->setText(message);
     pack77_1(message, packed);
     genft8(packed, tones);
 

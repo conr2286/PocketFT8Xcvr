@@ -30,11 +30,12 @@ class AToggleButton : public AWidget {
     void enable(void);                  // Enable this button
     void disable(void);                 // Disable (grey) this button
     void repaintWidget(void) override;  // Repaint this button
-    bool getState(void) const;        // Retrieve button's state
-    int getUserData(void) const;          // Get userData value
+    bool getState(void) const;          // Retrieve button's state
+    void setState(bool state);          // Set the button's state
+    int getUserData(void) const;        // Get userData value
+    void reset(void);                   // Reset this button
 
-    //Public variables
-
+    // Public variables
 
     // Protected
     virtual void touchButton(int userData) {}  // Application overrides to receive notifications of touch events for this AToggleButton

@@ -63,6 +63,7 @@ static const ACoord ButtonY = 290;        // All buttons in one row at screen bo
 class Waterfall : public APixelBox {
    public:
     Waterfall() : APixelBox(WaterfallX, WaterfallY, WaterfallRows, WaterfallCols) {}
+    void touchPixel(APixelPos x, APixelPos y) override;  // Application overrides touchPixel() to receive notifications of touch events
 };
 
 // Let this be visible for compatibility with legacy code

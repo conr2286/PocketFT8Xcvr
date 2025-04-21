@@ -383,7 +383,7 @@ int AListBox::removeItem(int index) {
     AGUI::getTextBounds((const uint8_t *)itemTxt[index]->c_str(), itemTxt[index]->length(), drawX, drawY, &x, &y, &w, &h);
     DTRACE();
     // Erase display
-    AGUI::fillRect(x, y, w, h, bgColor);
+    AGUI::fillRect(x, y, w, h+2, bgColor);      //getTextBounds returns undersized h for letter Q
     DTRACE();
     // Restore default clip
     AGUI::setClipRect();

@@ -10,8 +10,8 @@
 #include "HX8357_t3n.h"
 #include "UserInterface.h"
 
-char log_filename[] = "FT8_Traffic.txt";
-File Log_File;
+//char log_filename[] = "FT8_Traffic.txt";
+//File Log_File;
 
 extern time_t getTeensy3Time();
 extern char Station_Call[];  // six character call sign + /0
@@ -142,38 +142,38 @@ char* strlpad(char* str, unsigned size, char c) {
 //     tft.print(string);
 // }
 
-void display_time(int x, int y) {
-    getTeensy3Time();
-    char string[13];  // print format stuff
-    sprintf(string, "%02i:%02i:%02i", hour(), minute(), second());
-    if (gpsHelper.validGPSdata) {
-        tft.setTextColor(HX8357_GREEN, HX8357_BLACK);  // GPS-acquired UTC time
-    } else {
-        tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
-    }
-    // tft.setTextSize(2);
-    tft.setCursor(x, y);
-    tft.print(string);
-}
+// void display_time(int x, int y) {
+//     getTeensy3Time();
+//     char string[13];  // print format stuff
+//     sprintf(string, "%02i:%02i:%02i", hour(), minute(), second());
+//     if (gpsHelper.validGPSdata) {
+//         tft.setTextColor(HX8357_GREEN, HX8357_BLACK);  // GPS-acquired UTC time
+//     } else {
+//         tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
+//     }
+//     // tft.setTextSize(2);
+//     tft.setCursor(x, y);
+//     tft.print(string);
+// }
 
-void display_date(int x, int y) {
-    getTeensy3Time();
-    char string[13];  // print format stuff
-#if DISPLAY_DATE == MMDDYY
-    sprintf(string, "%02i/%02i/%02i", month(), day(), year() % 1000);
-#else
-    sprintf(string, "%02i/%02i/%02i", year() % 1000, month(), day());
-#endif
-    if (gpsHelper.validGPSdata) {
-        tft.setTextColor(HX8357_GREEN, HX8357_BLACK);  // GPS-acquired UTC date
-        // strlcat(string, " UTC", sizeof(string));
-    } else {
-        tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
-    }
-    // tft.setTextSize(2);
-    tft.setCursor(x, y);
-    tft.print(string);
-}
+// void display_date(int x, int y) {
+//     getTeensy3Time();
+//     char string[13];  // print format stuff
+// #if DISPLAY_DATE == MMDDYY
+//     sprintf(string, "%02i/%02i/%02i", month(), day(), year() % 1000);
+// #else
+//     sprintf(string, "%02i/%02i/%02i", year() % 1000, month(), day());
+// #endif
+//     if (gpsHelper.validGPSdata) {
+//         tft.setTextColor(HX8357_GREEN, HX8357_BLACK);  // GPS-acquired UTC date
+//         // strlcat(string, " UTC", sizeof(string));
+//     } else {
+//         tft.setTextColor(HX8357_RED, HX8357_BLACK);  // Unknown zone and accuracy
+//     }
+//     // tft.setTextSize(2);
+//     tft.setCursor(x, y);
+//     tft.print(string);
+// }
 
 /**
  *
@@ -184,9 +184,9 @@ void display_date(int x, int y) {
  * Note:  Display must be initialized
  *
  **/
-void displayInfoMsg(const char* msg) {
-    displayInfoMsg(msg, HX8357_YELLOW);
-}  // displayMsg()
+// void displayInfoMsg(const char* msg) {
+//     displayInfoMsg(msg, HX8357_YELLOW);
+// }  // displayMsg()
 
 /**
  *
@@ -198,11 +198,11 @@ void displayInfoMsg(const char* msg) {
  * Note:  Display must be initialized
  *
  **/
-void displayInfoMsg(const char* msg, uint16_t color) {
-    char bfr[24];
-    // strlpad(bfr, msg, ' ', sizeof(bfr));
-    // tft.setTextColor(color, HX8357_BLACK);
-    // // tft.setTextSize(2);
-    // tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
-    // tft.print(bfr);
-}  // displayMsg()
+// void displayInfoMsg(const char* msg, uint16_t color) {
+//     char bfr[24];
+//     // strlpad(bfr, msg, ' ', sizeof(bfr));
+//     // tft.setTextColor(color, HX8357_BLACK);
+//     // // tft.setTextSize(2);
+//     // tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
+//     // tft.print(bfr);
+// }  // displayMsg()

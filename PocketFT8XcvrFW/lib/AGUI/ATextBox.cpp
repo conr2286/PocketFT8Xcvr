@@ -120,7 +120,8 @@ void ATextBox::repaintWidget(void) {
  * @brief Change the display text in this ATextBox
  * @param txt NUL-terminated char[] string
  */
-void ATextBox::setText(const char *txt) {
+void ATextBox::setText(const char *txt, AColor fg) {
+    fgColor = fg;
     str = String(txt);
     repaintWidget();
 }
