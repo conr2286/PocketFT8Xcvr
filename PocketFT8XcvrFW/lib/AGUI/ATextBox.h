@@ -19,9 +19,9 @@ class ATextBox : public AWidget {
     virtual ~ATextBox() {}
 
     // Public methods
-    void setText(const char* str,AColor=A_WHITE);
+    void setText(const char* str,AColor fg=A_WHITE);
+    void setText(String str, AColor fg= A_WHITE);
     void repaintWidget(void) override;  // Repaint this ATextBox
-
 
     // Public variables
     ARect boundary;

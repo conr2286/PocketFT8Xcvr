@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "text.h"
 
 // TODO: This is wasteful, should figure out something more elegant

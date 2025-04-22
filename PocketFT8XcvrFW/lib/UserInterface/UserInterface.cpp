@@ -3,6 +3,9 @@
  *
  * @note UserInterface.cpp attempts to consolodate all user interface decisions and objects
  * in this single location facilitating future tweeks to the hardware and design.
+ *
+ * #ifndef PIO_UNIT_TESTING is widely used to disable application code to allow the
+ * user interface to be unit tested by itself.
  */
 
 #include "UserInterface.h"
@@ -19,10 +22,11 @@
 #include "AScrollBox.h"     //Scrolling interactive text box
 #include "ATextBox.h"       //Non-interactive text
 #include "AToggleButton.h"  //Stateful button
-#include "DEBUG.h"          //USB Serial debugging on the Teensy 4.1
-#include "FT8Font.h"        //Customized font for the Pocket FT8 Revisited
-#include "GPShelper.h"      //Decorator for Adafruit_GPS library
-#include "HX8357_t3n.h"     //WARNING:  #include HX8357_t3n following Adafruit_GFX
+#include "Config.h"
+#include "DEBUG.h"       //USB Serial debugging on the Teensy 4.1
+#include "FT8Font.h"     //Customized font for the Pocket FT8 Revisited
+#include "GPShelper.h"   //Decorator for Adafruit_GPS library
+#include "HX8357_t3n.h"  //WARNING:  #include HX8357_t3n following Adafruit_GFX
 #include "Sequencer.h"
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "display.h"
@@ -35,11 +39,12 @@ TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);              
 static AGUI* gui;
 
 // Define externals required to build the application (as opposed to unit test)
-#ifndef UNIT_TEST
+#ifndef PIO_UNIT_TESTING
 static Sequencer& seq = Sequencer::getSequencer();  // Get a reference to the Sequencer (RoboOp)
 #endif
 
 extern char* Station_Call;
+extern Config config;
 
 // GPS Access
 extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
@@ -190,7 +195,7 @@ void UserInterface::displayMode(String str, AColor fg) {
  */
 void UserInterface::setXmitRecvIndicator(IndicatorIconType indicator) {
     unsigned short color;  // Indicator icon color
-    char* string;
+    const char* string;
     char paddedString[9];
 
     switch (indicator) {
@@ -224,46 +229,49 @@ void UserInterface::setXmitRecvIndicator(IndicatorIconType indicator) {
     // tft.setTextColor(color, HX8357_BLACK);
     // // tft.setTextSize(2);
     // tft.setCursor(DISPLAY_XMIT_RECV_INDICATOR_X, DISPLAY_XMIT_RECV_INDICATOR_Y);
-    strlpad(paddedString, string, ' ', sizeof(paddedString));
+    strlpad(paddedString, (char*)string, ' ', sizeof(paddedString));
     // tft.print(paddedString);
     ui.displayMode(String(paddedString), (AColor)color);
 }  // setIndicatorIcon()
 
-/**
- * @brief Poll for and process touch events
- */
 // This is calibration data for the raw touch data to the screen coordinates
 // using 510 Ohm resistors to reduce the driven voltage to Y+ and X-
 #define TS_MINX 123
 #define TS_MINY 104
 #define TS_MAXX 1715
 #define TS_MAXY 1130
-#define MINPRESSURE 120
-static unsigned long lastTime = millis();  // For simple touchscreen debouncing
-void process_touch() {
+#define MINPRESSURE 120  // I don't think the pressure stuff is working as expected
+
+// Remember the time when we previously checked the touchscreen
+static unsigned long lastTime = millis();
+
+/**
+ * @brief Poll for and process touch events
+ *
+ * @note This function is invoked only by loop() to poll for touch screen events
+ *
+ * To minimize bounce and delays arising from ADC conversions that are not
+ * really required, we pace the touchscreen (i.e. getPoint()) measurements.
+ */
+void pollTouchscreen() {
     TSPoint pi, pw;
-    uint16_t draw_x, draw_y, touch_x, touch_y;
+    // uint16_t draw_x, draw_y, touch_x, touch_y;
 
-    unsigned long thisTime = millis();  // Milliseconds
+    unsigned long thisTime = millis();  // Current time
 
-    // DPRINTF("thisTime=%lu, lastTime=%lu\n", thisTime, lastTime);
-
-    if ((thisTime - lastTime) >= 250) {  // Try to avoid touch bounces
+    if ((thisTime - lastTime) >= 250) {  // 250 mS between measurements
         pi = ts.getPoint();              // Read the screen
 
-        if (pi.z > MINPRESSURE) {  // Has screen been touched?
-            DTRACE();
-            pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);
+        if (pi.z > MINPRESSURE) {                        // Has screen been touched?
+            pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);  // Map to resistance to screen coordinate
             pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
-            DPRINTF("dT=%d ", thisTime - lastTime);
-            DPRINTF("pi.x=%d pi.y=%d pi.z=%d\n", pi.x, pi.y, pi.z);
 
-            AWidget::processTouch(pw.x, pw.y);  // Notify widgets that something has been touched
+            // AWidget can determine which widget was touched and notify it
+            AWidget::processTouch(pw.x, pw.y);  // Notify widgets that something was touched
 
-            // checkButton();
             // check_FT8_Touch();
             // check_WF_Touch();
-            lastTime = thisTime;
+            lastTime = thisTime;  // Note the time when we last took a measurement
         }
     }
 }
@@ -273,9 +281,10 @@ void process_touch() {
  */
 void MenuButton::touchButton(int buttonId) {
     DPRINTF("touchButton #%d\n", buttonId);
-    ui.applicationMsgs->setText("");            // Clear existing application message, if any
 
-#ifndef UNIT_TEST  // Omit application product code when compiling tests
+#ifndef PIO_UNIT_TESTING              // Omit application product code when compiling tests
+    ui.applicationMsgs->setText("");  // Clear existing application message, if any
+
     // Dispatch touch event into the application program
     switch (buttonId) {
         // CQ button
@@ -290,7 +299,7 @@ void MenuButton::touchButton(int buttonId) {
             DPRINTF("Ab\n");
             seq.abortButtonEvent();  // Ask Sequencer to abort transmissions
             ui.b1->setState(false);  // Turn button "off" (it doesn't really toggle)
-            ui.b1->repaintWidget(); // Repaint the now "off" button
+            ui.b1->repaintWidget();  // Repaint the now "off" button
             break;
 
         // Tune button
@@ -304,7 +313,11 @@ void MenuButton::touchButton(int buttonId) {
             DPRINTF("Tx\n");
             if (getState()) {
                 setAutoReplyToCQ(true);  // If button is on then enable RoboOp
-                ui.applicationMsgs->setText("RoboOp is enabled and will automatically\nreply to first CQ from an unlogged station");
+                if (config.enableDuplicates) {
+                    ui.applicationMsgs->setText("RoboOp is enabled and will automatically\nreply to CQs from any station, even dups");
+                } else {
+                    ui.applicationMsgs->setText("RoboOp is enabled and will automatically\nreply to CQ from an unlogged station");
+                }
             } else {
                 setAutoReplyToCQ(false);  // Else disable RoboOp
                 ui.applicationMsgs->setText("RoboOp is disabled");
@@ -317,32 +330,49 @@ void MenuButton::touchButton(int buttonId) {
             break;
     }
 #endif
-
 }  // touchButton()
-
 
 /**
  * @brief Override APixelBox to receive notifications of touch events
  * @param x X-Coord
  * @param y Y-Coord
- * 
+ *
  * @note The coordinates received from APixelBox are inside the bitmap, not
  * screen coordinates.
  */
-extern uint16_t cursor_freq;      // Frequency of cursor line
-extern uint16_t cursor_line;      // Pixel location of cursor line
+extern uint16_t cursor_freq;  // Frequency of cursor line
+extern uint16_t cursor_line;  // Pixel location of cursor line
 #define ft8_min_bin 48
 #define FFT_Resolution 6.25
 const float ft8_shift = 6.25;  // FT8 Hz/bin???
 
-
 void Waterfall::touchPixel(ACoord x, ACoord y) {
+#ifndef PIO_UNIT_TESTING
+    // cursor_line = draw_x;
+    // cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
+    DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
+    cursor_line = x;
+    cursor_freq = ((float)cursor_line + (float)ft8_min_bin) * ft8_shift;
+    set_Xmit_Freq();
+    String str = String("FT8 offset freq = ") + String(cursor_freq) + String(" Hz");
+    ui.applicationMsgs->setText(str);
+#endif
 
-        // cursor_line = draw_x;
-        // cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-        // DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
-        cursor_line = x;
-        cursor_freq = ((float)cursor_line + (float)ft8_min_bin) * ft8_shift;
-        set_Xmit_Freq();
+}  // touchPixel()
 
-} //touchPixel()
+/**
+ * @brief Override AListBox to receive touch notifications for list items
+ * @param index Index of touched item
+ * @param isSelected true if item is selected
+ *
+ * When operator touches an item in DecodedMsgsBox, the Sequencer will attempt to
+ * engage that station in a QSO.
+ */
+void DecodedMsgsBox::touchItem(AListBoxItem* pItem) {
+    DPRINTF("touchItem(index=%d,)\n", index);
+    pItem->setItemColors(A_BLACK, A_GREY);  // Highlight this item
+#ifndef PIO_UNIT_TESTING
+    int index = getItemIndex(pItem);  // Lookup item's index
+    seq.msgClickEvent(index);         // Notify Sequencer when operator clicks a received message
+#endif
+}

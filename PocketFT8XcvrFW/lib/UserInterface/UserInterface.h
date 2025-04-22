@@ -66,14 +66,14 @@ class Waterfall : public APixelBox {
     void touchPixel(APixelPos x, APixelPos y) override;  // Application overrides touchPixel() to receive notifications of touch events
 };
 
-// Let this be visible for compatibility with legacy code
-// HX8357_t3n tft;
+// Define functions visible to legacy code
+void pollTouchscreen(void);
 
 // The interactive box displaying decoded messages
 class DecodedMsgsBox : public AListBox {
    public:
     DecodedMsgsBox(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AListBox(x, y, w, h, c) {}
-
+    void touchItem(AListBoxItem* pItem) override;
     void setMsg(int index, char* msg);
 };
 

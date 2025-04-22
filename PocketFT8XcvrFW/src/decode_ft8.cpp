@@ -43,7 +43,7 @@ char erase[] = "                   ";
 const int kLDPC_iterations = 10;
 const int kMax_candidates = 20;
 const int kMax_decoded_messages = 6;  // chhh 27 feb
-const int kMax_message_length = 22;
+const int kMax_message_length = 24;   // Was 22 (KQ7B)
 
 const int kMin_score = 40;  // Minimum sync score threshold for candidates (40)
 
@@ -227,11 +227,8 @@ int ft8_decode(void) {
                 }
 
                 // Inform QSO sequencer about newly received message
-                // DPRINTF("new_decoded[num_decoded].msgType=%u\n",new_decoded[num_decoded].msgType);
                 new_decoded[num_decoded].sequenceNumber = seq.getSequenceNumber();
                 seq.receivedMsgEvent(&new_decoded[num_decoded]);
-                // DTRACE();
-
                 ++num_decoded;
             }
         }
@@ -278,7 +275,7 @@ void display_messages(int decoded_messages) {
         strlpad(message, sizeof(message), ' ');  // Padding is faster than fillRect()
         // tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
         // tft.print(message);
-        ui.decodedMsgs->addItem(message, A_WHITE);  // Item will be added at position i
+        ui.decodedMsgs->addItem(ui.decodedMsgs, message, A_WHITE);  // Item will be added at position i
     }
 
     // Erase messages lines from the previous timeslot that weren't overwritten above
@@ -409,7 +406,7 @@ int Check_Calling_Stations(int num_decoded) {
             // tft.setTextSize(2);
             // tft.setCursor(DISPLAY_CALLING_X, DISPLAY_CALLING_Y + i * 25);
             // tft.print(message);
-            ui.stationMsgs->addItem(ui.stationMsgs, String(message));
+            // ui.stationMsgs->addItem(ui.stationMsgs, String(message));
 
             // Log details from this message to us (TODO:  prune retired TXT file logging code)
             // if (logging_on == 1) write_log_data(big_gulp);

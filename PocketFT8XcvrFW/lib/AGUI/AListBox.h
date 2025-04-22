@@ -1,71 +1,68 @@
-/**
- * AListBox --- An Arduino-friendly GUI List Box
- *
- * @author Jim Conrad, KQ7B
- *
- * @license MIT License
- * @copyright 2025 Jim Conrad, All rights reserved.
- *
- * AListBox implements the Arduino Print interface
- * AListBox is a AWidget
- *
- * Both AWidget and AListBox have callBack function pointers for selections.  The AWidget
- * callBack deals with clicks on the AListBox while the AListBox callBack member deals
- * with items in the list box.
- *
- */
-
 #pragma once
 
 #include <Arduino.h>
-#include <SPI.h>
-
-//#include <vector>
 
 #include "AGUI.h"
-#include "ARect.h"
+#include "AListBox.h"
 #include "AWidget.h"
 
-class AListBox : public AWidget {
+class AListBox;
+
+/**
+ * @brief Declare the content of a single scroll box item
+ */
+class AListBoxItem final {
    public:
-    const static uint8_t maxItems = 24;  // Maximum number of items in a list
-
-    // Constructors/destructors
-    AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h);  // No border
-    AListBox(ACoord x1, ACoord y1, ACoord w, ACoord h, AColor borderColor);
-    virtual ~AListBox() {}
-
-    // Public methods unique to AListBox
-    int addItem(const char *txt, AColor fgColor);                             // Add a new item with specified foreground color
-    int addItem(const char *txt);                                             // Add a new item
-    int setItem(int index, const char *str, AColor fgColor, AColor bgColor);  // Assign values to this item
-    int setItemColor(int index, AColor fgColor);                              // Change an item's foreground color
-    int getSelectedItem(ACoord xScreen, ACoord yScreen);                      // Returns index of item at xClick,yClick
-    void deselectItem(int item);                                              // Deselect specified item
-    int removeItem(int index);                                                // Remove the specified item
-    void reset(void);                                                         // Reset (clear all items) this AListBox
-
-    int getCount(void);  // #items
-
-    void repaint(void);  // Repaint every item
-
-    // Override the Arduino Print interface's virtual methods
-    size_t writeItem(const uint8_t *buffer, size_t count, AColor fgColor, AColor bgColor);  // Writes a char[] string sans NewLine (NL) chars
+    AListBoxItem(String str, AColor fgColor, AColor bgColor, AListBox* pBox);
+    String str;                                          // This item's text string
+    AColor fgColor;                                      // This item's foreground color
+    AColor bgColor;                                      // This item's background color
+    bool selected = false;                               // Is this item selected?
+    void repaint(void);                                  // Repaint this item
+    void setItemColors(AColor fg, AColor bg = A_BLACK);  // Change colors
+    void setItemText(String str, AColor fg = A_WHITE);   // Change specified item's text string
+    int getIndex(void);                                  // Get an item's index
 
    protected:
-    virtual void touchItem(int item, bool selected) {}  // Application overrides touchItem() to receive notifications of touch events for items
-    int repaint(int index);                             // Repaint a specific item
+    AListBox* listBoxContainer;  // Back pointer to containing AListBox
+};
+
+/**
+ * @brief Declare the content of AListBox
+ */
+class AListBox : public AWidget {
+   public:
+    // Public methods
+    AListBox(ACoord xCoord, ACoord yCoord, ALength w, ALength h, AColor bdColor = A_BLACK);  // Build AListBox with default colors
+    virtual ~AListBox();                                                                     // Destructor purges data struct and erases displayed items
+    AListBoxItem* addItem(AListBox* pListBox, String str, AColor fg = A_WHITE);              // Add item to bottom of this AListBox
+    int setItem(int index, String str, AColor fg, AColor bg = A_BLACK);                      // Add item at specified index
+    AListBoxItem* setItemColors(AListBoxItem* pItem, AColor fg, AColor bg = A_BLACK);        // Change specified item's colors
+    int setItemColor(int index, AColor fg, AColor bg = A_BLACK);                             // Change indexed item's foreground color
+    int getCount(void);                                                                      // Get count of displayed items in this AListBox
+    void reset(void);                                                                        // Remove all items from this AListBox
+    int getItemIndex(AListBoxItem* pItem);                                                   // Get items[] index (line number) of specified item
+    AListBoxItem* repaint(AListBoxItem* pItem);                                              // Repaint item specified by pointer
+
+    // Public constants
+    constexpr static int maxItems = 16;  // Maximum number of items allowed in AListBox
+
+   protected:
+    virtual void touchItem(AListBoxItem* pItem) {}  // Application overrides touchItem() to receive notifications of touch events
 
    private:
-    int addItem(int index, const char *txt, AColor fgColor);  // Add iteam at index with specified foreground color
-    uint16_t leading;                                         // Space (pixels) between lines of text for this font
-    uint16_t itemPixelCount[maxItems];                        // Identifies #pixels in each item (or 0 for empty item)
-    bool itemSelected[maxItems];                              // True if indexed item is selected
-    uint8_t nextItem;                                         // Index of where to place next unnumbered addition
-    String *itemTxt[maxItems];                                // The item text
-    AColor itemColor[maxItems];                               // the items' fgColors
+    // Our private methods
+    void touchWidget(ACoord screenX, ACoord screenY) override;      // We override AWidget to receive touch events for this AListBox
+    AListBoxItem* getSelectedItem(ACoord screenX, ACoord screenY);  // Return pointer to selected item
+    void repaintWidget(void) override;                              // We override AWidget to receive repaint events for this AListBox
+    // bool itemWillFit(int nItems);                                     // Helper determines if count items will fit within boundary box
+    int removeItem(int index);  // Remove specified item from displayedItems[]
+    int repaint(int index);     // Repaint item specified by index
 
-    // Helper methods
-    void touchWidget(ACoord xScreen, ACoord yScreen) override final;  // We override AWidget touchWidget() to receive touch notifications
-
-};  // AListBox
+    // Our private member variables
+    AListBoxItem* displayedItems[maxItems];  // Pointer to items displayed in this AListBox indexed by their position
+    unsigned leading;                        // The leading (text line spacing in pixels) for this AListBox's font
+    int nDisplayedItems;                     // Number of *displayed* items
+    constexpr static uint8_t xOffset = 3;    // xOffset==n provides n-1 blank pixels on left, between border and text
+    constexpr static uint8_t yOffset = 2;    // Similar but for space at top of box
+};

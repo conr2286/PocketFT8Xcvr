@@ -31,6 +31,10 @@ void test_DecodedMsgs(void) {
     ui.decodedMsgs->setMsg(3, "WA3ABC AG0E -13 S3");
     ui.decodedMsgs->setMsg(4, "WA4ABC AG0E -13 S3");
     ui.decodedMsgs->setMsg(5, "WA5ABC AG0E -13 S3");
+    delay(1000);
+    //AWidget::processTouch(20, 124); //Highlight item 0
+    delay(1000);
+    ui.decodedMsgs->setItemColor(1, A_BLACK, A_LIGHT_GREY); //Highlight item 1
 }
 
 void test_StationMsgs(void) {
@@ -56,6 +60,7 @@ void test_Waterfall() {
 void test_AppMessage() {
     TEST_MESSAGE("test_AppMessage\n");
     ui.applicationMsgs->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+    delay(5000);
 }
 
 void test_CQButton() {
@@ -86,7 +91,7 @@ extern void process_touch(void);
 void test_TouchScreen() {
     TEST_MESSAGE("Touch any displayed button in the next 15 seconds");
     for (int i = 0; i < 150; i++) {
-        process_touch();
+        pollTouchscreen();
         delay(100);
     }
     TEST_MESSAGE("Finished\n");

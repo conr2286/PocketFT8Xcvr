@@ -96,8 +96,8 @@ AScrollBoxItem* AScrollBox::addItem(AScrollBox* pAScrollBox, String str, AColor 
     if (nDisplayedItems >= maxItems) return nullptr;
 
     // Build the new Item
-    fgColor = fg;
-    AScrollBoxItem* pNewItem = new AScrollBoxItem(str, fgColor, bgColor, pAScrollBox);  // Build item using widget's default colors
+    // fgColor = fg;
+    AScrollBoxItem* pNewItem = new AScrollBoxItem(str, fg, bgColor, pAScrollBox);  // Build item using widget's default colors
 
     // Scroll the displayed items up if the added item won't fit within widget's boundary box
     if (!itemWillFit(nDisplayedItems + 1)) {
@@ -170,7 +170,7 @@ int AScrollBox::repaint(int index) {
  */
 AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
     if (!Serial) Serial.begin(9600);
-    //Serial.print("repaint(pTem)\n");
+    // Serial.print("repaint(pTem)\n");
 
     // Sanity checks
     if (pItem == nullptr) return nullptr;
@@ -189,10 +189,13 @@ AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
     int x1 = boundary.x1 + xOffset;
     int y1 = boundary.y1 + index * leading + yOffset;
 
+    // Erase existing text in this item's location
+    AGUI::fillRect(x1, y1, boundary.w - xOffset, leading, bgColor);
+
     // Write the item's text to display
     AGUI::setCursor(x1, y1);      // Text position
     AGUI::writeText(pItem->str);  // Output text
-    AGUI::setClipRect();        //Restore clip
+    AGUI::setClipRect();          // Restore clip
 
     return pItem;
 }  // repaint()
@@ -345,6 +348,7 @@ int AScrollBox::removeItem(int index) {
 
     // Sanity checks
     if ((index < 0) || (index >= nDisplayedItems)) return -1;
+    if (displayedItems[index] == nullptr) return -1;
 
     // Delete the item and its reference in displayedItems[]
     delete displayedItems[index];

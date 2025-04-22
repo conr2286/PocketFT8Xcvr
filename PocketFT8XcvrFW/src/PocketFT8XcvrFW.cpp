@@ -70,6 +70,7 @@
 #include <gfxfont.h>
 
 #include "AListBox.h"
+#include "Config.h"
 #include "DEBUG.h"
 #include "FT8Font.h"
 #include "GPShelper.h"
@@ -120,25 +121,26 @@ static void copy_to_fft_buffer(void *, const void *);
 #define AUDIO_RECORDING_FILENAME "ft8.raw"
 // #define AUDIO_SAMPLE_RATE 6400
 
-// Configuration parameters read from SD file
-#define CONFIG_FILENAME "/config.json"
-struct Config {
-    char callsign[12];                     // 11 chars and NUL
-    char locator[5];                       // 4 char maidenhead locator and NUL
-    unsigned frequency;                    // Operating frequency in kHz
-    unsigned long audioRecordingDuration;  // Seconds or 0 to disable audio recording
-    unsigned enableAVC;                    // 0=disable, 1=enable SI47xx AVC
-    unsigned gpsTimeout;                   // GPS timeout (seconds) to obtain a fix
-    unsigned qsoTimeout;                   // QSO timeout (seconds) to obtain a response
-} config;
+// // Configuration parameters read from SD file
+// #define CONFIG_FILENAME "/config.json"
+// struct Config {
+//     char callsign[12];                     // 11 chars and NUL
+//     char locator[5];                       // 4 char maidenhead locator and NUL
+//     unsigned frequency;                    // Operating frequency in kHz
+//     unsigned long audioRecordingDuration;  // Seconds or 0 to disable audio recording
+//     unsigned enableAVC;                    // 0=disable, 1=enable SI47xx AVC
+//     unsigned gpsTimeout;                   // GPS timeout (seconds) to obtain a fix
+//     unsigned qsoTimeout;                   // QSO timeout (seconds) to obtain a response
+// } config;
 
-// Default configuration
-#define DEFAULT_FREQUENCY 7074                // kHz
-#define DEFAULT_CALLSIGN "****"               // There's no realistic default callsign
-#define DEFAULT_AUDIO_RECORDING_DURATION 0UL  // Default of 0 seconds disables audio recording
-#define DEFAULT_ENABLE_AVC 1                  // SI4735 AVC enabled by default
-#define DEFAULT_GPS_TIMEOUT 60                // Number of seconds before GPS fix time-out
-#define DEFAULT_QSO_TIMEOUT 180               // Number seconds Sequencer will retry transmission without a response
+// // Default configuration
+// #define DEFAULT_FREQUENCY 7074                // kHz
+// #define DEFAULT_CALLSIGN "****"               // There's no realistic default callsign
+// #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  // Default of 0 seconds disables audio recording
+// #define DEFAULT_ENABLE_AVC 1                  // SI4735 AVC enabled by default
+// #define DEFAULT_GPS_TIMEOUT 60                // Number of seconds before GPS fix time-out
+// #define DEFAULT_QSO_TIMEOUT 180               // Number seconds Sequencer will retry transmission without a response
+extern ConfigType config;
 
 // Adafruit 480x320 touchscreen configuration
 // HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
@@ -169,8 +171,8 @@ q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));  // TODO:  Move to D
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
 // ToDo:  Arrange for the various modules to access these directly from config structure
-char Station_Call[12];  // six character call sign + /0
-char Locator[11] = "";  // four character locator  + /0
+extern char Station_Call[12];  // six character call sign + /0
+char Locator[11] = "";         // four character locator  + /0
 
 // Global flag to disable the transmitter for testing
 bool disable_xmit = false;  // Flag can be set with config params
@@ -281,7 +283,7 @@ void setup(void) {
     // won't run at the standard Teensy sample rate.  In the best-of-all-possible-worlds, we'd implement this check at
     // compile time, but KQ7B hasn't found how to check at compile-time with a float value for AUDIO_SAMPLE_RATE_EXACT.
     if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
-        ui.applicationMsgs->setText("FATAL:  AUDIO_SAMPLE_RATE_EXACT!=6400.0F",A_RED);
+        ui.applicationMsgs->setText("FATAL:  AUDIO_SAMPLE_RATE_EXACT!=6400.0F", A_RED);
         Serial.println("FATAL:  You *must* copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
         Serial.println("...before building the Pocket FT8 Revisited firmware.\n");
         while (true) continue;  // Fatal
@@ -299,18 +301,18 @@ void setup(void) {
         delay(2000);
     }
 
-// // Zero-out EEPROM when executed on a new Teensy (whose memory is filled with 0xff).  This prevents
-// // calcuation of crazy transmit offset from 0xffff filled EEPROM.  TODO:  Do we still need the offset thing???
-// #define EEPROMSIZE 4284  // Teensy 4.1
-//     bool newChip = true;
-//     for (int adr = 0; adr < EEPROMSIZE; adr++) {
-//         if (EEPROM.read(adr) != 0xff) newChip = false;
-//     }
-//     if (newChip) {
-//         Serial.print("Initializing EEPROM for new chip\n");
-//         EEPROMWriteInt(10, 0);  // Address 10 is offset but the encoding remains mysterious
-//     }
-//     // DPRINTF("Offset = %d\n", EEPROM.read(10));
+    // // Zero-out EEPROM when executed on a new Teensy (whose memory is filled with 0xff).  This prevents
+    // // calcuation of crazy transmit offset from 0xffff filled EEPROM.  TODO:  Do we still need the offset thing???
+    // #define EEPROMSIZE 4284  // Teensy 4.1
+    //     bool newChip = true;
+    //     for (int adr = 0; adr < EEPROMSIZE; adr++) {
+    //         if (EEPROM.read(adr) != 0xff) newChip = false;
+    //     }
+    //     if (newChip) {
+    //         Serial.print("Initializing EEPROM for new chip\n");
+    //         EEPROMWriteInt(10, 0);  // Address 10 is offset but the encoding remains mysterious
+    //     }
+    //     // DPRINTF("Offset = %d\n", EEPROM.read(10));
 
     // Initialize the SI5351 clock generator.  NOTE:  PocketFT8Xcvr boards use CLKIN input (supposedly less jitter than XTAL).
     si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          // KQ7B's counter isn't accurate enough to calculate a correction
@@ -330,32 +332,33 @@ void setup(void) {
         // DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
     }
 
-    // Read the JSON configuration file into the config structure.  We allow the firmware to continue even
-    // if the configuration file is unreadable or useless because the receiver remains usable.
-    JsonDocument doc;  // Key-Value pair doc
-    File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
-    DeserializationError error = deserializeJson(doc, configFile);
-    if (error) {
-        char msg[40];
-        snprintf(msg, sizeof(msg), "ERROR:  Unable to read Teensy SD file, %s\n", CONFIG_FILENAME);
-        ui.applicationMsgs->setText(msg);
-        delay(5000);
-    }
+    // // Read the JSON configuration file into the config structure.  We allow the firmware to continue even
+    // // if the configuration file is unreadable or useless because the receiver remains usable.
+    // JsonDocument doc;  // Key-Value pair doc
+    // File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
+    // DeserializationError error = deserializeJson(doc, configFile);
+    // if (error) {
+    //     char msg[40];
+    //     snprintf(msg, sizeof(msg), "ERROR:  Unable to read Teensy SD file, %s\n", CONFIG_FILENAME);
+    //     ui.applicationMsgs->setText(msg);
+    //     delay(5000);
+    // }
 
-    // Extract the configuration parameters from doc or assign their defaults to the config struct
-    strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  // Station callsign
-    config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
-    strlcpy(config.locator, doc["locator"] | "", sizeof(config.locator));
-    // config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
-    config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
-    config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
-    config.qsoTimeout = doc["qsoTimeout"] | DEFAULT_QSO_TIMEOUT;
-    configFile.close();
-    String configMsg = String("Configured station ") + String(config.callsign) + String(" on ") + String(config.frequency) + String(" kHz");
-    ui.applicationMsgs->setText(configMsg.c_str());
+    // // Extract the configuration parameters from doc or assign their defaults to the config struct
+    // strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  // Station callsign
+    // config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
+    // strlcpy(config.locator, doc["locator"] | "", sizeof(config.locator));
+    // // config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
+    // config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
+    // config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
+    // config.qsoTimeout = doc["qsoTimeout"] | DEFAULT_QSO_TIMEOUT;
+    // configFile.close();
+    // String configMsg = String("Configured station ") + String(config.callsign) + String(" on ") + String(config.frequency) + String(" kHz");
+    // ui.applicationMsgs->setText(configMsg.c_str());
 
-    // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)
-    strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
+    // // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)
+    // strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
+    readConfigFile();
 
     // Initialize the SI4735 receiver
     delay(10);
@@ -395,7 +398,7 @@ void setup(void) {
     //     Serial.printf("Unable to open %s\n", AUDIO_RECORDING_FILENAME);
     //   }
     // }
-    //display_all_buttons();
+    // display_all_buttons();
 
     // Start the audio pipeline
     queue1.begin();
@@ -423,9 +426,9 @@ void setup(void) {
     receive_sequence();                            // Setup to receive at start of first timeslot
 
     // Wait for the next FT8 timeslot (at 0, 15, 30, or 45 seconds past the minute)
-    start_time = millis();     //Note start time for update_synchronization()
-    update_synchronization();  //Do we really need this in-addition to and before waitForFT8timeslot()?
-    //waitForFT8timeslot();  // Wait for a 15 second FT8 timeslot
+    start_time = millis();     // Note start time for update_synchronization()
+    update_synchronization();  // Do we really need this in-addition to and before waitForFT8timeslot()?
+    // waitForFT8timeslot();  // Wait for a 15 second FT8 timeslot
 
 }  // setup()
 
@@ -495,16 +498,15 @@ void loop() {
     }
 
     // Check touchscreen and serial port for activity
-    process_touch();
-    //if (tune_flag == 1) process_serial();  // TODO:  Do we still need this???
+    pollTouchscreen();
+    // if (tune_flag == 1) process_serial();  // TODO:  Do we still need this???
 
     // If we have not yet obtained valid GPS data, but the GPS device has acquired a fix, then obtain the GPS data.
     // This is a bit abrupt as we afterward more or less resynch everything and wait for a timeslot.
     if (gpsHelper.validGPSdata == false && gpsHelper.hasFix() == true) {
         // Sync MCU and RTC time with GPS if it's working and can get a timely fix  TODO:  eliminate gpsCallback???
         if (gpsHelper.obtainGPSData(config.gpsTimeout, gpsCallback)) {
-
-            //Inform operator
+            // Inform operator
             ui.applicationMsgs->setText("GPS has acquired a fix");
 
             // Set the MCU time to the GPS result

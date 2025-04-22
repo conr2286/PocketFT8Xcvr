@@ -74,9 +74,11 @@ void ContactLogFile::buildListOfKnownCallsigns() {
  * Method:  Modulo division by a prime number
  */
 unsigned ContactLogFile::hashString(char* str) {
-    unsigned result = 0;
+    //unsigned result = 0;
+    unsigned long long result = 0;
     for (char* p = str; *p != 0; p++) {
-        result += *p;
+        //DPRINTF("result=%llu *p=%c\n", result, *p);
+        result = (result << 8) + (*p);  // Assemble entire callsign as bytes in 64-bit unsigned
     }
     return (result % callsignTableSize);  // This is the hash function
 }  // hashString()

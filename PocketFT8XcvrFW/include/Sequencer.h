@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AScrollBox.h"
 #include "Contact.h"
 #include "LogFactory.h"
 #include "SequencerStates.h"
@@ -45,10 +46,12 @@ class Sequencer {
     void endQSO(void);                         // Terminate a QSO
 
     // Private member variables
-    SequencerStateType state;      // The Sequencer's current state
-    unsigned long sequenceNumber;  // The current timeslot's sequence number
-    Timer *timeoutTimer;           // Terminates run-on transmissions after timeout period
-    ContactLogFile *contactLog;    // The contact log file
+    SequencerStateType state;          // The Sequencer's current state
+    unsigned long sequenceNumber;      // The current timeslot's sequence number
+    Timer *timeoutTimer;               // Terminates run-on transmissions after timeout period
+    ContactLogFile *contactLog;        // The contact log file
+    String lastReceivedMsg;            // The last received (decoded) message text
+    AScrollBoxItem *lastReceivedItem;  // Pointer to last item in StationMsgs box
 
    public:
     // Define the events triggering the Sequencing State Machine transitions

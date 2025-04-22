@@ -125,3 +125,13 @@ void ATextBox::setText(const char *txt, AColor fg) {
     str = String(txt);
     repaintWidget();
 }
+
+/**
+ * @brief Change the display text in this ATextBox
+ * @param txt String to display
+ */
+void ATextBox::setText(String str, AColor fg) {
+    fgColor = fg;
+    str = String(str);
+    repaintWidget();
+}
