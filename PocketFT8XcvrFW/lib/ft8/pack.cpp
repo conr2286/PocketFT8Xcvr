@@ -35,7 +35,7 @@ int32_t pack28(const char *callsign) {
     if (starts_with(callsign, "CQ ")) return 2;
 
     if (starts_with(callsign, "CQ_")) {
-        int nnum = 0, nlet = 0;
+        //int nnum = 0, nlet = 0;
 
         // TODO:
         // if(nnum.eq.3 .and. nlet.eq.0) then n28=3+nqsy

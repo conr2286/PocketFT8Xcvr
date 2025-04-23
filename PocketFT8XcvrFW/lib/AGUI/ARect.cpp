@@ -28,7 +28,7 @@ void ARect::setCorners(ACoord x1, ACoord y1, ALength w, ALength h) {
  * @param y y-coord
  * @return true if coord lies within, else false
  */
-bool ARect::isWithin(ACoord x, ACoord y) {
+bool ARect::isWithin(ACoord x, ACoord y) const {
     DPRINTF("x=%d, y=%d) for (%d,%d) to (%d,%d)\n", x, y, x1,y1,x2,y2);
     if ((x < x1) || (x > x2)) return false;
     if ((y < y1) || (y > y2)) return false;

@@ -446,7 +446,7 @@ int Check_Calling_Stations(int num_decoded) {
  * translating RSL back into a single digit (e.g. 1..9) S-Level (as in RST).
  */
 char rsl2s(int rsl) {
-    static const char mapRSL2S[] = "112233445566778899";  // RSL Levels -17..0 dB
+    //static const char mapRSL2S[] = "112233445566778899";  // RSL Levels -17..0 dB
     char S = ' ';                                         // S-Level
 
     if (rsl <= -17) return '1';  // Check for really weak signal

@@ -751,7 +751,7 @@ void sync_FT8(void) {
  *
  **/
 void waitForFT8timeslot(void) {
-    // DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
+    DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
 
     // displayInfoMsg("Waiting for timeslot");
     ui.applicationMsgs->setText("Awaiting FT8 timeslot");

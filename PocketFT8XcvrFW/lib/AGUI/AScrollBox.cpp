@@ -29,7 +29,7 @@
  *
  * @note The text string, s, must not contain a NL character
  */
-AScrollBoxItem::AScrollBoxItem(String s, AColor fg, AColor bg, AScrollBox* pBox) {
+AScrollBoxItem::AScrollBoxItem(String& s, AColor fg, AColor bg, AScrollBox* pBox) {
     //if (!Serial) Serial.begin(9600);
     //Serial.println("AScrollBoxItem()");
     str = s;                    // Item's text String
@@ -206,7 +206,7 @@ AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
  * @param nItems #items
  * @return true if they fit, else false
  */
-bool AScrollBox::itemWillFit(int nItems) {
+bool AScrollBox::itemWillFit(int nItems) const {
     // DTRACE();
 
     // Does the box have room for anything at all?
@@ -284,7 +284,7 @@ AScrollBoxItem* AScrollBox::setItemColors(AScrollBoxItem* pItem, AColor fgColor,
  * @param pItem Pointer to item
  * @return Item's index into items[] array or -1 if not found
  */
-int AScrollBox::getItemIndex(AScrollBoxItem* pItem) {
+int AScrollBox::getItemIndex(AScrollBoxItem* pItem) const {
     DTRACE();
     // Sanity check
     if (pItem == nullptr) return -1;
@@ -300,7 +300,7 @@ int AScrollBox::getItemIndex(AScrollBoxItem* pItem) {
  * @brief Get count of displayed items
  * @return count
  */
-int AScrollBox::getCount() {
+int AScrollBox::getCount() const {
     return nDisplayedItems;
 }
 
@@ -386,7 +386,7 @@ void AScrollBox::touchWidget(ACoord xTouch, ACoord yTouch) {
  * @param yClick Screen y-Coord
  * @return Pointer to the AScrollBoxItem or nullptr if none
  */
-AScrollBoxItem* AScrollBox::getSelectedItem(ACoord xClick, ACoord yClick) {
+AScrollBoxItem* AScrollBox::getSelectedItem(ACoord xClick, ACoord yClick) const {
     DTRACE();
 
     // Perhaps this click lies entirely outside this widget's boundary

@@ -38,8 +38,9 @@ void readConfigFile() {
     configFile.close();
 
     // Report configuration
-    String configMsg = String("Configured station ") + String(config.callsign) + String(" on ") + String(config.frequency) + String(" kHz");
-    if (config.enableDuplicates) configMsg += String("\nenableDuplicates==1");
+    String configMsg = String("Configured station ") + String(config.callsign) + String(" on ") + String(config.frequency) + String(" kHz\n");
+    if (config.enableDuplicates) configMsg += String("enableDuplicates==1 ");
+    configMsg += String("logFilename=") + String(config.logFilename);
     ui.applicationMsgs->setText(configMsg.c_str());
 
     // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)
@@ -47,4 +48,7 @@ void readConfigFile() {
 
     // DPRINTF("enableAVC=%d\n", config.enableAVC);
     // DPRINTF("enableDuplicates=%d", config.enableDuplicates);
+
+    //Let the config report linger on the display for a moment
+    delay(2000);
 }

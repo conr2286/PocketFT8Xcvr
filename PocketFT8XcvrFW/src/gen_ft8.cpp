@@ -109,11 +109,11 @@ char* get_message() {
  * TODO:  Replace these hardwired message numbers with MsgType enumerations
  **/
 void set_message(uint16_t index) {
-    char big_gulp[60];
+    //char big_gulp[60];
     uint8_t packed[K_BYTES];
-    char blank[] = "                   ";
+    //char blank[] = "                   ";
     char seventy_three[] = "RR73";
-    char Reply_State[20];
+    //char Reply_State[20];
 
     // DPRINTF("set_message(%u)\n", index);
 
@@ -164,7 +164,7 @@ void set_message(uint16_t index) {
     // tft.print(message);
 
     // TODO:  Check for empty message???
-    ui.applicationMsgs->setText(message);
+    //ui.applicationMsgs->setText(message);
     pack77_1(message, packed);
     genft8(packed, tones);
 

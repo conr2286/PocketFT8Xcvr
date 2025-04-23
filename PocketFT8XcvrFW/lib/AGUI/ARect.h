@@ -38,7 +38,7 @@ class ARect {
      * @param x x-screen coordinate
      * @param y y-screen coordinate
      */
-    bool isWithin(ACoord x, ACoord y);
+    bool isWithin(ACoord x, ACoord y) const;
 
     // Purposefully and perhaps foolishly left public
     ACoord x1, y1;  // Upper left corner

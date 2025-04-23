@@ -37,7 +37,7 @@ extern UserInterface ui;
  * size chars in str[].
  *
  **/
-char* strlpad(char* str, unsigned size, char c) {
+char* strlpad(char* str, int size, char c) {
     const char NUL = 0;
     bool paddingUnderway = false;
     int i;

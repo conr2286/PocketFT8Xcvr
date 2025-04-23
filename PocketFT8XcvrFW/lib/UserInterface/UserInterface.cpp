@@ -23,7 +23,7 @@
 #include "ATextBox.h"       //Non-interactive text
 #include "AToggleButton.h"  //Stateful button
 #include "Config.h"
-#include "DEBUG.h"       //USB Serial debugging on the Teensy 4.1
+#include "NODEBUG.h"       //USB Serial debugging on the Teensy 4.1
 #include "FT8Font.h"     //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"   //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"  //WARNING:  #include HX8357_t3n following Adafruit_GFX
@@ -60,7 +60,7 @@ void DecodedMsgsBox::setMsg(int index, char* msg) {
  * @brief Start-up the Adafruit Display, GFX adapter and library, the resistive touchscreen, and widgets
  */
 void UserInterface::begin() {
-    DTRACE();
+    //DTRACE();
 
     // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
     gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries

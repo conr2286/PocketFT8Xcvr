@@ -83,7 +83,7 @@
 //     INDICATOR_ICON_TUNING = 3
 // } IndicatorIconType;
 
-char* strlpad(char* str, unsigned size, char c);
+char* strlpad(char* str, int size, char c);
 //char* strlpad(char* dst, char* src, char c, unsigned size);
 
 void display_frequency(int x, int y, int value);

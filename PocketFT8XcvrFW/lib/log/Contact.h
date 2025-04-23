@@ -17,7 +17,7 @@ class Contact {
     static const int sizeRSL = 4;        // 3 chars and a NUL
     static const int sizeSOTAref = 14;   // 14 chars and a NUL
     static const int sizeLocator = 7;    // 6 chars and a NUL
-    static const int sizeRig = 17;       // 16 chars and a NUL
+    static const int sizeRig = 64;       // 63 chars and a NUL
     static const int sizePwr = 5;        // 5 chars and a NUL
 
     // Constructor and other significant methods

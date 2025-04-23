@@ -29,7 +29,7 @@
 
 #include "Contact.h"
 #include "ContactLogFile.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "FileSystemAdapter.h"
 #include "lexical.h"
 

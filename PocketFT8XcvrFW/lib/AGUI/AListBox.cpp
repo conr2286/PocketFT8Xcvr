@@ -32,7 +32,7 @@
 AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
     // if (!Serial) Serial.begin(9600);
     // Serial.println("AListBoxItem()");
-    str = s;                  // Item's text String
+    str = s;                  // Copy Item's text String
     str.replace('\n', ' ');   // We really can't tolerate NL chars in the String
     fgColor = fg;             // Item's foreground color
     bgColor = bg;             // Item's background color
@@ -57,7 +57,7 @@ void AListBoxItem::setItemColors(AColor fg, AColor bg) {
  * @param s New String
  * @param fg Color
  */
-void AListBoxItem::setItemText(String s, AColor fg) {
+void AListBoxItem::setItemText(const String& s, AColor fg) {
     DTRACE();
     fgColor = fg;
     str = s;
@@ -74,7 +74,7 @@ void AListBoxItem::setItemText(String s, AColor fg) {
  */
 AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
     // if (!Serial) Serial.begin(9600);
-    Serial.println("AListBox()");
+    //Serial.println("AListBox()");
 
     // Initialize the member variables
     boundary.setCorners(x, y, w, h);  // Our boundary box
@@ -102,7 +102,7 @@ AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
  * No scrolling in a list box; that which doesn't fit clips
  *
  */
-AListBoxItem* AListBox::addItem(AListBox* pListBox, String str, AColor fg) {
+AListBoxItem* AListBox::addItem(AListBox* pListBox,const String str, AColor fg) {
     DPRINTF("str='%s'\n", str.c_str());
 
     // Too many items for our primitive data structs?
@@ -132,7 +132,7 @@ AListBoxItem* AListBox::addItem(AListBox* pListBox, String str, AColor fg) {
  *
  * @note Creating a new item can create "holes" (indices without items) in the list
  */
-int AListBox::setItem(int index, String str, AColor fg, AColor bg) {
+int AListBox::setItem(int index, const String& str, AColor fg, AColor bg) {
     // Sanity checks
     if ((index < 0) || (index >= maxItems)) return -1;  // Bad index?
 
@@ -205,11 +205,11 @@ int AListBox::repaint(int index) {
  * @param pItem Pointer to item to repaint
  * @return pointer to item or nullptr if error
  */
-AListBoxItem* AListBox::repaint(AListBoxItem* pItem) {
+AListBoxItem* AListBox::repaint(AListBoxItem* pItem) const {
     // if (!Serial) Serial.begin(9600);
 
     // Sanity checks
-    if (pItem == nullptr) return nullptr;
+    if (pItem == nullptr) return  nullptr;
 
     // Map item pointer to its index into displayedItems[]
     int index = getItemIndex(pItem);
@@ -277,7 +277,7 @@ AListBoxItem* AListBox::setItemColors(AListBoxItem* pItem, AColor fg, AColor bg)
  * @param pItem Pointer to item
  * @return Item's index into items[] array or -1 if not found
  */
-int AListBox::getItemIndex(AListBoxItem* pItem) {
+int AListBox::getItemIndex(const AListBoxItem* pItem) const {
     DTRACE();
     // Sanity check
     if (pItem == nullptr) return -1;
@@ -293,7 +293,7 @@ int AListBox::getItemIndex(AListBoxItem* pItem) {
  * @brief Get this item's index
  * @return index or -1 if error
  */
-int AListBoxItem::getIndex() {
+int AListBoxItem::getIndex() const {
     return listBoxContainer->getItemIndex(this);
 }  // getIndex()
 
@@ -301,7 +301,7 @@ int AListBoxItem::getIndex() {
  * @brief Get count of displayed items
  * @return count
  */
-int AListBox::getCount() {
+int AListBox::getCount() const {
     return nDisplayedItems;
 }
 
@@ -387,7 +387,7 @@ void AListBox::touchWidget(ACoord xTouch, ACoord yTouch) {
  * @param yClick Screen y-Coord
  * @return Pointer to the AListBoxItem or nullptr if none
  */
-AListBoxItem* AListBox::getSelectedItem(ACoord xClick, ACoord yClick) {
+AListBoxItem* AListBox::getSelectedItem(ACoord xClick, ACoord yClick) const {
     DTRACE();
 
     // Perhaps this click lies entirely outside this widget's boundary

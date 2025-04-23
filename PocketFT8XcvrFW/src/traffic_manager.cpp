@@ -43,7 +43,7 @@ extern UserInterface ui;
 void transmit_sequence(void) {
     DTRACE();
 
-    ui.applicationMsgs->setText(get_message(), RED);
+    //ui.applicationMsgs->setText(get_message(), A_RED);
 
     // Program the transmitter clock at F_Long
     set_Xmit_Freq();
@@ -198,5 +198,5 @@ void setup_to_transmit_on_next_DSP_Flag(void) {
     transmit_sequence();   // Turns-on the transmitter carrier at current F_Long ??
     // set_Xmit_Freq();                         //Recalculates F_long and reprograms SI5351 ??
     xmit_flag = 1;                              // This flag appears to trigger loop() to modulate the carrier
-    ui.applicationMsgs->setText(get_message(), HX8357_RED);  // Display transmitted message
+    //ui.applicationMsgs->setText(get_message(), A_RED);  // Display transmitted message
 }

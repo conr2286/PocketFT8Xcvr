@@ -20,7 +20,7 @@ class ATextBox : public AWidget {
 
     // Public methods
     void setText(const char* str, AColor fg = A_WHITE);
-    void setText(String str, AColor fg = A_WHITE);
+    void setText(String& str, AColor fg = A_WHITE);
     void repaintWidget(void) override;  // Repaint this ATextBox
     void reset(void);                   // Clear box of all text
 
@@ -33,5 +33,5 @@ class ATextBox : public AWidget {
 
     // Private variables
     ACoord r;    // Radius of the box's rounded corners
-    String str;  // The text string object
+    String str;  // Copy of the text string object
 };  // AToggleButton

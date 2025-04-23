@@ -20,7 +20,7 @@
 
 #include <Arduino.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  * @brief Private constructor initializes a new Timer object

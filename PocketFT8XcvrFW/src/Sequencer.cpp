@@ -2,9 +2,9 @@
  * SYNOPSIS
  *  Sequencer --- (AKA RoboOp) Implements a state machine for automated sequencing of FT8 QSOs
  *
- * NOTES
- *  Following the progress of a large state machine like this can be challenging.
- *  While a complete FT8 implementation accommodates arcane corner cases to
+ * !!!DON'T PANIC!!!
+ *  Following the progress of a large state machine like this is challenging.
+ *  While the complete FT8 implementation accommodates arcane corner cases to
  *  handle unexpected, exceptional events, the main flow is not so bad.
  *  Here's the main flow for how the Sequencer initiates a QSO by calling CQ:
  *
@@ -27,7 +27,7 @@
  *  The above includes events arising from three sources:  timeslot boundaries, GUI buttons,
  *  and received messages.  For many events, Sequencer undertakes one of two actions:
  *  prepare a message to transmit, or arm the transmitter to begin in an appropriate timeslot.
- *  The reference [1] below provides more information about sequencing a QSO.
+ *  The reference [1] below provides more information about sequencing an FT8 QSO.
  *
  *  All FT8 messages, received and transmitted, worldwide, start on 15-second
  *  timeslot intervals.  The intervals begin precisely at 0, 15, 30 and 45 seconds
@@ -59,8 +59,10 @@
  *
  *  Proper sequencing is important, and is most effectively automated due to the short
  *  dwell time available between when a message is decoded, displayed and the following
- *  timeslot begins.  Human operators simply can't react that fast.  Now consider the
- *  following in which K1JT's response is lost in the ozone:
+ *  timeslot begins.  Human operators simply can't prepare a message in time to send
+ *  in that next timeslot --- that's why we have RoboOp (if you've ever worked a CW
+ *  contest at 02:00 local time then you know the job).  Now consider the following in
+ *  which K1JT's response is lost in the ozone:
  *
  *  Timeslot Destn Source  Content Commentary
  *     0      CQ    K1JT    FN20    K1JT transmits CQ
@@ -82,41 +84,51 @@
  *  For the purpose of logging, Sequencer considers a QSO successfully completed when it
  *  receives any form of end-of-transmission (EOT), e.g. RRR, RR73, or 73, from the
  *  remote station ("It aint over till it's over").  Note this is a bit different from
- *  some contests and/or special events.
+ *  some contests and/or special events --- we're a bit conservative here.
  *
  *  Unexpected FT8 messages, those deviating from the so-called "standard" QSO sequence
  *  described in [1], present Sequencer with a quandry re. what to do as the documented
  *  protocol doesn't really prescribe what to do (i.e. when compared to, say, the TCP
  *  RFCs:).  The easiest thing to do would likely be abandon the QSO, but
- *  Sequencer attempts to get things back on track below.  It's confusing.
+ *  Sequencer attempts to get things back on track below.  It's confusing, and much of
+ *  the code below addresses the arcane situations when the QSO flows abnormally.
  *
  * DESIGN
  *  Sequencer implements a state machine, driven by event notification methods,
- *  and responds by invoking action methods.
+ *  and responds by invoking action methods.  There are two "main" forms of events,
+ *  timeslots and received messages.  Others (e.g. Timers) deal with oddities.
+ *  RoboOp is a lot of code, but it attempts to behave as would a (very fast) human
+ *  operator.
  *
  *  Sequencer expects to be notified about received messages in the timeslot in which they
- *  are decoded (so it can prepare a reply to transmit in the following timeslot).
+ *  are decoded (so it can prepare a response to transmit in the following timeslot).
  *  If this doesn't happen for some reason, sequencer is aware of even/odd timeslots and
  *  will pend its response until a suitable timeslot when the remote station should be
- *  listening.  Things can get really fouled up beyond all recognition (FUBAR) if the
+ *  listening.  The QSO can get really fouled up beyond all recognition (FUBAR) if the
  *  remote station changes their even/odd timeslot for transmissions.
  *
  *  Sequencer employs a timer to recognize QSO wreckage (changing band conditions,
  *  remote station QRT, whatever) and abort its automated activities.
+ *
+ * NOMENCLATURE
+ *  "Events" refer to things (e.g. received messages, timeslot boundaries, menu
+ *  buttons, timers...) that trigger the state machine.
+ *  "Actions" refer to the activities undertaken by the state machine in response to
+ *  events.
  *
  * REFERENCES
  *  1. Franke, Somerville and Taylor.  "The FT4 and FT8 Communication Protocols."
  *  QEX.  July/August 2020.
  *
  **/
-
 #include "Sequencer.h"
 
-#include <string.h>
+#include <Arduino.h>
+#include <String.h>
 
 #include "Config.h"
-#include "NODEBUG.h"
 #include "LogFactory.h"
+#include "NODEBUG.h"
 #include "SequencerStates.h"
 #include "UserInterface.h"
 #include "button.h"
@@ -190,7 +202,7 @@ void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
 void Sequencer::timeslotEvent() {
     DPRINTF("%s sequenceNumber=%lu, state=%u\n", __FUNCTION__, sequenceNumber, state);
 
-    //Review and purge ancient messages from Station Messages box
+    // Review and purge ancient messages from Station Messages box
     ui.stationMsgs->reviewTimeStamps();
 
     // Sequencer state determines what action to take
@@ -214,7 +226,7 @@ void Sequencer::timeslotEvent() {
         case XMIT_CQ:
             DTRACE();
             state = LISTEN_LOC;  // We are now listening for a response to our CQ
-            ui.applicationMsgs->setText(get_message(), HX8357_DARKGREEN);
+            //ui.applicationMsgs->setText(get_message(), A_DARK_GREEN);
             break;
 
         // We have listened for responders to our CQ and heard nothing.  At the next timeslot,
@@ -271,7 +283,7 @@ void Sequencer::timeslotEvent() {
             DTRACE();
             endQSO();      // Log it if we have valid data
             state = IDLE;  // Return to idle state
-            ui.applicationMsgs->setText("");
+            //ui.applicationMsgs->setText("");
             break;
 
         // We are waiting to contact a displayed station after operator clicked on their message.  We
@@ -370,14 +382,18 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
 
         // Display messages of interest to us in our Station's Messages box, recoloring retransmitted msgs yellow
         // rather than repeatedly displaying them (to conserve space in the scroll box).
-        String sp(" ");
+        static const String sp(" ");
         String thisReceivedMsg = String(msg->field1) + sp + String(msg->field2) + sp + String(msg->field3);
-        if (thisReceivedMsg == lastReceivedMsg) {
-            ui.stationMsgs->setItemColors(lastReceivedItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
-        } else {
-            lastReceivedItem = ui.stationMsgs->addItem(ui.stationMsgs, thisReceivedMsg);  // This received msg
+
+        // Display QSO messages (but not CQ) in the StationMsgs box
+        if (msg->msgType != MSG_CQ) {
+            if (thisReceivedMsg == lastReceivedMsg) {
+                ui.stationMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+            } else {
+                lastStationMsgsItem = ui.stationMsgs->addItem(ui.stationMsgs, thisReceivedMsg);  // New received msg
+            }
+            lastReceivedMsg = thisReceivedMsg;  // Remember this received msg text for when the next msg arrives
         }
-        lastReceivedMsg = thisReceivedMsg;  // Remember this received msg text for when the next msg arrives
 
         switch (msg->msgType) {
             // Did we receive a station's Tx6 CQ?
@@ -464,10 +480,10 @@ void Sequencer::cqMsgEvent(Decode* msg) {
             contact.setWorkedLocator(msg->field3);                                          // Record their locator if we recvd it
             setXmitParams(msg->field2, msg->snr);                                           // Inform gen_ft8 of remote station's info
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, contact.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
-            set_message(MSG_LOC);                                       // We get QSO underway by sending our locator
-            ui.applicationMsgs->setText(get_message(), HX8357_YELLOW);  // Display pending call in yellow
-            startTimer();                                               // Start the Timer to terminate a run-on QSO
-            state = LOC_PENDING;                                        // Await appropriate timeslot to transmit to Target_Call
+            set_message(MSG_LOC);                                  // We get QSO underway by sending our locator
+            //ui.applicationMsgs->setText(get_message(), A_YELLOW);  // Display pending call in yellow
+            startTimer();                                          // Start the Timer to terminate a run-on QSO
+            state = LOC_PENDING;                                   // Await appropriate timeslot to transmit to Target_Call
             ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
@@ -546,10 +562,10 @@ void Sequencer::cqButtonEvent() {
             setAutoReplyToCQ(false);
 
             // Prepare to call CQ
-            set_message(MSG_CQ);                                        // Build our CQ message
-            state = CQ_PENDING;                                         // Await the next timeslot
-            ui.applicationMsgs->setText(get_message(), HX8357_YELLOW);  // Display pending CQ message in yellow
-            startTimer();                                               // Start the Timer to terminate run-on CQ transmissions
+            set_message(MSG_CQ);                                   // Build our CQ message
+            state = CQ_PENDING;                                    // Await the next timeslot
+            //ui.applicationMsgs->setText(get_message(), A_YELLOW);  // Display pending CQ message in yellow
+            startTimer();                                          // Start the Timer to terminate run-on CQ transmissions
             ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
@@ -607,9 +623,9 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
                 contact.setWorkedLocator(msg->field3);                                          // Record their locator if we have it
                 setXmitParams(msg->field2, msg->snr);                                           // Inform gen_ft8 of remote station's info
                 DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, contact.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
-                set_message(MSG_LOC);                                       // We initiate QSO by sending our locator
-                ui.applicationMsgs->setText(get_message(), HX8357_YELLOW);  // Display pending call in yellow
-                startTimer();                                               // Start the Timer to terminate a run-on QSO
+                set_message(MSG_LOC);                                  // We initiate QSO by sending our locator
+                //ui.applicationMsgs->setText(get_message(), A_YELLOW);  // Display pending call in yellow
+                startTimer();                                          // Start the Timer to terminate a run-on QSO
                 // resetButton(BUTTON_CQ);                        // No longer calling CQ
                 ui.b0->reset();       // Reset highlighted button
                 state = LOC_PENDING;  // Await appropriate timeslot to transmit to Target_Call
@@ -745,7 +761,7 @@ void Sequencer::rslEvent(Decode* msg) {
             setXmitParams(msg->field2, msg->snr);  // Inform gen_ft8 of remote station's info
             set_message(MSG_RRR);                  // Prepare an RRR message
             state = RRR_PENDING;                   // We must await an appropriate even/odd timeslot
-            ui.applicationMsgs->setText(get_message(), HX8357_YELLOW);
+            //ui.applicationMsgs->setText(get_message(), A_YELLOW);
             ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
@@ -757,7 +773,7 @@ void Sequencer::rslEvent(Decode* msg) {
             setXmitParams(msg->field2, msg->snr);  // Inform gen_ft8 of remote station's info
             set_message(MSG_RRSL);                 // Prepare to send their signal report to remote station
             state = RRSL_PENDING;                  // Await an appropriate even/odd timeslot
-            ui.applicationMsgs->setText(get_message(), HX8357_YELLOW);
+            //ui.applicationMsgs->setText(get_message(), A_YELLOW);
             ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
@@ -773,7 +789,7 @@ void Sequencer::rslEvent(Decode* msg) {
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
             set_message(MSG_RRSL);  // Roger our RSL and send their RSL to remote station
             state = RRSL_PENDING;   // Transmit their RSL in next appropriate timeslot
-            ui.applicationMsgs->setText(get_message(), HX8357_YELLOW);
+            //ui.applicationMsgs->setText(get_message(), A_YELLOW);
             ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
@@ -847,7 +863,7 @@ void Sequencer::eotReplyEvent(Decode* msg) {
             setXmitParams(msg->field2, msg->snr);  // Inform gen_ft8 of remote station's info
             set_message(MSG_73);                   // Prepare an RRR message
             state = M73_PENDING;                   // We must await an appropriate even/odd timeslot
-            ui.applicationMsgs->setText(get_message(), HX8357_YELLOW);
+            //ui.applicationMsgs->setText(get_message(), A_YELLOW);
             ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             // TODO:  qso.end()???
             break;
@@ -899,7 +915,7 @@ void Sequencer::locatorEvent(Decode* msg) {
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
             set_message(MSG_RSL);  // Prepare to transmit RSL to responder
             state = RSL_PENDING;   // Must await an appropriate timeslot when responder is listening
-            ui.applicationMsgs->setText(get_message(), HX8357_YELLOW);
+            //ui.applicationMsgs->setText(get_message(), A_YELLOW);
             ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
@@ -980,10 +996,17 @@ void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
     // the current sequenceNumber's oddEven to avoid doubling with the remote station.
     if (oddEven == ODD(sequenceNumber)) {
         // DFPRINTF("In sequenceNumber %lu, setting-up to transmit in the following timeslot\n", sequenceNumber);
-        Transmit_Armned = 1;                               // Yes, transmit in the next slot
-        setup_to_transmit_on_next_DSP_Flag();              // loop() begins modulation in next timeslot
-        state = newState;                                  // Advance state machine to new state after arming the transmitter
-        ui.setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);  // Transmission will begin in loop()
+        Transmit_Armned = 1;                                // Yes, transmit in the next slot
+        setup_to_transmit_on_next_DSP_Flag();               // loop() begins modulation in next timeslot
+        state = newState;                                   // Advance state machine to new state after arming the transmitter
+        ui.setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);   // Transmission will begin in loop()
+        String thisTransmittedMsg = String(get_message());  // The pending outbound message text
+        if (thisTransmittedMsg == lastTransmittedMsg) {
+            ui.stationMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+        } else {
+            lastStationMsgsItem = ui.stationMsgs->addItem(ui.stationMsgs, thisTransmittedMsg);  // New transmitted msg
+        }
+        lastTransmittedMsg = thisTransmittedMsg;        // Remember for next time we add an item
     } else {
         ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Transmission pending appropriate time slot
     }

@@ -63,8 +63,8 @@ static const ACoord ButtonY = 290;        // All buttons in one row at screen bo
 class StationMessages : public AScrollBox {
     public:
      StationMessages(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {}
-     void addTimedItem(AScrollBox* pAScrollBox, String str, AColor fg = A_WHITE);
-     void checkScroll(void);
+     //void addTimedItem(AScrollBox* pAScrollBox, String str, AColor fg = A_WHITE);
+     //void checkScroll(void);
 
      private:
       unsigned long itemCreationTime;

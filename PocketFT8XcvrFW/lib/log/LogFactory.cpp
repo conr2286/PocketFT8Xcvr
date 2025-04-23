@@ -14,7 +14,7 @@
 
 #include "ADIFlog.h"
 #include "ContactLogFile.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  * ADIFlog factory method
