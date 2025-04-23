@@ -6,7 +6,7 @@
  * @note Caution:  Avoid confusion with Java Swing --- ATextBox does not
  * enable the operator to interactively edit the text.  That would be an
  * ATextEditor if implemented in AGUI.
- * 
+ *
  * @note While the user should subclass most AGUI widgets and override
  * their virtual methods, there's really not much to override here.
  *
@@ -16,7 +16,7 @@
 
 #include <Arduino.h>
 
-//#include <string>
+// #include <string>
 
 #include "AGUI.h"
 #include "AWidget.h"
@@ -107,12 +107,13 @@ void ATextBox::repaintWidget(void) {
     AGUI::setTextWrap(true);               // We do wrap text
     AGUI::setClipRect(clipX, clipY, clipW, clipH);
 
-    // Write the text
-    int16_t drawX = clipX + 1;  // X-coord
-    int16_t drawY = clipY + 1;  // Y-coord
-    AGUI::setCursor(drawX, drawY);
-    AGUI::writeText(str);  // Output text to box
-    AGUI::setClipRect();
+    // Erase old text and paint new text
+    int16_t drawX = clipX + 1;                                              // X-coord
+    int16_t drawY = clipY + 1;                                              // Y-coord
+    AGUI::fillRect(drawX, drawY, boundary.w - 2, boundary.h - 2, bgColor);  // Erase existing text
+    AGUI::setCursor(drawX, drawY);                                          // Text drawing posiiton
+    if (str != String("")) AGUI::writeText(str);                            // Output non-empty text to box
+    AGUI::setClipRect();                                                    // Restore default clip
 
 }  // repaintWidget()
 
@@ -133,5 +134,13 @@ void ATextBox::setText(const char *txt, AColor fg) {
 void ATextBox::setText(String str, AColor fg) {
     fgColor = fg;
     str = String(str);
+    repaintWidget();
+}
+
+/**
+ * @brief Reset this text box, clearing all text.  Colors remain unmodified.
+ */
+void ATextBox::reset() {
+    str = "";  // Nothing to display
     repaintWidget();
 }

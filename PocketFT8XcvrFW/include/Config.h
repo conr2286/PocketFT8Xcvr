@@ -14,6 +14,7 @@ typedef struct Config {
     unsigned gpsTimeout;                   // GPS timeout (seconds) to obtain a fix
     unsigned qsoTimeout;                   // QSO timeout (seconds) to obtain a response
     bool enableDuplicates;                 // Enable RoboOp to contact duplicates
+    char logFilename[24];                  // Log filename
 } ConfigType;
 
 // Default configuration
@@ -24,5 +25,6 @@ typedef struct Config {
 #define DEFAULT_GPS_TIMEOUT 60                // Number of seconds before GPS fix time-out
 #define DEFAULT_QSO_TIMEOUT 180               // Number seconds Sequencer will retry transmission without a response
 #define DEFAULT_ENABLE_DUPLICATES false       // RoboOp will not contact duplicates
+#define DEFAULT_LOG_FILENAME "LOGFILE.ADIF"   // Default ADIF Log Filename
 
 void readConfigFile(void);

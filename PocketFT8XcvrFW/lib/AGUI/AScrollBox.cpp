@@ -98,6 +98,7 @@ AScrollBoxItem* AScrollBox::addItem(AScrollBox* pAScrollBox, String str, AColor 
     // Build the new Item
     // fgColor = fg;
     AScrollBoxItem* pNewItem = new AScrollBoxItem(str, fg, bgColor, pAScrollBox);  // Build item using widget's default colors
+    pNewItem->timeStamp = millis();                                                // Record timestamp when item created
 
     // Scroll the displayed items up if the added item won't fit within widget's boundary box
     if (!itemWillFit(nDisplayedItems + 1)) {
@@ -399,3 +400,21 @@ AScrollBoxItem* AScrollBox::getSelectedItem(ACoord xClick, ACoord yClick) {
     return (displayedItems[index]);
 
 }  // getSelectedItem()
+
+/**
+ * @brief Review top item timestamp and scroll up if ancient
+ *
+ * @note The timeout period is hardwired to 6 minutes
+ */
+void AScrollBox::reviewTimeStamps() {
+    unsigned long now = millis();
+    const unsigned long timeoutMillis = 6 * 60 * 1000UL;
+
+    // Sanity checks
+    if (displayedItems[0] == nullptr) return;
+
+    // If top item has expired, scroll it off the box
+    if ((now - displayedItems[0]->timeStamp) > timeoutMillis) {
+        scrollUpOneLine();
+    }
+}

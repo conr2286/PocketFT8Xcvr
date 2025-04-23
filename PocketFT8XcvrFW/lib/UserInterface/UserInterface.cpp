@@ -55,6 +55,7 @@ void DecodedMsgsBox::setMsg(int index, char* msg) {
     setItem(index, msg, A_WHITE, bgColor);
 }
 
+
 /**
  * @brief Start-up the Adafruit Display, GFX adapter and library, the resistive touchscreen, and widgets
  */
@@ -81,7 +82,7 @@ void UserInterface::begin() {
     decodedMsgs = new DecodedMsgsBox(DecodedMsgsX, DecodedMsgsY, DecodedMsgsW, DecodedMsgsH, A_DARK_GREY);
 
     // Build the station messages box
-    stationMsgs = new AScrollBox(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
+    stationMsgs = new StationMessages(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
 
     // // Application message box
     applicationMsgs = new ATextBox("", AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
@@ -94,7 +95,7 @@ void UserInterface::begin() {
     b4 = new MenuButton("M0", ButtonX + 4 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 4);
     b5 = new MenuButton("M1", ButtonX + 5 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 5);
     b6 = new MenuButton("M2", ButtonX + 6 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 6);
-    b7 = new MenuButton("Sy", ButtonX + 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 7);
+    b7 = new MenuButton("SY", ButtonX + 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 7);
 }
 
 /**
@@ -127,7 +128,6 @@ void UserInterface::displayLocator(String grid, AColor fg) {
  */
 static int lastDay = -1;
 void UserInterface::displayDate(bool forceUpdate) {
-    // DTRACE();
     Teensy3Clock.get();  // Sync MCU clock with RTC
     char str[13];        // print format stuff
     AColor fg;           // Text color
@@ -139,12 +139,14 @@ void UserInterface::displayDate(bool forceUpdate) {
 #else
         snprintf(str, sizeof(str), "%02i/%02i/%02i", year() % 1000, month(), day());  // YY:MM:DD
 #endif
+        // Do we have disciplined UTC date from GPS?
         if (gpsHelper.validGPSdata) {
             fg = A_GREEN;
         } else {
             fg = A_YELLOW;
         }
         itemDate->setItemText(String(str), fg);  // Green if GPS Disciplined
+        lastDay = thisDay;                       // Remember new date
     }
 }  // displayDate()
 
@@ -153,7 +155,7 @@ void UserInterface::displayDate(bool forceUpdate) {
  *
  * Displayed in green if GPS disciplined else yellow.
  *
- * We only update the display when the second() changes.
+ * We only update the display infrequently to mitigate flicker
  */
 static int lastSecond = -1;
 void UserInterface::displayTime() {
@@ -161,7 +163,7 @@ void UserInterface::displayTime() {
     char str[13];        // print format stuff
     AColor fg;
     int thisSecond = second();
-    if (thisSecond != lastSecond) {
+    if (abs(thisSecond - lastSecond) > 2) {
         snprintf(str, sizeof(str), "%02i:%02i:%02i", hour(), minute(), second());
         if (gpsHelper.validGPSdata) {
             fg = A_GREEN;
@@ -169,6 +171,7 @@ void UserInterface::displayTime() {
             fg = A_YELLOW;
         }
         itemTime->setItemText(String(str), fg);  // Green if GPS Disciplined
+        lastSecond = thisSecond;
     }
 }  // displayTime
 
@@ -297,9 +300,10 @@ void MenuButton::touchButton(int buttonId) {
         // Abort button
         case 1:
             DPRINTF("Ab\n");
-            seq.abortButtonEvent();  // Ask Sequencer to abort transmissions
-            ui.b1->setState(false);  // Turn button "off" (it doesn't really toggle)
-            ui.b1->repaintWidget();  // Repaint the now "off" button
+            seq.abortButtonEvent();       // Ask Sequencer to abort transmissions
+            ui.b1->setState(false);       // Turn button "off" (it doesn't really toggle)
+            ui.b1->repaintWidget();       // Repaint the now "off" button
+            ui.applicationMsgs->reset();  // Reset (clear) the Application Messages box
             break;
 
         // Tune button

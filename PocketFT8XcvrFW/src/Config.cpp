@@ -34,10 +34,12 @@ void readConfigFile() {
     config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
     config.qsoTimeout = doc["qsoTimeout"] | DEFAULT_QSO_TIMEOUT;
     config.enableDuplicates = doc["enableDuplicates"] | DEFAULT_ENABLE_DUPLICATES;
+    strlcpy(config.logFilename, doc["logFilename"] | DEFAULT_LOG_FILENAME, sizeof(config.logFilename));
     configFile.close();
 
     // Report configuration
     String configMsg = String("Configured station ") + String(config.callsign) + String(" on ") + String(config.frequency) + String(" kHz");
+    if (config.enableDuplicates) configMsg += String("\nenableDuplicates==1");
     ui.applicationMsgs->setText(configMsg.c_str());
 
     // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)

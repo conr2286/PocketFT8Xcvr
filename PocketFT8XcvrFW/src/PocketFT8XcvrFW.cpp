@@ -422,7 +422,7 @@ void setup(void) {
 
     // Start the QSO Sequencer (RoboOp)
     DTRACE();
-    seq.begin(config.qsoTimeout, "LOGFILE.ADIF");  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
+    seq.begin(config.qsoTimeout, config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
     receive_sequence();                            // Setup to receive at start of first timeslot
 
     // Wait for the next FT8 timeslot (at 0, 15, 30, or 45 seconds past the minute)

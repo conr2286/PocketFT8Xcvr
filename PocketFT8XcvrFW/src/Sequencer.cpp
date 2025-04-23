@@ -190,6 +190,9 @@ void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
 void Sequencer::timeslotEvent() {
     DPRINTF("%s sequenceNumber=%lu, state=%u\n", __FUNCTION__, sequenceNumber, state);
 
+    //Review and purge ancient messages from Station Messages box
+    ui.stationMsgs->reviewTimeStamps();
+
     // Sequencer state determines what action to take
     switch (state) {
         // We are idle, monitoring the traffic --- there's nothing for Sequencer machine to do

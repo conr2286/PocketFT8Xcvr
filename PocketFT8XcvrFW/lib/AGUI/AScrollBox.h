@@ -23,6 +23,9 @@ class AScrollBoxItem final {
     void repaint(void);                                 // Repaint this item
     void setItemColors(AColor fg, AColor bg);           // Change colors
     void setItemText(String str, AColor fg = A_WHITE);  // Change specified item's text string
+    void reset(void);                                   // Clear the box of text
+
+    unsigned long timeStamp;
 
    private:
     AScrollBox* scrollBoxContainer;
@@ -42,19 +45,20 @@ class AScrollBox : public AWidget {
     void reset(void);                                                                   // Remove all items from this AScrollBox
     int getItemIndex(AScrollBoxItem* pItem);                                            // Get items[] index (line number) of specified item
     AScrollBoxItem* repaint(AScrollBoxItem* pItem);                                     // Repaint item specified by pointer
+    void reviewTimeStamps(void);                                                        // Review item timestamps and scroll if ancient
 
     // Public constants
     constexpr static int maxItems = 16;  // Maximum number of items allowed in AScrollBox
 
    protected:
     virtual void touchItem(AScrollBoxItem* pItem) {}  // Application overrides touchItem() to receive notifications of touch events
+    void scrollUpOneLine();                           // Scroll all existing items up (by one entry)
 
    private:
     // Our private methods
     void touchWidget(ACoord screenX, ACoord screenY) override;        // We override AWidget to receive touch events for this AScrollBox
     AScrollBoxItem* getSelectedItem(ACoord screenX, ACoord screenY);  // Return pointer to selected item
     void repaintWidget(void) override;                                // We override AWidget to receive repaint events for this AScrollBox
-    void scrollUpOneLine();                                           // Scroll all existing items up (by one entry)
     bool itemWillFit(int nItems);                                     // Helper determines if count items will fit within boundary box
     int removeItem(int index);                                        // Remove specified item from displayedItems[]
     int repaint(int index);                                           // Repaint item specified by index
