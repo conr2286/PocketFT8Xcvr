@@ -250,7 +250,7 @@ static void gpsCallback(unsigned seconds) {
  ** The FLASHMEM qualifier places the setup() function in the Teensy 4.1 flash memory, thereby
  ** saving RAM1 for high performance code/data.
  **/
-void setup(void) {
+ FLASHMEM void setup(void) {
     // Get the USB serial port running before something else goes wrong
     Serial.begin(9600);
     DTRACE();
@@ -439,7 +439,7 @@ unsigned oldFlags = 0;  // Used only for debugging the flags
  *
  * Note:  Placing the loop() code in FLASHMEM saves RAM1 memory for more time-sensitive activities
  */
-void loop() {
+ FLASHMEM void loop() {
     // Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
     // unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
     // if (newFlags != oldFlags) {
