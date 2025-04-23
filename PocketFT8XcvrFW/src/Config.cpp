@@ -45,6 +45,6 @@ void readConfigFile() {
     // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)
     strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
 
-    DPRINTF("enableAVC=%d\n", config.enableAVC);
-    DPRINTF("enableDuplicates=%d", config.enableDuplicates);
+    // DPRINTF("enableAVC=%d\n", config.enableAVC);
+    // DPRINTF("enableDuplicates=%d", config.enableDuplicates);
 }

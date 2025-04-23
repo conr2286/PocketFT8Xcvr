@@ -1,1 +1,11 @@
 <qso_date:8>20250219<time_on:6>023104<call:5>AE0TB<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:3>-10<rst_rcvd:3>-18<gridsquare:4>EN32<eor>
+<qso_date:8>20250220<time_on:6>205043<call:5>N7CMJ<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:3>-11<rst_rcvd:3>+02<gridsquare:4>DN28<my_rig:10>Pocket FT8<tx_pwr:4>0.25<eor>
+<qso_date:8>20250220<time_on:6>210443<call:5>KE4TH<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:2>-2<rst_rcvd:3>-20<gridsquare:4>DN40<my_rig:10>Pocket FT8<tx_pwr:4>0.25<eor>
+<qso_date:8>20250220<time_on:6>232144<call:6>KJ7VRI<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:3>-10<rst_rcvd:3>-12<gridsquare:4>DN41<my_rig:10>Pocket FT8<tx_pwr:4>0.25<eor>
+<qso_date:8>20250220<time_on:6>233744<call:4>WI0R<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:2>-3<rst_rcvd:3>-22<gridsquare:4>DM79<my_rig:10>Pocket FT8<tx_pwr:4>0.25<eor>
+
+<qso_date:8>20250223<time_on:6>170858<call:6>VA6DRU<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:3>-12<rst_rcvd:3>-12<gridsquare:4>DO31<my_rig:10>Pocket FT8<tx_pwr:4>0.25<eor>
+<qso_date:8>20250421<time_on:6>042928<call:4>K3QB<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:2>-5<rst_rcvd:3>R-1<gridsquare:4>CN87<my_rig:10>Pocket FT8<tx_pwr:4>0.25<eor>
+<qso_date:8>20250421<time_on:6>185729<call:4>KQ7B<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:3>-14<rst_rcvd:3>+13<gridsquare:4>DN15<my_rig:10>Pocket FT8<tx_pwr:4>0.25<eor>
+<qso_date:8>20250422<time_on:6>031702<call:4>WD6B<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:2>-9<rst_rcvd:3>-15<my_gridsquare:4>DN15<gridsquare:4>DM12<my_rig:16>https://github.c<tx_pwr:4>0.25<eor>
+<qso_date:8>20250423<time_on:6>025757<call:5>N5HHS<station_call:4>KQ7B<band:3>40m<mode:3>FT8<rst_sent:3>-10<rst_rcvd:3>-25<my_gridsquare:4>DN15<gridsquare:4>EL29<my_rig:16>https://github.c<tx_pwr:4>0.25<eor>
