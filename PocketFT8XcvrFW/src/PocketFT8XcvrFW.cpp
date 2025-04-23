@@ -71,7 +71,7 @@
 
 #include "AListBox.h"
 #include "Config.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "FT8Font.h"
 #include "GPShelper.h"
 #include "HX8357_t3n.h"  //WARNING:  Adafruit_GFX.h must include prior to HX8357_t3n.h

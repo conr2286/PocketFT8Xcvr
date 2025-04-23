@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "DEBUG.h"
 #include "HX8357_t3n.h"
+#include "NODEBUG.h"
 #include "constants.h"
 #include "encode.h"
 #include "pack.h"
@@ -27,9 +27,9 @@ extern HX8357_t3n tft;
 #include "display.h"
 #include "locator.h"
 // #include "log_file.h"
+#include "UserInterface.h"
 #include "msgTypes.h"
 #include "traffic_manager.h"
-#include "UserInterface.h"
 
 char Your_Call[] = "W5XXX";
 char Your_Locator[] = "AA00";
@@ -56,7 +56,7 @@ extern char Station_Call[];
 extern char Locator[];
 char ft8_time_string[] = "15:44:15";
 
-extern UserInterface ui; 
+extern UserInterface ui;
 
 int max_displayed_messages = 8;
 
@@ -188,7 +188,7 @@ void clearOutboundMessageDisplay(void) {
 
     char blank[] = "                      ";
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-    //tft.setTextSize(2);
+    // tft.setTextSize(2);
     tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
     tft.print(blank);
     message_state = 0;

@@ -30,8 +30,8 @@
  * @note The text string, s, must not contain a NL character
  */
 AScrollBoxItem::AScrollBoxItem(String s, AColor fg, AColor bg, AScrollBox* pBox) {
-    if (!Serial) Serial.begin(9600);
-    Serial.println("AScrollBoxItem()");
+    //if (!Serial) Serial.begin(9600);
+    //Serial.println("AScrollBoxItem()");
     str = s;                    // Item's text String
     str.replace('\n', ' ');     // We really can't tolerate NL chars in the String
     fgColor = fg;               // Item's foreground color
@@ -62,8 +62,8 @@ void AScrollBoxItem::setItemText(String s, AColor fg) {
  * @param h Height
  */
 AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
-    if (!Serial) Serial.begin(9600);
-    Serial.println("AScrollBox()");
+    //if (!Serial) Serial.begin(9600);
+    //Serial.println("AScrollBox()");
 
     // Initialize the member variables
     boundary.setCorners(x, y, w, h);  // Our boundary box
@@ -170,7 +170,7 @@ int AScrollBox::repaint(int index) {
  * @return Pointer to the item or nullptr if error
  */
 AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
-    if (!Serial) Serial.begin(9600);
+    //if (!Serial) Serial.begin(9600);
     // Serial.print("repaint(pTem)\n");
 
     // Sanity checks
@@ -191,7 +191,7 @@ AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
     int y1 = boundary.y1 + index * leading + yOffset;
 
     // Erase existing text in this item's location
-    AGUI::fillRect(x1, y1, boundary.w - xOffset, leading, bgColor);
+    AGUI::fillRect(x1, y1, boundary.w - 2*xOffset, leading, bgColor);
 
     // Write the item's text to display
     AGUI::setCursor(x1, y1);      // Text position

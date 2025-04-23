@@ -163,7 +163,7 @@ void UserInterface::displayTime() {
     char str[13];        // print format stuff
     AColor fg;
     int thisSecond = second();
-    if (abs(thisSecond - lastSecond) > 2) {
+    if (abs(thisSecond - lastSecond) >= 1) {
         snprintf(str, sizeof(str), "%02i:%02i:%02i", hour(), minute(), second());
         if (gpsHelper.validGPSdata) {
             fg = A_GREEN;
@@ -359,6 +359,7 @@ void Waterfall::touchPixel(ACoord x, ACoord y) {
     cursor_freq = ((float)cursor_line + (float)ft8_min_bin) * ft8_shift;
     set_Xmit_Freq();
     String str = String("FT8 offset freq = ") + String(cursor_freq) + String(" Hz");
+    DPRINTF("%s\n", str.c_str());
     ui.applicationMsgs->setText(str);
 #endif
 

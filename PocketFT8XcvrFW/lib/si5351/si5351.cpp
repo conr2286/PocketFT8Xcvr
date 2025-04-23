@@ -40,8 +40,8 @@
 Si5351::Si5351(uint8_t i2c_addr)
   : i2c_bus_addr(i2c_addr) {
 
-  Serial.begin(9600);
-  DTRACE();
+  //Serial.begin(9600);
+  //DTRACE();
 
   xtal_freq[0] = SI5351_XTAL_FREQ;
 

@@ -4,7 +4,7 @@
 #include <SI4735.h>
 #include <TimeLib.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "button.h"
 #include "decode_ft8.h"
 #include "display.h"

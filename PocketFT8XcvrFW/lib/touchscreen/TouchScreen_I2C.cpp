@@ -170,8 +170,8 @@ TSPoint TouchScreen::getPoint(void) {
 
 TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
                          uint16_t rxplate = 0) {
-  Serial.begin(9600);
-  DTRACE();
+  //Serial.begin(9600);
+  //DTRACE();
 
   _yp = yp;
   _xm = xm;

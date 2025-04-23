@@ -16,8 +16,8 @@ AWidget* AWidget::allWidgets = NULL;
  *  + Initialize the member variables
  */
 AWidget::AWidget() {
-    if (!Serial) Serial.begin(9600);
-    DPRINTF("AWidget()=0x%x\n", this);
+    //if (!Serial) Serial.begin(9600);
+   // DPRINTF("AWidget()=0x%x\n", this);
     // Link this new widget into the unordered list of all widgets
     this->next = allWidgets;
     allWidgets = this;

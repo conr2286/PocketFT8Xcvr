@@ -54,7 +54,7 @@ bool GPShelper::hasFix() {
  **
  **/
 GPShelper::GPShelper(unsigned gpsBaudRate) {
-    Serial.begin(9600);
+    //Serial.begin(9600);
     // DTRACE();
     delay(10);
 

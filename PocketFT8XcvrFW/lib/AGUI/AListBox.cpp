@@ -30,8 +30,8 @@
  * @note The text string, s, must not contain a NL character
  */
 AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
-    if (!Serial) Serial.begin(9600);
-    Serial.println("AListBoxItem()");
+    // if (!Serial) Serial.begin(9600);
+    // Serial.println("AListBoxItem()");
     str = s;                  // Item's text String
     str.replace('\n', ' ');   // We really can't tolerate NL chars in the String
     fgColor = fg;             // Item's foreground color
@@ -40,6 +40,11 @@ AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
     listBoxContainer = pBox;  // Backlink from item to Scroll box container
 }  // AListBoxItem()
 
+/**
+ * @brief Set an items fg/bg colors
+ * @param fg Foreground color
+ * @param bg Background color
+ */
 void AListBoxItem::setItemColors(AColor fg, AColor bg) {
     DTRACE();
     fgColor = fg;
@@ -47,6 +52,11 @@ void AListBoxItem::setItemColors(AColor fg, AColor bg) {
     listBoxContainer->repaint(this);
 }
 
+/**
+ * @brief Change an item's text
+ * @param s New String
+ * @param fg Color
+ */
 void AListBoxItem::setItemText(String s, AColor fg) {
     DTRACE();
     fgColor = fg;
@@ -63,7 +73,7 @@ void AListBoxItem::setItemText(String s, AColor fg) {
  * @param bdColor Border color (default is black)
  */
 AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
-    if (!Serial) Serial.begin(9600);
+    // if (!Serial) Serial.begin(9600);
     Serial.println("AListBox()");
 
     // Initialize the member variables
@@ -196,7 +206,7 @@ int AListBox::repaint(int index) {
  * @return pointer to item or nullptr if error
  */
 AListBoxItem* AListBox::repaint(AListBoxItem* pItem) {
-    if (!Serial) Serial.begin(9600);
+    // if (!Serial) Serial.begin(9600);
 
     // Sanity checks
     if (pItem == nullptr) return nullptr;
@@ -216,7 +226,7 @@ AListBoxItem* AListBox::repaint(AListBoxItem* pItem) {
     int y1 = boundary.y1 + index * leading + yOffset;
 
     // Erase existing text in this item's location
-    AGUI::fillRect(x1, y1, boundary.w - xOffset, leading, bgColor);
+    AGUI::fillRect(x1, y1, boundary.w - 2 * xOffset, leading, bgColor);
 
     // Write the item's text to display
     AGUI::setCursor(x1, y1);      // Text position
