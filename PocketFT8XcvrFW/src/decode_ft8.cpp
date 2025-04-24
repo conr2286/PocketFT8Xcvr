@@ -266,27 +266,24 @@ void display_messages(int decoded_messages) {
 
     // Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
     // field3 is an RSL or locator or ???.
-    // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);                     // Currently... all messages are the same color
-    // tft.setTextSize(2);                                                // 10X16 pixels per AdaFruit
     if (decoded_messages > 0) ui.decodedMsgs->reset();                  // Clear all the old messages
     for (int i = 0; i < decoded_messages && i <= message_limit; i++) {  // Charlie's leading handled 6 rows of text
         snprintf(message, sizeof(message), "%s %s %4s S%c", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, rsl2s(new_decoded[i].snr));
-        // DPRINTF("display_message %u = '%s' loc='%s'\n", i, message, new_decoded[i].locator);
-        strlpad(message, sizeof(message), ' ');  // Padding is faster than fillRect()
-        // tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
-        // tft.print(message);
-        ui.decodedMsgs->addItem(ui.decodedMsgs, message, A_WHITE);  // Item will be added at position i
+
+        // Display messages not sent to our station in the Decoded Messages box
+        if (strncmp(new_decoded[i].field1, Station_Call, 14) != 0) {
+            AColor color = A_LIGHT_GREY;  // Chatter appears in light grey
+            if (strncmp(new_decoded[i].field1, "CQ", 2) == 0) {
+                color = A_WHITE;  // CQ messages appear in white
+            }
+            // For now, don't display messages with hashed callsigns as our FT8 library doesn't support them
+            if (strchr(message, '<') == NULL) ui.decodedMsgs->addItem(ui.decodedMsgs, message, color);  // Display received message
+        }
     }
 
     // Erase messages lines from the previous timeslot that weren't overwritten above
     message[0] = 0;  // An empty line
-    // strlpad(message, sizeof(message), ' ');  // A line of spaces
-    // for (int i = decoded_messages; i < previousMessageCount; i++) {
-    //     tft.setCursor(DISPLAY_DECODED_X, DISPLAY_DECODED_Y + i * lineHeight);
-    //     tft.print(message);  // A line of spaces to clear previous timeslot's messages
-    // }
     previousMessageCount = decoded_messages;  // Remember for next timeslot
-    // DTRACE();
 
 }  // display_messages()
 
@@ -446,8 +443,8 @@ int Check_Calling_Stations(int num_decoded) {
  * translating RSL back into a single digit (e.g. 1..9) S-Level (as in RST).
  */
 char rsl2s(int rsl) {
-    //static const char mapRSL2S[] = "112233445566778899";  // RSL Levels -17..0 dB
-    char S = ' ';                                         // S-Level
+    // static const char mapRSL2S[] = "112233445566778899";  // RSL Levels -17..0 dB
+    char S = ' ';  // S-Level
 
     if (rsl <= -17) return '1';  // Check for really weak signal
     if (rsl >= 0) return '9';    // Check for really strong signal

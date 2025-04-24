@@ -71,12 +71,12 @@
 
 #include "AListBox.h"
 #include "Config.h"
-#include "NODEBUG.h"
 #include "FT8Font.h"
 #include "GPShelper.h"
 #include "HX8357_t3n.h"  //WARNING:  Adafruit_GFX.h must include prior to HX8357_t3n.h
 #include "LogFactory.h"
 #include "MCP342x.h"
+#include "NODEBUG.h"
 #include "Process_DSP.h"
 #include "Sequencer.h"
 #include "Timer.h"
@@ -235,13 +235,14 @@ GPShelper gpsHelper(9600);
  * Note:  The display must be initialized before GPShelper calls here
  *
  * TODO:  We probably don't need this anymore as we're using the GPS PPS interrupt
- * to determine when a satellite fix is obtained.
+ * to determine when a satellite fix is obtained and Station Message colors
+ * indicate when that occurs.
  *
  **/
 static void gpsCallback(unsigned seconds) {
-    char msg[32];
-    snprintf(msg, sizeof(msg), "Acquiring GPS fix:  %03d", seconds);
-    ui.applicationMsgs->setText(msg);
+    // char msg[32];
+    // snprintf(msg, sizeof(msg), "Acquiring GPS fix:  %03d", seconds);
+    // ui.applicationMsgs->setText(msg);
 }  // gpsCallback()
 
 /**
@@ -250,7 +251,7 @@ static void gpsCallback(unsigned seconds) {
  ** The FLASHMEM qualifier places the setup() function in the Teensy 4.1 flash memory, thereby
  ** saving RAM1 for high performance code/data.
  **/
- FLASHMEM void setup(void) {
+FLASHMEM void setup(void) {
     // Get the USB serial port running before something else goes wrong
     Serial.begin(9600);
     DTRACE();
@@ -423,7 +424,7 @@ static void gpsCallback(unsigned seconds) {
     // Start the QSO Sequencer (RoboOp)
     DTRACE();
     seq.begin(config.qsoTimeout, config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
-    receive_sequence();                            // Setup to receive at start of first timeslot
+    receive_sequence();                                // Setup to receive at start of first timeslot
 
     // Wait for the next FT8 timeslot (at 0, 15, 30, or 45 seconds past the minute)
     start_time = millis();     // Note start time for update_synchronization()
@@ -439,7 +440,7 @@ unsigned oldFlags = 0;  // Used only for debugging the flags
  *
  * Note:  Placing the loop() code in FLASHMEM saves RAM1 memory for more time-sensitive activities
  */
- FLASHMEM void loop() {
+FLASHMEM void loop() {
     // Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
     // unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
     // if (newFlags != oldFlags) {
