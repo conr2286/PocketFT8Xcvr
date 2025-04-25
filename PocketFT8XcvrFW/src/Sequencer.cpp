@@ -376,7 +376,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
     // When debugging, print some things from the received message
     DPRINTF("%s %s %s %s msgType=%u, sequenceNumber=%lu state=%u\n", __FUNCTION__, msg->field1, msg->field2, msg->field3, msg->msgType, sequenceNumber, state);
 
-    //Build a String of the received message fields for us to display
+    // Build a String of the received message fields for us to display
     static const String sp(" ");
     String thisReceivedMsg = String(msg->field1) + sp + String(msg->field2) + sp + String(msg->field3);
 
@@ -384,7 +384,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
     if (isMsgForUs(msg)) {
         DPRINTF("this msg is for us:  '%s' '%s' '%s'\n", msg->field1, msg->field2, msg->field3);
 
-        // We display CQ messages in the DecodedMsgs box
+        // Display messages sent directly to us (not a CQ) in StatoinMsgs
         if (msg->msgType != MSG_CQ) {
             // Display messages addressed to us in our Station Messages box.  Retransmissions appear
             // in yellow rather than wasting another line in our little Station Messages box
@@ -440,7 +440,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
                 DPRINTF("***** ERROR:  Unsupported received msgType=%d\n", msg->msgType);
                 break;
         }  // switch
-    } 
+    }
 
 }  // receivedMsgEvent()
 

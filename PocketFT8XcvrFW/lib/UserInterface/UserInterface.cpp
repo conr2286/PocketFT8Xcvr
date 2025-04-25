@@ -23,12 +23,13 @@
 #include "ATextBox.h"       //Non-interactive text
 #include "AToggleButton.h"  //Stateful button
 #include "Config.h"
-#include "NODEBUG.h"       //USB Serial debugging on the Teensy 4.1
+#include "DEBUG.h"       //USB Serial debugging on the Teensy 4.1
 #include "FT8Font.h"     //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"   //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"  //WARNING:  #include HX8357_t3n following Adafruit_GFX
 #include "Sequencer.h"
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
+#include "decode_ft8.h"       //Decoded message types
 #include "display.h"
 #include "lexical.h"  //String helpers
 #include "pins.h"     //Pocket FT8 pin assignments for Teensy 4.1 MCU
@@ -55,12 +56,11 @@ void DecodedMsgsBox::setMsg(int index, char* msg) {
     setItem(index, msg, A_WHITE, bgColor);
 }
 
-
 /**
  * @brief Start-up the Adafruit Display, GFX adapter and library, the resistive touchscreen, and widgets
  */
 void UserInterface::begin() {
-    //DTRACE();
+    // DTRACE();
 
     // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
     gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
@@ -70,7 +70,8 @@ void UserInterface::begin() {
     theWaterfall = new Waterfall();
 
     // Build the stationInfo
-    stationInfo = new AScrollBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
+    //stationInfo = new AScrollBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
+    stationInfo = new AListBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
     itemDate = stationInfo->addItem(stationInfo, "", A_RED);
     itemTime = stationInfo->addItem(stationInfo, "", A_RED);
     itemLocator = stationInfo->addItem(stationInfo, "", A_RED);
@@ -352,14 +353,11 @@ const float ft8_shift = 6.25;  // FT8 Hz/bin???
 
 void Waterfall::touchPixel(ACoord x, ACoord y) {
 #ifndef PIO_UNIT_TESTING
-    // cursor_line = draw_x;
-    // cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-    DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
     cursor_line = x;
     cursor_freq = ((float)cursor_line + (float)ft8_min_bin) * ft8_shift;
     set_Xmit_Freq();
-    String str = String("FT8 offset freq = ") + String(cursor_freq) + String(" Hz");
-    DPRINTF("%s\n", str.c_str());
+    String str = String("Cursor freq = ") + String(cursor_freq) + String(" Hz");
+    //DPRINTF("%s\n", str.c_str());
     ui.applicationMsgs->setText(str);
 #endif
 
@@ -381,3 +379,13 @@ void DecodedMsgsBox::touchItem(AListBoxItem* pItem) {
     seq.msgClickEvent(index);         // Notify Sequencer when operator clicks a received message
 #endif
 }
+
+/**
+ * @brief Override notified when StationMessage item touched
+ * @param pItem
+ */
+void StationMessages::touchItem(AScrollBoxItem* pItem) {
+    //DPRINTF("touched %s\n", pItem->getItemText()->c_str());
+
+}  // StationMessages::touchItem()
+

@@ -39,13 +39,16 @@ void test_DecodedMsgs(void) {
 
 void test_StationMsgs(void) {
     TEST_MESSAGE("test_StationMsgs\n");
-    AScrollBoxItem* pCQ = ui.stationMsgs->addItem(ui.stationMsgs, "CQ KQ7B DN15");
+    StationMessagesItem* pCQ = ui.stationMsgs->addItem(ui.stationMsgs, "CQ KQ7B DN15");
     pCQ->setItemColors(A_YELLOW, A_BLACK);
     ui.stationMsgs->addItem(ui.stationMsgs, "WN0XYZ KW9ABC RR73");
     ui.stationMsgs->addItem(ui.stationMsgs, "KQ7B KA0XYZ DN14");
     AScrollBoxItem* pReply = ui.stationMsgs->addItem(ui.stationMsgs, "KA0XYZ KQ7B -5");
     delay(2000);
     pReply->setItemColors(A_RED, A_BLACK);
+    delay(1000);
+    AWidget::processTouch(270, 120);
+    delay(1000);
 }  // test_StationMsgs()
 
 void test_Waterfall() {

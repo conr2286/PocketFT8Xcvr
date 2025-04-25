@@ -18,7 +18,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 /**
  * @brief Build an item for AScrollBox
@@ -48,9 +48,11 @@ void AScrollBoxItem::setItemColors(AColor fg, AColor bg) {
 }
 
 void AScrollBoxItem::setItemText(String s, AColor fg) {
+    //String* heap = new String("heap");
     DTRACE();
     fgColor = fg;
-    str = s;
+    str = s;            //str is AScrollBoxItem member object on the heap
+    //DPRINTF("Stored item str=%p, heap=%p, stack=%p\n", &str, heap, &heap);
     scrollBoxContainer->repaint(this);
 }
 
@@ -417,4 +419,9 @@ void AScrollBox::reviewTimeStamps() {
     if ((now - displayedItems[0]->timeStamp) > timeoutMillis) {
         scrollUpOneLine();
     }
+}
+
+
+String* AScrollBoxItem::getItemText()  {
+    return &str;
 }

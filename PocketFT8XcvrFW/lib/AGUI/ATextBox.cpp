@@ -20,7 +20,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 /**
  * @brief Build and display ATextBox object
@@ -131,9 +131,10 @@ void ATextBox::setText(const char *txt, AColor fg) {
  * @brief Change the display text in this ATextBox
  * @param txt String to display
  */
-void ATextBox::setText(String& str, AColor fg) {
+void ATextBox::setText(String& rstr, AColor fg) {
     fgColor = fg;
-    str = String(str);
+    //DPRINTF("setText %s\n", rstr.c_str());
+    str = String(rstr);
     repaintWidget();
 }
 

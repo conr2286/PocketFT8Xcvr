@@ -13,6 +13,7 @@
 #include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
 #include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
+#include "decode_ft8.h"       //Decoded message types
 #include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
 
 // Transmit/Receive/Pending indicator icon
@@ -60,14 +61,29 @@ static const ALength ButtonHeight = 30;   // Height in pixels
 static const ACoord ButtonX = 1;          // Button row left-side inset
 static const ACoord ButtonY = 290;        // All buttons in one row at screen bottom
 
-class StationMessages : public AScrollBox {
-    public:
-     StationMessages(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {}
-     //void addTimedItem(AScrollBox* pAScrollBox, String str, AColor fg = A_WHITE);
-     //void checkScroll(void);
+class StationMessages;
 
-     private:
-      unsigned long itemCreationTime;
+static String emptyString = String("");
+
+class StationMessagesItem : public AScrollBoxItem {
+   public:
+    StationMessagesItem(Decode* pMsgStruct, AColor fgColor, AColor bgColor, AScrollBox* box) : AScrollBoxItem(emptyString, fgColor, bgColor, box) {}
+    //StationMessages* pStationMessages;
+    //Decode msg;  // The decoded message struct for this item
+};
+
+class StationMessages : public AScrollBox {
+   public:
+    StationMessages(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {
+        itemCreationTime = millis();
+        for (int i = 0; i < maxItems; i++) items[i] = nullptr;
+    }
+    void touchItem(AScrollBoxItem* pItem) override;  // Application overrides touchItem() to receive notifications of touch events
+    //StationMessagesItem* addMessageItem(StationMessages* pStationMessages, Decode* msg);
+
+   private:
+    unsigned long itemCreationTime;
+    StationMessagesItem* items[maxItems];
 };
 
 class Waterfall : public APixelBox {
@@ -116,18 +132,18 @@ class UserInterface {
 
     // The widgets for displaying station info, traffic and info about the rig
     Waterfall* theWaterfall;
-    AScrollBox* stationInfo;
+    AListBox* stationInfo;
     DecodedMsgsBox* decodedMsgs;
     StationMessages* stationMsgs;
     ATextBox* applicationMsgs;
 
     // The stationInfo items
-    AScrollBoxItem* itemDate;
-    AScrollBoxItem* itemTime;
-    AScrollBoxItem* itemLocator;
-    AScrollBoxItem* itemCallsign;
-    AScrollBoxItem* itemFrequency;
-    AScrollBoxItem* itemMode;
+    AListBoxItem* itemDate;
+    AListBoxItem* itemTime;
+    AListBoxItem* itemLocator;
+    AListBoxItem* itemCallsign;
+    AListBoxItem* itemFrequency;
+    AListBoxItem* itemMode;
 
     // The button widgets
     MenuButton* b0;
