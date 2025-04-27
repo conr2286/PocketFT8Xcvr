@@ -33,7 +33,7 @@ class APixelBox : public AWidget {
 
     // Protected
    protected:
-    virtual void touchPixel(APixelPos x, APixelPos y) {}  // Application overrides touchPixel() to receive notifications of touch events
+    virtual void onTouchPixel(APixelPos x, APixelPos y) {}  // Application overrides onTouchPixel() to receive notifications of touch events
 
    private:
     void onTouchWidget(ACoord xScreen, ACoord yScreen) override final;  // We override AWidget onTouchWidget() to receive touch notifications

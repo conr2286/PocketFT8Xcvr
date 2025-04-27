@@ -38,7 +38,7 @@ class AToggleButton : public AWidget {
     // Public variables
 
     // Protected
-    virtual void touchButton(int userData) {}  // Application overrides to receive notifications of touch events for this AToggleButton
+    virtual void onTouchButton(int userData) {}  // Application overrides to receive notifications of touch events for this AToggleButton
 
    private:
     void onTouchWidget(ACoord xScreen, ACoord yScreen) override final;  // We override AWidget onTouchWidget() to receive touch notifications

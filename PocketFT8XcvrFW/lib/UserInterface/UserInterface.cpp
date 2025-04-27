@@ -23,10 +23,10 @@
 #include "ATextBox.h"       //Non-interactive text
 #include "AToggleButton.h"  //Stateful button
 #include "Config.h"
-#include "NODEBUG.h"       //USB Serial debugging on the Teensy 4.1
 #include "FT8Font.h"     //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"   //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"  //WARNING:  #include HX8357_t3n following Adafruit_GFX
+#include "NODEBUG.h"     //USB Serial debugging on the Teensy 4.1
 #include "Sequencer.h"
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "decode_ft8.h"       //Decoded message types
@@ -282,8 +282,8 @@ void pollTouchscreen() {
 /**
  * @brief Callback function notified when this MenuButton is touched
  */
-void MenuButton::touchButton(int buttonId) {
-    DPRINTF("touchButton #%d\n", buttonId);
+void MenuButton::onTouchButton(int buttonId) {
+    DPRINTF("onTouchButton #%d\n", buttonId);
 
 #ifndef PIO_UNIT_TESTING              // Omit application product code when compiling tests
     ui.applicationMsgs->setText("");  // Clear existing application message, if any
@@ -334,7 +334,7 @@ void MenuButton::touchButton(int buttonId) {
             break;
     }
 #endif
-}  // touchButton()
+}  // onTouchButton()
 
 /**
  * @brief Override APixelBox to receive notifications of touch events
@@ -350,7 +350,7 @@ extern uint16_t cursor_line;  // Pixel location of cursor line
 #define FFT_Resolution 6.25
 const float ft8_shift = 6.25;  // FT8 Hz/bin???
 
-void Waterfall::touchPixel(ACoord x, ACoord y) {
+void Waterfall::onTouchPixel(ACoord x, ACoord y) {
 #ifndef PIO_UNIT_TESTING
     cursor_line = x;
     cursor_freq = ((float)cursor_line + (float)ft8_min_bin) * ft8_shift;
@@ -360,7 +360,7 @@ void Waterfall::touchPixel(ACoord x, ACoord y) {
     ui.applicationMsgs->setText(str);
 #endif
 
-}  // touchPixel()
+}  // onTouchPixel()
 
 /**
  * @brief Override AListBox to receive touch notifications for list items
@@ -417,11 +417,18 @@ void StationMessages::onTouchItem(AScrollBoxItem* pItem) {
     DPRINTF("field1=%s field2=%s field3=%s\n", pMsgItem->msg.field1, pMsgItem->msg.field2, pMsgItem->msg.field3);
 
     // Ignore touch on our own transmitted message
+#ifndef PIO_UNIT_TESTING
     if ((strcmp(pMsgItem->msg.field2, Station_Call) == 0)) return;
+#endif
 
-    // Ask the Sequencer (RoboOp) to contact the remote station in touched message
+    // Highlight the touched Station Message
+    pMsgItem->setItemColors(A_BLACK, A_LIGHT_GREY);
+
+    // Ask the Sequencer (RoboOp) to contact the remote station identified in the touched message
     DPRINTF("Contact %s\n", pMsgItem->msg.field2);
+#ifndef PIO_UNIT_TESTING
     seq.decodedMessageClickEvent(&(pMsgItem->msg));
+#endif
 
 }  // StationMessages::onTouchItem()
 

@@ -633,6 +633,7 @@ void Sequencer::decodedMessageClickEvent(Decode* msg) {
                 ui.b0->reset();       // Reset highlighted button
                 state = LOC_PENDING;  // Await appropriate timeslot to transmit to Target_Call
                 ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+                
                 break;
 
                 // Message clicks are ignored during most states

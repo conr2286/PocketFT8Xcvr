@@ -84,7 +84,7 @@ void AToggleButton::onTouchWidget(ACoord xClick, ACoord yClick) {
     onRepaintWidget();
 
     // Notify the user-supplied callback of the selected item
-    touchButton(userData);
+    onTouchButton(userData);
 }  // touchWIdget()
 
 /**
@@ -107,7 +107,7 @@ void AToggleButton::onRepaintWidget() {
 
     // Get the button's boundaries
     ACoord w = boundary.x2 - boundary.x1 + 1;  // Width
-    ACoord h = boundary.y2 - boundary.y1 + 1;  // Height
+    ACoord h = boundary.y2 - boundary.y1 + 0;  // Height
 
     // Re-decorate the button
     AGUI::setClipRect(boundary.x1, boundary.y1, w, h);                                             // Set the clipping rectangle w/o consideration for rounded corners

@@ -30,7 +30,7 @@
  * @note The text string, s, must not contain a NL character
  */
 AScrollBoxItem::AScrollBoxItem(String& s, AColor fg, AColor bg, AScrollBox* pBox) {
-    DPRINTF("AScrollBoxItem('%s')\n",s.c_str());
+    DPRINTF("AScrollBoxItem('%s')\n", s.c_str());
     str = s;                    // Item's text String
     str.replace('\n', ' ');     // We really can't tolerate NL chars in the String
     fgColor = fg;               // Item's foreground color
@@ -44,6 +44,7 @@ void AScrollBoxItem::setItemColors(AColor fg, AColor bg) {
     fgColor = fg;
     bgColor = bg;
     scrollBoxContainer->repaint(this);
+    timeStamp = millis();  // Refresh timestamp
 }
 
 void AScrollBoxItem::setItemText(String s, AColor fg) {
@@ -51,6 +52,7 @@ void AScrollBoxItem::setItemText(String s, AColor fg) {
     fgColor = fg;
     str = s;  // str is AScrollBoxItem member object on the heap
     scrollBoxContainer->repaint(this);
+    timeStamp = millis();  // Refresh timestamp
 }
 
 /**
@@ -282,13 +284,13 @@ AScrollBoxItem* AScrollBox::setItemColors(AScrollBoxItem* pItem, AColor fgColor,
  * @return Item's index into items[] array or -1 if not found
  */
 int AScrollBox::getItemIndex(AScrollBoxItem* pItem) const {
-    //DTRACE();
-    // Sanity check
+    // DTRACE();
+    //  Sanity check
     if (pItem == nullptr) return -1;
 
     // Find it
     for (int index = 0; index < maxItems; index++) {
-        //DPRINTF("index=%d\n", index);
+        // DPRINTF("index=%d\n", index);
         if (pItem == displayedItems[index]) return index;
     }
     return -1;

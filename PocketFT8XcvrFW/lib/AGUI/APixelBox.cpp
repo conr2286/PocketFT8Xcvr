@@ -83,7 +83,7 @@ void APixelBox::drawPixel(APixelPos x, APixelPos y, AColor color) {
  *
  * Our job is to determine which pixel was touched and notify the application
  *
- * @note The touch coordinate passed to application's touchPixel are the pixel coordinates
+ * @note The touch coordinate passed to application's onTouchPixel are the pixel coordinates
  * inside the box (relative to bitmap location), not the screen coordinates.
  */
 void APixelBox::onTouchWidget(ACoord xScreen, ACoord yScreen) {
@@ -98,6 +98,6 @@ void APixelBox::onTouchWidget(ACoord xScreen, ACoord yScreen) {
     if ((xPos < 0) || (xPos > bitmap.x2)) return;
     if ((yPos < 0) || (yPos > bitmap.y2)) return;
 
-    DPRINTF("touchPixel %u %u\n", xPos, yPos);
-    touchPixel(xPos, yPos);
+    DPRINTF("onTouchPixel %u %u\n", xPos, yPos);
+    onTouchPixel(xPos, yPos);
 }

@@ -81,7 +81,7 @@ static String emptyString = String("");
 class StationMessagesItem : public AScrollBoxItem {
    public:
     StationMessagesItem(Decode* pNewMsg, AColor fgColor, AColor bgColor, StationMessages* pBox) : AScrollBoxItem(emptyString, fgColor, bgColor, pBox) {
-        msg = *pNewMsg;                                       // Retain a copy of the received msg struct
+        msg = *pNewMsg;                                          // Retain a copy of the received msg struct
         pStationMessages = static_cast<StationMessages*>(pBox);  // Save pointer to the base class object
     }  // StationMessagesItem()
     StationMessages* pStationMessages;
@@ -91,7 +91,7 @@ class StationMessagesItem : public AScrollBoxItem {
 class Waterfall : public APixelBox {
    public:
     Waterfall() : APixelBox(WaterfallX, WaterfallY, WaterfallRows, WaterfallCols) {}
-    void touchPixel(APixelPos x, APixelPos y) override;  // Application overrides touchPixel() to receive notifications of touch events
+    void onTouchPixel(APixelPos x, APixelPos y) override;  // Application overrides onTouchPixel() to receive notifications of touch events
 };
 
 // Define functions visible to legacy code
@@ -109,11 +109,10 @@ class DecodedMsgsBox : public AListBox {
 class MenuButton : public AToggleButton {
    public:
     MenuButton(const char* str, ACoord x1, ACoord y1, ALength w, ALength h, int userData) : AToggleButton(str, x1, y1, w, h, userData, true) {}
-    void touchButton(int userData) override;  // We override AToggleButton to receive notifications of touch events
+    void onTouchButton(int userData) override;  // We override AToggleButton to receive notifications of touch events
 };
 
 class UserInterface {
-
    public:
     // Initialization methods
     void begin(void);
