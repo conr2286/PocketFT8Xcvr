@@ -51,7 +51,7 @@ void test_StationMsgs(void) {
     ui.stationMsgs->addStationMessageItem(ui.stationMsgs, &msg2);
     ui.stationMsgs->addStationMessageItem(ui.stationMsgs, "NA1A KQ7B 73");
     delay(2000);
-    AWidget::processTouch(270, 120);
+    AWidget::processTouch(270, 120); //Touch AG0E's CQ message
     delay(1000);
 }  // test_StationMsgs()
 

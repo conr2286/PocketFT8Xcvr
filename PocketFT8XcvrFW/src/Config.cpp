@@ -38,7 +38,7 @@ void readConfigFile() {
     configFile.close();
 
     // Report configuration
-    String configMsg = String("Configured station ") + String(config.callsign) + String(" on ") + String(config.frequency) + String(" kHz\n");
+    String configMsg = String("Config callsign=") + String(config.callsign) + String(" frequency=") + String(config.frequency) + String(" kHz\n");
     if (config.enableDuplicates) configMsg += String("enableDuplicates==1 ");
     configMsg += String("logFilename=") + String(config.logFilename);
     ui.applicationMsgs->setText(configMsg.c_str());
@@ -49,6 +49,6 @@ void readConfigFile() {
     // DPRINTF("enableAVC=%d\n", config.enableAVC);
     // DPRINTF("enableDuplicates=%d", config.enableDuplicates);
 
-    //Let the config report linger on the display for a moment
+    // Let the config report linger on the display for a moment
     delay(2000);
 }

@@ -29,8 +29,8 @@
 
 #include "Contact.h"
 #include "ContactLogFile.h"
-#include "NODEBUG.h"
 #include "FileSystemAdapter.h"
+#include "NODEBUG.h"
 #include "lexical.h"
 
 // Define the size of the longest log entry (including the NUL)
@@ -78,6 +78,10 @@ int ADIFlog::logContact(Contact* contact) {
         DTRACE();
         return -1;  // Error:  Invalid contact
     }
+
+    // Update in-memory hash table of completed contacts.  This means lid RoboOp repeatedly tries to 
+    // establish a contact with a remote station that deliberately ignores us. 
+    ContactLogFile::addKnownCallsign(contact->getWorkedCall());
 
     // Open the log file for appending
     bool err = logFileAdapter.open(this->fileName, MODE_WRITE_FILE);

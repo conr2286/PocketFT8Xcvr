@@ -23,7 +23,7 @@
 #include "ATextBox.h"       //Non-interactive text
 #include "AToggleButton.h"  //Stateful button
 #include "Config.h"
-#include "DEBUG.h"       //USB Serial debugging on the Teensy 4.1
+#include "NODEBUG.h"       //USB Serial debugging on the Teensy 4.1
 #include "FT8Font.h"     //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"   //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"  //WARNING:  #include HX8357_t3n following Adafruit_GFX
@@ -44,12 +44,11 @@ static AGUI* gui;
 static Sequencer& seq = Sequencer::getSequencer();  // Get a reference to the Sequencer (RoboOp)
 #endif
 
-extern char* Station_Call;
 extern Config config;
 
 // GPS Access
 extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
-
+extern char Station_Call[];
 extern UserInterface ui;
 
 void DecodedMsgsBox::setMsg(int index, char* msg) {
@@ -379,7 +378,16 @@ void DecodedMsgsBox::onTouchItem(AListBoxItem* pItem) {
     seq.decodedMessageClickEvent(index);  // Notify Sequencer when operator clicks a received message
 #endif
 }
-
+/**
+ * @brief Tokenizer for FT8 messages
+ * @param str Reference to the String being tokenized
+ * @return First token from str
+ *
+ * @brief Extracts the first token (String of non-space chars) from front of str
+ *
+ * @note Modifies str text by removing the first token from the referenced str
+ *
+ */
 static String getNextStringToken(String& str) {
     String sp(" ");
 
@@ -402,7 +410,18 @@ static String getNextStringToken(String& str) {
  * @param pItem
  */
 void StationMessages::onTouchItem(AScrollBoxItem* pItem) {
-    // DPRINTF("touched %s\n", pItem->getItemText()->c_str());
+    DPRINTF("touched text %s\n", pItem->getItemText()->c_str());
+
+    StationMessagesItem* pMsgItem = static_cast<StationMessagesItem*>(pItem);
+
+    DPRINTF("field1=%s field2=%s field3=%s\n", pMsgItem->msg.field1, pMsgItem->msg.field2, pMsgItem->msg.field3);
+
+    // Ignore touch on our own transmitted message
+    if ((strcmp(pMsgItem->msg.field2, Station_Call) == 0)) return;
+
+    // Ask the Sequencer (RoboOp) to contact the remote station in touched message
+    DPRINTF("Contact %s\n", pMsgItem->msg.field2);
+    seq.decodedMessageClickEvent(&(pMsgItem->msg));
 
 }  // StationMessages::onTouchItem()
 

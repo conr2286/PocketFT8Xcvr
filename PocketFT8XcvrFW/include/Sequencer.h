@@ -34,9 +34,9 @@ class Sequencer {
     void cqMsgEvent(Decode *msg);     // Received a non-directed CQ
 
     // Other internally-generated events
-    static void timerEvent(Timer *timer);  // Timer's callback function
-    void startTimer(void);                 // Start timeout Timer
-    void stopTimer(void);                  // Stop timeout Timer
+    static void onTimerEvent(Timer *timer);  // Timer's callback function
+    void startTimer(void);                   // Start timeout Timer
+    void stopTimer(void);                    // Stop timeout Timer
 
     // Define the actions taken by the Sequencing State Machine
     void pendXmit(unsigned oddEven, SequencerStateType newState);  // Start transmitter in next timeslot
@@ -55,6 +55,9 @@ class Sequencer {
     String lastTransmittedMsg;            // The last transmitted message text
     AScrollBoxItem *lastStationMsgsItem;  // Pointer to last item in StationMsgs box
 
+    // Misc helpers
+    void highlightAbortedTransmission(void);  // in Station Messages
+
    public:
     // Define the events triggering the Sequencing State Machine transitions
     void begin(unsigned timeoutMinutes, const char *logfileName);  // Reset sequencer
@@ -63,9 +66,11 @@ class Sequencer {
     void cqButtonEvent(void);                                      // CQ button clicked
     void abortButtonEvent(void);                                   // Operator clicked ABORT button
     void tuneButtonEvent(void);                                    // TUNE button clicked
-    void decodedMessageClickEvent(unsigned msgIndex);              // Received message clicked
+    void decodedMessageClickEvent(unsigned msgIndex);              // Received message clicked this index
+    void Sequencer::decodedMessageClickEvent(Decode *msg);         // Received messages clicked this decoded msg
+
     // void abortEvent(void);                  // Abort transmission request
-    static void timerEvent(void);  // Timeout (QSO taking too long)
+    static void onTimerEvent(void);  // Timeout (QSO taking too long)
 
     // Expose getters for debugging Sequencer problems
     unsigned long getSequenceNumber(void);

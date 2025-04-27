@@ -127,8 +127,8 @@
 #include <String.h>
 
 #include "Config.h"
-#include "LogFactory.h"
 #include "NODEBUG.h"
+#include "LogFactory.h"
 #include "SequencerStates.h"
 #include "UserInterface.h"
 #include "button.h"
@@ -173,9 +173,9 @@ static bool autoReplyToCQ;  // RoboOp automatically transmits reply to CQ
  **/
 void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
     DTRACE();
-    sequenceNumber = 0;                                                    // Reset timeslot counter
-    state = IDLE;                                                          // Reset state to idle
-    timeoutTimer = Timer::buildTimer(timeoutSeconds * 1000L, timerEvent);  // Build the QSO/tuning timeout-timer
+    sequenceNumber = 0;                                                      // Reset timeslot counter
+    state = IDLE;                                                            // Reset state to idle
+    timeoutTimer = Timer::buildTimer(timeoutSeconds * 1000L, onTimerEvent);  // Build the QSO/tuning timeout-timer
     // DPRINTF("timeoutTimer=%lu\n", timeoutTimer);
     contactLog = LogFactory::buildADIFlog(logfileName);
     setAutoReplyToCQ(false);                          // Disable auto reply to CQ and clear button
@@ -608,7 +608,10 @@ void Sequencer::cqButtonEvent() {
 void Sequencer::decodedMessageClickEvent(unsigned msgIndex) {
     // Find the decoded message as we need some info from it
     Decode* msg = getDecodedMsg(msgIndex);
+    decodedMessageClickEvent(msg);
+}  // decodedMessageClickEvent()
 
+void Sequencer::decodedMessageClickEvent(Decode* msg) {
     // Assert Target_Call==msg->field2 as this stuff could become FUBAR
     DFPRINTF("sequenceNumber=%lu, Target_Call='%s', msg->field2='%s', msg->sequenceNumber=%u, state=%u\n", sequenceNumber, Target_Call, msg->field2, msg->sequenceNumber, state);
 
@@ -650,7 +653,7 @@ void Sequencer::decodedMessageClickEvent(unsigned msgIndex) {
  * activity, and is normally stopped when that QSO/TUNE completes normally.
  * The duration was established by begin().
  */
-void Sequencer::timerEvent(Timer* thisTimer) {
+void Sequencer::onTimerEvent(Timer* thisTimer) {
     // Find the one and only Sequencer from static method
     Sequencer& theSequencer = Sequencer::getSequencer();
     DFPRINTF("sequenceNumber=%lu, state=%u\n", theSequencer.sequenceNumber, theSequencer.state);
@@ -676,6 +679,7 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case LISTEN_RRSL:
         case LISTEN_RSL:
         case LISTEN_73:
+            theSequencer.highlightAbortedTransmission();
             theSequencer.endQSO();       // Misc activities to terminate QSO
             clearOutboundMessageText();  // Clear outbound message text chars
             theSequencer.state = IDLE;   // IDLE the state machine
@@ -688,6 +692,7 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case RSL_PENDING:
         case RRSL_PENDING:
         case M73_PENDING:
+            theSequencer.highlightAbortedTransmission();
             theSequencer.endQSO();
             clearOutboundMessageText();  // Clear outbound message text chars
             theSequencer.state = IDLE;   // IDLE the state machine
@@ -700,6 +705,7 @@ void Sequencer::timerEvent(Timer* thisTimer) {
         case XMIT_RRSL:
         case XMIT_RSL:
         case XMIT_73:
+            theSequencer.highlightAbortedTransmission();
             theSequencer.endQSO();
             clearOutboundMessageText();  // Clear outbound message text chars
             theSequencer.state = IDLE;   // IDLE the state machine
@@ -713,9 +719,6 @@ void Sequencer::timerEvent(Timer* thisTimer) {
     // Always reset a few more things
     theSequencer.stopTimer();  // Cancel the QSO Timer
 
-    // Clear the info message
-    // ui.applicationMsgs->setText(" ");
-
     // Stop modulation, disarm the transmitter, clear the outbound message, and turn the receiver on
     xmit_flag = 0;                  // Stop modulation
     terminate_transmit_armed();     // Dis-arm the transmitter
@@ -726,9 +729,9 @@ void Sequencer::timerEvent(Timer* thisTimer) {
     // resetButton(BUTTON_TU);
     ui.b0->reset();  // Reset highlighted button
     ui.b2->reset();  // Reset highlighted button
-    // resetButton(BUTTON_CQ);
+                     // resetButton(BUTTON_CQ);
 
-}  // timerEvent()
+}  // onTimerEvent()
 
 /**
  * @brief Operator clicked the ABORT button to halt transmissions
@@ -739,7 +742,7 @@ void Sequencer::timerEvent(Timer* thisTimer) {
 void Sequencer::abortButtonEvent() {
     DTRACE();
     setAutoReplyToCQ(false);  // Reset the RoboOp
-    timerEvent(NULL);         // TODO:  refactor so we don't need to pass a NULL Timer pointer
+    onTimerEvent(NULL);       // TODO:  refactor so we don't need to pass a NULL Timer pointer
     ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 }  // abortButtonEvent()
 
@@ -795,7 +798,7 @@ void Sequencer::rslEvent(Decode* msg) {
 
         // Ignore non-sense
         default:
-            DPRINTF("***** ERROR:  Ignoring received msgType=%d because state=%d\n", msg->msgType, state);
+            DPRINTF("***** NOTE:  Ignoring received msgType=%d from %s because state=%d\n", msg->msgType, msg->field2, state);
             break;
 
     }  // switch
@@ -1052,7 +1055,7 @@ SequencerStateType Sequencer::getState() {
  *
  * The Timer was created and its interval established by begin().
  *
- * If/when the Timer expires, it notifies timerEvent() callback function.
+ * If/when the Timer expires, it notifies onTimerEvent() callback function.
  *
  */
 void Sequencer::startTimer() {
@@ -1145,3 +1148,13 @@ void setAutoReplyToCQ(bool x) {
 bool getAutoReplyToCQ() {
     return autoReplyToCQ;
 }
+
+/**
+ * @brief Highlight the lastTransmittedMsg if it timed-out
+ */
+void Sequencer::highlightAbortedTransmission() {
+    String thisTransmittedMsg = String(get_message());  // The pending outbound message text
+    if (thisTransmittedMsg == lastTransmittedMsg) {
+        ui.stationMsgs->setItemColors(lastStationMsgsItem, A_RED, A_BLACK);  // Recolor previous (retransmitted) msg
+    }
+}  // highlightAbortedTransmission()
