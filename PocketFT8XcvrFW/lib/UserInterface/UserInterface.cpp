@@ -70,7 +70,7 @@ void UserInterface::begin() {
     theWaterfall = new Waterfall();
 
     // Build the stationInfo
-    //stationInfo = new AScrollBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
+    // stationInfo = new AScrollBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
     stationInfo = new AListBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
     itemDate = stationInfo->addItem(stationInfo, "", A_RED);
     itemTime = stationInfo->addItem(stationInfo, "", A_RED);
@@ -303,7 +303,7 @@ void MenuButton::touchButton(int buttonId) {
             DPRINTF("Ab\n");
             seq.abortButtonEvent();       // Ask Sequencer to abort transmissions
             ui.b1->setState(false);       // Turn button "off" (it doesn't really toggle)
-            ui.b1->repaintWidget();       // Repaint the now "off" button
+            ui.b1->onRepaintWidget();     // Repaint the now "off" button
             ui.applicationMsgs->reset();  // Reset (clear) the Application Messages box
             break;
 
@@ -357,7 +357,7 @@ void Waterfall::touchPixel(ACoord x, ACoord y) {
     cursor_freq = ((float)cursor_line + (float)ft8_min_bin) * ft8_shift;
     set_Xmit_Freq();
     String str = String("Cursor freq = ") + String(cursor_freq) + String(" Hz");
-    //DPRINTF("%s\n", str.c_str());
+    // DPRINTF("%s\n", str.c_str());
     ui.applicationMsgs->setText(str);
 #endif
 
@@ -371,21 +371,95 @@ void Waterfall::touchPixel(ACoord x, ACoord y) {
  * When operator touches an item in DecodedMsgsBox, the Sequencer will attempt to
  * engage that station in a QSO.
  */
-void DecodedMsgsBox::touchItem(AListBoxItem* pItem) {
-    DPRINTF("touchItem(index=%d,)\n", index);
+void DecodedMsgsBox::onTouchItem(AListBoxItem* pItem) {
+    DPRINTF("onTouchItem(index=%d,)\n", index);
     pItem->setItemColors(A_BLACK, A_GREY);  // Highlight this item
 #ifndef PIO_UNIT_TESTING
-    int index = getItemIndex(pItem);  // Lookup item's index
-    seq.msgClickEvent(index);         // Notify Sequencer when operator clicks a received message
+    int index = getItemIndex(pItem);      // Lookup item's index
+    seq.decodedMessageClickEvent(index);  // Notify Sequencer when operator clicks a received message
 #endif
 }
+
+static String getNextStringToken(String& str) {
+    String sp(" ");
+
+    // Skip leading spaces and ensure a trailing space
+    str = str.trim() + sp;
+    // DPRINTF("Trimmed incoming str='%s'\n", str.c_str());
+
+    // Find the space terminating the token
+    int index = str.indexOf(' ');  // Find the space terminating the token
+    // DPRINTF("index=%d\n", index);
+    if (index <= 0) return emptyString;      // Missing?
+    String token = str.substring(0, index);  // Extract token
+    str = str.substring(index);              // Trim token from str
+    // DPRINTF("Token='%s', remainder str='%s'\n", token.c_str(),str.c_str());
+    return token;
+}  // getNextStringToken()
 
 /**
  * @brief Override notified when StationMessage item touched
  * @param pItem
  */
-void StationMessages::touchItem(AScrollBoxItem* pItem) {
-    //DPRINTF("touched %s\n", pItem->getItemText()->c_str());
+void StationMessages::onTouchItem(AScrollBoxItem* pItem) {
+    // DPRINTF("touched %s\n", pItem->getItemText()->c_str());
 
-}  // StationMessages::touchItem()
+}  // StationMessages::onTouchItem()
 
+StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pContainer, String str) {
+    Decode newMsg;
+
+    // Extract fields from str
+    // DPRINTF("%s %s %s\n", getNextStringToken(str).c_str(), getNextStringToken(str).c_str(), getNextStringToken(str).c_str());
+    strcpy(newMsg.field1, getNextStringToken(str).c_str());
+    strcpy(newMsg.field2, getNextStringToken(str).c_str());
+    strcpy(newMsg.field3, getNextStringToken(str).c_str());
+
+    DPRINTF("%s %s %s \n", newMsg.field1, newMsg.field2, newMsg.field3);
+
+    StationMessagesItem* newItem = addStationMessageItem(pContainer, &newMsg);
+    DTRACE();
+
+    return newItem;
+}
+
+/**
+ * @brief Add an item to this Station Messages Box
+ * @param pStationMessages Back pointer to Station Messages Box
+ * @param pNewMsg New Decode msg structure
+ * @return Pointer to new item or nullptr
+ */
+StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pStationMessages, Decode* pNewMsg) {
+    int newItemIndex = nDisplayedItems;
+    StationMessagesItem* pNewItem;
+    String str = pNewMsg->toString();
+
+    DPRINTF("field1=%s field2=%s field3=%s\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3);
+
+    // Too many items for our simple data structs?
+    if (nDisplayedItems >= maxItems) return nullptr;
+
+    pNewItem = new StationMessagesItem(pNewMsg, A_WHITE, A_BLACK, pStationMessages);  // Derived of AScrollBoxItem
+    if (pNewItem != nullptr) {
+        pNewItem->setItemText(pNewMsg->toString());
+        items[newItemIndex] = pNewItem;
+    }
+
+    // Record the timestamp
+    pNewItem->timeStamp = millis();  // Record timestamp when item created
+
+    // Scroll the displayed items up if the added item won't fit within widget's boundary box
+    if (!itemWillFit(nDisplayedItems + 1)) {
+        DPRINTF("Scroll with nDisplayedItems=%d\n", nDisplayedItems);
+        scrollUpOneLine();  // Scrolling reduces nDisplayedItems by one, making room for new item
+    }
+
+    // Record the new item
+    nDisplayedItems++;  // Bump count of displayed items
+    displayedItems[newItemIndex] = pNewItem;
+
+    // Paint the new item
+    repaint(pNewItem);
+
+    return pNewItem;
+}

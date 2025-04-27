@@ -73,7 +73,7 @@ void APixelBox::drawPixel(APixelPos x, APixelPos y, AColor color) {
     AGUI::setClipRect();
     // AGUI::setClipRect(bitmap.x1, bitmap.y1, bitmap.x2 - bitmap.x1 + 1, bitmap.y2 - bitmap.y1 + 1);
     AGUI::drawPixel(bitmap.x1 + x, bitmap.y1 + y, color);
-    //AGUI::setClipRect();
+    // AGUI::setClipRect();
 }
 
 /**
@@ -86,7 +86,7 @@ void APixelBox::drawPixel(APixelPos x, APixelPos y, AColor color) {
  * @note The touch coordinate passed to application's touchPixel are the pixel coordinates
  * inside the box (relative to bitmap location), not the screen coordinates.
  */
-void APixelBox::touchWidget(ACoord xScreen, ACoord yScreen) {
+void APixelBox::onTouchWidget(ACoord xScreen, ACoord yScreen) {
     DTRACE();
 
     // Calculate pixel coordinates within the box's bitmap.  Warning:  either position could be

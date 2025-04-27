@@ -5,8 +5,8 @@
 #include "LogFactory.h"
 #include "SequencerStates.h"
 #include "Timer.h"
-#include "decode_ft8.h"
 #include "UserInterface.h"
+#include "decode_ft8.h"
 
 void setAutoReplyToCQ(bool);
 bool getAutoReplyToCQ(void);
@@ -47,12 +47,12 @@ class Sequencer {
     void endQSO(void);                         // Terminate a QSO
 
     // Private member variables
-    SequencerStateType state;                  // The Sequencer's current state
-    unsigned long sequenceNumber;              // The current timeslot's sequence number
-    Timer *timeoutTimer;                       // Terminates run-on transmissions after timeout period
-    ContactLogFile *contactLog;                // The contact log file
-    String lastReceivedMsg;                    // The last received (decoded) message text
-    String lastTransmittedMsg;                 // The last transmitted message text
+    SequencerStateType state;             // The Sequencer's current state
+    unsigned long sequenceNumber;         // The current timeslot's sequence number
+    Timer *timeoutTimer;                  // Terminates run-on transmissions after timeout period
+    ContactLogFile *contactLog;           // The contact log file
+    String lastReceivedMsg;               // The last received (decoded) message text
+    String lastTransmittedMsg;            // The last transmitted message text
     AScrollBoxItem *lastStationMsgsItem;  // Pointer to last item in StationMsgs box
 
    public:
@@ -63,7 +63,7 @@ class Sequencer {
     void cqButtonEvent(void);                                      // CQ button clicked
     void abortButtonEvent(void);                                   // Operator clicked ABORT button
     void tuneButtonEvent(void);                                    // TUNE button clicked
-    void msgClickEvent(unsigned msgIndex);                         // Received message clicked
+    void decodedMessageClickEvent(unsigned msgIndex);              // Received message clicked
     // void abortEvent(void);                  // Abort transmission request
     static void timerEvent(void);  // Timeout (QSO taking too long)
 

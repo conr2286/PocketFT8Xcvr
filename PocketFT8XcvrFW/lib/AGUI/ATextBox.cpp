@@ -76,7 +76,7 @@ ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AC
     AGUI::setClipRect();
 }
 
-void ATextBox::repaintWidget(void) {
+void ATextBox::onRepaintWidget(void) {
     // Setup clipping rectangle without regard for rounded vs. squared corners
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);
 
@@ -115,7 +115,7 @@ void ATextBox::repaintWidget(void) {
     if (str != String("")) AGUI::writeText(str);                            // Output non-empty text to box
     AGUI::setClipRect();                                                    // Restore default clip
 
-}  // repaintWidget()
+}  // onRepaintWidget()
 
 /**
  * @brief Change the display text in this ATextBox
@@ -124,18 +124,18 @@ void ATextBox::repaintWidget(void) {
 void ATextBox::setText(const char *txt, AColor fg) {
     fgColor = fg;
     str = String(txt);
-    repaintWidget();
+    onRepaintWidget();
 }
 
 /**
  * @brief Change the display text in this ATextBox
  * @param txt String to display
  */
-void ATextBox::setText(String& rstr, AColor fg) {
+void ATextBox::setText(String &rstr, AColor fg) {
     fgColor = fg;
-    //DPRINTF("setText %s\n", rstr.c_str());
+    // DPRINTF("setText %s\n", rstr.c_str());
     str = String(rstr);
-    repaintWidget();
+    onRepaintWidget();
 }
 
 /**
@@ -143,5 +143,5 @@ void ATextBox::setText(String& rstr, AColor fg) {
  */
 void ATextBox::reset() {
     str = "";  // Nothing to display
-    repaintWidget();
+    onRepaintWidget();
 }

@@ -36,7 +36,7 @@ class APixelBox : public AWidget {
     virtual void touchPixel(APixelPos x, APixelPos y) {}  // Application overrides touchPixel() to receive notifications of touch events
 
    private:
-    void touchWidget(ACoord xScreen, ACoord yScreen) override final;  // We override AWidget touchWidget() to receive touch notifications
+    void onTouchWidget(ACoord xScreen, ACoord yScreen) override final;  // We override AWidget onTouchWidget() to receive touch notifications
 
     // Private variables
     ACoord r;      // Radius of the rounded corners

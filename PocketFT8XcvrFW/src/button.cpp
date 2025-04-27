@@ -351,22 +351,22 @@ void terminate_transmit_armed(void) {
  *
  *
  **/
-void check_FT8_Touch(void) {
-    int FT_8_TouchIndex;
-    int y_test;
+// void check_FT8_Touch(void) {
+//     int FT_8_TouchIndex;
+//     int y_test;
 
-    if (draw_x < 400 && (draw_y > 90 && draw_y < 300)) {
-        y_test = draw_y - 90;
-        FT_8_TouchIndex = y_test / 25;
-        // DPRINTF("FT_8_TouchIndex=%d, master_decoded=%d\n", FT_8_TouchIndex, master_decoded);
-        if (FT_8_TouchIndex < master_decoded) {
-            display_selected_call(FT_8_TouchIndex);
-            seq.msgClickEvent(FT_8_TouchIndex);  // Notify Sequencer when operator clicks on a received message
-        }
-        DTRACE();
-    }
+//     if (draw_x < 400 && (draw_y > 90 && draw_y < 300)) {
+//         y_test = draw_y - 90;
+//         FT_8_TouchIndex = y_test / 25;
+//         // DPRINTF("FT_8_TouchIndex=%d, master_decoded=%d\n", FT_8_TouchIndex, master_decoded);
+//         if (FT_8_TouchIndex < master_decoded) {
+//             display_selected_call(FT_8_TouchIndex);
+//             seq.decodedMessageClickEvent(FT_8_TouchIndex);  // Notify Sequencer when operator clicks on a received message
+//         }
+//         DTRACE();
+//     }
 
-}  // check_FT8_Touch()
+// }  // check_FT8_Touch()
 
 /*
  * Check for movement of transmit offset in waterfall

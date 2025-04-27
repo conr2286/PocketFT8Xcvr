@@ -114,7 +114,7 @@ Decode *getNewDecoded() {
 }
 
 /**
- * Decode received FT8 signals into new_decoded[] of successfully decoded messages (if any)
+ * Decode received->FT8 signals into new_decoded[] of successfully decoded messages (if any)
  *
  * @return Number of successfully demodulated messages placed in new_decoded[]
  *
@@ -282,7 +282,7 @@ void display_messages(int decoded_messages) {
     }
 
     // Erase messages lines from the previous timeslot that weren't overwritten above
-    message[0] = 0;  // An empty line
+    message[0] = 0;                           // An empty line
     previousMessageCount = decoded_messages;  // Remember for next timeslot
 
 }  // display_messages()
@@ -399,26 +399,17 @@ int Check_Calling_Stations(int num_decoded) {
             // Display details of received message addressed to our station
             getTeensy3Time();
             snprintf(big_gulp, sizeof(message), "%02i/%02i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
-            // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
-            // tft.setTextSize(2);
-            // tft.setCursor(DISPLAY_CALLING_X, DISPLAY_CALLING_Y + i * 25);
-            // tft.print(message);
             // ui.stationMsgs->addItem(ui.stationMsgs, String(message));
-
-            // Log details from this message to us (TODO:  prune retired TXT file logging code)
-            // if (logging_on == 1) write_log_data(big_gulp);
-            // DPRINTF("decode_ft8() would write_log_data:  %s\n", big_gulp);
-            // DPRINTF("target=%s, snr=%d, locator=%s, field3=%s\n", new_decoded[i].field1, new_decoded[i].snr, new_decoded[i].locator, new_decoded[i].field3);
 
             num_Calling_Stations++;
             message_test = i + 100;  // 100+index of this calling station.  Why the 100 bias???
         }
 
-        // Erase something???  What (decoded messages)?  Why?
-        if (num_Calling_Stations == max_Calling_Stations) {
-            tft.fillRect(0, 100, 240, 190, HX8357_BLACK);
-            num_Calling_Stations = 0;
-        }
+        // // Erase something???  What (decoded messages)?  Why?
+        // if (num_Calling_Stations == max_Calling_Stations) {
+        //     tft.fillRect(0, 100, 240, 190, HX8357_BLACK);
+        //     num_Calling_Stations = 0;
+        // }
     }
 
     // Return index of final calling station in new_decoded[] or -1 if none????????????????????????

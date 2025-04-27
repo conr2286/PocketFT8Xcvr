@@ -36,7 +36,7 @@ class AListBox : public AWidget {
     AListBox(ACoord xCoord, ACoord yCoord, ALength w, ALength h, AColor bdColor = A_BLACK);  // Build AListBox with default colors
     virtual ~AListBox();                                                                     // Destructor purges data struct and erases displayed items
     AListBoxItem* addItem(AListBox* pListBox, const String str, AColor fg = A_WHITE);        // Add item to bottom of this AListBox
-    int setItem(int index, const String& str, AColor fg, AColor bg = A_BLACK);                // Add item at specified index
+    int setItem(int index, const String& str, AColor fg, AColor bg = A_BLACK);               // Add item at specified index
     AListBoxItem* setItemColors(AListBoxItem* pItem, AColor fg, AColor bg = A_BLACK);        // Change specified item's colors
     int setItemColor(int index, AColor fg, AColor bg = A_BLACK);                             // Change indexed item's foreground color
     int getCount(void) const;                                                                // Get count of displayed items in this AListBox
@@ -48,13 +48,13 @@ class AListBox : public AWidget {
     constexpr static int maxItems = 16;  // Maximum number of items allowed in AListBox
 
    protected:
-    virtual void touchItem(AListBoxItem* pItem) {}  // Application overrides touchItem() to receive notifications of touch events
+    virtual void onTouchItem(AListBoxItem* pItem) {}  // Application overrides onTouchItem() to receive notifications of touch events
 
    private:
     // Our private methods
-    void touchWidget(ACoord screenX, ACoord screenY) override;      // We override AWidget to receive touch events for this AListBox
+    void onTouchWidget(ACoord screenX, ACoord screenY) override;          // We override AWidget to receive touch events for this AListBox
     AListBoxItem* getSelectedItem(ACoord screenX, ACoord screenY) const;  // Return pointer to selected item
-    void repaintWidget(void) override;                              // We override AWidget to receive repaint events for this AListBox
+    void onRepaintWidget(void) override;                                  // We override AWidget to receive repaint events for this AListBox
     // bool itemWillFit(int nItems);                                     // Helper determines if count items will fit within boundary box
     int removeItem(int index);  // Remove specified item from displayedItems[]
     int repaint(int index);     // Repaint item specified by index

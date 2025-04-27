@@ -12,37 +12,40 @@
 
 int ft8_decode(void);
 
-typedef struct
-{
-  char field1[14];               //Their station's call
-  char field2[14];               //Our station's call
-  char field3[7];                //Extra info
-  char locator[7];               //Their locator if we have it
-  int freq_hz;                   //
-  char decode_time[10];          //Timestamp when message successfully decoded
-  int sync_score;                //
-  int snr;                       //Their received signal level
-  int distance;                  //KM between their and our station
-  MsgType msgType;               //Type of received message (e.g. CQ, LOC, RSL...)
-  unsigned long sequenceNumber;  //Sequencer's timeslot sequenceNumber when msg was received
-} Decode;
+static const String sp = String(" ");
+// typedef struct
+class Decode {
+   public:
+    String toString(void) { return String(field1) + sp + String(field2) + sp + String(field3); }
+
+    char field1[14];               // Their station's call
+    char field2[14];               // Our station's call
+    char field3[7];                // Extra info
+    char locator[7];               // Their locator if we have it
+    int freq_hz;                   //
+    char decode_time[10];          // Timestamp when message successfully decoded
+    int sync_score;                //
+    int snr;                       // Their received signal level
+    int distance;                  // KM between their and our station
+    MsgType msgType;               // Type of received message (e.g. CQ, LOC, RSL...)
+    unsigned long sequenceNumber;  // Sequencer's timeslot sequenceNumber when msg was received
+} /*Decode*/;
 
 typedef struct
 {
-  char decode_time[10];
-  char call[7];
+    char decode_time[10];
+    char call[7];
 
 } Calling_Station;
 
 typedef struct
 {
-  char decode_time[10];
-  char call[7];
-  int distance;
-  int snr;
-  int freq_hz;
+    char decode_time[10];
+    char call[7];
+    int distance;
+    int snr;
+    int freq_hz;
 } CQ_Station;
-
 
 Decode* getNewDecoded(void);
 

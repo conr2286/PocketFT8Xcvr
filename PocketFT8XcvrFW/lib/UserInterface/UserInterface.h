@@ -61,29 +61,31 @@ static const ALength ButtonHeight = 30;   // Height in pixels
 static const ACoord ButtonX = 1;          // Button row left-side inset
 static const ACoord ButtonY = 290;        // All buttons in one row at screen bottom
 
-class StationMessages;
+class StationMessagesItem;
+
+class StationMessages : public AScrollBox {
+   public:
+    StationMessages(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {
+        for (int i = 0; i < maxItems; i++) items[i] = nullptr;
+    }
+    void onTouchItem(AScrollBoxItem* pItem) override;  // Application overrides onTouchItem() to receive notifications of touch events
+    StationMessagesItem* addStationMessageItem(StationMessages* pStationMessages, Decode* msg);
+    StationMessagesItem* addStationMessageItem(StationMessages* pStationMessages, String str);
+
+   private:
+    StationMessagesItem* items[maxItems];
+};
 
 static String emptyString = String("");
 
 class StationMessagesItem : public AScrollBoxItem {
    public:
-    StationMessagesItem(Decode* pMsgStruct, AColor fgColor, AColor bgColor, AScrollBox* box) : AScrollBoxItem(emptyString, fgColor, bgColor, box) {}
-    //StationMessages* pStationMessages;
-    //Decode msg;  // The decoded message struct for this item
-};
-
-class StationMessages : public AScrollBox {
-   public:
-    StationMessages(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {
-        itemCreationTime = millis();
-        for (int i = 0; i < maxItems; i++) items[i] = nullptr;
-    }
-    void touchItem(AScrollBoxItem* pItem) override;  // Application overrides touchItem() to receive notifications of touch events
-    //StationMessagesItem* addMessageItem(StationMessages* pStationMessages, Decode* msg);
-
-   private:
-    unsigned long itemCreationTime;
-    StationMessagesItem* items[maxItems];
+    StationMessagesItem(Decode* pNewMsg, AColor fgColor, AColor bgColor, StationMessages* pBox) : AScrollBoxItem(emptyString, fgColor, bgColor, pBox) {
+        msg = *pNewMsg;                                       // Retain a copy of the received msg struct
+        pStationMessages = static_cast<StationMessages*>(pBox);  // Save pointer to the base class object
+    }  // StationMessagesItem()
+    StationMessages* pStationMessages;
+    Decode msg;  // The decoded message struct for this item
 };
 
 class Waterfall : public APixelBox {
@@ -99,7 +101,7 @@ void pollTouchscreen(void);
 class DecodedMsgsBox : public AListBox {
    public:
     DecodedMsgsBox(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AListBox(x, y, w, h, c) {}
-    void touchItem(AListBoxItem* pItem) override;
+    void onTouchItem(AListBoxItem* pItem) override;
     void setMsg(int index, char* msg);
 };
 
@@ -111,11 +113,6 @@ class MenuButton : public AToggleButton {
 };
 
 class UserInterface {
-    // private:
-    //  Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
-    //  HX8357_t3n* tft;
-    // static AGUI* gui;
-    // static TouchScreen* ts;
 
    public:
     // Initialization methods

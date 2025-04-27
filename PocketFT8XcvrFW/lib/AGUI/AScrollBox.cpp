@@ -30,8 +30,7 @@
  * @note The text string, s, must not contain a NL character
  */
 AScrollBoxItem::AScrollBoxItem(String& s, AColor fg, AColor bg, AScrollBox* pBox) {
-    //if (!Serial) Serial.begin(9600);
-    //Serial.println("AScrollBoxItem()");
+    DPRINTF("AScrollBoxItem('%s')\n",s.c_str());
     str = s;                    // Item's text String
     str.replace('\n', ' ');     // We really can't tolerate NL chars in the String
     fgColor = fg;               // Item's foreground color
@@ -48,11 +47,9 @@ void AScrollBoxItem::setItemColors(AColor fg, AColor bg) {
 }
 
 void AScrollBoxItem::setItemText(String s, AColor fg) {
-    //String* heap = new String("heap");
-    DTRACE();
+    DPRINTF("setItemText(%s)\n", s.c_str());
     fgColor = fg;
-    str = s;            //str is AScrollBoxItem member object on the heap
-    //DPRINTF("Stored item str=%p, heap=%p, stack=%p\n", &str, heap, &heap);
+    str = s;  // str is AScrollBoxItem member object on the heap
     scrollBoxContainer->repaint(this);
 }
 
@@ -64,8 +61,8 @@ void AScrollBoxItem::setItemText(String s, AColor fg) {
  * @param h Height
  */
 AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
-    //if (!Serial) Serial.begin(9600);
-    //Serial.println("AScrollBox()");
+    // if (!Serial) Serial.begin(9600);
+    // Serial.println("AScrollBox()");
 
     // Initialize the member variables
     boundary.setCorners(x, y, w, h);  // Our boundary box
@@ -79,7 +76,7 @@ AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor)
     }
 
     // Draw the empty box
-    repaintWidget();
+    onRepaintWidget();
 
 }  // AScrollBox()
 
@@ -125,7 +122,7 @@ AScrollBoxItem* AScrollBox::addItem(AScrollBox* pAScrollBox, String str, AColor 
  *
  * Erases our widget's screen and then repaints each item individually
  */
-void AScrollBox::repaintWidget() {
+void AScrollBox::onRepaintWidget() {
     DTRACE();
 
     // Paint the entire background first, erasing whatever gibberish preceded us
@@ -172,9 +169,6 @@ int AScrollBox::repaint(int index) {
  * @return Pointer to the item or nullptr if error
  */
 AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
-    //if (!Serial) Serial.begin(9600);
-    // Serial.print("repaint(pTem)\n");
-
     // Sanity checks
     if (pItem == nullptr) return nullptr;
 
@@ -193,10 +187,11 @@ AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
     int y1 = boundary.y1 + index * leading + yOffset;
 
     // Erase existing text in this item's location
-    AGUI::fillRect(x1, y1, boundary.w - 2*xOffset, leading, bgColor);
+    AGUI::fillRect(x1, y1, boundary.w - 2 * xOffset, leading, bgColor);
 
     // Write the item's text to display
-    AGUI::setCursor(x1, y1);      // Text position
+    AGUI::setCursor(x1, y1);  // Text position
+    DPRINTF("writeText(%s)\n", pItem->str.c_str());
     AGUI::writeText(pItem->str);  // Output text
     AGUI::setClipRect();          // Restore clip
 
@@ -287,12 +282,13 @@ AScrollBoxItem* AScrollBox::setItemColors(AScrollBoxItem* pItem, AColor fgColor,
  * @return Item's index into items[] array or -1 if not found
  */
 int AScrollBox::getItemIndex(AScrollBoxItem* pItem) const {
-    DTRACE();
+    //DTRACE();
     // Sanity check
     if (pItem == nullptr) return -1;
 
     // Find it
     for (int index = 0; index < maxItems; index++) {
+        //DPRINTF("index=%d\n", index);
         if (pItem == displayedItems[index]) return index;
     }
     return -1;
@@ -321,7 +317,7 @@ void AScrollBox::reset() {
     nDisplayedItems = 0;
 
     // Repaint this box
-    repaintWidget();
+    onRepaintWidget();
 }  // reset()
 
 AScrollBox::~AScrollBox() {
@@ -368,7 +364,7 @@ int AScrollBox::removeItem(int index) {
  *
  * @note The coordinates are those of the screen, not offsets within this AScrollBox
  */
-void AScrollBox::touchWidget(ACoord xTouch, ACoord yTouch) {
+void AScrollBox::onTouchWidget(ACoord xTouch, ACoord yTouch) {
     DTRACE();
 
     // Find the selected item
@@ -379,7 +375,7 @@ void AScrollBox::touchWidget(ACoord xTouch, ACoord yTouch) {
     item->selected = !item->selected;
 
     // Notify application of touched item
-    touchItem(item);  // Application overrides touchItem() to receive notifications of touch events for items
+    onTouchItem(item);  // Application overrides onTouchItem() to receive notifications of touch events for items
 }
 
 /**
@@ -421,7 +417,6 @@ void AScrollBox::reviewTimeStamps() {
     }
 }
 
-
-String* AScrollBoxItem::getItemText()  {
+String* AScrollBoxItem::getItemText() {
     return &str;
 }

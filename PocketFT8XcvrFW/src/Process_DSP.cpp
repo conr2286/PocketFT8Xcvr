@@ -157,14 +157,6 @@ void update_offset_waterfall(int offset) {
     }
 
     // At the beginning(!!!) of a timeslot, display recvd messages, and prepare to send CQ or respond to calls
-    //  if (WF_counter == 0 && num_decoded_msg > 0) {
-    //    display_messages(num_decoded_msg);  //Displays received messages
-    //    if (CQ_Flag == 1) {
-    //      service_CQ();  //Drives the so-called beacon-mode state machine
-    //    } else {
-    //      Check_Calling_Stations(num_decoded_msg);
-    //    }
-    //  }
     if (WF_counter == 0) {
         // DTRACE();
         //  DPRINTF("WF_counter=%u, num_decoded_msg=%u, FT_8_counter=%u, xmit_flag=%u, Transmit_Armned=%u\n", WF_counter, num_decoded_msg, FT_8_counter, xmit_flag, Transmit_Armned);

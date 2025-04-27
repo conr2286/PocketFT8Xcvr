@@ -16,8 +16,8 @@ AWidget* AWidget::allWidgets = NULL;
  *  + Initialize the member variables
  */
 AWidget::AWidget() {
-    //if (!Serial) Serial.begin(9600);
-   // DPRINTF("AWidget()=0x%x\n", this);
+    // if (!Serial) Serial.begin(9600);
+    // DPRINTF("AWidget()=0x%x\n", this);
     // Link this new widget into the unordered list of all widgets
     this->next = allWidgets;
     allWidgets = this;
@@ -105,10 +105,10 @@ void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
         //  If touch coords lie within scanned widget and call its notification method if provided
         if (scannedWidget->boundary.isWithin(xCoord, yCoord)) {
             // DTRACE();
-            scannedWidget->touchWidget(xCoord, yCoord);
+            scannedWidget->onTouchWidget(xCoord, yCoord);
         }
     }
-    //delay(50);  //Cheap debounce
+    // delay(50);  //Cheap debounce
 }
 
 /**

@@ -74,7 +74,7 @@ void AListBoxItem::setItemText(const String& s, AColor fg) {
  */
 AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
     // if (!Serial) Serial.begin(9600);
-    //Serial.println("AListBox()");
+    // Serial.println("AListBox()");
 
     // Initialize the member variables
     boundary.setCorners(x, y, w, h);  // Our boundary box
@@ -88,7 +88,7 @@ AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
     }
 
     // Draw the empty box
-    repaintWidget();
+    onRepaintWidget();
 
 }  // AListBox()
 
@@ -102,7 +102,7 @@ AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
  * No scrolling in a list box; that which doesn't fit clips
  *
  */
-AListBoxItem* AListBox::addItem(AListBox* pListBox,const String str, AColor fg) {
+AListBoxItem* AListBox::addItem(AListBox* pListBox, const String str, AColor fg) {
     DPRINTF("str='%s'\n", str.c_str());
 
     // Too many items for our primitive data structs?
@@ -160,7 +160,7 @@ int AListBox::setItem(int index, const String& str, AColor fg, AColor bg) {
  *
  * Erases our widget's panel then repaints each item individually
  */
-void AListBox::repaintWidget() {
+void AListBox::onRepaintWidget() {
     DTRACE();
 
     // Paint the entire panel background first, erasing whatever gibberish preceded us
@@ -209,7 +209,7 @@ AListBoxItem* AListBox::repaint(AListBoxItem* pItem) const {
     // if (!Serial) Serial.begin(9600);
 
     // Sanity checks
-    if (pItem == nullptr) return  nullptr;
+    if (pItem == nullptr) return nullptr;
 
     // Map item pointer to its index into displayedItems[]
     int index = getItemIndex(pItem);
@@ -320,7 +320,7 @@ void AListBox::reset() {
     nDisplayedItems = 0;
 
     // Repaint this box
-    repaintWidget();
+    onRepaintWidget();
 }  // reset()
 
 AListBox::~AListBox() {
@@ -367,7 +367,7 @@ int AListBox::removeItem(int index) {
  *
  * @note The coordinates are those of the screen, not offsets within this AListBox
  */
-void AListBox::touchWidget(ACoord xTouch, ACoord yTouch) {
+void AListBox::onTouchWidget(ACoord xTouch, ACoord yTouch) {
     DTRACE();
 
     // Find the selected item
@@ -378,7 +378,7 @@ void AListBox::touchWidget(ACoord xTouch, ACoord yTouch) {
     item->selected = !item->selected;
 
     // Notify application of touched item
-    touchItem(item);  // Application overrides touchItem() to receive notifications of touch events for items
+    onTouchItem(item);  // Application overrides onTouchItem() to receive notifications of touch events for items
 }
 
 /**

@@ -30,9 +30,8 @@ class AWidget {
     AColor fgColor;              // Foreground color
     AColor spColor;              // Special color (e.g. selected item color)
 
-    virtual void touchWidget(ACoord screenX, ACoord screenY) {}  // Derived classes must overide touchWidget() to receive touch events
-    virtual void repaintWidget(void) {}                          // Derived classes must overide doRepaintWidget() to repaint themselves
+    virtual void onTouchWidget(ACoord screenX, ACoord screenY) {}  // Derived classes must overide touchWidget() to receive touch events
+    virtual void onRepaintWidget(void) {}                          // Derived classes must overide doRepaintWidget() to repaint themselves
 
-    private:
-
+   private:
 };

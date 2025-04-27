@@ -24,7 +24,7 @@ class AScrollBoxItem {
     void repaint(void);                                 // Repaint this item
     void setItemColors(AColor fg, AColor bg);           // Change colors
     void setItemText(String str, AColor fg = A_WHITE);  // Change specified item's text String
-    String* getItemText(void) ;                    // Get reference to this item's text String
+    String* getItemText(void);                          // Get reference to this item's text String
     void reset(void);                                   // Clear the box of text
 
     unsigned long timeStamp;
@@ -53,23 +53,22 @@ class AScrollBox : public AWidget {
     constexpr static int maxItems = 16;  // Maximum number of items allowed in AScrollBox
 
    protected:
-    virtual void touchItem(AScrollBoxItem* pItem) {}  // Application overrides touchItem() to receive notifications of touch events
-    void scrollUpOneLine();                           // Scroll all existing items up (by one entry)
-    int nDisplayedItems;                       // Number of *displayed* items
-    AScrollBoxItem* displayedItems[maxItems];  // Pointer to items displayed in this AScrollBox indexed by their position
-
+    virtual void onTouchItem(AScrollBoxItem* pItem) {}  // Application overrides onTouchItem() to receive notifications of touch events
+    void scrollUpOneLine();                             // Scroll all existing items up (by one entry)
+    int nDisplayedItems;                                // Number of *displayed* items
+    AScrollBoxItem* displayedItems[maxItems];           // Pointer to items displayed in this AScrollBox indexed by their position
+    bool itemWillFit(int nItems) const;                 // Helper determines if count items will fit within boundary box
 
    private:
     // Our private methods
-    void touchWidget(ACoord screenX, ACoord screenY) override;              // We override AWidget to receive touch events for this AScrollBox
+    void onTouchWidget(ACoord screenX, ACoord screenY) override;            // We override AWidget to receive touch events for this AScrollBox
     AScrollBoxItem* getSelectedItem(ACoord screenX, ACoord screenY) const;  // Return pointer to selected item
-    void repaintWidget(void) override;                                      // We override AWidget to receive repaint events for this AScrollBox
-    bool itemWillFit(int nItems) const;                                     // Helper determines if count items will fit within boundary box
+    void onRepaintWidget(void) override;                                    // We override AWidget to receive repaint events for this AScrollBox
     int removeItem(int index);                                              // Remove specified item from displayedItems[]
     int repaint(int index);                                                 // Repaint item specified by index
 
     // Our private member variables
-    unsigned leading;                          // The leading (text line spacing in pixels) for this AScrollBox's font
-    constexpr static uint8_t xOffset = 3;      // xOffset==n provides n-1 blank pixels on left, between border and text
-    constexpr static uint8_t yOffset = 2;      // Similar but for space at top of box
+    unsigned leading;                      // The leading (text line spacing in pixels) for this AScrollBox's font
+    constexpr static uint8_t xOffset = 3;  // xOffset==n provides n-1 blank pixels on left, between border and text
+    constexpr static uint8_t yOffset = 2;  // Similar but for space at top of box
 };

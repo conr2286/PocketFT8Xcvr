@@ -287,7 +287,7 @@ void Sequencer::timeslotEvent() {
             break;
 
         // We are waiting to contact a displayed station after operator clicked on their message.  We
-        // expect msgClickEvent() to have previously initialized the QSO struct and prepared the
+        // expect decodedMessageClickEvent() to have previously initialized the QSO struct and prepared the
         // outbound message containing our own location.
         case LOC_PENDING:
             DTRACE();
@@ -391,7 +391,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             if (thisReceivedMsg == lastReceivedMsg) {
                 ui.stationMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
             } else {
-                lastStationMsgsItem = ui.stationMsgs->addItem(ui.stationMsgs, thisReceivedMsg);  // New received msg
+                lastStationMsgsItem = ui.stationMsgs->addStationMessageItem(ui.stationMsgs, thisReceivedMsg);  // New received msg
             }
             lastReceivedMsg = thisReceivedMsg;  // Remember this received msg text for when the next msg arrives
         }
@@ -558,7 +558,7 @@ void Sequencer::cqButtonEvent() {
         case LOC_PENDING:  // Operator decided to CQ rather than respond to a known station
             DTRACE();
 
-            // Disable RoboOp.  Our own CQ activity overides received CQ messages.
+            // Disable RoboOp's autoreply to CQ.  Our own CQ activity overides received CQ messages.
             setAutoReplyToCQ(false);
 
             // Prepare to call CQ
@@ -592,12 +592,12 @@ void Sequencer::cqButtonEvent() {
 }
 
 /**
- *  Click on displayed message to initiate a QSO
+ *  Clicked a decoded message to initiate a QSO
  *
  *  This event handler initiates a QSO by contacting a displayed, received
  *  message.
  *
- *  msgClickEvent() is invoked only by display_selected_call() after initializing
+ *  decodedMessageClickEvent() is invoked only by display_selected_call() after initializing
  *  the Target_Call extern with the remote station's callsign.
  *
  *  We create a QSO contact here, perhaps prematurely (Target_Call may not reply),
@@ -605,7 +605,7 @@ void Sequencer::cqButtonEvent() {
  *  Also... this may be the only time when we'll have Target_Call's locator.
  *
  **/
-void Sequencer::msgClickEvent(unsigned msgIndex) {
+void Sequencer::decodedMessageClickEvent(unsigned msgIndex) {
     // Find the decoded message as we need some info from it
     Decode* msg = getDecodedMsg(msgIndex);
 
@@ -639,7 +639,7 @@ void Sequencer::msgClickEvent(unsigned msgIndex) {
         }
     }
 
-}  // msgClickEvent()
+}  // decodedMessageClickEvent()
 
 /**
  * @brief Callback function notified if/when timeout Timer expires
@@ -1004,7 +1004,7 @@ void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
         if (thisTransmittedMsg == lastTransmittedMsg) {
             ui.stationMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
         } else {
-            lastStationMsgsItem = ui.stationMsgs->addItem(ui.stationMsgs, thisTransmittedMsg);  // New transmitted msg
+            lastStationMsgsItem = ui.stationMsgs->addStationMessageItem(ui.stationMsgs, thisTransmittedMsg);  // New transmitted msg
         }
         lastTransmittedMsg = thisTransmittedMsg;  // Remember for next time we add an item
     } else {

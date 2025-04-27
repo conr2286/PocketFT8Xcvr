@@ -38,15 +38,19 @@ void test_DecodedMsgs(void) {
 }
 
 void test_StationMsgs(void) {
+    Decode msg1, msg2;
+    strcpy(msg1.field1, "CQ");
+    strcpy(msg1.field2, "AG0E");
+    strcpy(msg1.field3, "CM13");
+    strcpy(msg2.field1, "AG0E");
+    strcpy(msg2.field2, "KQ7B");
+    strcpy(msg2.field3, "DN15");
     TEST_MESSAGE("test_StationMsgs\n");
-    StationMessagesItem* pCQ = ui.stationMsgs->addItem(ui.stationMsgs, "CQ KQ7B DN15");
+    StationMessagesItem* pCQ = ui.stationMsgs->addStationMessageItem(ui.stationMsgs, &msg1);
     pCQ->setItemColors(A_YELLOW, A_BLACK);
-    ui.stationMsgs->addItem(ui.stationMsgs, "WN0XYZ KW9ABC RR73");
-    ui.stationMsgs->addItem(ui.stationMsgs, "KQ7B KA0XYZ DN14");
-    AScrollBoxItem* pReply = ui.stationMsgs->addItem(ui.stationMsgs, "KA0XYZ KQ7B -5");
+    ui.stationMsgs->addStationMessageItem(ui.stationMsgs, &msg2);
+    ui.stationMsgs->addStationMessageItem(ui.stationMsgs, "NA1A KQ7B 73");
     delay(2000);
-    pReply->setItemColors(A_RED, A_BLACK);
-    delay(1000);
     AWidget::processTouch(270, 120);
     delay(1000);
 }  // test_StationMsgs()
