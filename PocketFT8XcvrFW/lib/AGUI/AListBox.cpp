@@ -30,8 +30,6 @@
  * @note The text string, s, must not contain a NL character
  */
 AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
-    // if (!Serial) Serial.begin(9600);
-    // Serial.println("AListBoxItem()");
     str = s;                  // Copy Item's text String
     str.replace('\n', ' ');   // We really can't tolerate NL chars in the String
     fgColor = fg;             // Item's foreground color
@@ -47,6 +45,10 @@ AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
  */
 void AListBoxItem::setItemColors(AColor fg, AColor bg) {
     DTRACE();
+    // Sanity checks
+    if (listBoxContainer == nullptr) return;
+
+    // Set colors and repaint
     fgColor = fg;
     bgColor = bg;
     listBoxContainer->repaint(this);
@@ -59,6 +61,11 @@ void AListBoxItem::setItemColors(AColor fg, AColor bg) {
  */
 void AListBoxItem::setItemText(const String& s, AColor fg) {
     DTRACE();
+
+    // Sanity checks
+    if (listBoxContainer == nullptr) return;
+
+    // Set text and repaint
     fgColor = fg;
     str = s;
     listBoxContainer->repaint(this);
@@ -97,7 +104,7 @@ AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
  * @param pListBox Pointer to list box container for this item
  * @param str The item's text String
  * @param fg Text color
- * @return Pointer to the newly added item
+ * @return Pointer to the newly added item or nullptr if error
  *
  * No scrolling in a list box; that which doesn't fit clips
  *
@@ -110,6 +117,7 @@ AListBoxItem* AListBox::addItem(AListBox* pListBox, const String str, AColor fg)
 
     // Build the new Item
     AListBoxItem* pNewItem = new AListBoxItem(str, fg, bgColor, pListBox);  // Build item using widget's default colors
+    if (pNewItem == nullptr) return nullptr;
 
     // Record the new item
     int newItemIndex = nDisplayedItems;       // Savev index into displayedItems[] where new item will reside
@@ -205,15 +213,13 @@ int AListBox::repaint(int index) {
  * @param pItem Pointer to item to repaint
  * @return pointer to item or nullptr if error
  */
-AListBoxItem* AListBox::repaint(AListBoxItem* pItem) const {
-    // if (!Serial) Serial.begin(9600);
-
+const AListBoxItem* AListBox::repaint(const AListBoxItem* pItem) const {
     // Sanity checks
     if (pItem == nullptr) return nullptr;
 
     // Map item pointer to its index into displayedItems[]
     int index = getItemIndex(pItem);
-    if (index < 0) return nullptr;
+    if ((index < 0) || (index >= maxItems)) return nullptr;
 
     // Configure app for writing text in this widget
     AGUI::setFont(defaultFont);                                           // Use the widget's font
@@ -323,16 +329,19 @@ void AListBox::reset() {
     onRepaintWidget();
 }  // reset()
 
+/**
+ * @brief Destructor purges items and removes this container from the display
+ */
 AListBox::~AListBox() {
     DTRACE();
 
-    // Purge the items
-    reset();
-
-    // Also erase the widget's border
+    // Erase the widget's border
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);        // Configure clip window to our boundary
     AGUI::fillRect(boundary.x1, boundary.y1, boundary.w, boundary.h, bgColor);  // Erase everything within boundary box
     AGUI::setClipRect();                                                        // Default clip window
+
+    // Purge the items from this container
+    reset();
 }
 
 /**
@@ -397,7 +406,7 @@ AListBoxItem* AListBox::getSelectedItem(ACoord xClick, ACoord yClick) const {
     unsigned index = (yClick - boundary.y1) / leading;
     if (index >= maxItems) return nullptr;  // Validate calculated index
 
-    // Return pointer or null (empty indices of displayedItems[] are nullptr)
+    // Return pointer or nullptr (empty indices of displayedItems[] are nullptr)
     return (displayedItems[index]);
 
 }  // getSelectedItem()

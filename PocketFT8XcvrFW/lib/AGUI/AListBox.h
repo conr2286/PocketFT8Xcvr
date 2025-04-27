@@ -42,7 +42,7 @@ class AListBox : public AWidget {
     int getCount(void) const;                                                                // Get count of displayed items in this AListBox
     void reset(void);                                                                        // Remove all items from this AListBox
     int getItemIndex(const AListBoxItem* pItem) const;                                       // Get items[] index (line number) of specified item
-    AListBoxItem* repaint(AListBoxItem* pItem) const;                                        // Repaint item specified by pointer
+    const AListBoxItem* repaint(const AListBoxItem* pItem) const;                                        // Repaint item specified by pointer
 
     // Public constants
     constexpr static int maxItems = 16;  // Maximum number of items allowed in AListBox
