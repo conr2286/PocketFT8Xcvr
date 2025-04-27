@@ -101,3 +101,5 @@ void APixelBox::onTouchWidget(ACoord xScreen, ACoord yScreen) {
     DPRINTF("onTouchPixel %u %u\n", xPos, yPos);
     onTouchPixel(xPos, yPos);
 }
+
+

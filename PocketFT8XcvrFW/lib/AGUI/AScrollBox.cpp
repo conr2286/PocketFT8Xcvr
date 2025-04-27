@@ -41,6 +41,7 @@ AScrollBoxItem::AScrollBoxItem(String& s, AColor fg, AColor bg, AScrollBox* pBox
 
 void AScrollBoxItem::setItemColors(AColor fg, AColor bg) {
     DTRACE();
+    if (scrollBoxContainer == nullptr) return;
     fgColor = fg;
     bgColor = bg;
     scrollBoxContainer->repaint(this);
@@ -49,6 +50,7 @@ void AScrollBoxItem::setItemColors(AColor fg, AColor bg) {
 
 void AScrollBoxItem::setItemText(String s, AColor fg) {
     DPRINTF("setItemText(%s)\n", s.c_str());
+    if (scrollBoxContainer == nullptr) return;
     fgColor = fg;
     str = s;  // str is AScrollBoxItem member object on the heap
     scrollBoxContainer->repaint(this);
@@ -63,9 +65,6 @@ void AScrollBoxItem::setItemText(String s, AColor fg) {
  * @param h Height
  */
 AScrollBox::AScrollBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
-    // if (!Serial) Serial.begin(9600);
-    // Serial.println("AScrollBox()");
-
     // Initialize the member variables
     boundary.setCorners(x, y, w, h);  // Our boundary box
     leading = AGUI::getLeading();     // Get the leading (in pixels) for our font
@@ -240,8 +239,7 @@ void AScrollBox::scrollUpOneLine() {
 
     // Scroll the display
     AGUI::scrollTextArea(leading);  // Scroll-up one line of pixels
-    delay(2000);
-    AGUI::disableScroll();  // TODO:  Not sure we need to enable/disable
+    AGUI::disableScroll();          // TODO:  Not sure we need to enable/disable
 
     // Update displayItems[] to reflect how the items moved up a line
     if (nDisplayedItems <= 0) return;  // Sanity check
@@ -325,13 +323,13 @@ void AScrollBox::reset() {
 AScrollBox::~AScrollBox() {
     DTRACE();
 
-    // Purge the items
-    reset();
-
     // Also erase the widget's border
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);        // Configure clip window to our boundary
     AGUI::fillRect(boundary.x1, boundary.y1, boundary.w, boundary.h, bgColor);  // Erase everything within boundary box
-    AGUI::setClipRect();                                                        // Default clip window
+    AGUI::setClipRect();                                                        // Restore default clip
+
+    // Purge the items
+    reset();
 }
 
 /**

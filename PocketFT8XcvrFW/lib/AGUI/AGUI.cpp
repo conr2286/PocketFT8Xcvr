@@ -97,7 +97,6 @@ AGUI::AGUI(HX8357_t3n* tft, uint8_t rotation, const GFXfont* font) {
  * @note GFX supports a single clip window
  */
 void AGUI::setClipRect(ACoord clipX, ACoord clipY, ACoord clipW, ACoord clipH) {
-    DPRINTF("setClipRect(%d,%d,%d,%d)\n", clipX, clipY, clipW, clipH);
     gfx->setClipRect(clipX, clipY, clipW, clipH);
 }
 

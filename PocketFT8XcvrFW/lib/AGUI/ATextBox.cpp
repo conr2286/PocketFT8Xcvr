@@ -104,7 +104,7 @@ void ATextBox::onRepaintWidget(void) {
     // Configure app for writing the text
     AGUI::setFont(defaultFont);            // Use the widget's default font
     AGUI::setTextColor(fgColor, bgColor);  // Use the widget's default colors
-    AGUI::setTextWrap(true);               // We do wrap text
+    AGUI::setTextWrap(true);               // We do wrap text inside the clip
     AGUI::setClipRect(clipX, clipY, clipW, clipH);
 
     // Erase old text and paint new text
@@ -120,6 +120,8 @@ void ATextBox::onRepaintWidget(void) {
 /**
  * @brief Change the display text in this ATextBox
  * @param txt NUL-terminated char[] string
+ *
+ * @note Repaints the text box with the new text
  */
 void ATextBox::setText(const char *txt, AColor fg) {
     fgColor = fg;

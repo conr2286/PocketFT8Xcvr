@@ -4046,7 +4046,7 @@ Linker script and memory map
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o
-                0x00000000680e7a0c                __rtc_localtime = 0x680e7a0c
+                0x00000000680ea4ea                __rtc_localtime = 0x680ea4ea
 LOAD .pio/build/teensy41/src/Config.cpp.o
 LOAD .pio/build/teensy41/src/GPShelper.cpp.o
 LOAD .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
@@ -5254,21 +5254,21 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x00000000000140c8       0x20 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
                 0x00000000000140c8                AScrollBoxItem::setItemColors(AColor, AColor)
  .text._ZN14AScrollBoxItem11setItemTextE6String6AColor
-                0x00000000000140e8       0x20 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
+                0x00000000000140e8       0x28 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
                 0x00000000000140e8                AScrollBoxItem::setItemText(String, AColor)
  .text._ZN10AScrollBox15onRepaintWidgetEv
-                0x0000000000014108       0x74 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
-                0x0000000000014108                AScrollBox::onRepaintWidget()
+                0x0000000000014110       0x74 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
+                0x0000000000014110                AScrollBox::onRepaintWidget()
  .text._ZN10AScrollBoxC2Etttt6AColor
-                0x000000000001417c       0x54 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
-                0x000000000001417c                AScrollBox::AScrollBox(unsigned short, unsigned short, unsigned short, unsigned short, AColor)
-                0x000000000001417c                AScrollBox::AScrollBox(unsigned short, unsigned short, unsigned short, unsigned short, AColor)
+                0x0000000000014184       0x54 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
+                0x0000000000014184                AScrollBox::AScrollBox(unsigned short, unsigned short, unsigned short, unsigned short, AColor)
+                0x0000000000014184                AScrollBox::AScrollBox(unsigned short, unsigned short, unsigned short, unsigned short, AColor)
  .text._ZNK10AScrollBox11itemWillFitEi
-                0x00000000000141d0       0x18 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
-                0x00000000000141d0                AScrollBox::itemWillFit(int) const
+                0x00000000000141d8       0x18 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
+                0x00000000000141d8                AScrollBox::itemWillFit(int) const
  .text._ZN10AScrollBox15scrollUpOneLineEv
-                0x00000000000141e8       0xbc .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
-                0x00000000000141e8                AScrollBox::scrollUpOneLine()
+                0x00000000000141f0       0xb4 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
+                0x00000000000141f0                AScrollBox::scrollUpOneLine()
  .text._ZN10AScrollBox13setItemColorsEP14AScrollBoxItem6AColorS2_
                 0x00000000000142a4       0x14 .pio/build/teensy41/libbf3/libAGUI.a(AScrollBox.cpp.o)
                 0x00000000000142a4                AScrollBox::setItemColors(AScrollBoxItem*, AColor, AColor)
