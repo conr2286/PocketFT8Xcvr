@@ -24,11 +24,12 @@
 //
 //------------------------------------------------------------------------------------------------------
 {
-   "callsign": "KQ7B",        //REQUIRED:  Station callsign
-   "frequency": 7074,         //REQUIRED:  Operating frequency in kHz
-   "locator": "",             //OPTIONAL:  Station maidenhead gridsquare (four-characters)
-   "enableAVC": true,         //OPTIONAL:  0=disabled, 1=enabled SI4735 AVC (default is enabled)
-   "gpsTimeout": 5,           //OPTIONAL:  Maximum seconds we wait for a GPS fix before giving-up
-   "qsoTimeout": 120,         //OPTIONAL:  Seconds Sequencer will retry w/o response from remote
-   "enableDuplicates": false  //OPTIONAL:  Enable RoboOp to respond to CQs from previously logged stations
+   "callsign": "KQ7B",              //REQUIRED:  Station callsign
+   "frequency": 7074,               //REQUIRED:  Operating frequency in kHz
+   "locator": "DN15",               //OPTIONAL:  Station maidenhead gridsquare (four-characters)
+   "enableAVC": true,               //OPTIONAL:  0=disabled, 1=enabled SI4735 AVC (default is enabled)
+   "gpsTimeout": 5,                 //OPTIONAL:  Maximum seconds we wait for a GPS fix before giving-up
+   "qsoTimeout": 120,               //OPTIONAL:  Seconds RoboOp sequencer retries w/o response from remote
+   "enableDuplicates": false,       //OPTIONAL:  Enable RoboOp to respond to CQs from previously logged stations
+   "logFilename" : "LOGFILE.ADIF"   //OPTIONAL:  ADIF logfile name
 }

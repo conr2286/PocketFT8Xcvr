@@ -19,22 +19,16 @@
 #include "gen_ft8.h"
 #include "ldpc.h"
 #include "unpack.h"
-// #include "button.h"
 #include <TimeLib.h>
 
 #include "Process_DSP.h"
-// #include "display.h"
-// #include "options.h"
-// #include "log_file.h"
 #include "decode_ft8.h"
-// #include "locator.h"
-// #include "traffic_manager.h"
 #include "Sequencer.h"
 
-// #include <HX8357_t3.h>
 #include "HX8357_t3n.h"
 #include "UserInterface.h"
 #include "display.h"
+#include "PocketFT8Xcvr.h"
 
 extern HX8357_t3n tft;
 
@@ -48,7 +42,7 @@ const int kMax_message_length = 24;   // Was 22 (KQ7B)
 const int kMin_score = 40;  // Minimum sync score threshold for candidates (40)
 
 int validate_locator(char locator[]);
-int strindex(char s[], char t[]);
+int strindex(const char s[], const char t[]);
 
 extern uint32_t ft8_time;
 extern uint8_t export_fft_power[ft8_msg_samples * ft8_buffer * 4];
@@ -84,7 +78,7 @@ int message_limit = DISPLAY_DECODED_LINES;
 int max_Calling_Stations = DISPLAY_DECODED_LINES;
 int num_Calling_Stations;
 
-extern char Station_Call[];
+//extern char Station_Call[];
 
 extern float Station_Latitude, Station_Longitude;
 
@@ -271,7 +265,7 @@ void display_messages(int decoded_messages) {
         snprintf(message, sizeof(message), "%s %s %4s S%c", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, rsl2s(new_decoded[i].snr));
 
         // Display messages not sent to our station in the Decoded Messages box
-        if (strncmp(new_decoded[i].field1, Station_Call, 14) != 0) {
+        if (strncmp(new_decoded[i].field1, thisStation.getCallsign(), 14) != 0) {
             AColor color = A_LIGHT_GREY;  // Chatter appears in light grey
             if (strncmp(new_decoded[i].field1, "CQ", 2) == 0) {
                 color = A_WHITE;  // CQ messages appear in white
@@ -355,7 +349,7 @@ int validate_locator(char locator[]) {
         return 0;
 }
 
-int strindex(char s[], char t[]) {
+int strindex(const char s[], const char t[]) {
     int i, j, k, result;
 
     result = -1;
@@ -392,7 +386,7 @@ int Check_Calling_Stations(int num_decoded) {
     // Loop executed once for each entry in new_decoded[] of received messages
     for (int i = 0; i < num_decoded; i++) {
         // Was this received message sent to our station?
-        if (strindex(new_decoded[i].field1, Station_Call) >= 0) {
+        if (strindex(new_decoded[i].field1, thisStation.getCallsign()) >= 0) {
             // Yes, assemble details (their callsign, our callsign, extra_info) into message buffer
             snprintf(message, sizeof(message), "%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
 

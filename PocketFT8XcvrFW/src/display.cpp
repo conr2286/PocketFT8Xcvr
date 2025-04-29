@@ -14,8 +14,6 @@
 //File Log_File;
 
 extern time_t getTeensy3Time();
-extern char Station_Call[];  // six character call sign + /0
-extern char Locator[];       // four character locator  + /0
 
 extern int log_flag, logging_on;
 

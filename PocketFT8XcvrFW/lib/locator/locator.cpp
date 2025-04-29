@@ -12,7 +12,7 @@
 const double EARTH_RAD = 6371;  //radius in km
 
 
-void process_locator(char locator[]);
+void process_locator(const char locator[]);
 double distance(double lat1, double lon1, double lat2, double lon2);
 double deg2rad(double deg);
 
@@ -27,7 +27,7 @@ float Target_Latitude, Target_Longitude;
 float Target_Distance(char target[]);
 
 
-void set_Station_Coordinates(char station[]) {
+void set_Station_Coordinates(const char station[]) {
 
   process_locator(station);
   Station_Latitude = Latitude;
@@ -48,7 +48,7 @@ float Target_Distance(char target[]) {
   return Target_Distance;
 }
 
-void process_locator(char locator[]) {
+void process_locator(const char locator[]) {
 
   uint8_t A1, A2, N1, N2;
   uint8_t A1_value, A2_value, N1_value, N2_value;

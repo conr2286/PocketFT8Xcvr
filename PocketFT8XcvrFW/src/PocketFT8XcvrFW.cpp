@@ -71,12 +71,12 @@
 
 #include "AListBox.h"
 #include "Config.h"
+#include "NODEBUG.h"
 #include "FT8Font.h"
 #include "GPShelper.h"
 #include "HX8357_t3n.h"  //WARNING:  Adafruit_GFX.h must include prior to HX8357_t3n.h
 #include "LogFactory.h"
 #include "MCP342x.h"
-#include "NODEBUG.h"
 #include "Process_DSP.h"
 #include "Sequencer.h"
 #include "Timer.h"
@@ -95,6 +95,7 @@
 #include "pins.h"
 #include "si5351.h"
 #include "traffic_manager.h"
+#include "PocketFT8Xcvr.h"
 
 // Forward references (required to build on PlatformIO)
 void loadSSB();
@@ -121,26 +122,12 @@ static void copy_to_fft_buffer(void *, const void *);
 #define AUDIO_RECORDING_FILENAME "ft8.raw"
 // #define AUDIO_SAMPLE_RATE 6400
 
-// // Configuration parameters read from SD file
-// #define CONFIG_FILENAME "/config.json"
-// struct Config {
-//     char callsign[12];                     // 11 chars and NUL
-//     char locator[5];                       // 4 char maidenhead locator and NUL
-//     unsigned frequency;                    // Operating frequency in kHz
-//     unsigned long audioRecordingDuration;  // Seconds or 0 to disable audio recording
-//     unsigned enableAVC;                    // 0=disable, 1=enable SI47xx AVC
-//     unsigned gpsTimeout;                   // GPS timeout (seconds) to obtain a fix
-//     unsigned qsoTimeout;                   // QSO timeout (seconds) to obtain a response
-// } config;
 
-// // Default configuration
-// #define DEFAULT_FREQUENCY 7074                // kHz
-// #define DEFAULT_CALLSIGN "****"               // There's no realistic default callsign
-// #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  // Default of 0 seconds disables audio recording
-// #define DEFAULT_ENABLE_AVC 1                  // SI4735 AVC enabled by default
-// #define DEFAULT_GPS_TIMEOUT 60                // Number of seconds before GPS fix time-out
-// #define DEFAULT_QSO_TIMEOUT 180               // Number seconds Sequencer will retry transmission without a response
-extern ConfigType config;
+//Define the static objects widely referenced throughout PocketFT8Xcvr
+Station thisStation;     //Station model
+ConfigType config;
+
+//extern ConfigType config;
 
 // Adafruit 480x320 touchscreen configuration
 // HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
@@ -171,13 +158,10 @@ q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));  // TODO:  Move to D
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
 // ToDo:  Arrange for the various modules to access these directly from config structure
-extern char Station_Call[12];  // six character call sign + /0
-char Locator[11] = "";         // four character locator  + /0
 
 // Global flag to disable the transmitter for testing
 bool disable_xmit = false;  // Flag can be set with config params
 
-uint16_t currentFrequency;
 long et1 = 0, et2 = 0;
 const uint16_t size_content = sizeof ssb_patch_content;  // see ssb_patch_content in patch_full.h or patch_init.h;
 uint32_t current_time, start_time, ft8_time;
@@ -262,20 +246,6 @@ FLASHMEM void setup(void) {
         delay(5000);
     }
 
-    // // Initialize the Adafruit 480x320 TFT display
-    // tft.begin(30000000UL, 20000000Ul);
-    // tft.fillScreen(HX8357_BLACK);
-    // tft.setRotation(3);
-    // tft.setFont(&FT8Font);
-    // tft.setTextColor(HX8357_WHITE);
-    // displayInfoMsg("Starting...");
-    // delay(100);
-
-    // // For helping with GUI design work, draw outlines of the text boxes
-    // tft.drawRect(DISPLAY_DECODED_X, DISPLAY_DECODED_Y, DISPLAY_DECODED_W, DISPLAY_DECODED_H, HX8357_BLUE);
-    // tft.drawRect(DISPLAY_CALLING_X, DISPLAY_CALLING_Y, 480 - DISPLAY_CALLING_X, 320 - DISPLAY_DECODED_H, HX8357_BLUE);
-    // tft.drawRect(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y - 4, DISPLAY_DECODED_W, 24, HX8357_BLUE);
-
     // Get the UI running
     ui.begin();
     ui.applicationMsgs->setText("Starting");
@@ -302,19 +272,6 @@ FLASHMEM void setup(void) {
         delay(2000);
     }
 
-    // // Zero-out EEPROM when executed on a new Teensy (whose memory is filled with 0xff).  This prevents
-    // // calcuation of crazy transmit offset from 0xffff filled EEPROM.  TODO:  Do we still need the offset thing???
-    // #define EEPROMSIZE 4284  // Teensy 4.1
-    //     bool newChip = true;
-    //     for (int adr = 0; adr < EEPROMSIZE; adr++) {
-    //         if (EEPROM.read(adr) != 0xff) newChip = false;
-    //     }
-    //     if (newChip) {
-    //         Serial.print("Initializing EEPROM for new chip\n");
-    //         EEPROMWriteInt(10, 0);  // Address 10 is offset but the encoding remains mysterious
-    //     }
-    //     // DPRINTF("Offset = %d\n", EEPROM.read(10));
-
     // Initialize the SI5351 clock generator.  NOTE:  PocketFT8Xcvr boards use CLKIN input (supposedly less jitter than XTAL).
     si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          // KQ7B's counter isn't accurate enough to calculate a correction
     si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  // We are using cmos CLKIN, not a XTAL input!!!
@@ -333,33 +290,11 @@ FLASHMEM void setup(void) {
         // DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
     }
 
-    // // Read the JSON configuration file into the config structure.  We allow the firmware to continue even
-    // // if the configuration file is unreadable or useless because the receiver remains usable.
-    // JsonDocument doc;  // Key-Value pair doc
-    // File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
-    // DeserializationError error = deserializeJson(doc, configFile);
-    // if (error) {
-    //     char msg[40];
-    //     snprintf(msg, sizeof(msg), "ERROR:  Unable to read Teensy SD file, %s\n", CONFIG_FILENAME);
-    //     ui.applicationMsgs->setText(msg);
-    //     delay(5000);
-    // }
-
-    // // Extract the configuration parameters from doc or assign their defaults to the config struct
-    // strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));  // Station callsign
-    // config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;
-    // strlcpy(config.locator, doc["locator"] | "", sizeof(config.locator));
-    // // config.audioRecordingDuration = doc["audioRecordingDuration"] | DEFAULT_AUDIO_RECORDING_DURATION;
-    // config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;
-    // config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;
-    // config.qsoTimeout = doc["qsoTimeout"] | DEFAULT_QSO_TIMEOUT;
-    // configFile.close();
-    // String configMsg = String("Configured station ") + String(config.callsign) + String(" on ") + String(config.frequency) + String(" kHz");
-    // ui.applicationMsgs->setText(configMsg.c_str());
-
     // // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)
-    // strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
     readConfigFile();
+    thisStation.setCallsign(config.callsign);   //Extract callsign from CONFIG.JSON
+    thisStation.setLocator(config.locator);     //Extract optional locator from CONFIG.JSON
+    thisStation.setFrequency(config.frequency); //Extract frequency from CONFIG.JSON
 
     // Initialize the SI4735 receiver
     delay(10);
@@ -371,18 +306,8 @@ FLASHMEM void setup(void) {
     delay(10);
     si4735.setSSB(MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, config.frequency, 1, USB);  // FT8 is *always* USB
     delay(10);
-    currentFrequency = si4735.getFrequency();
+    //currentFrequency = si4735.getFrequency();
     si4735.setVolume(50);
-    // display_value(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
-
-    // Sadly, the Si4735 receiver has its own onboard PLL that actually determines the receiver's
-    // frequency which is stabilized but *not* determined by the Si5351.
-    // The apparent result of all this is the transmit and receive
-    // frequencies may not be obviously aligned (TODO:  Why not?  Is this still necessary?).
-    // Serial.println(" ");
-    // Serial.println("To change Transmit Frequency Offset Touch Tu button, then: ");
-    // Serial.println("Use keyboard u to raise, d to lower, & s to save ");
-    // Serial.println(" ");
 
     // Initialize the receiver's DSP chain
     init_DSP();
@@ -393,14 +318,6 @@ FLASHMEM void setup(void) {
     // It can run on less than 100, but you'll occasionally miss a receive timeslot.
     AudioMemory(audioQueueSize);  // Number of Teensy audio queue blocks
 
-    // //If we are recording raw audio to SD, then create/open the SD file for writing
-    // if (config.audioRecordingDuration > 0) {
-    //   if ((ft8Raw = SD.open(AUDIO_RECORDING_FILENAME, FILE_WRITE)) == 0) {
-    //     Serial.printf("Unable to open %s\n", AUDIO_RECORDING_FILENAME);
-    //   }
-    // }
-    // display_all_buttons();
-
     // Start the audio pipeline
     queue1.begin();
 
@@ -408,28 +325,27 @@ FLASHMEM void setup(void) {
     set_startup_freq();
     delay(10);
 
-    // display_frequency(DISPLAY_FREQUENCY_X, DISPLAY_FREQUENCY_Y, (int)currentFrequency);
-    ui.displayFrequency(currentFrequency);
+    ui.displayFrequency(thisStation.getFrequency());
 
     // Sync MCU clock with battery-backed RTC
     setSyncProvider(getTeensy3Time);
     ui.displayDate();  // Likely not yet GPS disciplined
     ui.displayTime();  //...and thus displayed in YELLOW
 
-    // Misc initialization
-    set_Station_Coordinates(Locator);              // Configure the Maidenhead Locator library with grid square
-    ui.displayLocator(String(Locator), A_YELLOW);  // Display the locator with caution yellow until we get GPS fix
+    // Final station initialization
+    thisStation.setRig("https://github.com/conr2286/PocketFT8Xcvr");
+    set_Station_Coordinates(thisStation.getLocator());              // Configure the Maidenhead Locator library with grid square
+    ui.displayLocator(String(thisStation.getLocator()), A_YELLOW);  // Display the locator with caution yellow until we get GPS fix
     ui.displayCallsign(String(config.callsign));   // Display station callsigne
 
     // Start the QSO Sequencer (RoboOp)
-    DTRACE();
     seq.begin(config.qsoTimeout, config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
     receive_sequence();                                // Setup to receive at start of first timeslot
 
     // Wait for the next FT8 timeslot (at 0, 15, 30, or 45 seconds past the minute)
-    start_time = millis();     // Note start time for update_synchronization()
-    update_synchronization();  // Do we really need this in-addition to and before waitForFT8timeslot()?
-    // waitForFT8timeslot();  // Wait for a 15 second FT8 timeslot
+    start_time = millis();  // Note start time for update_synchronization()
+    // update_synchronization();  // Do we really need this in-addition to and before waitForFT8timeslot()?
+    waitForFT8timeslot();  // Wait for a 15 second FT8 timeslot
 
 }  // setup()
 
@@ -441,12 +357,6 @@ unsigned oldFlags = 0;  // Used only for debugging the flags
  * Note:  Placing the loop() code in FLASHMEM saves RAM1 memory for more time-sensitive activities
  */
 FLASHMEM void loop() {
-    // Debugging aide for the multitude of flags.  Maybe someday these could become a real state variable???
-    // unsigned newFlags = (CQ_Flag << 2) | (Transmit_Armned << 1) | (xmit_flag);
-    // if (newFlags != oldFlags) {
-    //   DPRINTF("oldFlags=0x%x newFlags = 0x%x\n", oldFlags, newFlags);
-    //   oldFlags = newFlags;
-    // }
 
     // If it's not time to decode incoming messages, then it's time to grab the recv'd sigs from A/D
     if (decode_flag == 0) process_data();
@@ -481,8 +391,6 @@ FLASHMEM void loop() {
         ui.displayDate();
         ui.displayTime();
 
-        // display_time(DISPLAY_TIME_X, DISPLAY_TIME_Y);
-        // display_date(DISPLAY_DATE_X, DISPLAY_DATE_Y);
     }  // DSP_Flag
 
     // Apparently:  Have we acquired all of the timeslot's receiver time-domain data?
@@ -519,17 +427,18 @@ FLASHMEM void loop() {
 
             // Use the GPS-derived locator unless config.json hardwired it to something else
             if (strlen(config.locator) == 0) {
-                strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
-                ui.displayLocator(Locator, A_GREEN);
+                thisStation.setLocator(get_mh(gpsHelper.flat, gpsHelper.flng, 4));
+                //strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
+                ui.displayLocator(thisStation.getLocator(), A_GREEN);
             }
 
             // Arrange for the Teensy battery-backed RTC (UTC) to keep the MCU time accurate
             setSyncProvider(getTeensy3Time);
 
             // Record the locator gridsquare for logging
-            set_Station_Coordinates(Locator);
+            set_Station_Coordinates(thisStation.getLocator());
 
-            // Wait for an FT8 timeslot to begin (this updates start_time)
+            // Wait for an FT8 timeslot to begin (this updates start_time) using GPS disciplined time
             waitForFT8timeslot();
         }
     }  // gps
@@ -752,7 +661,7 @@ void sync_FT8(void) {
  *
  **/
 void waitForFT8timeslot(void) {
-    DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validFix);
+    //DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validGPSdata);
 
     // displayInfoMsg("Waiting for timeslot");
     ui.applicationMsgs->setText("Awaiting FT8 timeslot");
@@ -771,9 +680,11 @@ void waitForFT8timeslot(void) {
         // Wait for the end of the current 15 second FT8 timeslot.  This will arise at 0, 15, 30 or 45 seconds past the current minute.
         // Sadly... second() has only 1000 ms resolution and, without GPS, its accuracy may not be what FT8 needs.
         while ((second()) % 15 != 0) continue;
+        //DTRACE();
     }
 
     // Begin the first FT8 timeslot
+    //DTRACE();
     start_time = millis();              // Start of the first timeslot in ms of elapsed execution
     nextTimeSlot = start_time + 15000;  // Time (ms) when next timeslot should begin
     ft8_flag = 1;

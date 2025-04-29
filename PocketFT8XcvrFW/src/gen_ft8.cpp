@@ -26,10 +26,10 @@ extern HX8357_t3n tft;
 #include "decode_ft8.h"
 #include "display.h"
 #include "locator.h"
-// #include "log_file.h"
 #include "UserInterface.h"
 #include "msgTypes.h"
 #include "traffic_manager.h"
+#include "PocketFT8Xcvr.h"
 
 char Your_Call[] = "W5XXX";
 char Your_Locator[] = "AA00";
@@ -52,8 +52,6 @@ int message_state;  // Non-zero => message[] is valid/ready (but nothing checks 
 extern int log_flag, logging_on;
 extern time_t getTeensy3Time();
 
-extern char Station_Call[];
-extern char Locator[];
 char ft8_time_string[] = "15:44:15";
 
 extern UserInterface ui;
@@ -127,31 +125,31 @@ void set_message(uint16_t index) {
 
     switch (index) {
         case MSG_CQ:  // We are calling CQ from our Locator, e.g. CQ KQ7B DN15
-            snprintf(message, sizeof(message), "%s %s %s", "CQ", Station_Call, Locator);
+            snprintf(message, sizeof(message), "%s %s %s", "CQ", thisStation.getCallsign(), thisStation.getLocator());
             break;
 
         case MSG_LOC:  // We are calling target from our Locator, e.g. AG0E KQ7B DN15
-            snprintf(message, sizeof(message), "%s %s %s", Target_Call, Station_Call, Locator);
+            snprintf(message, sizeof(message), "%s %s %s", Target_Call, thisStation.getCallsign(), thisStation.getLocator());
             break;
 
         case MSG_RSL:  // We are responding to target with their signal report, e.g. AG0E KQ7B -12
-            snprintf(message, sizeof(message), "%s %s %3i", Target_Call, Station_Call, Target_RSL);
+            snprintf(message, sizeof(message), "%s %s %3i", Target_Call, thisStation.getCallsign(), Target_RSL);
             break;
 
         case MSG_RR73:  // We are responding to target with RR73, e.g. AG0E KQ7B RR73
-            snprintf(message, sizeof(message), "%s %s %3s", Target_Call, Station_Call, seventy_three);
+            snprintf(message, sizeof(message), "%s %s %3s", Target_Call, thisStation.getCallsign(), seventy_three);
             break;
 
         case MSG_73:  // We are responding to target with 73, e.g. AG0E KQ7B 73
-            snprintf(message, sizeof(message), "%s %s %s", Target_Call, Station_Call, "73");
+            snprintf(message, sizeof(message), "%s %s %s", Target_Call, thisStation.getCallsign(), "73");
             break;
 
         case MSG_RRSL:  // We are responding with Roger and their RRSL signal report, e.g. AG0E KQ7B R-3
-            snprintf(message, sizeof(message), "%s %s R%3i", Target_Call, Station_Call, Target_RSL);
+            snprintf(message, sizeof(message), "%s %s R%3i", Target_Call, thisStation.getCallsign(), Target_RSL);
             break;
 
         case MSG_RRR:  // We are responding with RRR, e.g. AG0E KQ7B RRR
-            snprintf(message, sizeof(message), "%s %s RRR", Target_Call, Station_Call);
+            snprintf(message, sizeof(message), "%s %s RRR", Target_Call, thisStation.getCallsign());
             break;
 
         default:

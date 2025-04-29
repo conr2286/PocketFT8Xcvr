@@ -9,6 +9,6 @@
 #define LOCATOR_H_
 
 
-void set_Station_Coordinates(char station[]);
+void set_Station_Coordinates(const char station[]);
 
 #endif /* LOCATOR_H_ */

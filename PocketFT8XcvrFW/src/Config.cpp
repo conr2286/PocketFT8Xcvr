@@ -7,15 +7,18 @@
 
 #include "DEBUG.h"
 #include "UserInterface.h"
+#include "PocketFT8Xcvr.h"
 
 extern UserInterface ui;
 
-char Station_Call[12];
-ConfigType config;
 
+//Implementation of the ConfigType object
+//ConfigType config;
+
+/**
+ * @brief Read CONFIG.JSON file into the config structure
+ */
 void readConfigFile() {
-    // Read the JSON configuration file into the config structure.  We allow the firmware to continue even
-    // if the configuration file is unreadable or useless because the receiver remains usable.
     JsonDocument doc;  // Key-Value pair doc
     File configFile = SD.open(CONFIG_FILENAME, FILE_READ);
     DeserializationError error = deserializeJson(doc, configFile);
@@ -42,9 +45,6 @@ void readConfigFile() {
     if (config.enableDuplicates) configMsg += String("enableDuplicates==1 ");
     configMsg += String("logFilename=") + String(config.logFilename);
     ui.applicationMsgs->setText(configMsg.c_str());
-
-    // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)
-    strlcpy(Station_Call, config.callsign, sizeof(Station_Call));
 
     // DPRINTF("enableAVC=%d\n", config.enableAVC);
     // DPRINTF("enableDuplicates=%d", config.enableDuplicates);

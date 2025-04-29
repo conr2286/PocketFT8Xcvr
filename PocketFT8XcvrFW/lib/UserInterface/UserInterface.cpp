@@ -34,6 +34,7 @@
 #include "lexical.h"  //String helpers
 #include "pins.h"     //Pocket FT8 pin assignments for Teensy 4.1 MCU
 #include "traffic_manager.h"
+#include "PocketFT8Xcvr.h"
 
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
@@ -48,7 +49,6 @@ extern Config config;
 
 // GPS Access
 extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
-extern char Station_Call[];
 extern UserInterface ui;
 
 void DecodedMsgsBox::setMsg(int index, char* msg) {
@@ -418,7 +418,7 @@ void StationMessages::onTouchItem(AScrollBoxItem* pItem) {
 
     // Ignore touch on our own transmitted message
 #ifndef PIO_UNIT_TESTING
-    if ((strcmp(pMsgItem->msg.field2, Station_Call) == 0)) return;
+    if ((strcmp(pMsgItem->msg.field2, thisStation.getCallsign()) == 0)) return;
 #endif
 
     // Highlight the touched Station Message

@@ -39,7 +39,6 @@ extern TouchScreen ts;
 extern int Transmit_Armned;
 
 extern SI4735 si4735;
-extern uint16_t currentFrequency;
 #define USB 2
 
 uint16_t draw_x, draw_y, touch_x, touch_y;

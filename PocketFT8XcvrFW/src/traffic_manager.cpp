@@ -12,12 +12,12 @@
 #include "pins.h"
 #include "si5351.h"
 #include "UserInterface.h"
+#include "PocketFT8Xcvr.h"
 
 #define FT8_TONE_SPACING 625
 
 extern Si5351 si5351;
 extern SI4735 si4735;
-extern uint16_t currentFrequency;
 extern int xmit_flag, ft8_xmit_counter, Transmit_Armned;
 extern bool disable_xmit;
 
@@ -105,7 +105,7 @@ void tune_On_sequence(void) {
     //ui.applicationMsgs->setText("TUNE");
 
     // Program the transmitter clock to F_Long
-    uint64_t tuneFreq = currentFrequency * 1000ULL * 100ULL;  // KQ7B tuning at FT8 base subband freq (e.g. 7074)
+    uint64_t tuneFreq = thisStation.getFrequency() * 1000ULL * 100ULL;  // KQ7B tuning at FT8 base subband freq (e.g. 7074)
     // DPRINTF("tuneFreq=%llu Hz\n", tuneFreq / 100);
     si5351.set_freq(tuneFreq, SI5351_CLK0);  // Freq is in hundreths of a HZ
 
@@ -163,11 +163,7 @@ void tune_Off_sequence(void) {
 
 // KQ7B:  Recalculates carrier frequency F_Long and programs SI5351 with new unmodulated carrier frequency
 void set_Xmit_Freq() {
-    // display_value(400, 320, ( int ) cursor_freq);
-    //  display_value(400, 360,  offset_freq);
-    F_Long = (uint64_t)((currentFrequency * 1000 + cursor_freq + offset_freq) * 100);
-    // DFPRINTF("currentFrequency=%u, cursor_freq=%u, offset_freq=%d, F_Long=%llu\n", currentFrequency, cursor_freq, offset_freq, F_Long);
-    //  F_Long = (uint64_t) ((currentFrequency * 1000 + cursor_freq ) * 100);
+    F_Long = (uint64_t)((thisStation.getFrequency() * 1000 + cursor_freq + offset_freq) * 100);
     si5351.set_freq(F_Long, SI5351_CLK0);
 
 }  // set_Xmit_Freq()

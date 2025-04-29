@@ -24,19 +24,19 @@ class Contact {
     Contact() {
         this->reset();
     }
-    void begin(char* workedCall, unsigned freq, const char* mode, unsigned oddEven);  // Begin a new, active QSO
+    void begin(const char* myCall, const char* workedCall, unsigned freq, const char* mode, unsigned oddEven);  // Begin a new, active QSO
     void reset(void);                                                                 // Reset all fields in a Contact instance, making it inactive
     bool isValid(void);                                                               // Determine if the current QSO, if any, is a valid (completed) contact
     bool isActive(void);                                                              // Determine if a Contact instance has recorded any values
 
     // Define the setters for the contact fields
-    void setWorkedRSL(char* rsl);
+    void setWorkedRSL(const char* rsl);
     void setWorkedRSL(int rsl);
-    void setMyRSL(char* rsl);
+    void setMyRSL(const char* rsl);
     void setMySOTAref(char* sotaRef);
     void setWorkedSOTAref(char* sotaRef);
-    void setMyLocator(char* locator);
-    void setWorkedLocator(char* locator);
+    void setMyLocator(const char* locator);
+    void setWorkedLocator(const char* locator);
     void setPwr(float watts);
     void setRig(const char* rig);
 

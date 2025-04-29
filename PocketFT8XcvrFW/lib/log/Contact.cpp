@@ -65,9 +65,6 @@
 #include "ContactLogFile.h"
 #include "DEBUG.h"
 
-// Externs
-extern char Station_Call[];
-
 /**
  *  Begin recording a contact
  *
@@ -85,18 +82,20 @@ extern char Station_Call[];
  * active will become true.
  *
  * WARNING:  Not all amateur frequencies are converted to ADIF-compliant band enumerations
- * at this version of the code.  HF is in pretty good shape though. 
+ * at this version of the code.  HF is in pretty good shape though.
  *
  **/
-void Contact::begin(char* workedCall, unsigned freq, const char* mode, unsigned oddEven) {
-    char* myCall = Station_Call;  // TODO:  Seek alternatives to these externs
-
+void Contact::begin(const char* myStationCall, const char* workedCall, unsigned freq, const char* mode, unsigned oddEven) {
     // DPRINTF("workedCall=%s, myCall=%s, freq=%u, mode=%s, oddEven=%u\n", workedCall, myCall, freq, mode, oddEven);
+
+    // Sanity checks
+    if ((myStationCall == nullptr) || (workedCall == nullptr)) return;
 
     // Reset all Contact field values (except odd/even which has no "undefined" value)
     reset();
 
     // Record the supplied char fields
+    strlcpy(myCall, myStationCall, sizeof(myCall));
     strlcpy(this->workedCall, workedCall, sizeof(this->workedCall));
     strlcpy(this->myCall, myCall, sizeof(this->myCall));
     strlcpy(this->mode, mode, sizeof(this->mode));
@@ -194,7 +193,7 @@ bool Contact::isValid() {
 }  // isValid()
 
 // Here are the setters for the fields that get filled-in after begin()
-void Contact::setWorkedRSL(char* rsl) {
+void Contact::setWorkedRSL(const char* rsl) {
     strlcpy(this->workedRSL, rsl, sizeof(this->workedRSL));
 }
 
@@ -202,15 +201,15 @@ void Contact::setWorkedRSL(int rsl) {
     snprintf(this->workedRSL, sizeof(this->workedRSL), "%d", rsl);
 }
 
-void Contact::setMyRSL(char* rsl) {
+void Contact::setMyRSL(const char* rsl) {
     strlcpy(this->myRSL, rsl, sizeof(this->myRSL));
 }
 
-void Contact::setMyLocator(char* locator) {
+void Contact::setMyLocator(const char* locator) {
     strlcpy(this->myLocator, locator, sizeof(this->myLocator));
 }
 
-void Contact::setWorkedLocator(char* locator) {
+void Contact::setWorkedLocator(const char* locator) {
     strlcpy(this->workedLocator, locator, sizeof(this->workedLocator));
 }
 
@@ -223,6 +222,7 @@ void Contact::setWorkedSOTAref(char* sotaRef) {
 }
 
 void Contact::setRig(const char* rig) {
+    DPRINTF("myRig='%s'\n", this->myRig);
     strlcpy(this->myRig, rig, sizeof(this->myRig));
 }
 
@@ -232,6 +232,7 @@ void Contact::setPwr(float pwr) {
 
 // Here are the getters for the fields
 char* Contact::getRig() {
+    DPRINTF("myRig='%s'\n", this->myRig);
     return this->myRig;
 }
 
