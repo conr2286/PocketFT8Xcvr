@@ -8,7 +8,7 @@
 #include "WF_Table.h"
 #include "arm_math.h"
 #include "decode_ft8.h"
-#include "display.h"
+//#include "display.h"
 #include "traffic_manager.h"
 
 extern HX8357_t3n tft;

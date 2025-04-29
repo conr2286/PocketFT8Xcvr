@@ -1,4 +1,3 @@
-#include "display.h"
 /*
  * decode_ft8.c
  *
@@ -6,6 +5,10 @@
  *      Author: user
  */
 
+#include "decode_ft8.h"
+
+#include <Arduino.h>
+#include <TimeLib.h>
 #include <ctype.h>
 #include <math.h>
 #include <stdio.h>
@@ -13,22 +16,18 @@
 #include <string.h>
 
 #include "DEBUG.h"
+#include "HX8357_t3n.h"
+#include "PocketFT8Xcvr.h"
+#include "Process_DSP.h"
+#include "Sequencer.h"
+#include "UserInterface.h"
 #include "constants.h"
 #include "decode.h"
+#include "display.h"
 #include "encode.h"
 #include "gen_ft8.h"
 #include "ldpc.h"
 #include "unpack.h"
-#include <TimeLib.h>
-
-#include "Process_DSP.h"
-#include "decode_ft8.h"
-#include "Sequencer.h"
-
-#include "HX8357_t3n.h"
-#include "UserInterface.h"
-#include "display.h"
-#include "PocketFT8Xcvr.h"
 
 extern HX8357_t3n tft;
 
@@ -78,7 +77,7 @@ int message_limit = DISPLAY_DECODED_LINES;
 int max_Calling_Stations = DISPLAY_DECODED_LINES;
 int num_Calling_Stations;
 
-//extern char Station_Call[];
+// extern char Station_Call[];
 
 extern float Station_Latitude, Station_Longitude;
 

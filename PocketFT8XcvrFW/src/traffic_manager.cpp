@@ -7,7 +7,7 @@
 #include "NODEBUG.h"
 #include "button.h"
 #include "decode_ft8.h"
-#include "display.h"
+//#include "display.h"
 #include "gen_ft8.h"
 #include "pins.h"
 #include "si5351.h"

@@ -133,7 +133,7 @@
 #include "UserInterface.h"
 #include "button.h"
 #include "decode_ft8.h"
-#include "display.h"
+//#include "display.h"
 #include "gen_ft8.h"
 #include "msgTypes.h"
 #include "traffic_manager.h"
@@ -144,8 +144,6 @@ extern int Transmit_Armned;        // (Maybe) Transmit message pending in next t
 extern int xmit_flag;              // Transmitting modulated symbols
 extern char Target_Call[];         // Displayed station's callsign
 extern int Target_RSL;             // Remote station's RSL
-extern UserInterface ui;           // The application's user interface
-extern ConfigType config;          // Radio configuration params
 
 // Our statics
 static bool autoReplyToCQ;  // RoboOp automatically transmits reply to CQ

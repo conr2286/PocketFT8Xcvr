@@ -83,15 +83,15 @@
 //     INDICATOR_ICON_TUNING = 3
 // } IndicatorIconType;
 
-char* strlpad(char* str, int size, char c);
+//char* strlpad(char* str, int size, char c);
 //char* strlpad(char* dst, char* src, char c, unsigned size);
 
-void display_frequency(int x, int y, int value);
-// void erase_value(int x, int y);
-void display_time(int x, int y);
-void display_date(int x, int y);
-// void display_station_data(int x, int y);
-void displayInfoMsg(const char* msg);
-void displayInfoMsg(const char* msg, uint16_t color);
+// void display_frequency(int x, int y, int value);
+// // void erase_value(int x, int y);
+// void display_time(int x, int y);
+// void display_date(int x, int y);
+// // void display_station_data(int x, int y);
+// void displayInfoMsg(const char* msg);
+// void displayInfoMsg(const char* msg, uint16_t color);
 
 //void setXmitRecvIndicator(IndicatorIconType indicator);

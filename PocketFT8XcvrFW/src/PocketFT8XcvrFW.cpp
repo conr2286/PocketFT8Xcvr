@@ -87,7 +87,7 @@
 #include "button.h"
 #include "constants.h"
 #include "decode_ft8.h"
-#include "display.h"
+//#include "display.h"
 #include "gen_ft8.h"
 #include "locator.h"
 #include "maidenhead.h"

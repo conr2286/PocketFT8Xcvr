@@ -24,7 +24,7 @@ extern HX8357_t3n tft;
 
 #include "arm_math.h"
 #include "decode_ft8.h"
-#include "display.h"
+//#include "display.h"
 #include "locator.h"
 #include "UserInterface.h"
 #include "msgTypes.h"

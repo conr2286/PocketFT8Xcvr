@@ -4,10 +4,9 @@
  *  Created on: Nov 2, 2019
  *      Author: user
  */
+#pragma once
 
-#ifndef DECODE_FT8_H_
-#define DECODE_FT8_H_
-
+#include <Arduino.h>
 #include "msgTypes.h"
 
 int ft8_decode(void);
@@ -66,4 +65,4 @@ void display_selected_call(int index);
 void process_selected_CQ(void);
 
 char rsl2s(int rsl);
-#endif /* DECODE_FT8_H_ */
+

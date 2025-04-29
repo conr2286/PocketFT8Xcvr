@@ -22,19 +22,18 @@
 #include "AScrollBox.h"     //Scrolling interactive text box
 #include "ATextBox.h"       //Non-interactive text
 #include "AToggleButton.h"  //Stateful button
-#include "Config.h"
+#include "Config.h"     // CONFIG.JSON
 #include "FT8Font.h"     //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"   //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"  //WARNING:  #include HX8357_t3n following Adafruit_GFX
 #include "NODEBUG.h"     //USB Serial debugging on the Teensy 4.1
-#include "Sequencer.h"
+#include "PocketFT8Xcvr.h"  //Globals
+#include "Sequencer.h"  //RoboOp
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "decode_ft8.h"       //Decoded message types
-#include "display.h"
 #include "lexical.h"  //String helpers
 #include "pins.h"     //Pocket FT8 pin assignments for Teensy 4.1 MCU
 #include "traffic_manager.h"
-#include "PocketFT8Xcvr.h"
 
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
@@ -54,6 +53,42 @@ extern UserInterface ui;
 void DecodedMsgsBox::setMsg(int index, char* msg) {
     setItem(index, msg, A_WHITE, bgColor);
 }
+
+
+// /**
+//  * Helper function to pad a char[] to a specified length
+//  *
+//  * @param str  Pointer to the char[] string to pad
+//  * @param size sizeof(str) including the NUL terminator
+//  * @param c    The pad character (e.g. ' ')
+//  *
+//  * strlpad() pads the specified array containing a NUL terminated char string
+//  * with the specified char, c, ensuring that str remains NUL terminated.  The
+//  * resulting string, including the NUL terminator, will occupy no more than
+//  * size chars in str[].
+//  *
+//  **/
+// static char* strlpad(char* str, int size, char c) {
+//     const char NUL = 0;
+//     bool paddingUnderway = false;
+//     int i;
+
+//     for (i = 0; i < size - 1; i++) {
+//         if (str[i] == NUL) paddingUnderway = true;
+//         if (paddingUnderway) {
+//             str[i] = c;
+//         }
+//     }
+
+//     str[size - 1] = NUL;
+
+//     return str;
+
+// }  // strlpad()
+
+
+
+
 
 /**
  * @brief Start-up the Adafruit Display, GFX adapter and library, the resistive touchscreen, and widgets
@@ -198,43 +233,37 @@ void UserInterface::displayMode(String str, AColor fg) {
  */
 void UserInterface::setXmitRecvIndicator(IndicatorIconType indicator) {
     unsigned short color;  // Indicator icon color
-    const char* string;
-    char paddedString[9];
+    String str;
 
     switch (indicator) {
         // We are receiving
         case INDICATOR_ICON_RECEIVE:
             color = HX8357_GREEN;
-            string = "RECEIVE";
+            str = "RECEIVE";
             break;
         // Transmission pending for next appropriate timeslot
         case INDICATOR_ICON_PENDING:
             color = HX8357_YELLOW;
-            string = "PENDING";
+            str = "PENDING";
             break;
         // Transmission in progress
         case INDICATOR_ICON_TRANSMIT:
             color = HX8357_RED;
-            string = "TRANSMIT";
+            str = "TRANSMIT";
             break;
         // Tuning in progress
         case INDICATOR_ICON_TUNING:
             color = HX8357_ORANGE;
-            string = "TUNING";
+            str = "TUNING";
             break;
         // Lost in the ozone again
         default:
             color = HX8357_BLACK;
-            string = " ";
+            str = " ";
             break;
     }
 
-    // tft.setTextColor(color, HX8357_BLACK);
-    // // tft.setTextSize(2);
-    // tft.setCursor(DISPLAY_XMIT_RECV_INDICATOR_X, DISPLAY_XMIT_RECV_INDICATOR_Y);
-    strlpad(paddedString, (char*)string, ' ', sizeof(paddedString));
-    // tft.print(paddedString);
-    ui.displayMode(String(paddedString), (AColor)color);
+    ui.displayMode(str, (AColor)color);
 }  // setIndicatorIcon()
 
 // This is calibration data for the raw touch data to the screen coordinates
