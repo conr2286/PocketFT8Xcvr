@@ -6,7 +6,6 @@
 //  + There is no reasonable default for the station callsign; it must be configured
 //  + There is no reasonable default for the operating frequency; it too must be configured
 //  + The 4-character maidenhead locator is optional if you have a working GPS
-//  + If your GPS is new or slow, you may need 60 seconds or more for the gpsTimeout
 //  + The Si4735 AVC can normally be enabled though your mileage may vary
 //
 //  DETAILS
@@ -20,16 +19,16 @@
 //  locator you specify overides the GPS if that's what you really want.  If your GPS is not working
 //  and you don't specify a locator, then the firmware omits the locator from your traffic.
 //
-//  This configuration file must be named "config.json" and installed on the Teensy's SD card slot.
+//  This configuration file must be named "CONFIG.JSON" and installed on the Teensy's SD card slot.
 //
 //------------------------------------------------------------------------------------------------------
 {
    "callsign": "KQ7B",              //REQUIRED:  Station callsign
    "frequency": 7074,               //REQUIRED:  Operating frequency in kHz
-   "locator": "DN15",               //OPTIONAL:  Station maidenhead gridsquare (four-characters)
+   "locator": "",                   //OPTIONAL:  Station maidenhead gridsquare (four-characters)
    "enableAVC": true,               //OPTIONAL:  0=disabled, 1=enabled SI4735 AVC (default is enabled)
-   "gpsTimeout": 5,                 //OPTIONAL:  Maximum seconds we wait for a GPS fix before giving-up
    "qsoTimeout": 120,               //OPTIONAL:  Seconds RoboOp sequencer retries w/o response from remote
    "enableDuplicates": false,       //OPTIONAL:  Enable RoboOp to respond to CQs from previously logged stations
-   "logFilename" : "LOGFILE.ADIF"   //OPTIONAL:  ADIF logfile name
+   "logFilename" : "LOGFILE.ADIF",  //OPTIONAL:  ADIF logfile name
+   "myName" : "Jim"                 //OPTIONAL:  Operator's personal name (not callsign)
 }

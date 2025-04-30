@@ -14,25 +14,25 @@
 #include <Arduino.h>       //We use many Arduino classes and data types
 #include <TimeLib.h>       //Teensy time
 
-#include "AColor.h"         //AGUI colors
-#include "ACoord.h"         // Screen coordinate data types
-#include "AGUI.h"           //The adapter for Adafruit GFX libraries
-#include "AListBox.h"       //Interactive text box
-#include "APixelBox.h"      //Interactive raster box
-#include "AScrollBox.h"     //Scrolling interactive text box
-#include "ATextBox.h"       //Non-interactive text
-#include "AToggleButton.h"  //Stateful button
-#include "Config.h"     // CONFIG.JSON
-#include "FT8Font.h"     //Customized font for the Pocket FT8 Revisited
-#include "GPShelper.h"   //Decorator for Adafruit_GPS library
-#include "HX8357_t3n.h"  //WARNING:  #include HX8357_t3n following Adafruit_GFX
-#include "NODEBUG.h"     //USB Serial debugging on the Teensy 4.1
-#include "PocketFT8Xcvr.h"  //Globals
-#include "Sequencer.h"  //RoboOp
+#include "AColor.h"           //AGUI colors
+#include "ACoord.h"           // Screen coordinate data types
+#include "AGUI.h"             //The adapter for Adafruit GFX libraries
+#include "AListBox.h"         //Interactive text box
+#include "APixelBox.h"        //Interactive raster box
+#include "AScrollBox.h"       //Scrolling interactive text box
+#include "ATextBox.h"         //Non-interactive text
+#include "AToggleButton.h"    //Stateful button
+#include "Config.h"           // CONFIG.JSON
+#include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
+#include "GPShelper.h"        //Decorator for Adafruit_GPS library
+#include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
+#include "NODEBUG.h"          //USB Serial debugging on the Teensy 4.1
+#include "PocketFT8Xcvr.h"    //Globals
+#include "Sequencer.h"        //RoboOp
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "decode_ft8.h"       //Decoded message types
-#include "lexical.h"  //String helpers
-#include "pins.h"     //Pocket FT8 pin assignments for Teensy 4.1 MCU
+#include "lexical.h"          //String helpers
+#include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
 #include "traffic_manager.h"
 
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
@@ -53,42 +53,6 @@ extern UserInterface ui;
 void DecodedMsgsBox::setMsg(int index, char* msg) {
     setItem(index, msg, A_WHITE, bgColor);
 }
-
-
-// /**
-//  * Helper function to pad a char[] to a specified length
-//  *
-//  * @param str  Pointer to the char[] string to pad
-//  * @param size sizeof(str) including the NUL terminator
-//  * @param c    The pad character (e.g. ' ')
-//  *
-//  * strlpad() pads the specified array containing a NUL terminated char string
-//  * with the specified char, c, ensuring that str remains NUL terminated.  The
-//  * resulting string, including the NUL terminator, will occupy no more than
-//  * size chars in str[].
-//  *
-//  **/
-// static char* strlpad(char* str, int size, char c) {
-//     const char NUL = 0;
-//     bool paddingUnderway = false;
-//     int i;
-
-//     for (i = 0; i < size - 1; i++) {
-//         if (str[i] == NUL) paddingUnderway = true;
-//         if (paddingUnderway) {
-//             str[i] = c;
-//         }
-//     }
-
-//     str[size - 1] = NUL;
-
-//     return str;
-
-// }  // strlpad()
-
-
-
-
 
 /**
  * @brief Start-up the Adafruit Display, GFX adapter and library, the resistive touchscreen, and widgets

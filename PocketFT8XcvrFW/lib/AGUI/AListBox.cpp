@@ -81,7 +81,7 @@ void AListBoxItem::setItemText(const String& s, AColor fg) {
 bool AListBoxItem::timedOut() const {
     unsigned long now = millis();
     const unsigned long timeoutMillis = 6 * 60 * 1000UL;
-    if ((timeStamp - now) > timeoutMillis) return true;
+    if ((now - timeStamp) > timeoutMillis) return true;
     return false;
 }
 
