@@ -27,7 +27,7 @@ class AScrollBoxItem {
     String* getItemText(void);                          // Get reference to this item's text String
     void reset(void);                                   // Clear the box of text
 
-    unsigned long timeStamp;
+    unsigned long timeStamp;  // Time stamp for removing ancient items
 
    private:
     AScrollBox* scrollBoxContainer;

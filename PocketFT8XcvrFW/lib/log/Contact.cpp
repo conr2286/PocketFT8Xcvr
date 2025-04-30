@@ -85,11 +85,10 @@
  * at this version of the code.  HF is in pretty good shape though.
  *
  **/
-void Contact::begin(const char* myStationCall, const char* workedCall, unsigned freq, const char* mode, unsigned oddEven) {
-    // DPRINTF("workedCall=%s, myCall=%s, freq=%u, mode=%s, oddEven=%u\n", workedCall, myCall, freq, mode, oddEven);
+void Contact::begin(const char* myStationCall, const char* workedCall, unsigned freq, const char* mode, const char* myRig, unsigned oddEven) {
 
     // Sanity checks
-    if ((myStationCall == nullptr) || (workedCall == nullptr)) return;
+    if ((myStationCall == nullptr) || (workedCall == nullptr) || (mode==nullptr)) return;
 
     // Reset all Contact field values (except odd/even which has no "undefined" value)
     reset();

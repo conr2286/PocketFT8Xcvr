@@ -36,6 +36,7 @@ AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
     bgColor = bg;             // Item's background color
     selected = false;         // Item is not selected
     listBoxContainer = pBox;  // Backlink from item to Scroll box container
+    timeStamp = millis();     // Init the timestamp
 }  // AListBoxItem()
 
 /**
@@ -52,6 +53,7 @@ void AListBoxItem::setItemColors(AColor fg, AColor bg) {
     fgColor = fg;
     bgColor = bg;
     listBoxContainer->repaint(this);
+    timeStamp = millis();  // Refresh timestamp
 }
 
 /**
@@ -69,6 +71,18 @@ void AListBoxItem::setItemText(const String& s, AColor fg) {
     fgColor = fg;
     str = s;
     listBoxContainer->repaint(this);
+    timeStamp = millis();  // Refresh timestamp
+}
+
+/**
+ * @brief Determine if this item has termed-out
+ * @return true if timed-out, false otherwise
+ */
+bool AListBoxItem::timedOut() const {
+    unsigned long now = millis();
+    const unsigned long timeoutMillis = 6 * 60 * 1000UL;
+    if ((timeStamp - now) > timeoutMillis) return true;
+    return false;
 }
 
 /**
@@ -410,3 +424,23 @@ AListBoxItem* AListBox::getSelectedItem(ACoord xClick, ACoord yClick) const {
     return (displayedItems[index]);
 
 }  // getSelectedItem()
+
+/**
+ * @brief Review top item timestamp and scroll up if ancient
+ *
+ * @note The timeout period is hardwired to 6 minutes
+ */
+void AListBox::reviewTimeStamps() {
+    unsigned long now = millis();
+    const unsigned long timeoutMillis = 6 * 60 * 1000UL;
+
+    // Review items' timestamps
+    for (int i = 0; i < maxItems; i++) {
+        // Check each item, but note:  There may be holes in the displayedItems[]
+        if (displayedItems[i] != nullptr) {
+            if (displayedItems[i]->timedOut()) {
+                removeItem(i);
+            }
+        }
+    }
+} //reviewTimeStamps()

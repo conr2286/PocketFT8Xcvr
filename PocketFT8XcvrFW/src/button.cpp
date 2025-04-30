@@ -49,7 +49,7 @@ extern void sync_FT8(void);
 extern uint16_t cursor_freq;
 extern int tune_flag;
 extern uint16_t cursor_line;
-extern int offset_freq;
+//extern int offset_freq;
 
 const float ft8_shift = 6.25;  // FT8 Hz/bin???
 // int start_up_offset_freq;

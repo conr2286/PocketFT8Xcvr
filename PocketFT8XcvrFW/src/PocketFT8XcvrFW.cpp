@@ -71,12 +71,13 @@
 
 #include "AListBox.h"
 #include "Config.h"
-#include "NODEBUG.h"
 #include "FT8Font.h"
 #include "GPShelper.h"
 #include "HX8357_t3n.h"  //WARNING:  Adafruit_GFX.h must include prior to HX8357_t3n.h
 #include "LogFactory.h"
 #include "MCP342x.h"
+#include "DEBUG.h"
+#include "PocketFT8Xcvr.h"
 #include "Process_DSP.h"
 #include "Sequencer.h"
 #include "Timer.h"
@@ -87,7 +88,6 @@
 #include "button.h"
 #include "constants.h"
 #include "decode_ft8.h"
-//#include "display.h"
 #include "gen_ft8.h"
 #include "locator.h"
 #include "maidenhead.h"
@@ -95,7 +95,6 @@
 #include "pins.h"
 #include "si5351.h"
 #include "traffic_manager.h"
-#include "PocketFT8Xcvr.h"
 
 // Forward references (required to build on PlatformIO)
 void loadSSB();
@@ -122,12 +121,11 @@ static void copy_to_fft_buffer(void *, const void *);
 #define AUDIO_RECORDING_FILENAME "ft8.raw"
 // #define AUDIO_SAMPLE_RATE 6400
 
-
-//Define the static objects widely referenced throughout PocketFT8Xcvr
-Station thisStation;     //Station model
+// Define the static objects widely referenced throughout PocketFT8Xcvr
+Station thisStation;  // Station model
 ConfigType config;
 
-//extern ConfigType config;
+// extern ConfigType config;
 
 // Adafruit 480x320 touchscreen configuration
 // HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
@@ -156,8 +154,6 @@ unsigned long recordSampleCount = 0;  // Number of 16-bit audio samples recorded
 q15_t dsp_buffer[3 * input_gulp_size] __attribute__((aligned(4)));
 q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));  // TODO:  Move to DMAMEM?
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
-
-// ToDo:  Arrange for the various modules to access these directly from config structure
 
 // Global flag to disable the transmitter for testing
 bool disable_xmit = false;  // Flag can be set with config params
@@ -290,11 +286,11 @@ FLASHMEM void setup(void) {
         // DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
     }
 
-    // // Argh... copy station callsign config struct to C global variables (TODO:  fix someday)
+    // Digest the CONFIG.JSON file
     readConfigFile();
-    thisStation.setCallsign(config.callsign);   //Extract callsign from CONFIG.JSON
-    thisStation.setLocator(config.locator);     //Extract optional locator from CONFIG.JSON
-    thisStation.setFrequency(config.frequency); //Extract frequency from CONFIG.JSON
+    thisStation.setCallsign(config.callsign);    // Extract callsign from CONFIG.JSON
+    thisStation.setLocator(config.locator);      // Extract optional locator from CONFIG.JSON
+    thisStation.setFrequency(config.frequency);  // Extract frequency from CONFIG.JSON
 
     // Initialize the SI4735 receiver
     delay(10);
@@ -306,7 +302,7 @@ FLASHMEM void setup(void) {
     delay(10);
     si4735.setSSB(MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, config.frequency, 1, USB);  // FT8 is *always* USB
     delay(10);
-    //currentFrequency = si4735.getFrequency();
+    // currentFrequency = si4735.getFrequency();
     si4735.setVolume(50);
 
     // Initialize the receiver's DSP chain
@@ -333,10 +329,14 @@ FLASHMEM void setup(void) {
     ui.displayTime();  //...and thus displayed in YELLOW
 
     // Final station initialization
-    thisStation.setRig("https://github.com/conr2286/PocketFT8Xcvr");
+    thisStation.setRig(String("https://github.com/conr2286/PocketFT8Xcvr"));
+    DPRINTF("rig='%s'\n", thisStation.getRig());
     set_Station_Coordinates(thisStation.getLocator());              // Configure the Maidenhead Locator library with grid square
     ui.displayLocator(String(thisStation.getLocator()), A_YELLOW);  // Display the locator with caution yellow until we get GPS fix
-    ui.displayCallsign(String(config.callsign));   // Display station callsigne
+    ui.displayCallsign(String(config.callsign));                    // Display station callsigne
+
+    // Can the transmitter operate?
+    if ((config.frequency == 0) || (strlen(thisStation.getCallsign()) == 0)) disable_xmit = true;
 
     // Start the QSO Sequencer (RoboOp)
     seq.begin(config.qsoTimeout, config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
@@ -357,7 +357,6 @@ unsigned oldFlags = 0;  // Used only for debugging the flags
  * Note:  Placing the loop() code in FLASHMEM saves RAM1 memory for more time-sensitive activities
  */
 FLASHMEM void loop() {
-
     // If it's not time to decode incoming messages, then it's time to grab the recv'd sigs from A/D
     if (decode_flag == 0) process_data();
 
@@ -428,7 +427,7 @@ FLASHMEM void loop() {
             // Use the GPS-derived locator unless config.json hardwired it to something else
             if (strlen(config.locator) == 0) {
                 thisStation.setLocator(get_mh(gpsHelper.flat, gpsHelper.flng, 4));
-                //strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
+                // strlcpy(Locator, get_mh(gpsHelper.flat, gpsHelper.flng, 4), sizeof(Locator));
                 ui.displayLocator(thisStation.getLocator(), A_GREEN);
             }
 
@@ -661,7 +660,7 @@ void sync_FT8(void) {
  *
  **/
 void waitForFT8timeslot(void) {
-    //DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validGPSdata);
+    // DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validGPSdata);
 
     // displayInfoMsg("Waiting for timeslot");
     ui.applicationMsgs->setText("Awaiting FT8 timeslot");
@@ -680,11 +679,11 @@ void waitForFT8timeslot(void) {
         // Wait for the end of the current 15 second FT8 timeslot.  This will arise at 0, 15, 30 or 45 seconds past the current minute.
         // Sadly... second() has only 1000 ms resolution and, without GPS, its accuracy may not be what FT8 needs.
         while ((second()) % 15 != 0) continue;
-        //DTRACE();
+        // DTRACE();
     }
 
     // Begin the first FT8 timeslot
-    //DTRACE();
+    // DTRACE();
     start_time = millis();              // Start of the first timeslot in ms of elapsed execution
     nextTimeSlot = start_time + 15000;  // Time (ms) when next timeslot should begin
     ft8_flag = 1;

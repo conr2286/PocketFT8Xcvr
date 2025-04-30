@@ -7,12 +7,12 @@
 #include "NODEBUG.h"
 #include "button.h"
 #include "decode_ft8.h"
-//#include "display.h"
+// #include "display.h"
+#include "PocketFT8Xcvr.h"
+#include "UserInterface.h"
 #include "gen_ft8.h"
 #include "pins.h"
 #include "si5351.h"
-#include "UserInterface.h"
-#include "PocketFT8Xcvr.h"
 
 #define FT8_TONE_SPACING 625
 
@@ -28,7 +28,7 @@ extern uint16_t cursor_line;
 extern int Beacon_State;
 extern int num_decoded_msg;
 
-extern int offset_freq;
+// extern int offset_freq;
 
 uint64_t F_Long, F_FT8, F_Offset;
 
@@ -43,7 +43,7 @@ extern UserInterface ui;
 void transmit_sequence(void) {
     DTRACE();
 
-    //ui.applicationMsgs->setText(get_message(), A_RED);
+    // ui.applicationMsgs->setText(get_message(), A_RED);
 
     // Program the transmitter clock at F_Long
     set_Xmit_Freq();
@@ -102,7 +102,7 @@ void receive_sequence(void) {
 void tune_On_sequence(void) {
     DTRACE();
 
-    //ui.applicationMsgs->setText("TUNE");
+    // ui.applicationMsgs->setText("TUNE");
 
     // Program the transmitter clock to F_Long
     uint64_t tuneFreq = thisStation.getFrequency() * 1000ULL * 100ULL;  // KQ7B tuning at FT8 base subband freq (e.g. 7074)
@@ -161,11 +161,15 @@ void tune_Off_sequence(void) {
 
 }  // tune_Off_sequence()
 
-// KQ7B:  Recalculates carrier frequency F_Long and programs SI5351 with new unmodulated carrier frequency
+/**
+ * @brief Recalculate carrier frequency, F_Long, and program Si5351 with unmodulated carrier frequency
+ *
+ * @note The Si5351 is programmed in terms of 0.01 Hz, not Hz nor kHz nor mHz.  Also recall that
+ * the station frequency is stored as kHz.
+ */
 void set_Xmit_Freq() {
-    F_Long = (uint64_t)((thisStation.getFrequency() * 1000 + cursor_freq + offset_freq) * 100);
+    F_Long = (uint64_t)((thisStation.getFrequency() * 1000 + cursor_freq /* + offset_freq*/) * 100);
     si5351.set_freq(F_Long, SI5351_CLK0);
-
 }  // set_Xmit_Freq()
 
 /**
@@ -193,6 +197,6 @@ void setup_to_transmit_on_next_DSP_Flag(void) {
     ft8_xmit_counter = 0;  // Reset symbol slot counter
     transmit_sequence();   // Turns-on the transmitter carrier at current F_Long ??
     // set_Xmit_Freq();                         //Recalculates F_long and reprograms SI5351 ??
-    xmit_flag = 1;                              // This flag appears to trigger loop() to modulate the carrier
-    //ui.applicationMsgs->setText(get_message(), A_RED);  // Display transmitted message
+    xmit_flag = 1;  // This flag appears to trigger loop() to modulate the carrier
+    // ui.applicationMsgs->setText(get_message(), A_RED);  // Display transmitted message
 }

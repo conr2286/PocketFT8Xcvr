@@ -22,6 +22,8 @@ class AListBoxItem final {
     void setItemColors(AColor fg, AColor bg = A_BLACK);        // Change colors
     void setItemText(const String& str, AColor fg = A_WHITE);  // Change specified item's text string
     int getIndex(void) const;                                  // Get an item's index
+    bool timedOut(void) const;                                 // Determine if an item has timed-out
+    unsigned long timeStamp;                                   // Time stamp for removing ancient items
 
    protected:
     AListBox* listBoxContainer;  // Back pointer to containing AListBox
@@ -42,7 +44,8 @@ class AListBox : public AWidget {
     int getCount(void) const;                                                                // Get count of displayed items in this AListBox
     void reset(void);                                                                        // Remove all items from this AListBox
     int getItemIndex(const AListBoxItem* pItem) const;                                       // Get items[] index (line number) of specified item
-    const AListBoxItem* repaint(const AListBoxItem* pItem) const;                                        // Repaint item specified by pointer
+    const AListBoxItem* repaint(const AListBoxItem* pItem) const;                            // Repaint item specified by pointer
+    void reviewTimeStamps(void);                                                             // Review item timestamps and scroll if ancient
 
     // Public constants
     constexpr static int maxItems = 16;  // Maximum number of items allowed in AListBox
