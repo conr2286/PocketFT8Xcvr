@@ -375,9 +375,14 @@ int AListBox::removeItem(int index) {
     if ((index < 0) || (index >= nDisplayedItems)) return -1;
     if (displayedItems[index] == nullptr) return -1;
 
+    // Repaint must occur prior to deleting the item
+    displayedItems[index]->setItemText("");  // Remove the existing text
+    repaint(index);                          // Then repaint the item to remove it from display
+
     // Delete the item and its reference in displayedItems[]
     delete displayedItems[index];
     displayedItems[index] = nullptr;
+
     return index;
 }
 
