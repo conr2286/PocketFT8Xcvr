@@ -431,9 +431,6 @@ AListBoxItem* AListBox::getSelectedItem(ACoord xClick, ACoord yClick) const {
  * @note The timeout period is hardwired to 6 minutes
  */
 void AListBox::reviewTimeStamps() {
-    unsigned long now = millis();
-    const unsigned long timeoutMillis = 6 * 60 * 1000UL;
-
     // Review items' timestamps
     for (int i = 0; i < maxItems; i++) {
         // Check each item, but note:  There may be holes in the displayedItems[]
@@ -443,4 +440,4 @@ void AListBox::reviewTimeStamps() {
             }
         }
     }
-} //reviewTimeStamps()
+}  // reviewTimeStamps()

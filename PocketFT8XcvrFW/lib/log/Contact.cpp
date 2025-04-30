@@ -86,9 +86,8 @@
  *
  **/
 void Contact::begin(const char* myStationCall, const char* workedCall, unsigned freq, const char* mode, const char* myRig, unsigned oddEven) {
-
     // Sanity checks
-    if ((myStationCall == nullptr) || (workedCall == nullptr) || (mode==nullptr)) return;
+    if ((myStationCall == nullptr) || (workedCall == nullptr) || (mode == nullptr)) return;
 
     // Reset all Contact field values (except odd/even which has no "undefined" value)
     reset();
@@ -163,6 +162,7 @@ void Contact::reset() {
     this->workedLocator[0] = 0;
     this->myRig[0] = 0;
     this->txPwr[0] = 0;
+    this->myName[0] = 0;
     this->active = false;
 }  // reset()
 
@@ -221,8 +221,11 @@ void Contact::setWorkedSOTAref(char* sotaRef) {
 }
 
 void Contact::setRig(const char* rig) {
-    DPRINTF("myRig='%s'\n", this->myRig);
     strlcpy(this->myRig, rig, sizeof(this->myRig));
+}
+
+void Contact::setMyName(const char* myName) {
+    strlcpy(this->myName, myName, sizeof(this->myName));
 }
 
 void Contact::setPwr(float pwr) {
@@ -231,8 +234,11 @@ void Contact::setPwr(float pwr) {
 
 // Here are the getters for the fields
 char* Contact::getRig() {
-    DPRINTF("myRig='%s'\n", this->myRig);
     return this->myRig;
+}
+
+char* Contact::getMyName() {
+    return this->myName;
 }
 
 char* Contact::getPwr() {

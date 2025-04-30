@@ -127,8 +127,8 @@
 #include <String.h>
 
 #include "Config.h"
-#include "DEBUG.h"
 #include "LogFactory.h"
+#include "NODEBUG.h"
 #include "PocketFT8Xcvr.h"
 #include "SequencerStates.h"
 #include "UserInterface.h"
@@ -1066,14 +1066,13 @@ void Sequencer::endQSO() {
     DTRACE();
 
     // Add info to log
-    DPRINTF("rig=%s\n", thisStation.getRig());
     contact.setRig(thisStation.getRig());
     contact.setPwr(0.250);
     contact.setMyLocator(thisStation.getLocator());
+    contact.setMyName(thisStation.getMyName());
 
     // Log the contact if we collected sufficient data about the remote station
     if (contact.isActive() && contact.isValid()) {
-        DTRACE();
         contactLog->logContact(&contact);
         String str = String("Logged ") + String(contact.getWorkedCall());
         ui.applicationMsgs->setText(str);
@@ -1092,7 +1091,7 @@ void Sequencer::endQSO() {
     ui.b0->reset();  // Reset highlighted button
     ui.b2->reset();  // Reset highlighted button
 
-    // Reset the RoboOp
+    // Reset the RoboOp auto reply
     setAutoReplyToCQ(false);
 
     // We are finished with this contact whether we had enough data to log it or not

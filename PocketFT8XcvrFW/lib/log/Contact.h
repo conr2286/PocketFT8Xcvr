@@ -19,15 +19,16 @@ class Contact {
     static const int sizeLocator = 7;    // 6 chars and a NUL
     static const int sizeRig = 64;       // 63 chars and a NUL
     static const int sizePwr = 5;        // 5 chars and a NUL
+    static const int sizeName = 16;      // 15 chars and a NUL
 
     // Constructor and other significant methods
     Contact() {
         this->reset();
     }
     void begin(const char* myCall, const char* workedCall, unsigned freq, const char* mode, const char* myRig, unsigned oddEven);  // Begin a new, active QSO
-    void reset(void);                                                                 // Reset all fields in a Contact instance, making it inactive
-    bool isValid(void);                                                               // Determine if the current QSO, if any, is a valid (completed) contact
-    bool isActive(void);                                                              // Determine if a Contact instance has recorded any values
+    void reset(void);                                                                                                              // Reset all fields in a Contact instance, making it inactive
+    bool isValid(void);                                                                                                            // Determine if the current QSO, if any, is a valid (completed) contact
+    bool isActive(void);                                                                                                           // Determine if a Contact instance has recorded any values
 
     // Define the setters for the contact fields
     void setWorkedRSL(const char* rsl);
@@ -39,6 +40,7 @@ class Contact {
     void setWorkedLocator(const char* locator);
     void setPwr(float watts);
     void setRig(const char* rig);
+    void setMyName(const char* myName);
 
     // Define the getters used to extract info about the contact
     char* getWorkedCall();
@@ -55,13 +57,14 @@ class Contact {
     char* getWorkedLocator();
     char* getPwr();
     char* getRig();
+    char* getMyName();
 
    private:
     bool active;  // true if contact has recorded anything about a QSO
 
     // These are the required fields for a valid (completed) contact
     char workedCall[sizeCallsign];  // Remote station's callsign
-    char myCall[sizeCallsign];      // Our station operator's callsign
+    char myCall[sizeCallsign];      // Our station's callsign
     char qsoDate[sizeDate];         // UTC date (YYYYMMDD) when QSO began
     char qsoTime[sizeTime];         // UTC time (HHMMSS) when QSO began
     char band[sizeBand];            // ITU amateur band (meters)
@@ -76,4 +79,5 @@ class Contact {
     char workedLocator[sizeLocator];  // Worked station's maidenhead locator (gridsquare)
     char txPwr[sizePwr];              // Our station's transmitter power
     char myRig[sizeRig];              // Our station's rig
+    char myName[sizeName];            // Our name (not callsign)
 };

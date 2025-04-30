@@ -15,6 +15,7 @@ typedef struct Config {
     unsigned qsoTimeout;                   // QSO timeout (seconds) to obtain a response
     bool enableDuplicates;                 // Enable RoboOp to contact duplicates
     char logFilename[24];                  // Log filename
+    char myName[16];                       // Operator's personal name, not callsign
 } ConfigType;
 
 // Default configuration
@@ -26,5 +27,6 @@ typedef struct Config {
 #define DEFAULT_QSO_TIMEOUT 180               // Number seconds Sequencer will retry transmission without a response
 #define DEFAULT_ENABLE_DUPLICATES false       // RoboOp will not contact duplicates
 #define DEFAULT_LOG_FILENAME "LOGFILE.ADIF"   // Default ADIF Log Filename
+#define DEFAULT_MY_NAME ""                    // Operator's personal name (not callsign)
 
 void readConfigFile(void);

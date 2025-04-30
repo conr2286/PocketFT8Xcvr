@@ -10,12 +10,14 @@ class Station {
     const char* getCallsign(void) { return callsign.c_str(); }
     const char* getLocator(void) { return locator.c_str(); }
     const char* getRig(void) { return rig.c_str(); }
-    unsigned getFrequency(void) { return frequency; }  // kHz
+    const char* getMyName(void) { return myName.c_str(); }  // Operator's name, not callsign
+    unsigned getFrequency(void) { return frequency; }       // kHz
 
     // The setters
     void setCallsign(String s) { callsign = s; }
     void setLocator(String s) { locator = s; }
     void setRig(String s) { rig = s; }
+    void setMyName(String s) { myName = s; }
     void setFrequency(unsigned kHz) { frequency = kHz; }
 
    private:
@@ -23,5 +25,6 @@ class Station {
     String callsign;
     String locator;
     String rig;
+    String myName;
     unsigned frequency;  // kHz
 };

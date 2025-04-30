@@ -5,15 +5,14 @@
 #include <ArduinoJson.h>
 #include <SD.h>
 
-#include "DEBUG.h"
-#include "UserInterface.h"
+#include "NODEBUG.h"
 #include "PocketFT8Xcvr.h"
+#include "UserInterface.h"
 
 extern UserInterface ui;
 
-
-//Implementation of the ConfigType object
-//ConfigType config;
+// Implementation of the ConfigType object
+// ConfigType config;
 
 /**
  * @brief Read CONFIG.JSON file into the config structure
@@ -38,16 +37,14 @@ void readConfigFile() {
     config.qsoTimeout = doc["qsoTimeout"] | DEFAULT_QSO_TIMEOUT;
     config.enableDuplicates = doc["enableDuplicates"] | DEFAULT_ENABLE_DUPLICATES;
     strlcpy(config.logFilename, doc["logFilename"] | DEFAULT_LOG_FILENAME, sizeof(config.logFilename));
+    strlcpy(config.myName, doc["myName"] | DEFAULT_MY_NAME, sizeof(config.myName));
     configFile.close();
 
     // Report configuration
-    String configMsg = String("Config callsign=") + String(config.callsign) + String(" frequency=") + String(config.frequency) + String(" kHz\n");
+    String configMsg = String("call=") + String(config.callsign) + String(" freq=") + String(config.frequency) + String(" kHz\n");
     if (config.enableDuplicates) configMsg += String("enableDuplicates==1 ");
-    configMsg += String("logFilename=") + String(config.logFilename);
+    configMsg += String("log=") + String(config.logFilename) + String(" name=") + String(config.myName);
     ui.applicationMsgs->setText(configMsg.c_str());
-
-    // DPRINTF("enableAVC=%d\n", config.enableAVC);
-    // DPRINTF("enableDuplicates=%d", config.enableDuplicates);
 
     // Let the config report linger on the display for a moment
     delay(2000);
