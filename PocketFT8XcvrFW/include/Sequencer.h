@@ -66,8 +66,8 @@ class Sequencer {
     void cqButtonEvent(void);                                      // CQ button clicked
     void abortButtonEvent(void);                                   // Operator clicked ABORT button
     void tuneButtonEvent(void);                                    // TUNE button clicked
-    void decodedMessageClickEvent(unsigned msgIndex);              // Received message clicked this index
-    void decodedMessageClickEvent(Decode *msg);         // Received messages clicked this decoded msg
+    void clickDecodedMessageEvent(unsigned msgIndex);              // Received message clicked this index
+    void clickDecodedMessageEvent(Decode *msg);                    // Received messages clicked this decoded msg
 
     // void abortEvent(void);                  // Abort transmission request
     static void onTimerEvent(void);  // Timeout (QSO taking too long)

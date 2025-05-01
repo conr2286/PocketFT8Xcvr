@@ -9,13 +9,14 @@
 **    + 4-Layer PCB
 **    + Single band FT8 transmit/receiver
 **    + Teensy 4.1 processor
-**    + Small, 4.0x2.8" PCB mates with the Adafruit display
+**    + 4.0x2.8" PCB mates with the Adafruit display
 **    + Adafruit 320x480 3.5" resistive touchscreen display
 **    + TCXO
 **    + Powered by 0.37 Amps from a single +5V USB power source
 **    + SD Card logging to ADIF file
 **    + Station configuration JSON file
 **    + Plugable filters
+**    + GPS disciplined UTC time and location
 **    + Optional Adafruit Ultimate GPS automates time synchronization and Maidenhead Grid Square locator
 **  The overall goal is to construct a single band, fully self-contained, HF FT8 transceiver for
 **  POTA/SOTA work where light weight and power requirements dominate other goals.
@@ -23,9 +24,10 @@
 ** RATIONAL
 **  + Single-band operation is not a serious limitation for SOTA/POTA work where the portable
 **  antenna limits the available band(s).
-**  + QRPP == battery life for SOTA/POTA
+**  + QRPP == battery life for portable work
 **  + While the SI4735 receiver's performance likely lags that available from a Tayloe detector,
-**  it offers considerable simplicity and effectiveness for SOTA/POTA FT8 operation.
+**  it offers considerable simplicity and effectiveness for SOTA/POTA FT8 operation and will
+**  likely stations that here the QRPP signal
 **
 ** FUTURE
 **    + Consider using a real touchscreen controller to replace the MCP342X ADC
@@ -53,7 +55,7 @@
 **
 ** LICENSES
 **  + The permissive MIT license widely cited throughout the Pocket FT8 firmware and libraries
-**  + Except the SI5351 library has a copy-left GPL license.
+**  + Excepting the SI5351 library has a copy-left GPL license.
 **
 ** REFERENCES
 **  Franke, Somerville, and Taylor.  "The FT4 and FT8 Communication Protocols." QEX. Jul/Aug 2020.
@@ -123,32 +125,20 @@ static void copy_to_fft_buffer(void *, const void *);
 
 // Define the static objects widely referenced throughout PocketFT8Xcvr
 Station thisStation;  // Station model
-ConfigType config;
-
-// extern ConfigType config;
-
-// Adafruit 480x320 touchscreen configuration
-// HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
-// TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
-UserInterface ui;
-
-/// Build the VFO clock
-Si5351 si5351;
+ConfigType config;    // CONFIG.JSON parameters
+UserInterface ui;     // User Interface
+Si5351 si5351;        // Transmitter/receiver's clock
 
 // Build the receiver
 #define MINIMUM_FREQUENCY 7000  // The Si4735 sadly wants to know these :(
-#define MAXIMUM_FREQUENCY 7300
-SI4735 si4735;
+#define MAXIMUM_FREQUENCY 7300  // TODO:  These need automated :(
+SI4735 si4735;                  // The receiver
 
 // Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
 AudioInputAnalog adc1;  // xy=132,104
 AudioRecordQueue queue1;
 AudioConnection patchCord2(adc1, queue1);
 static const unsigned audioQueueSize = 100;  // Number of blocks in the Teensy audio queue (one symbol's period requires 8 blocks)
-
-// Optional raw audio recording file written to SD card for debugging nasty receiver problems
-File ft8Raw = NULL;
-unsigned long recordSampleCount = 0;  // Number of 16-bit audio samples recorded so far
 
 // Audio pipeline buffers
 q15_t dsp_buffer[3 * input_gulp_size] __attribute__((aligned(4)));
@@ -188,21 +178,17 @@ int Transmit_Armned;
 
 // This appears to be the modulated symbol counter for payload and costas
 int ft8_xmit_counter;
-
 int master_decoded;
 
-// uint16_t cursor_freq;
-// uint16_t cursor_line;
-// int offset_freq;
 int tune_flag;
 
-int log_flag, logging_on;
+int log_flag, logging_on;  // TODO:  deprecate
 
 // Get a reference to the QSO Sequencer machine implementing a robo-like operator handling
 // QSOs arising from our own CQ and calls to a remote station
 Sequencer &seq = Sequencer::getSequencer();
 
-// Build the GPSHelper that ensures valid gps member variables
+// Build the GPSHelper encapsulating the details of operating the GPS receiver
 GPShelper gpsHelper(9600);
 
 /**
@@ -214,9 +200,7 @@ GPShelper gpsHelper(9600);
  *
  * Note:  The display must be initialized before GPShelper calls here
  *
- * TODO:  We probably don't need this anymore as we're using the GPS PPS interrupt
- * to determine when a satellite fix is obtained and Station Message colors
- * indicate when that occurs.
+ * TODO:  Deprecated
  *
  **/
 static void gpsCallback(unsigned seconds) {
@@ -331,7 +315,6 @@ FLASHMEM void setup(void) {
 
     // Final station initialization
     thisStation.setRig(String("https://github.com/conr2286/PocketFT8Xcvr"));
-    DPRINTF("rig='%s'\n", thisStation.getRig());
     set_Station_Coordinates(thisStation.getLocator());              // Configure the Maidenhead Locator library with grid square
     ui.displayLocator(String(thisStation.getLocator()), A_YELLOW);  // Display the locator with caution yellow until we get GPS fix
     ui.displayCallsign(String(config.callsign));                    // Display station callsigne
@@ -420,7 +403,6 @@ FLASHMEM void loop() {
 
             // Set the MCU time to the GPS result
             setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
-            // DPRINTF("GPS time = %02d/%02d/%02d %02d:%02d:%02d\n", gpsHelper.month, gpsHelper.day, gpsHelper.year, gpsHelper.hour, gpsHelper.minute, gpsHelper.second);
 
             // Now set the battery-backed Teensy RTC to the GPS-derived time in the MCU
             Teensy3Clock.set(now());

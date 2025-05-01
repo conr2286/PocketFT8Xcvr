@@ -368,7 +368,7 @@ void DecodedMsgsBox::onTouchItem(AListBoxItem* pItem) {
     pItem->setItemColors(A_BLACK, A_GREY);  // Highlight this item
 #ifndef PIO_UNIT_TESTING
     int index = getItemIndex(pItem);      // Lookup item's index
-    seq.decodedMessageClickEvent(index);  // Notify Sequencer when operator clicks a received message
+    seq.clickDecodedMessageEvent(index);  // Notify Sequencer when operator clicks a received message
 #endif
 }
 /**
@@ -420,7 +420,7 @@ void StationMessages::onTouchItem(AScrollBoxItem* pItem) {
     // Ask the Sequencer (RoboOp) to contact the remote station identified in the touched message
     DPRINTF("Contact %s\n", pMsgItem->msg.field2);
 #ifndef PIO_UNIT_TESTING
-    seq.decodedMessageClickEvent(&(pMsgItem->msg));
+    seq.clickDecodedMessageEvent(&(pMsgItem->msg));
 #endif
 
 }  // StationMessages::onTouchItem()

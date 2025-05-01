@@ -14,7 +14,7 @@
 #include <string.h>
 
 #include "HX8357_t3n.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "constants.h"
 #include "encode.h"
 #include "pack.h"
@@ -133,7 +133,7 @@ void set_message(uint16_t index) {
             break;
 
         case MSG_RSL:  // We are responding to target with their signal report, e.g. AG0E KQ7B -12
-            snprintf(message, sizeof(message), "%s %s %3i", Target_Call, thisStation.getCallsign(), Target_RSL);
+            snprintf(message, sizeof(message), "%s %s %i", Target_Call, thisStation.getCallsign(), Target_RSL);
             break;
 
         case MSG_RR73:  // We are responding to target with RR73, e.g. AG0E KQ7B RR73
@@ -145,7 +145,7 @@ void set_message(uint16_t index) {
             break;
 
         case MSG_RRSL:  // We are responding with Roger and their RRSL signal report, e.g. AG0E KQ7B R-3
-            snprintf(message, sizeof(message), "%s %s R%3i", Target_Call, thisStation.getCallsign(), Target_RSL);
+            snprintf(message, sizeof(message), "%s %s R%i", Target_Call, thisStation.getCallsign(), Target_RSL);
             break;
 
         case MSG_RRR:  // We are responding with RRR, e.g. AG0E KQ7B RRR
@@ -156,13 +156,11 @@ void set_message(uint16_t index) {
             DPRINTF("***** ERROR:  Invalid set_message(%d) index\n", index);
             break;
     }
-    // tft.setTextColor(HX8357_WHITE, HX8357_BLACK);
-    // tft.setTextSize(2);
-    // tft.setCursor(DISPLAY_OUTBOUND_X, DISPLAY_OUTBOUND_Y);
-    // tft.print(message);
+    DPRINTF("message='%s'\n", message);
+    ui.applicationMsgs->setText(message);
+
 
     // TODO:  Check for empty message???
-    // ui.applicationMsgs->setText(message);
     pack77_1(message, packed);
     genft8(packed, tones);
 
@@ -182,7 +180,7 @@ void clearOutboundMessageText(void) {
 }
 
 void clearOutboundMessageDisplay(void) {
-    DTRACE();
+    //DTRACE();
 
     // char blank[] = "                      ";
     // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);

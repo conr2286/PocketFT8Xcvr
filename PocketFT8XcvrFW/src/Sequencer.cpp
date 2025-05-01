@@ -282,7 +282,7 @@ void Sequencer::timeslotEvent() {
             break;
 
         // We are waiting to contact a displayed station after operator clicked on their message.  We
-        // expect decodedMessageClickEvent() to have previously initialized the QSO struct and prepared the
+        // expect clickDecodedMessageEvent() to have previously initialized the QSO struct and prepared the
         // outbound message containing our own location.
         case LOC_PENDING:
             // DTRACE();
@@ -591,7 +591,7 @@ void Sequencer::cqButtonEvent() {
  *  This event handler initiates a QSO by contacting a displayed, received
  *  message.
  *
- *  decodedMessageClickEvent() is invoked only by display_selected_call() after initializing
+ *  clickDecodedMessageEvent() is invoked only by display_selected_call() after initializing
  *  the Target_Call extern with the remote station's callsign.
  *
  *  We create a QSO contact here, perhaps prematurely (Target_Call may not reply),
@@ -599,13 +599,13 @@ void Sequencer::cqButtonEvent() {
  *  Also... this may be the only time when we'll have Target_Call's locator.
  *
  **/
-void Sequencer::decodedMessageClickEvent(unsigned msgIndex) {
+void Sequencer::clickDecodedMessageEvent(unsigned msgIndex) {
     // Find the decoded message as we need some info from it
     Decode* msg = getDecodedMsg(msgIndex);
-    decodedMessageClickEvent(msg);
-}  // decodedMessageClickEvent()
+    clickDecodedMessageEvent(msg);
+}  // clickDecodedMessageEvent()
 
-void Sequencer::decodedMessageClickEvent(Decode* msg) {
+void Sequencer::clickDecodedMessageEvent(Decode* msg) {
     // Assert Target_Call==msg->field2 as this stuff could become FUBAR
     DFPRINTF("sequenceNumber=%lu, Target_Call='%s', msg->field2='%s', msg->sequenceNumber=%u, state=%u\n", sequenceNumber, Target_Call, msg->field2, msg->sequenceNumber, state);
 
@@ -637,7 +637,7 @@ void Sequencer::decodedMessageClickEvent(Decode* msg) {
         }
     }
 
-}  // decodedMessageClickEvent()
+}  // clickDecodedMessageEvent()
 
 /**
  * @brief Callback function notified if/when timeout Timer expires

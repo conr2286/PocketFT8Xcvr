@@ -360,7 +360,7 @@ void terminate_transmit_armed(void) {
 //         // DPRINTF("FT_8_TouchIndex=%d, master_decoded=%d\n", FT_8_TouchIndex, master_decoded);
 //         if (FT_8_TouchIndex < master_decoded) {
 //             display_selected_call(FT_8_TouchIndex);
-//             seq.decodedMessageClickEvent(FT_8_TouchIndex);  // Notify Sequencer when operator clicks on a received message
+//             seq.clickDecodedMessageEvent(FT_8_TouchIndex);  // Notify Sequencer when operator clicks on a received message
 //         }
 //         DTRACE();
 //     }
