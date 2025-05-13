@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Arduino.h>
+
 #include "msgTypes.h"
 
 int ft8_decode(void);
@@ -15,6 +16,10 @@ static const String sp = String(" ");
 // typedef struct
 class Decode {
    public:
+    Decode() {
+        field1[0] = field2[0] = field3[0] = locator[0] = decode_time[0] = 0;
+        freq_hz = sync_score = snr = distance = sequenceNumber = 0;
+    }
     String toString(void) { return String(field1) + sp + String(field2) + sp + String(field3); }
 
     char field1[14];               // Their station's call
@@ -65,4 +70,3 @@ void display_selected_call(int index);
 void process_selected_CQ(void);
 
 char rsl2s(int rsl);
-
