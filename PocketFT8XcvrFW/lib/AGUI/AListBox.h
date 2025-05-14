@@ -14,19 +14,21 @@ class AListBox;
 class AListBoxItem final {
    public:
     AListBoxItem(String str, AColor fgColor, AColor bgColor, AListBox* pBox);
-    String str;                                                // Copy of this item's text string
-    AColor fgColor;                                            // This item's foreground color
-    AColor bgColor;                                            // This item's background color
-    bool selected = false;                                     // Is this item selected?
     void repaint(void);                                        // Repaint this item
     void setItemColors(AColor fg, AColor bg = A_BLACK);        // Change colors
     void setItemText(const String& str, AColor fg = A_WHITE);  // Change specified item's text string
     int getIndex(void) const;                                  // Get an item's index
     bool timedOut(void) const;                                 // Determine if an item has timed-out
-    unsigned long timeStamp;                                   // Time stamp for removing ancient items
+
+    // Member variables
+    unsigned long timeStamp;  // Time stamp for removing ancient items
+    String str;               // Copy of this item's text string
+    AColor fgColor;           // This item's foreground color
+    AColor bgColor;           // This item's background color
+    bool selected = false;    // Is this item selected?
 
    protected:
-    AListBox* listBoxContainer;  // Back pointer to containing AListBox
+    AListBox* listBoxContainer;  // Shallow back pointer to AListBox container of this item
 };
 
 /**

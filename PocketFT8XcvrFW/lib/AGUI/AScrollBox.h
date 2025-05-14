@@ -55,9 +55,11 @@ class AScrollBox : public AWidget {
    protected:
     virtual void onTouchItem(AScrollBoxItem* pItem) {}  // Application overrides onTouchItem() to receive notifications of touch events
     void scrollUpOneLine();                             // Scroll all existing items up (by one entry)
-    int nDisplayedItems;                                // Number of *displayed* items
-    AScrollBoxItem* displayedItems[maxItems];           // Pointer to items displayed in this AScrollBox indexed by their position
     bool itemWillFit(int nItems) const;                 // Helper determines if count items will fit within boundary box
+
+    // Protected variablez
+    int nDisplayedItems;                       // Number of *displayed* items
+    AScrollBoxItem* displayedItems[maxItems];  // Pointer to items displayed in this AScrollBox indexed by their position
 
    private:
     // Our private methods

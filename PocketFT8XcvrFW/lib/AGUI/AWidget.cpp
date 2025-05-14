@@ -6,7 +6,7 @@
 
 // Initialize the head of the unordered list of all AWidget objects.
 // The processTouch() class method uses the list to find the selected widget.
-AWidget* AWidget::allWidgets = NULL;
+AWidget* AWidget::pWidgets = NULL;
 
 /**
  * @brief Default constructor for the AWidget base class
@@ -19,8 +19,8 @@ AWidget::AWidget() {
     // if (!Serial) Serial.begin(9600);
     // DPRINTF("AWidget()=0x%x\n", this);
     // Link this new widget into the unordered list of all widgets
-    this->next = allWidgets;
-    allWidgets = this;
+    this->next = pWidgets;
+    pWidgets = this;
 
     // Setup default colors for new widget using the application's defaults
     // Each widget can change any of these colors if they wish, but initializing
@@ -57,9 +57,9 @@ AWidget::~AWidget() {
     AGUI::gfx->fillRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1, bgColor);
 
     // Unlink this widget if at the head of the list of all widgets
-    if (allWidgets == this) {
+    if (pWidgets == this) {
         // Unlink this widget from head of list
-        allWidgets = this->next;
+        pWidgets = this->next;
 
         // Paranoia for dangling pointers
         this->next = NULL;
@@ -69,13 +69,13 @@ AWidget::~AWidget() {
     }
 
     // Unlink this widget from somewhere else in the list of all widgets
-    for (AWidget* scannedWidget = allWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
+    for (AWidget* scannedWidget = pWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
         // Does scannedWidget precede this widget?
         if (scannedWidget->next == this) {
             // Yes, unlink this widget from list
             scannedWidget->next = this->next;
 
-            // Paranoia for stale pointers
+            // Paranoia for dangling pointers
             this->next = NULL;
 
             break;  // Finished
@@ -100,7 +100,7 @@ AWidget::~AWidget() {
  */
 void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
     DTRACE();
-    for (AWidget* scannedWidget = allWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
+    for (AWidget* scannedWidget = pWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
         // DTRACE();
         //  If touch coords lie within scanned widget and call its notification method if provided
         if (scannedWidget->boundary.isWithin(xCoord, yCoord)) {

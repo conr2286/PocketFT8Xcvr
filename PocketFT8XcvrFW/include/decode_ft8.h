@@ -20,7 +20,15 @@ class Decode {
         field1[0] = field2[0] = field3[0] = locator[0] = decode_time[0] = 0;
         freq_hz = sync_score = snr = distance = sequenceNumber = 0;
     }
-    String toString(void) { return String(field1) + sp + String(field2) + sp + String(field3); }
+    //String toString(void) { return String(field1) + sp + String(field2) + sp + String(field3); }
+    String toString(void) {
+        String result = field1;
+        result += sp;
+        result += field2;
+        result += sp;
+        result += field3;
+        return result;
+    }
 
     char field1[14];               // Their station's call
     char field2[14];               // Our station's call

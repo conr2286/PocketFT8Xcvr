@@ -11,15 +11,15 @@
  */
 
 #include <Arduino.h>
-#include <stdint.h>
 #include <SPI.h>
+#include <stdint.h>
 
 #include "AGUI.h"
 
 class ARect {
    public:
     // Constructors
-    ARect() {}
+    ARect() { x1 = y1 = x2 = y2 = w = h = 0; }
     virtual ~ARect() {}
     ARect(ACoord x1, ACoord y1, ALength w, ALength h) {
         this->x1 = x1;
