@@ -56,7 +56,7 @@ AToggleButton::AToggleButton(const char *txt, ACoord x1, ACoord y1, ALength w, A
         AGUI::fillRect(x1, y1, w, h, bgColor);                          // Erase background
         if (bdColor != bgColor) AGUI::drawRect(x1, y1, w, h, bdColor);  // Draw squared border if we need it
     }
-    AGUI::setFont(defaultFont);            // Use the widget's default font
+    AGUI::setFont(font);                   // Use the widget's default font
     AGUI::setTextColor(fgColor, bgColor);  // Use the widget's default colors
 
     // Label the button
@@ -113,7 +113,7 @@ void AToggleButton::onRepaintWidget() {
     AGUI::setClipRect(boundary.x1, boundary.y1, w, h);                                             // Set the clipping rectangle w/o consideration for rounded corners
     AGUI::fillRoundRect(boundary.x1, boundary.y1, w, h, radius, bgCurrent);                        // Erase background
     if (bdColor != bgColor) AGUI::drawRoundRect(boundary.x1, boundary.y1, w, h, radius, bdColor);  // Draw border if we need it
-    AGUI::setFont(defaultFont);                                                                    // Use the widget's default font
+    AGUI::setFont(font);                                                                           // Use the widget's default font
     AGUI::setTextColor(fgCurrent, bgCurrent);                                                      // Use toggle button's current state colors
 
     // Re-label the button

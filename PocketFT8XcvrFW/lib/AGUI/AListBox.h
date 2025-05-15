@@ -13,7 +13,10 @@ class AListBox;
  */
 class AListBoxItem final {
    public:
-    AListBoxItem(String str, AColor fgColor, AColor bgColor, AListBox* pBox);
+    AListBoxItem(String str, AColor fgColor, AColor bgColor, AListBox* pBox);  // Constructor
+    AListBoxItem(const AListBoxItem& existing);                                // Copy constructor
+    AListBoxItem& operator=(const AListBoxItem& that);                         // Assignment operator
+
     void repaint(void);                                        // Repaint this item
     void setItemColors(AColor fg, AColor bg = A_BLACK);        // Change colors
     void setItemText(const String& str, AColor fg = A_WHITE);  // Change specified item's text string
@@ -39,6 +42,7 @@ class AListBox : public AWidget {
     // Public methods
     AListBox(ACoord xCoord, ACoord yCoord, ALength w, ALength h, AColor bdColor = A_BLACK);  // Build AListBox with default colors
     virtual ~AListBox();                                                                     // Destructor purges data struct and erases displayed items
+    AListBox(const AListBox& existing);                                                      // Copy constructor for AListBox
     AListBoxItem* addItem(AListBox* pListBox, const String str, AColor fg = A_WHITE);        // Add item to bottom of this AListBox
     int setItem(int index, const String& str, AColor fg, AColor bg = A_BLACK);               // Add item at specified index
     AListBoxItem* setItemColors(AListBoxItem* pItem, AColor fg, AColor bg = A_BLACK);        // Change specified item's colors

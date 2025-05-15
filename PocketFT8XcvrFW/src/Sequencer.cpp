@@ -1129,6 +1129,6 @@ bool getAutoReplyToCQ() {
 void Sequencer::highlightAbortedTransmission() {
     String thisTransmittedMsg = String(get_message());  // The pending outbound message text
     if (thisTransmittedMsg == lastTransmittedMsg) {
-        ui.stationMsgs->setItemColors(lastStationMsgsItem, A_RED, A_BLACK);  // Recolor previous (retransmitted) msg
+        ui.stationMsgs->setItemColors(lastStationMsgsItem, A_DARK_GREY, A_BLACK);  // Recolor previous (retransmitted) msg
     }
 }  // highlightAbortedTransmission()

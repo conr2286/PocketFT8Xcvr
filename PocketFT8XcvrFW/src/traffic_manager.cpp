@@ -21,8 +21,8 @@ extern SI4735 si4735;
 extern int xmit_flag, ft8_xmit_counter, Transmit_Armned;
 extern bool disable_xmit;
 
-extern uint16_t cursor_freq;
-extern uint16_t cursor_line;
+//extern uint16_t cursor_freq;
+//extern uint16_t cursor_line;
 
 // extern int CQ_Flag;
 extern int Beacon_State;
@@ -168,7 +168,7 @@ void tune_Off_sequence(void) {
  * the station frequency is stored as kHz.
  */
 void set_Xmit_Freq() {
-    F_Long = (uint64_t)((thisStation.getFrequency() * 1000 + cursor_freq /* + offset_freq*/) * 100);
+    F_Long = (uint64_t)((thisStation.getFrequency() * 1000 + thisStation.getCursorFreq() /* + offset_freq*/) * 100);
     si5351.set_freq(F_Long, SI5351_CLK0);
 }  // set_Xmit_Freq()
 

@@ -6,7 +6,7 @@
 
 // Initialize the head of the unordered list of all AWidget objects.
 // The processTouch() class method uses the list to find the selected widget.
-AWidget* AWidget::pWidgets = NULL;
+AWidget* AWidget::headOfWidgets = NULL;
 
 /**
  * @brief Default constructor for the AWidget base class
@@ -19,8 +19,8 @@ AWidget::AWidget() {
     // if (!Serial) Serial.begin(9600);
     // DPRINTF("AWidget()=0x%x\n", this);
     // Link this new widget into the unordered list of all widgets
-    this->next = pWidgets;
-    pWidgets = this;
+    this->next = headOfWidgets;
+    headOfWidgets = this;
 
     // Setup default colors for new widget using the application's defaults
     // Each widget can change any of these colors if they wish, but initializing
@@ -32,11 +32,58 @@ AWidget::AWidget() {
 
     // Initially config the widget font to the application's default
     DPRINTF("txtFont=%p\n", AGUI::appFont);
-    this->defaultFont = AGUI::appFont;  // Widget's font
+    this->font = AGUI::appFont;  // Widget's font
 
     // TODO:  Refactor such that radius==0 ==> squared corners rather than rounded
     this->radius = 7;  // Radius of rounded corners in this widget
 }
+
+/**
+ * @brief Copy constructor for AWidget
+ * @param existing Reference to an existing AWidget
+ *
+ * @note New object placed at head of list and members, except next, copied from existing object.
+ */
+AWidget::AWidget(const AWidget& existing) {
+    // Link this new widget at the head of the unordered list of all widgets
+    this->next = headOfWidgets;  // We link to the old head
+    headOfWidgets = this;        // We become the new head
+
+    // Copy fonts
+    this->bgColor = existing.bgColor;  // Background color
+    this->fgColor = existing.fgColor;  // Foreground color
+    this->bdColor = existing.bdColor;  // Border color
+    this->spColor = existing.spColor;  // Special color (e.g. selected item color)
+
+    // Copy font
+    this->font = existing.font;  // This widget's font
+
+    // Copy radius
+    this->radius = existing.radius;  // Radius of rounded corners in this widget
+}  // Copy Constructor
+
+/**
+ * @brief AWidget assignment operator
+ * @param that Reference to object whose members will be assigned to this
+ * @return Reference to target object
+ *
+ * @note Assignment copies all members except link to next AWidget
+ */
+AWidget& AWidget::operator=(const AWidget& that) {
+    // Check for self-assignment
+    if (this == &that) return *this;
+
+    // Copy member variables except the link to the next widget which must remain unmodified
+    this->bgColor = that.bgColor;  // Background color
+    this->fgColor = that.fgColor;  // Foreground color
+    this->bdColor = that.bdColor;  // Border color
+    this->spColor = that.spColor;  // Special color (e.g. selected item color)
+    this->font = that.font;        // This widget's font
+    this->radius = that.radius;    // Radius of rounded corners in this widget
+
+    return *this;
+
+}  // Assignment Operator
 
 /**
  * @brief Destructor for the AWidget base class
@@ -57,9 +104,9 @@ AWidget::~AWidget() {
     AGUI::gfx->fillRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1, bgColor);
 
     // Unlink this widget if at the head of the list of all widgets
-    if (pWidgets == this) {
+    if (headOfWidgets == this) {
         // Unlink this widget from head of list
-        pWidgets = this->next;
+        headOfWidgets = this->next;
 
         // Paranoia for dangling pointers
         this->next = NULL;
@@ -69,7 +116,7 @@ AWidget::~AWidget() {
     }
 
     // Unlink this widget from somewhere else in the list of all widgets
-    for (AWidget* scannedWidget = pWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
+    for (AWidget* scannedWidget = headOfWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
         // Does scannedWidget precede this widget?
         if (scannedWidget->next == this) {
             // Yes, unlink this widget from list
@@ -100,7 +147,7 @@ AWidget::~AWidget() {
  */
 void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
     DTRACE();
-    for (AWidget* scannedWidget = pWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
+    for (AWidget* scannedWidget = headOfWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
         // DTRACE();
         //  If touch coords lie within scanned widget and call its notification method if provided
         if (scannedWidget->boundary.isWithin(xCoord, yCoord)) {

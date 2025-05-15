@@ -174,7 +174,7 @@ AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
     if (pItem == nullptr) return nullptr;
 
     // Configure app for writing text in this widget
-    AGUI::setFont(defaultFont);                                           // Use the widget's font
+    AGUI::setFont(font);                                                  // Use the widget's font
     AGUI::setTextColor(pItem->fgColor, pItem->bgColor);                   // Use the item's colors
     AGUI::setTextWrap(false);                                             // No wrapping, we clip 'em
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);  // Widget's clip rectangle... see, told ya

@@ -46,9 +46,9 @@ int test;
 
 extern int master_decoded;
 extern void sync_FT8(void);
-extern uint16_t cursor_freq;
+//extern uint16_t cursor_freq;
 extern int tune_flag;
-extern uint16_t cursor_line;
+//extern uint16_t cursor_line;
 //extern int offset_freq;
 
 const float ft8_shift = 6.25;  // FT8 Hz/bin???
@@ -372,14 +372,14 @@ void terminate_transmit_armed(void) {
  *
  *
  **/
-void check_WF_Touch(void) {
-    if (draw_x < 350 && draw_y < 90) {
-        cursor_line = draw_x;
-        cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
-        // DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
-        set_Xmit_Freq();
-    }
-}  // check_WF_Touch()
+// void check_WF_Touch(void) {
+//     if (draw_x < 350 && draw_y < 90) {
+//         cursor_line = draw_x;
+//         cursor_freq = (uint16_t)((float)(cursor_line + ft8_min_bin) * ft8_shift);
+//         // DPRINTF("cursor_line=%u, cursor_freq=%u\n", cursor_line, cursor_freq);
+//         set_Xmit_Freq();
+//     }
+// }  // check_WF_Touch()
 
 //?????
 // void set_startup_freq(void) {

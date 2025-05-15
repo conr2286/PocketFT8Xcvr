@@ -50,6 +50,9 @@ extern Config config;
 extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
 extern UserInterface ui;
 
+// The legacy externs
+//extern uint16_t cursor_freq;  // Frequency of FT8 cursor in Hz
+
 void DecodedMsgsBox::setMsg(int index, char* msg) {
     setItem(index, msg, A_WHITE, bgColor);
 }
@@ -101,9 +104,11 @@ void UserInterface::begin() {
  * @brief Display nominal operating frequency
  * @param kHz Frequency in kHz
  * @param fg Foreground color
+ *
+ * The display contains frequency in kHz and the offset in Hz
  */
 void UserInterface::displayFrequency(unsigned kHz) {
-    String s = String(kHz) + " kHz";
+    String s = String(kHz) + "  " + String(thisStation.getCursorFreq());
     itemFrequency->setItemText(s, A_GREEN);
 }  // displayFrequency()
 
@@ -202,27 +207,27 @@ void UserInterface::setXmitRecvIndicator(IndicatorIconType indicator) {
     switch (indicator) {
         // We are receiving
         case INDICATOR_ICON_RECEIVE:
-            color = HX8357_GREEN;
-            str = "RECEIVE";
+            color = A_WHITE;
+            str = "RECV";
             break;
         // Transmission pending for next appropriate timeslot
         case INDICATOR_ICON_PENDING:
-            color = HX8357_YELLOW;
-            str = "PENDING";
+            color = A_WHITE;
+            str = "PEND";
             break;
         // Transmission in progress
         case INDICATOR_ICON_TRANSMIT:
-            color = HX8357_RED;
-            str = "TRANSMIT";
+            color = A_WHITE;
+            str = "XMIT";
             break;
         // Tuning in progress
         case INDICATOR_ICON_TUNING:
-            color = HX8357_ORANGE;
-            str = "TUNING";
+            color = A_WHITE;
+            str = "TUNE";
             break;
         // Lost in the ozone again
         default:
-            color = HX8357_BLACK;
+            color = A_WHITE;
             str = " ";
             break;
     }
@@ -337,20 +342,20 @@ void MenuButton::onTouchButton(int buttonId) {
  * @note The coordinates received from APixelBox are inside the bitmap, not
  * screen coordinates.
  */
-extern uint16_t cursor_freq;  // Frequency of cursor line
 extern uint16_t cursor_line;  // Pixel location of cursor line
 #define ft8_min_bin 48
 #define FFT_Resolution 6.25
-const float ft8_shift = 6.25;  // FT8 Hz/bin???
+const float ft8_shift = 6.25;  // FT8 Hz/bin???  TODO:  move this elsewhere
 
 void Waterfall::onTouchPixel(ACoord x, ACoord y) {
 #ifndef PIO_UNIT_TESTING
     cursor_line = x;
-    cursor_freq = ((float)cursor_line + (float)ft8_min_bin) * ft8_shift;
+    thisStation.setCursorFreq( ((float)cursor_line + (float)ft8_min_bin) * ft8_shift) ;
     set_Xmit_Freq();
-    String str = String("Cursor freq = ") + String(cursor_freq) + String(" Hz");
+    String str = String("Cursor freq = ") + String(thisStation.getCursorFreq()) + String(" Hz");
     // DPRINTF("%s\n", str.c_str());
-    ui.applicationMsgs->setText(str);
+    //ui.applicationMsgs->setText(str);
+    ui.displayFrequency(thisStation.getFrequency());  // Update station info display too
 #endif
 
 }  // onTouchPixel()

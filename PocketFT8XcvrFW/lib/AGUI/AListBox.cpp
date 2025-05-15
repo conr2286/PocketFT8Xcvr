@@ -40,6 +40,45 @@ AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
 }  // AListBoxItem()
 
 /**
+ * @brief AListBoxItem copy constructor
+ * @param existing Reference to existing item
+ */
+AListBoxItem::AListBoxItem(const AListBoxItem& existing) {
+    // Copy all the simple members
+    this->timeStamp = existing.timeStamp;
+    this->str = existing.str;
+    this->fgColor = existing.fgColor;
+    this->bgColor = existing.bgColor;
+    this->listBoxContainer = existing.listBoxContainer;  // New item is contained by existing item's container
+
+    // Now deal with members unique to new item
+    this->timeStamp = millis();
+    this->selected = false;
+
+}  // AListBoxItem copy constructor
+
+/**
+ * @brief AListBoxItem assignment operator
+ * @param that References object whose member values will be assigned to target object
+ * @return Reference to target object
+ *
+ * @note Copy that item's members to this (target) item
+ */
+AListBoxItem& AListBoxItem::operator=(const AListBoxItem& that) {
+    // Copy everything across
+    this->timeStamp = that.timeStamp;
+    this->str = that.str;
+    this->fgColor = that.fgColor;
+    this->bgColor = that.bgColor;
+    this->listBoxContainer = that.listBoxContainer;  // New item is contained by existing item's container
+    this->timeStamp = that.timeStamp;                // Preserve timestamp
+    this->selected = that.selected;                  // And selected state variable
+
+    return *this;     
+
+}  // AListBoxItem assignment
+
+/**
  * @brief Set an items fg/bg colors
  * @param fg Foreground color
  * @param bg Background color
@@ -112,6 +151,29 @@ AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
     onRepaintWidget();
 
 }  // AListBox()
+
+/**
+ * @brief AListBox copy constructor
+ * @param existing Reference to existing object being copied
+ *
+ * @note We have to make deep copies of all the items
+ */
+AListBox::AListBox(const AListBox& existing) : AWidget(existing) {
+    // Copy the simple AListBox members
+    this->leading = existing.leading;
+    this->nDisplayedItems = existing.nDisplayedItems;
+
+    // Now copy all the existing object's items except holes in its list
+    for (int i = 0; i < maxItems; i++) {
+        // Copy a real items with AListItem's copy constructor
+        if (existing.displayedItems[i] != nullptr) {
+            this->displayedItems[i] = new AListBoxItem(*existing.displayedItems[i]);  // Copy existing item
+        } else {
+            this->displayedItems[i] = nullptr;  // Copy hole
+        }
+    }
+
+}  // AListBox copy constructor
 
 /**
  * @brief Add a new item to the bottom of this AListBox
@@ -236,7 +298,7 @@ const AListBoxItem* AListBox::repaint(const AListBoxItem* pItem) const {
     if ((index < 0) || (index >= maxItems)) return nullptr;
 
     // Configure app for writing text in this widget
-    AGUI::setFont(defaultFont);                                           // Use the widget's font
+    AGUI::setFont(font);                                                  // Use the widget's font
     AGUI::setTextColor(pItem->fgColor, pItem->bgColor);                   // Use the item's colors
     AGUI::setTextWrap(false);                                             // No wrapping, we clip 'em
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);  // Widget's clip rectangle

@@ -63,7 +63,7 @@ ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AC
     }
 
     // Configure app for writing the text
-    AGUI::setFont(defaultFont);            // Use the widget's default font
+    AGUI::setFont(font);                   // Use the widget's default font
     AGUI::setTextColor(fgColor, bgColor);  // Use the widget's default colors
     AGUI::setTextWrap(true);               // We do wrap text
     AGUI::setClipRect(clipX, clipY, clipW, clipH);
@@ -102,7 +102,7 @@ void ATextBox::onRepaintWidget(void) {
     }
 
     // Configure app for writing the text
-    AGUI::setFont(defaultFont);            // Use the widget's default font
+    AGUI::setFont(font);                   // Use the widget's default font
     AGUI::setTextColor(fgColor, bgColor);  // Use the widget's default colors
     AGUI::setTextWrap(true);               // We do wrap text inside the clip
     AGUI::setClipRect(clipX, clipY, clipW, clipH);
