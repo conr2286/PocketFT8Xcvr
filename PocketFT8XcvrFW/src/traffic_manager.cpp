@@ -19,13 +19,7 @@
 extern Si5351 si5351;
 extern SI4735 si4735;
 extern int xmit_flag, ft8_xmit_counter, Transmit_Armned;
-extern bool disable_xmit;
 
-//extern uint16_t cursor_freq;
-//extern uint16_t cursor_line;
-
-// extern int CQ_Flag;
-extern int Beacon_State;
 extern int num_decoded_msg;
 
 // extern int offset_freq;
@@ -58,7 +52,7 @@ void transmit_sequence(void) {
 
     // Enable the transmitter clock
     si5351.drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);  // Set for max power if desired
-    if (!disable_xmit) si5351.output_enable(SI5351_CLK0, 1);
+    if (thisStation.getEnableTransmit()) si5351.output_enable(SI5351_CLK0, 1);
 
     // Connect transmitter to antenna and short the receiver RF input to ground
     pinMode(PIN_PTT, OUTPUT);
@@ -113,7 +107,7 @@ void tune_On_sequence(void) {
     si4735.setVolume(0);
 
     // Turn-on the transmitter clock
-    if (!disable_xmit) si5351.output_enable(SI5351_CLK0, 1);
+    if (thisStation.getEnableTransmit()) si5351.output_enable(SI5351_CLK0, 1);
 
     // Disconnect receiver from antenna and enable the SN74ACT244 PA
     pinMode(PIN_RCV, OUTPUT);

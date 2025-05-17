@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "lexical.h"
 
 //This is the hash table for known (previously logged) callsigns.  We new-up the table so

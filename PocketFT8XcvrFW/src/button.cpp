@@ -64,8 +64,6 @@ void waitForFT8timeslot(void);
 // Setter for Sequencer's RoboOp response to a received CQ message
 void setAutoReplyToCQ(bool);
 
-// int CQ_Flag;
-int Beacon_State;
 
 #define numButtons 9
 #define button_height BUTTON_BAR_H  // TODO:  Clean-up old definitions for height and top line location

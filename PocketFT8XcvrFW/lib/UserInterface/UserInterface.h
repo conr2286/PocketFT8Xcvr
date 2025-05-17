@@ -118,11 +118,11 @@ class UserInterface {
     void begin(void);
 
     // StationInfo methods
-    void displayFrequency(unsigned kHz);
+    void displayFrequency(void);
     void displayLocator(String grid, AColor fgColor);
     void displayDate(bool forceUpdate = false);
     void displayTime(void);
-    void displayCallsign(String callSign);
+    void displayCallsign();
     void displayMode(String mode, AColor fg);
     void setXmitRecvIndicator(IndicatorIconType indicator);
 

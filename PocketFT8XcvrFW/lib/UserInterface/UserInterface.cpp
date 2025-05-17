@@ -34,6 +34,7 @@
 #include "lexical.h"          //String helpers
 #include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
 #include "traffic_manager.h"
+#include "Station.h"
 
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
@@ -44,6 +45,7 @@ static AGUI* gui;
 static Sequencer& seq = Sequencer::getSequencer();  // Get a reference to the Sequencer (RoboOp)
 #endif
 
+//
 extern Config config;
 
 // GPS Access
@@ -107,8 +109,8 @@ void UserInterface::begin() {
  *
  * The display contains frequency in kHz and the offset in Hz
  */
-void UserInterface::displayFrequency(unsigned kHz) {
-    String s = String(kHz) + "  " + String(thisStation.getCursorFreq());
+void UserInterface::displayFrequency() {
+    String s = String(thisStation.getFrequency()) + "  " + String(thisStation.getCursorFreq());
     itemFrequency->setItemText(s, A_GREEN);
 }  // displayFrequency()
 
@@ -183,8 +185,8 @@ void UserInterface::displayTime() {
  * @brief Display station callsign
  * @param callSign Station's callsign
  */
-void UserInterface::displayCallsign(String callSign) {
-    itemCallsign->setItemText(callSign, A_GREEN);
+void UserInterface::displayCallsign() {
+    itemCallsign->setItemText(thisStation.getCallsign(), A_GREEN);
 }  // displayCallSign
 
 /**
@@ -355,7 +357,7 @@ void Waterfall::onTouchPixel(ACoord x, ACoord y) {
     String str = String("Cursor freq = ") + String(thisStation.getCursorFreq()) + String(" Hz");
     // DPRINTF("%s\n", str.c_str());
     //ui.applicationMsgs->setText(str);
-    ui.displayFrequency(thisStation.getFrequency());  // Update station info display too
+    ui.displayFrequency();  // Update station info display too
 #endif
 
 }  // onTouchPixel()

@@ -86,7 +86,6 @@ extern float Target_Latitude, Target_Longitude;
 extern float Target_Distance(char target[]);
 
 extern int CQ_State;
-extern int Beacon_State;
 
 extern char Target_Call[7];
 extern int Target_RSL;  // four character RSL  + /0

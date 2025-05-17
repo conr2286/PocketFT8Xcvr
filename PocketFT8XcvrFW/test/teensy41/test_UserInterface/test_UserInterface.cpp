@@ -4,16 +4,18 @@
 #include "DEBUG.h"
 #include "HX8357_t3n.h"
 #include "UserInterface.h"
-// #include "UserInterfaceExterns.h"
 #include "unity.h"
+#include "Station.h"
 
 extern UserInterface ui;
+
+Station thisStation;
 
 //
 void test_StationInfo(void) {
     TEST_MESSAGE("test_StationInfo()\n");
-    ui.displayFrequency(7074);
-    ui.displayCallsign(String("KQ7B"));
+    ui.displayFrequency();
+    ui.displayCallsign();
     ui.setXmitRecvIndicator(INDICATOR_ICON_TUNING);
     delay(1000);
     ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
@@ -55,11 +57,13 @@ void test_StationMsgs(void) {
     delay(1000);
 }  // test_StationMsgs()
 
+static unsigned cursorX = 102;
 void test_Waterfall() {
     TEST_MESSAGE("test_Waterfall()\n");
     for (int y = 0; y < 100; y++) {
         for (int x = 0; x < 350; x++) {
-            ui.theWaterfall->drawPixel(x, y, A_BLUE);
+            //ui.theWaterfall->drawPixel(x, y, A_BLUE);
+            if (x == cursorX) ui.theWaterfall->drawPixel(x, y, A_RED);
         }
     }
 }  // test_Waterfall()
@@ -123,6 +127,14 @@ UserInterface ui;
 
 void setup() {
     Serial.begin(9600);
+
+    //Mock the Station assembly
+    thisStation.setCallsign("AA0A");
+    thisStation.setLocator("BB0B");
+    thisStation.setRig("TX1");
+    thisStation.setMyName("CCCC");
+    thisStation.setFrequency(1234);
+    thisStation.setCursorFreq(555);
 
     ui.begin();
 

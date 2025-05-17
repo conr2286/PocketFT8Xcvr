@@ -1,10 +1,10 @@
 
 /*
 ** NAME
-**  PocketFT8XcvrFW -- Firmware for the KQ7B edition of the Pocket FT8 transceiver
+**  PocketFT8XcvrFW -- Firmware for the Pocket FT8 Revisited Software Defined Radio Transceiver
 **
 ** DESCRIPTION
-**  The PocketFT8Xcvr is a derivative of the original Pocket FT8 transceiver
+**  The KQ7B PocketFT8Xcvr is a derivative of the original Pocket FT8 transceiver
 **  in a compact, self-contained, package.  Notable features include:
 **    + 4-Layer PCB
 **    + Single band FT8 transmit/receiver
@@ -18,7 +18,7 @@
 **    + Plugable filters
 **    + GPS disciplined UTC time and location
 **    + Optional Adafruit Ultimate GPS automates time synchronization and Maidenhead Grid Square locator
-**  The overall goal is to construct a single band, fully self-contained, HF FT8 transceiver for
+**  The overall goal is to deliver a single band, fully self-contained, HF FT8 transceiver for
 **  POTA/SOTA work where light weight and power requirements dominate other goals.
 **
 ** RATIONAL
@@ -34,9 +34,9 @@
 **    + Bug fixes (see https://github.com/conr2286/PocketFT8Xcvr Issues)
 **    + Update the FT8 library with Karlis' more recent code
 **
-** KQ7B
-**  Retired networking engineer living in north central Idaho (USA), stereotype "old guy"
-**  ham radio operator, began constructing radios and was first licensed in the 1960s.
+** KQ7B (conr2286 AT gmail.com)
+**  Retired engineer living in north central Idaho (USA), stereotype "old guy"
+**  ham radio operator, began constructing radios and first licensed in the 1960s.
 **  "What a long, strange trip it has been." -- The Grateful Dead
 **
 ** VERSIONS
@@ -60,7 +60,7 @@
 ** REFERENCES
 **  Franke, Somerville, and Taylor.  "The FT4 and FT8 Communication Protocols." QEX. Jul/Aug 2020.
 */
-#include <Adafruit_GFX.h>  //WARNING:  Must #include ADAfruit_GFX.h prior to HX8357_t3n.h
+#include <Adafruit_GFX.h>  //WARNING:  *Must* #include ADAfruit_GFX.h prior to HX8357_t3n.h
 #include <Arduino.h>
 #include <Audio.h>
 #include <AudioStream.h>
@@ -110,22 +110,16 @@ static void copy_to_fft_buffer(void *, const void *);
 #define ARDUINOJSON_ENABLE_COMMENTS 1
 #include <ArduinoJson.h>
 
-// We include .../teensy4/AudioStream.h only so we can confirm AUDIO_SAMPLE_RATE_EXACT is 6400.0f
+// We include .../teensy4/AudioStream.h only to confirm AUDIO_SAMPLE_RATE_EXACT is 6400.0f
 #include <AudioStream.h>
 
+// Si4735
 #define AM_FUNCTION 1
 #define USB 2
 
-// For HW debugging, define an option to record received audio to an SD file, ft8.raw,
-// encoded as a single channel of 16-bit unsigned integers at 6400 samples/second.
-// The command, sox -r 6400 -c 1 -e unsigned -b 16 ft8.raw ft8.wav, will convert the
-// recording to a wav file.  Set the duration to 0 to eliminate file I/O overhead.
-#define AUDIO_RECORDING_FILENAME "ft8.raw"
-// #define AUDIO_SAMPLE_RATE 6400
-
 // Define the static objects widely referenced throughout PocketFT8Xcvr
 Station thisStation;  // Station model
-ConfigType config;    // CONFIG.JSON parameters
+ConfigType config;    // RAM-resident copy of CONFIG.JSON parameters
 UserInterface ui;     // User Interface
 Si5351 si5351;        // Transmitter/receiver's clock
 
@@ -146,15 +140,14 @@ q15_t dsp_output[FFT_SIZE * 2] __attribute__((aligned(4)));  // TODO:  Move to D
 q15_t input_gulp[input_gulp_size] __attribute__((aligned(4)));
 
 // Global flag to disable the transmitter for testing
-bool disable_xmit = false;  // Flag can be set with config params
+// bool disable_xmit = false;  // Flag can be set with config params
 
+// Legacy globals
 long et1 = 0, et2 = 0;
 const uint16_t size_content = sizeof ssb_patch_content;  // see ssb_patch_content in patch_full.h or patch_init.h;
 uint32_t current_time, start_time, ft8_time;
 uint32_t days_fraction, hours_fraction, minute_fraction;
-
 uint8_t ft8_hours, ft8_minutes, ft8_seconds;
-
 int FT_8_counter, ft8_marker;
 
 // Apparently set when it's time to do an FFT (When is that?  At the end of a received symbol?????)
@@ -241,6 +234,7 @@ FLASHMEM void setup(void) {
     }
 
     // Turn the transmitter off and the receiver on
+    thisStation.setEnableTransmit(false);  // Disable transmitter until we get config info
     pinMode(PIN_PTT, OUTPUT);
     pinMode(PIN_RCV, OUTPUT);
     digitalWrite(PIN_RCV, HIGH);  // Disable the PA and disconnect receiver's RF input from antenna
@@ -272,10 +266,11 @@ FLASHMEM void setup(void) {
 
     // Digest the CONFIG.JSON file
     readConfigFile();
-    thisStation.setCallsign(config.callsign);    // Extract callsign from CONFIG.JSON
-    thisStation.setLocator(config.locator);      // Extract optional locator from CONFIG.JSON
-    thisStation.setFrequency(config.frequency);  // Extract frequency from CONFIG.JSON
-    thisStation.setMyName(config.myName);        // Operator's personal name (not callsign)
+    thisStation.setCallsign(config.callsign);      // Extract callsign from CONFIG.JSON
+    thisStation.setLocator(config.locator);        // Extract optional locator from CONFIG.JSON
+    thisStation.setFrequency(config.frequency);    // Extract frequency from CONFIG.JSON
+    thisStation.setMyName(config.myName);          // Operator's personal name (not callsign)
+    thisStation.setQSOtimeout(config.qsoTimeout);  // Seconds RoboOp will retransmit without receiving a response
 
     // Initialize the SI4735 receiver
     delay(10);
@@ -306,7 +301,7 @@ FLASHMEM void setup(void) {
     set_startup_freq();
     delay(10);
 
-    ui.displayFrequency(thisStation.getFrequency());
+    ui.displayFrequency();
 
     // Sync MCU clock with battery-backed RTC
     setSyncProvider(getTeensy3Time);
@@ -317,16 +312,21 @@ FLASHMEM void setup(void) {
     thisStation.setRig(String("https://github.com/conr2286/PocketFT8Xcvr"));
     set_Station_Coordinates(thisStation.getLocator());              // Configure the Maidenhead Locator library with grid square
     ui.displayLocator(String(thisStation.getLocator()), A_YELLOW);  // Display the locator with caution yellow until we get GPS fix
-    ui.displayCallsign(String(config.callsign));                    // Display station callsigne
+    ui.displayCallsign();                                           // Display station callsigne
 
     // Can the transmitter operate?
-    if ((config.frequency == 0) || (strlen(thisStation.getCallsign()) == 0)) disable_xmit = true;
+    if ((thisStation.getFrequency() >= MINIMUM_FREQUENCY && thisStation.getFrequency() <= MAXIMUM_FREQUENCY) || (strlen(thisStation.getCallsign()) != 0)) {
+        thisStation.setEnableTransmit(true);
+    } else {
+        ui.applicationMsgs->setText("Transmitter disabled");
+        delay(1000);
+    }
 
-    // Start the QSO Sequencer (RoboOp)
-    seq.begin(config.qsoTimeout, config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
-    receive_sequence();                                // Setup to receive at start of first timeslot
+    // Start the QSO Sequencer (RoboOp) and receiver
+    seq.begin(thisStation.getQSOtimeout(), config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
+    receive_sequence();                                          // Setup to receive at start of first timeslot
 
-    // Wait for the next FT8 timeslot (at 0, 15, 30, or 45 seconds past the minute)
+    // Wait for the first FT8 timeslot (at 0, 15, 30, or 45 seconds past the minute) to begin
     start_time = millis();  // Note start time for update_synchronization()
     // update_synchronization();  // Do we really need this in-addition to and before waitForFT8timeslot()?
     waitForFT8timeslot();  // Wait for a 15 second FT8 timeslot

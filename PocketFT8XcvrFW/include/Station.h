@@ -1,5 +1,10 @@
 /**
  * @brief Station model
+ *
+ * Defines many operating parameters for the current station.  Unlike the content
+ * of the config structure (which is simply a RAM-resident copy of CONFIG.JSON),
+ * the content of Station potentially can vary during execution. 
+ *
  */
 #pragma once
 #include <Arduino.h>
@@ -13,6 +18,9 @@ class Station {
     const char* getMyName(void) { return myName.c_str(); }  // Operator's name, not callsign
     unsigned getFrequency(void) { return frequency; }       // kHz
     uint16_t getCursorFreq(void) { return cursorFreq; }     // Hz
+    bool getEnableDuplicates(void) { return enableDuplicates; }
+    bool getEnableTransmit(void) { return enableTransmit; }
+    unsigned getQSOtimeout(void) { return qsoTimeout; }
 
     // The setters
     void setCallsign(String s) { callsign = s; }
@@ -21,14 +29,19 @@ class Station {
     void setMyName(String s) { myName = s; }
     void setFrequency(unsigned kHz) { frequency = kHz; }
     void setCursorFreq(uint16_t hz) { cursorFreq = hz; }
+    void setEnableDuplicates(bool enabled) { enableDuplicates = enabled; }
+    void setEnableTransmit(bool enabled) { enableTransmit = enabled; }
+    void setQSOtimeout(unsigned seconds) { qsoTimeout = seconds; }
 
    private:
-    // The station model data
-    String callsign;
-    String locator;
-    String rig;
-    String myName;
-    unsigned frequency;   // kHz
-    uint16_t cursorFreq;  // FSK "tone" offset from carrier in Hz
-    //TODO:  move cursor_line here
+    String callsign;        // My callsign
+    String locator;         // My Maidenhead Gridsquare
+    String rig;             // My rig
+    String myName;          // My name
+    unsigned frequency;     // Carrier kHz
+    uint16_t cursorFreq;    // FSK "tone" offset from carrier in Hz
+    bool enableDuplicates;  // true==>enable RoboOp to respond to duplicate (previously logged) callsigns
+    bool enableTransmit;    // true==>enable transmitter
+    unsigned qsoTimeout;    // QSO timeout seconds
+    // TODO:  move cursor_line here
 };

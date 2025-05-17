@@ -11,9 +11,6 @@
 
 extern UserInterface ui;
 
-// Implementation of the ConfigType object
-// ConfigType config;
-
 /**
  * @brief Read CONFIG.JSON file into the config structure
  */
