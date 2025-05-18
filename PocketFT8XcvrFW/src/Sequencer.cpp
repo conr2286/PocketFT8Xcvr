@@ -271,14 +271,14 @@ void Sequencer::timeslotEvent() {
             state = LISTEN_73;  // Listen for their 73
             break;
 
-        // We listened for the remote station's 73 but have heard nothing.
-        // We'll assume the QSO has ended.
+        // We listened for the remote station's 73-type msg but have heard nothing.
+        // Let's retransmit our previous msg to tease-out a response from remote and
+        // rely on the timer to close the QSO if it's hopeless.  Our state remains
+        // unchanged while we continue to listen.
         case LISTEN_73:
         case LISTEN_RRR:
             DTRACE();
-            endQSO();      // Log it if we have valid data
-            state = IDLE;  // Return to idle state
-            // ui.applicationMsgs->setText("");
+            pendXmit(contact.oddEven, XMIT_RRSL);  // Retransmit our RRSL to remote
             break;
 
         // We are waiting to contact a displayed station after operator clicked on their message.  We
@@ -990,7 +990,7 @@ void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
             lastStationMsgsItem = ui.stationMsgs->addStationMessageItem(ui.stationMsgs, thisTransmittedMsg);  // New transmitted msg
         }
         lastTransmittedMsg = thisTransmittedMsg;  // Remember for next time we add an item
-        DPRINTF("thisTransmittedMsg='%s'\n", thisTransmittedMsg.c_str());
+        //DPRINTF("thisTransmittedMsg='%s'\n", thisTransmittedMsg.c_str());
     } else {
         ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Transmission pending appropriate time slot
     }

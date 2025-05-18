@@ -117,16 +117,18 @@ static void copy_to_fft_buffer(void *, const void *);
 #define AM_FUNCTION 1
 #define USB 2
 
+
+
+// Build the receiver
+#define MINIMUM_FREQUENCY 7000  // Min freq supported by HW filters
+#define MAXIMUM_FREQUENCY 7300  // Max freq supported by HW filters
+SI4735 si4735;                  // The receiver
+
 // Define the static objects widely referenced throughout PocketFT8Xcvr
-Station thisStation;  // Station model
+Station thisStation(MINIMUM_FREQUENCY,MAXIMUM_FREQUENCY);  // Station model
 ConfigType config;    // RAM-resident copy of CONFIG.JSON parameters
 UserInterface ui;     // User Interface
 Si5351 si5351;        // Transmitter/receiver's clock
-
-// Build the receiver
-#define MINIMUM_FREQUENCY 7000  // The Si4735 sadly wants to know these :(
-#define MAXIMUM_FREQUENCY 7300  // TODO:  These need automated :(
-SI4735 si4735;                  // The receiver
 
 // Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
 AudioInputAnalog adc1;  // xy=132,104
@@ -314,13 +316,8 @@ FLASHMEM void setup(void) {
     ui.displayLocator(String(thisStation.getLocator()), A_YELLOW);  // Display the locator with caution yellow until we get GPS fix
     ui.displayCallsign();                                           // Display station callsigne
 
-    // Can the transmitter operate?
-    if ((thisStation.getFrequency() >= MINIMUM_FREQUENCY && thisStation.getFrequency() <= MAXIMUM_FREQUENCY) || (strlen(thisStation.getCallsign()) != 0)) {
-        thisStation.setEnableTransmit(true);
-    } else {
-        ui.applicationMsgs->setText("Transmitter disabled");
-        delay(1000);
-    }
+    // Notify operator if transmitter is disabled
+    if (!thisStation.canTransmit()) ui.applicationMsgs->setText("Transmitter disabled");
 
     // Start the QSO Sequencer (RoboOp) and receiver
     seq.begin(thisStation.getQSOtimeout(), config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
@@ -328,7 +325,6 @@ FLASHMEM void setup(void) {
 
     // Wait for the first FT8 timeslot (at 0, 15, 30, or 45 seconds past the minute) to begin
     start_time = millis();  // Note start time for update_synchronization()
-    // update_synchronization();  // Do we really need this in-addition to and before waitForFT8timeslot()?
     waitForFT8timeslot();  // Wait for a 15 second FT8 timeslot
 
 }  // setup()
@@ -341,6 +337,10 @@ unsigned oldFlags = 0;  // Used only for debugging the flags
  * Note:  Placing the loop() code in FLASHMEM saves RAM1 memory for more time-sensitive activities
  */
 FLASHMEM void loop() {
+
+    // Check station params to determine if we have everything required to transmit
+    if (thisStation.canTransmit()) thisStation.setEnableTransmit(true);
+
     // If it's not time to decode incoming messages, then it's time to grab the recv'd sigs from A/D
     if (decode_flag == 0) process_data();
 
@@ -685,3 +685,6 @@ void waitForFT8timeslot(void) {
     DPRINTF("-----Timeslot %lu: second()=%u, millis()=%lu ---------------------\n", seq.getSequenceNumber(), millis());
 
 }  // waitForFT8timeslot()
+
+
+
