@@ -53,11 +53,7 @@ bool GPShelper::hasFix() {
  ** @param baudRate GPS serial connection baud rate
  **
  **/
-GPShelper::GPShelper(unsigned gpsBaudRate) {
-    //Serial.begin(9600);
-    // DTRACE();
-    delay(10);
-
+GPShelper::GPShelper(unsigned gpsBaudRate) : validGPSdata(false), year(0), month(0), day(0), hour(0), minute(0), second(0), milliseconds(0), elapsedMillis(0), flat(0.0), flng(0.0) {
     // Configure GPS communication parameters
     gpsDevice.begin(9600);                                // Set Serial1 baud rate to GPS device
     gpsDevice.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);  // We are only interested in RMC messages from GPS
@@ -68,6 +64,7 @@ GPShelper::GPShelper(unsigned gpsBaudRate) {
 #ifdef PIN_PPS
     attachInterrupt(digitalPinToInterrupt(PIN_PPS), isrPPS, CHANGE);
 #endif
+
 }  // GPShelper
 
 /**

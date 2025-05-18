@@ -24,9 +24,6 @@ class ATextBox : public AWidget {
     void onRepaintWidget(void) override;  // Repaint this ATextBox
     void reset(void);                     // Clear box of all text
 
-    // Public variables
-    ARect boundary;
-
    protected:
    private:
     void onTouchWidget(ACoord xScreen, ACoord yScreen) override {};  // We implement and ignore AWidget's touch notifications

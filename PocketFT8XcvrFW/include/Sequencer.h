@@ -18,9 +18,9 @@ class Sequencer {
     char theirTimeslot;  // 0==even, 1==odd
 
     // The Sequencer singleton's private constructor
-    Sequencer() {
-        sequenceNumber = 0;
-    }
+    Sequencer() : state(IDLE), sequenceNumber(0), timeoutTimer(nullptr), contactLog(nullptr), lastStationMsgsItem(nullptr) {
+
+    } //Sequencer()
 
     // Delete copy constructor and assignment operator to prevent copying
     // Sequencer(const Sequencer &) = delete;

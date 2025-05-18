@@ -11,10 +11,8 @@
 
 class Station {
    public:
-    Station(unsigned minF, unsigned maxF) { 
-        minFreq = minF;
-        maxFreq = maxF;
-    }
+    Station(unsigned minF, unsigned maxF) : minFreq(minF), maxFreq(maxF), frequency(0), cursorFreq(0), qsoTimeout(0), enableDuplicates(false), enableTransmit(false) {
+    }  // Station()
 
     // Determine if this Station has everything required to transmit
     bool canTransmit(void) {
@@ -55,8 +53,8 @@ class Station {
     unsigned maxFreq;       // Maximum freq supported by HW filters
     unsigned frequency;     // Carrier kHz
     uint16_t cursorFreq;    // FSK "tone" offset from carrier in Hz
+    unsigned qsoTimeout;    // QSO timeout seconds
     bool enableDuplicates;  // true==>enable RoboOp to respond to duplicate (previously logged) callsigns
     bool enableTransmit;    // true==>enable transmitter
-    unsigned qsoTimeout;    // QSO timeout seconds
     // TODO:  move cursor_line here
 };

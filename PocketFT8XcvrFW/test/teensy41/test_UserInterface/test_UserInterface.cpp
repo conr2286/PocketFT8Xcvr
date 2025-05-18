@@ -9,7 +9,7 @@
 
 extern UserInterface ui;
 
-Station thisStation;
+Station thisStation(7000,7300);
 
 //
 void test_StationInfo(void) {
