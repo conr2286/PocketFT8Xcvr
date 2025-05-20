@@ -39,7 +39,7 @@ APixelBox::APixelBox(ACoord x1, ACoord y1, APixelPos nRows, APixelPos nCols) {
     ACoord wBitMap = nCols - radius / 2 - 1;
     ACoord hBitMap = nRows - radius / 2 - 1;
 
-    // Calculate width/height for the boundary box
+    // Calculate width/height for the rounded boundary box
     ACoord w = nCols + radius;  // Width of box
     ACoord h = nRows + radius;  // Height of box
 
@@ -68,12 +68,11 @@ APixelBox::APixelBox(ACoord x1, ACoord y1, APixelPos nRows, APixelPos nCols) {
  * position (0,0) refers to the upper-left *visible* pixel of the box (inside of the
  * border, if any;).
  */
-void APixelBox::drawPixel(APixelPos x, APixelPos y, AColor color) {
-    // Setup the clip rectangle
-    AGUI::setClipRect();
-    // AGUI::setClipRect(bitmap.x1, bitmap.y1, bitmap.x2 - bitmap.x1 + 1, bitmap.y2 - bitmap.y1 + 1);
+void APixelBox::drawPixel(APixelPos x, APixelPos y, AColor color) const {
+    // Setup the clip rectangle, draw, then restore clip
+    AGUI::setClipRect(bitmap.x1, bitmap.y1, bitmap.w, bitmap.h);
     AGUI::drawPixel(bitmap.x1 + x, bitmap.y1 + y, color);
-    // AGUI::setClipRect();
+    AGUI::setClipRect();
 }
 
 /**
@@ -89,7 +88,7 @@ void APixelBox::drawPixel(APixelPos x, APixelPos y, AColor color) {
 void APixelBox::onTouchWidget(ACoord xScreen, ACoord yScreen) {
     DTRACE();
 
-    // Calculate pixel coordinates within the box's bitmap.  Warning:  either position could be
+    // Calculate pixel coordinates within the bitmap.  Warning:  either position could be
     // negative if touch lies between bitmap and widget boundary.
     int xPos = xScreen - bitmap.x1;
     int yPos = yScreen - bitmap.y1;
@@ -98,7 +97,7 @@ void APixelBox::onTouchWidget(ACoord xScreen, ACoord yScreen) {
     if ((xPos < 0) || (xPos > bitmap.x2)) return;
     if ((yPos < 0) || (yPos > bitmap.y2)) return;
 
-    DPRINTF("onTouchPixel %u %u\n", xPos, yPos);
+    DPRINTF("Invoking onTouchPixel(%u %u)\n", xPos, yPos);
     onTouchPixel(xPos, yPos);
 }
 

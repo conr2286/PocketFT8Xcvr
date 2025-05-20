@@ -29,7 +29,7 @@ class APixelBox : public AWidget {
     virtual ~APixelBox() {}
 
     // Methods
-    void drawPixel(APixelPos x, APixelPos y, AColor color);
+    void drawPixel(APixelPos x, APixelPos y, AColor color) const;
 
     // Protected
    protected:

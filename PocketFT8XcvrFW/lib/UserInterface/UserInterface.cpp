@@ -344,7 +344,7 @@ void MenuButton::onTouchButton(int buttonId) {
  * @note The coordinates received from APixelBox are inside the bitmap, not
  * screen coordinates.
  */
-extern uint16_t cursor_line;  // Pixel location of cursor line
+extern uint16_t cursor_line;  // TODO:  Pixel location of cursor line
 #define ft8_min_bin 48
 #define FFT_Resolution 6.25
 const float ft8_shift = 6.25;  // FT8 Hz/bin???  TODO:  move this elsewhere

@@ -20,10 +20,12 @@
  *    classes (e.g. bool and String) and functions defined in Arduino.h
  *  + This is a minimalist approach with an Adafruit accent for a GUI library.  Consider
  *    LGVL for a more full-featured solution.
- *  + This driver should probably become a singleton if multiple displays are forbidden
+ *  + This adapter should probably become a singleton as multiple displays are forbidden
+ *    due to the use of static member variables. 
  *  + There is no dependency on nor interaction with the touchscreen system here.  See
- *    AWidget's static processTouch() method.
- *  + Not every GFX method is adapted here.
+ *    AWidget's static processTouch() method which is the bridge between the touch and
+ *    display worlds. 
+ *  + Not every GFX method is adapted here.  You may need to implement something. 
  *
  * DEPENDENCIES
  *  + https://github.com/adafruit/Adafruit_HX8357_Library

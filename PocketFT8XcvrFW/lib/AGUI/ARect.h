@@ -21,11 +21,7 @@ class ARect {
     // Constructors
     ARect() { x1 = y1 = x2 = y2 = w = h = 0; }
     virtual ~ARect() {}
-    ARect(ACoord x1, ACoord y1, ALength w, ALength h) {
-        this->x1 = x1;
-        this->y1 = y1;
-        this->w = w;
-        this->h = h;
+    ARect(ACoord x, ACoord y, ALength w, ALength h) : x1(x), y1(y), w(w), h(h) {
         this->x2 = x1 + w;
         this->y2 = y1 + h;
     }

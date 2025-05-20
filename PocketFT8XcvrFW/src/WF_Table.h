@@ -7,7 +7,7 @@
 
 #ifndef WF_TABLE_H_
 #define WF_TABLE_H_
-const uint16_t WFPalette[64] = {
+const PROGMEM uint16_t WFPalette[64] = {
 0x0000, 
 0x0000, 
 0x0000, 

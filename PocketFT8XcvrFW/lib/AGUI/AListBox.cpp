@@ -74,7 +74,7 @@ AListBoxItem& AListBoxItem::operator=(const AListBoxItem& that) {
     this->timeStamp = that.timeStamp;                // Preserve timestamp
     this->selected = that.selected;                  // And selected state variable
 
-    return *this;     
+    return *this;
 
 }  // AListBoxItem assignment
 

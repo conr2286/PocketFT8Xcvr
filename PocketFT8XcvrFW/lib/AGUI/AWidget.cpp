@@ -14,6 +14,9 @@ AWidget* AWidget::headOfWidgets = NULL;
  * Our primary responsibilities here are:
  *  + Link this new widget into the list of all widgets
  *  + Initialize the member variables
+ * 
+ * @note AGUI derived classes depend upon initialized AWidget member variables.  If you
+ * add a new constructor, ensure everything below gets initialized. 
  */
 AWidget::AWidget() {
     // if (!Serial) Serial.begin(9600);

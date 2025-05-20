@@ -28,11 +28,8 @@
  * Note:  This constructor is unnecessary as buildTimer() initializes
  * everything.
  */
-Timer::Timer() {
-    this->next = NULL;
-    this->running = false;
-    this->callback = NULL;
-}
+Timer::Timer() : next(nullptr), running(false), callback(nullptr) {
+} //Timer()
 
 /**
  * @brief Build a new Timer object and add it into the listOfAllTimers
