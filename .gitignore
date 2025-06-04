@@ -2,3 +2,4 @@
 *.zip
 *.o
 compile_commands.json
+*.FCBak
