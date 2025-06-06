@@ -8,7 +8,7 @@
 #include "WF_Table.h"
 #include "arm_math.h"
 #include "decode_ft8.h"
-//#include "display.h"
+// #include "display.h"
 #include "traffic_manager.h"
 
 extern HX8357_t3n tft;
@@ -152,7 +152,7 @@ void update_offset_waterfall(int offset) {
     for (int k = ft8_min_bin; k < ft8_buffer; k++) {
         // tft.drawPixel(k - ft8_min_bin, WF_counter, WFPalette[WF_index[k]]);
         ui.theWaterfall->drawPixel(k - ft8_min_bin, WF_counter, (AColor)WFPalette[WF_index[k]]);
-        //if (k - ft8_min_bin == cursor_line) tft.drawPixel(k - ft8_min_bin, WF_counter, HX8357_RED);
+        // if (k - ft8_min_bin == cursor_line) tft.drawPixel(k - ft8_min_bin, WF_counter, HX8357_RED);
         if (k - ft8_min_bin == cursor_line) ui.theWaterfall->drawPixel(k - ft8_min_bin, WF_counter, A_RED);
     }
 
