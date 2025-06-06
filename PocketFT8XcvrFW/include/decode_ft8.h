@@ -67,7 +67,7 @@ void display_Answer_CQ_Items(void);
 
 int Check_Calling_Stations(int num_decoded);
 void clear_CQ_List_box(void);
-void display_details(int decoded_messages);
+//void display_details(int decoded_messages);
 void display_messages(int decoded_messages);
 void clear_display_details(void);
 int Check_CQ_Calling_Stations(int num_decoded, int reply_state);

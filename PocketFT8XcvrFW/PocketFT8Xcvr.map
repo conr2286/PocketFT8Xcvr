@@ -681,10 +681,6 @@ Discarded input sections
                 0x0000000000000000       0x18 .pio/build/teensy41/src/decode_ft8.cpp.o
  .text._Z13getNewDecodedv
                 0x0000000000000000        0x8 .pio/build/teensy41/src/decode_ft8.cpp.o
- .rodata._Z15display_detailsi.str1.4
-                0x0000000000000000       0x18 .pio/build/teensy41/src/decode_ft8.cpp.o
- .text._Z15display_detailsi
-                0x0000000000000000       0x68 .pio/build/teensy41/src/decode_ft8.cpp.o
  .text._Z5rsl2si
                 0x0000000000000000       0x20 .pio/build/teensy41/src/decode_ft8.cpp.o
  .rodata._Z21display_selected_calli.str1.4
@@ -3908,7 +3904,7 @@ Linker script and memory map
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o
-                0x000000006838da80                __rtc_localtime = 0x6838da80
+                0x000000006842403e                __rtc_localtime = 0x6842403e
 LOAD .pio/build/teensy41/src/Config.cpp.o
 LOAD .pio/build/teensy41/src/GPShelper.cpp.o
 LOAD .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
@@ -7072,7 +7068,7 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000020000e8c       0x1c .pio/build/teensy41/libbf8/libMCP342x.a(MCP342x.cpp.o)
  .rodata.CSWTCH.64
                 0x0000000020000ea8       0x1c .pio/build/teensy41/libbf8/libMCP342x.a(MCP342x.cpp.o)
- .rodata.CSWTCH.74
+ .rodata.CSWTCH.72
                 0x0000000020000ec4        0xf .pio/build/teensy41/src/decode_ft8.cpp.o
  .rodata._GLOBAL__sub_I_F_Long.str1.4
                 0x0000000020000ed3        0x1 .pio/build/teensy41/src/traffic_manager.cpp.o
