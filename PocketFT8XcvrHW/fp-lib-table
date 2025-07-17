@@ -1,0 +1,5 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "JRC")(type "KiCad")(uri "/Users/jconrad/GitHub/KiCAD/JRC")(options "")(descr ""))
+  (lib (name "teensy")(type "KiCad")(uri "/Users/jconrad/GitHub/teensy.pretty")(options "")(descr ""))
+)
