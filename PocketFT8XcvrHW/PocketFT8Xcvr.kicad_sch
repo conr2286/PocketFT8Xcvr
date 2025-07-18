@@ -6,7 +6,7 @@
 	(paper "USLegal")
 	(title_block
 		(title "KQ7B Derivative of the Pocket FT8 Transceiver")
-		(date "2025-07-17")
+		(date "2025-07-18")
 		(rev "3.0")
 		(company "https://github.com/conr2286/PocketFT8Xcvr.git")
 	)
@@ -10378,14 +10378,14 @@
 		)
 		(uuid "843bd358-614a-43c1-a441-60a55639e0fd")
 	)
-	(text_box "J1:  Adafruit 3.5\" SPI display connections\nJ2:  Antenna\nJ3:  GPS\nJ4:  Xmit PA Hi/Lo Power\nJ5:  Mechanical support for Adafruit 3.5\" display"
+	(text_box "J1:  Adafruit 3.5\" SPI display 2050 display\nJ2:  SMA Antenna connector\nJ3:  Adafruit Ultimate GPS PA1616S connector\nJ4:  Auxiliary digital/analog expansion\nJ5:  Mechanical support for Adafruit 2050 display"
 		(exclude_from_sim no)
 		(at 45.72 24.13 0)
 		(size 50.8 11.43)
 		(margins 0.9525 0.9525 0.9525 0.9525)
 		(stroke
 			(width 0)
-			(type default)
+			(type solid)
 		)
 		(fill
 			(type color)
