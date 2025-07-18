@@ -5,7 +5,7 @@
 	(uuid "9b703ee0-e32d-4836-8d5c-bb1a7416ca3c")
 	(paper "USLegal")
 	(title_block
-		(title "KQ7B Derivative of the Pocket FT8 Transceiver")
+		(title "Pocket FT8 Transceiver Revisited")
 		(date "2025-07-18")
 		(rev "3.0")
 		(company "https://github.com/conr2286/PocketFT8Xcvr.git")
