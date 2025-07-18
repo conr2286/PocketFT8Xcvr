@@ -5,12 +5,10 @@
 	(uuid "9b703ee0-e32d-4836-8d5c-bb1a7416ca3c")
 	(paper "USLegal")
 	(title_block
-		(title "KQ7B Edition of the Pocket FT8 Transceiver")
-		(date "2024-10-25")
-		(rev "2.9")
-		(company "KQ7B")
-		(comment 1 "Original design by Charles Hill, Barb Asuroglu, Ricardo Caritti, Karlis Goba, et al")
-		(comment 2 "https://github.com/conr2286/PocketFT8Xcvr.git")
+		(title "KQ7B Derivative of the Pocket FT8 Transceiver")
+		(date "2025-07-17")
+		(rev "3.0")
+		(company "https://github.com/conr2286/PocketFT8Xcvr.git")
 	)
 	(lib_symbols
 		(symbol "2024-08-05_00-31-14:BU2032SM-JJ-GTR"
@@ -14390,9 +14388,9 @@
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "0ab8b9eb-1903-41ae-9d27-333ee452a291")
 		(property "Reference" "J4"
 			(at 94.488 96.52 0)
@@ -21467,7 +21465,7 @@
 		(at 77.47 49.53 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp yes)
 		(uuid "8108b9e2-d221-4d8b-8ca4-85899e120c97")
