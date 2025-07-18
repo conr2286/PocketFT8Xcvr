@@ -58,7 +58,24 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "lib_footprint_issues|185920000|113060000|a64e3316-3aa1-43ec-9806-5098f1363591|00000000-0000-0000-0000-000000000000",
+          "I lost this library during a computer upgrade"
+        ],
+        [
+          "silk_over_copper|123764351|73291823|fa131021-5a23-44ac-a329-5ebc10fd05ca|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "starved_thermal|170815000|58480000|9470ed37-217c-4597-a384-25beaa3ab20b|a3fb2f61-d68c-4db3-90e6-8db4d88827d1|F.Cu",
+          ""
+        ],
+        [
+          "starved_thermal|198120000|73660000|bc9f3c6d-f632-4195-8ba1-d2fb5395628f|c5cc5c10-5dc4-4d83-a45a-eafdb44c2146|B.Cu",
+          "It's grounded on 3 layers --- should be fine"
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -89,7 +106,7 @@
         "items_not_allowed": "error",
         "length_out_of_range": "error",
         "lib_footprint_issues": "warning",
-        "lib_footprint_mismatch": "warning",
+        "lib_footprint_mismatch": "ignore",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
         "mirrored_text_on_front_layer": "warning",

@@ -11149,6 +11149,16 @@
 	)
 	(wire
 		(pts
+			(xy 88.9 49.53) (xy 82.55 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "29e71cad-d4be-4eeb-a60c-65980f47293c")
+	)
+	(wire
+		(pts
 			(xy 34.29 97.79) (xy 38.1 97.79)
 		)
 		(stroke
@@ -14403,7 +14413,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "SparkFun-Connector:1x06"
 			(at 95.25 95.25 0)
 			(effects
 				(font
@@ -23820,7 +23830,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 82.55 49.53 90)
+		(at 88.9 49.53 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -23828,7 +23838,7 @@
 		(dnp no)
 		(uuid "b6092cd6-82f3-4792-b85e-40ecd1437fad")
 		(property "Reference" "#PWR021"
-			(at 88.9 49.53 0)
+			(at 95.25 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23837,7 +23847,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 85.09 48.768 90)
+			(at 91.44 48.768 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23846,7 +23856,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 82.55 49.53 0)
+			(at 88.9 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23855,7 +23865,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 82.55 49.53 0)
+			(at 88.9 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23864,7 +23874,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 82.55 49.53 0)
+			(at 88.9 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
