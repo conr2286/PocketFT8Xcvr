@@ -25388,7 +25388,7 @@
 				(hide yes)
 			)
 		)
-		(property "Notes" "https://www.digikey.com/en/products/detail/skyworks-solutions-inc/SI5351C-B-GM/3679850"
+		(property "Notes" "https://www.digikey.com/en/products/detail/skyworks-solutions-inc/SI5351C-B-GM/3679850 (Do not substitute)"
 			(at 97.79 172.72 0)
 			(effects
 				(font
