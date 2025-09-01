@@ -53,7 +53,7 @@ extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
 extern UserInterface ui;
 
 // The legacy externs
-//extern uint16_t cursor_freq;  // Frequency of FT8 cursor in Hz
+// extern uint16_t cursor_freq;  // Frequency of FT8 cursor in Hz
 
 void DecodedMsgsBox::setMsg(int index, char* msg) {
     setItem(index, msg, A_WHITE, bgColor);
@@ -328,6 +328,24 @@ void MenuButton::onTouchButton(int buttonId) {
             }
             break;
 
+        // Memory M0 button
+        case 4:
+            DPRINTF("M0\n");
+            seq.msgButtonEvent(config.m0);
+            break;
+
+        // Memory M1 button
+        case 5:
+            DPRINTF("M1\n");
+            seq.msgButtonEvent(config.m1);
+            break;
+
+        // Memory M2 button
+        case 6:
+            DPRINTF("M0\n");
+            seq.msgButtonEvent(config.m2);
+            break;
+
         // Ignore unknown button identifiers
         default:
             DPRINTF("Unknown button\n");
@@ -352,11 +370,11 @@ const float ft8_shift = 6.25;  // FT8 Hz/bin???  TODO:  move this elsewhere
 void Waterfall::onTouchPixel(ACoord x, ACoord y) {
 #ifndef PIO_UNIT_TESTING
     cursor_line = x;
-    thisStation.setCursorFreq( ((float)cursor_line + (float)ft8_min_bin) * ft8_shift) ;
+    thisStation.setCursorFreq(((float)cursor_line + (float)ft8_min_bin) * ft8_shift);
     set_Xmit_Freq();
     String str = String("Cursor freq = ") + String(thisStation.getCursorFreq()) + String(" Hz");
     // DPRINTF("%s\n", str.c_str());
-    //ui.applicationMsgs->setText(str);
+    // ui.applicationMsgs->setText(str);
     ui.displayFrequency();  // Update station info display too
 #endif
 

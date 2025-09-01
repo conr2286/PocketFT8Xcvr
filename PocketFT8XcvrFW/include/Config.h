@@ -16,6 +16,10 @@ typedef struct Config {
     bool enableDuplicates;                 // Enable RoboOp to contact duplicates
     char logFilename[24];                  // Log filename
     char myName[16];                       // Operator's personal name, not callsign
+    char m0[14];                           // Free Text Message 0 and NUL
+    char m1[14];                           // Free Text Message 1 and NUL
+    char m2[14];                           // Free Text Message 2 and NUL
+    char my_sota_ref[12];                  // My station's SOTA Reference
 } ConfigType;
 
 // Default configuration

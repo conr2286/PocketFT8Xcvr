@@ -29,6 +29,10 @@ typedef enum {
     XMIT_73 = 17,       // QSOing:  Transmitting 73
 
     // Tuning mode
-    TUNING = 18  // TUNEing:  Transmitting unmodulated carrier
+    TUNING = 18,  // TUNEing:  Transmitting unmodulated carrier
+
+    // Free text message states
+    MSG_PENDING = 19,  // 13-char (max) free text msg awaits a timeslot
+    XMIT_MSG = 20      // Transmit free text msg now
 
 } SequencerStateType;

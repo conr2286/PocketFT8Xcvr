@@ -24,7 +24,7 @@ extern HX8357_t3n tft;
 
 #include "arm_math.h"
 #include "decode_ft8.h"
-//#include "display.h"
+// #include "display.h"
 #include "locator.h"
 #include "UserInterface.h"
 #include "msgTypes.h"
@@ -104,7 +104,6 @@ char* get_message() {
  *              4 -- AG0E KQ7B R-8
  *              5 -- AG0E KQ7B RRR
  *
- * TODO:  Replace these hardwired message numbers with MsgType enumerations
  **/
 void set_message(uint16_t index) {
     // char big_gulp[60];
@@ -159,7 +158,6 @@ void set_message(uint16_t index) {
     DPRINTF("message='%s'\n", message);
     ui.applicationMsgs->setText(message);
 
-
     // TODO:  Check for empty message???
     pack77_1(message, packed);
     genft8(packed, tones);
@@ -173,6 +171,38 @@ void set_message(uint16_t index) {
 
 }  // set_message()
 
+/**
+ * @brief Set up a 13-char (max) free text for transmission
+ * @param freeText The message
+ */
+void set_message(char* freeText) {
+    uint8_t packed[K_BYTES];
+
+    DPRINTF("set_message(%s)\n", freeText);
+
+    // Ignore nonsense
+    if ((freeText == NULL) || (strlen(freeText) == 0)) return;
+
+    // strlcpy(message, blank, sizeof(message));
+    clearOutboundMessageText();
+    clearOutboundMessageDisplay();
+
+    snprintf(message, sizeof(message), "%s", freeText);
+    DPRINTF("message='%s'\n", message);
+    ui.applicationMsgs->setText(message);
+
+    // Prepare the outbound message as an array of tones for the FSK modulator
+    packtext77(message, packed);  // Pack text into compressed bits
+    genft8(packed, tones);        // Generate the FT8 tones for modulator
+
+    message_state = 1;
+
+    //	sprintf(big_gulp,"%s %s", rtc_string, message);
+    //	if (logging_on == 1) write_log_data(big_gulp);
+
+    // DPRINTF("message='%s'\n", message);
+}
+
 void clearOutboundMessageText(void) {
     // char blank[] = "                   ";
     // strlcpy(message, blank, sizeof(message));
@@ -180,7 +210,7 @@ void clearOutboundMessageText(void) {
 }
 
 void clearOutboundMessageDisplay(void) {
-    //DTRACE();
+    // DTRACE();
 
     // char blank[] = "                      ";
     // tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);

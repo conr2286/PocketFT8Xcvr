@@ -19,8 +19,7 @@ class Sequencer {
 
     // The Sequencer singleton's private constructor
     Sequencer() : state(IDLE), sequenceNumber(0), timeoutTimer(nullptr), contactLog(nullptr), lastStationMsgsItem(nullptr) {
-
-    } //Sequencer()
+    }  // Sequencer()
 
     // Delete copy constructor and assignment operator to prevent copying
     // Sequencer(const Sequencer &) = delete;
@@ -64,6 +63,7 @@ class Sequencer {
     void timeslotEvent(void);                                      // FT8 timeslot boundary
     void receivedMsgEvent(Decode *msg);                            // Received an FT8 message
     void cqButtonEvent(void);                                      // CQ button clicked
+    void msgButtonEvent(char *freeTxtMsg);                         // Send a 13 char free txt msg button
     void abortButtonEvent(void);                                   // Operator clicked ABORT button
     void tuneButtonEvent(void);                                    // TUNE button clicked
     void clickDecodedMessageEvent(unsigned msgIndex);              // Received message clicked this index

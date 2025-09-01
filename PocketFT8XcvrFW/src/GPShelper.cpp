@@ -42,8 +42,10 @@ void isrPPS() {
 /**
  * @brief Determine if the GPS device has acquired a satellite fix
  * @return true==satellite fix, false==not yet
+ *
+ * @note The GPS can have a fix but the data may remain invalid
  */
-bool GPShelper::hasFix() {
+volatile bool GPShelper::hasFix() {
     return gpsPPSActive;
 }  // hasFix()
 
@@ -98,8 +100,9 @@ bool GPShelper::obtainGPSData(unsigned timeoutSeconds, void (*gpsAcquiringFix)(u
     // Assume we won't acquire a fix
     validGPSdata = false;
 
-    // //Assume an inactive/disconnected/defective GPS
-    // bool activeGPS=false;
+    // Note:  We could quickly check gpsPPSActive here if we knew for certain the hardware
+    // had the PPS signal connected to the MCU GPIO port.  Since we don't require that in
+    // V2.10 hardware, we always poll gpsDevice to determine if it has a valid fix.
 
     // A successful result requires all three flags to become true
     bool gotDate = false;

@@ -85,7 +85,7 @@
  * at this version of the code.  HF is in pretty good shape though.
  *
  **/
-void Contact::begin(const char* myStationCall, const char* workedCall, unsigned freq, const char* mode, const char* myRig, unsigned oddEven) {
+void Contact::begin(const char* myStationCall, const char* workedCall, unsigned freq, const char* mode, const char* myRig, unsigned oddEven, char* mySOTAref) {
     // Sanity checks
     if ((myStationCall == nullptr) || (workedCall == nullptr) || (mode == nullptr)) return;
 
@@ -97,6 +97,7 @@ void Contact::begin(const char* myStationCall, const char* workedCall, unsigned 
     strlcpy(this->workedCall, workedCall, sizeof(this->workedCall));
     strlcpy(this->myCall, myCall, sizeof(this->myCall));
     strlcpy(this->mode, mode, sizeof(this->mode));
+    strlcpy(this->mySOTAref, mySOTAref, sizeof(this->mySOTAref));
 
     // // Update in-memory hash table of attempted contacts.  We record all attempted contacts so the
     // // RoboOp ignores stations that won't waste time attempting to contact stations that won't
