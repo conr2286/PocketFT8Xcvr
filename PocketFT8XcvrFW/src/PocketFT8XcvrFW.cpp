@@ -78,7 +78,7 @@
 #include "HX8357_t3n.h"  //WARNING:  Adafruit_GFX.h must include prior to HX8357_t3n.h
 #include "LogFactory.h"
 #include "MCP342x.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "PocketFT8Xcvr.h"
 #include "Process_DSP.h"
 #include "Sequencer.h"
