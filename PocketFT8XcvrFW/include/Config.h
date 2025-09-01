@@ -19,6 +19,7 @@ typedef struct Config {
     char m0[14];                           // Free Text Message 0 and NUL
     char m1[14];                           // Free Text Message 1 and NUL
     char m2[14];                           // Free Text Message 2 and NUL
+    char my_sota_ref[12];                  // My station's SOTA Reference
 } ConfigType;
 
 // Default configuration

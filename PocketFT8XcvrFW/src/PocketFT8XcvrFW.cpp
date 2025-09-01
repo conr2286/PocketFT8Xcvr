@@ -78,7 +78,7 @@
 #include "HX8357_t3n.h"  //WARNING:  Adafruit_GFX.h must include prior to HX8357_t3n.h
 #include "LogFactory.h"
 #include "MCP342x.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "PocketFT8Xcvr.h"
 #include "Process_DSP.h"
 #include "Sequencer.h"
@@ -117,18 +117,16 @@ static void copy_to_fft_buffer(void *, const void *);
 #define AM_FUNCTION 1
 #define USB 2
 
-
-
 // Build the receiver
 #define MINIMUM_FREQUENCY 7000  // Min freq supported by HW filters
 #define MAXIMUM_FREQUENCY 7300  // Max freq supported by HW filters
 SI4735 si4735;                  // The receiver
 
 // Define the static objects widely referenced throughout PocketFT8Xcvr
-Station thisStation(MINIMUM_FREQUENCY,MAXIMUM_FREQUENCY);  // Station model
-ConfigType config;    // RAM-resident copy of CONFIG.JSON parameters
-UserInterface ui;     // User Interface
-Si5351 si5351;        // Transmitter/receiver's clock
+Station thisStation(MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY);  // Station model
+ConfigType config;                                          // RAM-resident copy of CONFIG.JSON parameters
+UserInterface ui;                                           // User Interface
+Si5351 si5351;                                              // Transmitter/receiver's clock
 
 // Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
 AudioInputAnalog adc1;  // xy=132,104
@@ -273,6 +271,7 @@ FLASHMEM void setup(void) {
     thisStation.setFrequency(config.frequency);    // Extract frequency from CONFIG.JSON
     thisStation.setMyName(config.myName);          // Operator's personal name (not callsign)
     thisStation.setQSOtimeout(config.qsoTimeout);  // Seconds RoboOp will retransmit without receiving a response
+    thisStation.setSOTAref(config.my_sota_ref);    // This station's SOTA Reference if any
 
     // Initialize the SI4735 receiver
     delay(10);
@@ -325,7 +324,7 @@ FLASHMEM void setup(void) {
 
     // Wait for the first FT8 timeslot (at 0, 15, 30, or 45 seconds past the minute) to begin
     start_time = millis();  // Note start time for update_synchronization()
-    waitForFT8timeslot();  // Wait for a 15 second FT8 timeslot
+    waitForFT8timeslot();   // Wait for a 15 second FT8 timeslot
 
 }  // setup()
 
@@ -337,7 +336,6 @@ unsigned oldFlags = 0;  // Used only for debugging the flags
  * Note:  Placing the loop() code in FLASHMEM saves RAM1 memory for more time-sensitive activities
  */
 FLASHMEM void loop() {
-
     // Check station params to determine if we have everything required to transmit
     if (thisStation.canTransmit()) thisStation.setEnableTransmit(true);
 
@@ -393,10 +391,12 @@ FLASHMEM void loop() {
     pollTouchscreen();
     // if (tune_flag == 1) process_serial();  // TODO:  Do we still need this???
 
-    // If we have not yet obtained valid GPS data, but the GPS device has acquired a fix, then obtain the GPS data.
+    // If we haven't recorded valid GPS data, but the GPS device has now acquired a fix, then obtain the GPS data.
     // This is a bit abrupt as we afterward more or less resynch everything and wait for a timeslot.
-    if (gpsHelper.validGPSdata == false && gpsHelper.hasFix() == true) {
-        // Sync MCU and RTC time with GPS if it's working and can get a timely fix  TODO:  eliminate gpsCallback???
+    if (!gpsHelper.validGPSdata && gpsHelper.hasFix()) {
+        // DPRINTF("gpsHelper.validGPSdata=%d, gpsHelper.hasFix()=%d\n", gpsHelper.validGPSdata, gpsHelper.hasFix());
+
+        // Sync MCU and RTC time with GPS if it has valid data
         if (gpsHelper.obtainGPSData(config.gpsTimeout, gpsCallback)) {
             // Inform operator
             ui.applicationMsgs->setText("GPS has acquired a fix");
@@ -419,6 +419,10 @@ FLASHMEM void loop() {
 
             // Record the locator gridsquare for logging
             set_Station_Coordinates(thisStation.getLocator());
+
+            // Update date/time in the UI
+            ui.displayDate(true);
+            ui.displayTime();
 
             // Wait for an FT8 timeslot to begin (this updates start_time) using GPS disciplined time
             waitForFT8timeslot();
@@ -685,6 +689,3 @@ void waitForFT8timeslot(void) {
     DPRINTF("-----Timeslot %lu: second()=%u, millis()=%lu ---------------------\n", seq.getSequenceNumber(), millis());
 
 }  // waitForFT8timeslot()
-
-
-

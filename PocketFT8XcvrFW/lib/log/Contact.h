@@ -25,10 +25,10 @@ class Contact {
     Contact() {
         this->reset();
     }
-    void begin(const char* myCall, const char* workedCall, unsigned freq, const char* mode, const char* myRig, unsigned oddEven);  // Begin a new, active QSO
-    void reset(void);                                                                                                              // Reset all fields in a Contact instance, making it inactive
-    bool isValid(void);                                                                                                            // Determine if the current QSO, if any, is a valid (completed) contact
-    bool isActive(void);                                                                                                           // Determine if a Contact instance has recorded any values
+    void begin(const char* myCall, const char* workedCall, unsigned freq, const char* mode, const char* myRig, unsigned oddEven, char* mySOTAref);  // Begin a new, active QSO
+    void reset(void);                                                                                                                               // Reset all fields in a Contact instance, making it inactive
+    bool isValid(void);                                                                                                                             // Determine if the current QSO, if any, is a valid (completed) contact
+    bool isActive(void);                                                                                                                            // Determine if a Contact instance has recorded any values
 
     // Define the setters for the contact fields
     void setWorkedRSL(const char* rsl);

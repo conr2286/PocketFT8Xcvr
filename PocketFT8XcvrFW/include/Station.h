@@ -25,6 +25,7 @@ class Station {
     // The getters
     const char* getCallsign(void) { return callsign.c_str(); }
     const char* getLocator(void) { return locator.c_str(); }
+    const char* getSOTAref(void) { return mySOTAref.c_str(); }
     const char* getRig(void) { return rig.c_str(); }
     const char* getMyName(void) { return myName.c_str(); }  // Operator's name, not callsign
     unsigned getFrequency(void) { return frequency; }       // kHz
@@ -37,6 +38,7 @@ class Station {
     void setCallsign(String s) { callsign = s; }
     void setLocator(String s) { locator = s; }
     void setRig(String s) { rig = s; }
+    void setSOTAref(String s) { mySOTAref = s; }
     void setMyName(String s) { myName = s; }
     void setFrequency(unsigned kHz) { frequency = kHz; }
     void setCursorFreq(uint16_t hz) { cursorFreq = hz; }
@@ -49,6 +51,7 @@ class Station {
     String locator;         // My Maidenhead Gridsquare
     String rig;             // My rig
     String myName;          // My name
+    String mySOTAref;       // This station's SOTA Reference number
     unsigned minFreq;       // Minimum freq supported by HW filters
     unsigned maxFreq;       // Maximum freq supported by HW filters
     unsigned frequency;     // Carrier kHz
