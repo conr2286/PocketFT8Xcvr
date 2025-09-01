@@ -7,17 +7,25 @@
 //  + There is no reasonable default for the operating frequency; it too must be configured
 //  + The 4-character maidenhead locator is optional if you have a working GPS
 //  + The Si4735 AVC can normally be enabled though your mileage may vary
+//  + The FT8 protocol limits free text messages to a maximum of 13 chars
 //
 //  DETAILS
 //  The operating frequency may be configured for any amateur band between 160 and 12 meters subject
 //  to the following restrictions:  The chosen frequency (e.g. 7074 kHz) must align with the chosen
 //  low pass filter installed in the hardware.  The Si4735 is limited to a maximum frequency of ~26 mHz.
 //  The firmware does not verify the operating frequency lies within an amateur radio band. The
-//  firmware and hardware have only been tested on 40 and 20 meters.
+//  firmware and hardware have only been tested on 40 meters.
 //
 //  If you have a working GPS, the locator is obtained from the satellites if unspecified.  The
 //  locator you specify overides the GPS if that's what you really want.  If your GPS is not working
 //  and you don't specify a locator, then the firmware omits the locator from your traffic.
+//
+//  By default, the FT8 RoboOp Sequencer will not respond to a CQ from a duplicate station whose
+//  callsign appears in a cache of recent contacts.  You may overide this by enabling duplicates. 
+//
+//  The RoboOp sequencer will timeout if an unsuitable response is not received from the remote
+//  station due to QRM, QSB, QRT, QLF, whatever.  You may reconfigure the timeout, but remember
+//  the quickest FT8 response requires at least one 30 second FT8 timeslot.
 //
 //  This configuration file must be named "CONFIG.JSON" and installed on the Teensy's SD card slot.
 //
@@ -27,8 +35,11 @@
    "frequency": 7074,               //REQUIRED:  Operating frequency in kHz
    "locator": "",                   //OPTIONAL:  Station maidenhead gridsquare (four-characters)
    "enableAVC": true,               //OPTIONAL:  0=disabled, 1=enabled SI4735 AVC (default is enabled)
-   "qsoTimeout": 120,               //OPTIONAL:  Seconds RoboOp sequencer retries w/o response from remote
+   "qsoTimeout": 180,               //OPTIONAL:  Seconds RoboOp sequencer retries w/o response from remote
    "enableDuplicates": false,       //OPTIONAL:  Enable RoboOp to respond to CQs from previously logged stations
    "logFilename" : "LOGFILE.ADIF",  //OPTIONAL:  ADIF logfile name
-   "myName" : "Jim"                 //OPTIONAL:  Operator's personal name (not callsign)
+   "myName" : "Jim",                //OPTIONAL:  Operator's personal name (not callsign)
+   "my_sota_ref" : "W7I/IC-257",    //OPTIONAL:  SOTA Reference Number entry for ADIF log (default is NUL)
+   "M0" : "IC257 KQ7B",             //OPTIONAL:  13-Char Free Text Msg0 (default is NUL)
+   "M2" : "QRT KQ7B"                //OPTIONAL:  13-Char Free Text Msg2 (default is NUL)
 }

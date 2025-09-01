@@ -215,6 +215,12 @@ void Sequencer::timeslotEvent() {
             pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Set modulation flag for loop()
             break;
 
+        // Time to start transmitter sending free text msg
+        case MSG_PENDING:
+            DTRACE();
+            pendXmit(ODD(sequenceNumber), XMIT_MSG);  // Start the FSK modulator in loop()
+            break;
+
         // Time to listen for replies to our Tx6 CQ transmission.  The loop()
         // has already stopped transmitting symbols and switched us to receive mode.
         // Our job is to prepare to process a possible response to our CQ.
@@ -222,6 +228,17 @@ void Sequencer::timeslotEvent() {
             DTRACE();
             state = LISTEN_LOC;  // We are now listening for a response to our CQ
             // ui.applicationMsgs->setText(get_message(), A_DARK_GREEN);
+            break;
+
+        // We have finished transmitting a free text message.  No further transmission
+        // nor response is expected.  Free text messages are not part of a logged QSO
+        // so we don't have anything to do with logging/etc.
+        case XMIT_MSG:
+            DTRACE();
+            state = IDLE;    // No further transmission nor response expected
+            ui.b4->reset();  // Reset the highlighted GUI M* buttons
+            ui.b5->reset();
+            ui.b6->reset();
             break;
 
         // We have listened for responders to our CQ and heard nothing.  At the next timeslot,
@@ -539,13 +556,45 @@ void Sequencer::tuneButtonEvent() {
 }  // tuneButtonEvent();
 
 /**
+ * @brief Operator clicked a send free text button (M0, M1 or M2)
+ * @param msg The possibly empty free text msg to transmit
+ *
+ */
+void Sequencer::msgButtonEvent(char* msg) {
+    DTRACE();
+
+    // Ignore nonsense
+    if ((msg == NULL) || (strlen(msg) == 0)) return;
+
+    // The required action depends upon which state the Sequencer resides
+    switch (state) {
+        // We can send a free text message if we are not engaged in a QSO
+        case IDLE:
+            // Encode the free text message for transmission by the FSK modulator
+            set_message(msg);  // Build the FT8 FSK tone array
+
+            // Prepare the sequencer to transmit the free text message
+            state = MSG_PENDING;                              // Await the next timeslot
+            startTimer();                                     // Start the Timer to terminate run-on transmissions
+            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Tell operator msg is pending
+            break;
+
+        // The M* buttons are ignored when we are in the midst of an existing QSO
+        default:
+            DTRACE();
+
+    }  // switch
+
+}  // msgButtonEvent()
+
+/**
  *  Operator clicked the CQ button
  *
  **/
 void Sequencer::cqButtonEvent() {
     DTRACE();
 
-    // The required action depends upon which state the Synchronizer machine currently resides
+    // The required action depends upon which state the Sequencer machine currently resides
     switch (state) {
         // Prepare to transmit CQ in the next available timeslot.  Since we are not interacting with
         // another station, we are not concerned about doubling with them, just await next timeslot.
@@ -990,7 +1039,7 @@ void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
             lastStationMsgsItem = ui.stationMsgs->addStationMessageItem(ui.stationMsgs, thisTransmittedMsg);  // New transmitted msg
         }
         lastTransmittedMsg = thisTransmittedMsg;  // Remember for next time we add an item
-        //DPRINTF("thisTransmittedMsg='%s'\n", thisTransmittedMsg.c_str());
+        // DPRINTF("thisTransmittedMsg='%s'\n", thisTransmittedMsg.c_str());
     } else {
         ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Transmission pending appropriate time slot
     }

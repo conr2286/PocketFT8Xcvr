@@ -25,6 +25,7 @@ void Station_Data_Initialize(void);
 
 char* get_message();
 void set_message(uint16_t index);
+void set_message(char* freeText);
 void clearOutboundMessageDisplay(void);
 void setXmitParams(char* targetStation, int snr);
 void clearOutboundMessageText(void);
