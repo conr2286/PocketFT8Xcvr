@@ -19,6 +19,7 @@ class AWidget {
 
     static void processTouch(uint16_t xCoord, uint16_t yCoord);  // All touch events pass through processTouch()
     bool hasBorder(void);
+    void repaint(void) { onRepaintWidget(); }
     inline ALength width(void) const { return boundary.w; }
     inline ALength height(void) const { return boundary.h; }
     ARect boundary;       // Widget boundary rectangle coordinates
@@ -37,4 +38,5 @@ class AWidget {
     virtual void onRepaintWidget(void) {}                          // Derived classes must overide doRepaintWidget() to repaint themselves
 
    private:
+    bool overlaps(AWidget* someWidget);  // Does someWidget overlap this widget?
 };

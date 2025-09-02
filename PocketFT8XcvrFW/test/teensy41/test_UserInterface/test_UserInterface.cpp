@@ -9,7 +9,7 @@
 
 extern UserInterface ui;
 
-Station thisStation(7000,7300);
+Station thisStation(7000, 7300);
 
 //
 void test_StationInfo(void) {
@@ -34,9 +34,18 @@ void test_DecodedMsgs(void) {
     ui.decodedMsgs->setMsg(4, "WA4ABC AG0E -13 S3");
     ui.decodedMsgs->setMsg(5, "WA5ABC AG0E -13 S3");
     delay(1000);
-    //AWidget::processTouch(20, 124); //Highlight item 0
+    // AWidget::processTouch(20, 124); //Highlight item 0
     delay(1000);
-    ui.decodedMsgs->setItemColor(1, A_BLACK, A_LIGHT_GREY); //Highlight item 1
+    ui.decodedMsgs->setItemColor(1, A_BLACK, A_LIGHT_GREY);  // Highlight item 1
+}
+
+void test_popup(void) {
+    TEST_MESSAGE("test_popup()\n");
+    delay(1000);
+    ATextBox* popup = new ATextBox("I am the popup widget", 0, 0, 440, 310, A_RED);
+    delay(2000);   // Leave popup on the screen for a bit
+    delete popup;  // Should repaint overlapping widgets
+    delay(2000);   // Leave repainted gui visible for a moment
 }
 
 void test_StationMsgs(void) {
@@ -53,7 +62,7 @@ void test_StationMsgs(void) {
     ui.stationMsgs->addStationMessageItem(ui.stationMsgs, &msg2);
     ui.stationMsgs->addStationMessageItem(ui.stationMsgs, "NA1A KQ7B 73");
     delay(2000);
-    AWidget::processTouch(270, 120); //Touch AG0E's CQ message
+    AWidget::processTouch(270, 120);  // Touch AG0E's CQ message
     delay(1000);
 }  // test_StationMsgs()
 
@@ -62,7 +71,7 @@ void test_Waterfall() {
     TEST_MESSAGE("test_Waterfall()\n");
     for (int y = 0; y < 100; y++) {
         for (int x = 0; x < 350; x++) {
-            //ui.theWaterfall->drawPixel(x, y, A_BLUE);
+            // ui.theWaterfall->drawPixel(x, y, A_BLUE);
             if (x == cursorX) ui.theWaterfall->drawPixel(x, y, A_RED);
         }
     }
@@ -117,6 +126,7 @@ int runUnityTests(void) {
     RUN_TEST(test_AppMessage);
     RUN_TEST(test_CQButton);
     RUN_TEST(test_AbortButton);
+    RUN_TEST(test_popup);
     RUN_TEST(test_TouchScreen);
     return UNITY_END();
 }
@@ -128,7 +138,7 @@ UserInterface ui;
 void setup() {
     Serial.begin(9600);
 
-    //Mock the Station assembly
+    // Mock the Station assembly
     thisStation.setCallsign("AA0A");
     thisStation.setLocator("BB0B");
     thisStation.setRig("TX1");
