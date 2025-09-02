@@ -1,3 +1,20 @@
+/**
+ * AWidget is the base class for all AGUI controls
+ *
+ * Notes:
+ *  + AGUI controls have limited support for repainting an underlying control
+ *  when an overlying control is deleted.
+ *  + AGUI controls repaint by recalculating what appears within them; AGUI does
+ *  not store a shadow pixel map of the display as do most modern GUIs.
+ *  + When a deleted control covers another's displayed screen area, AWidget
+ *  invokes the repaint method of the overlapped control.
+ *  + The result of nested overlaps is undefined when one is deleted as the
+ *  list of all AWidgets is linear without knowledge of nested overlaps and
+ *  thus the order of repaints is indeterminate.
+ *  + Because APixelBox does not implement a "real" repaint() method, it is unable to
+ *  repaint the display after being uncovered by another control.
+ */
+
 #include "AWidget.h"
 
 #include "AGUI.h"
@@ -14,9 +31,9 @@ AWidget* AWidget::headOfWidgets = NULL;
  * Our primary responsibilities here are:
  *  + Link this new widget into the list of all widgets
  *  + Initialize the member variables
- * 
+ *
  * @note AGUI derived classes depend upon initialized AWidget member variables.  If you
- * add a new constructor, ensure everything below gets initialized. 
+ * add a new constructor, ensure everything below gets initialized.
  */
 AWidget::AWidget() {
     // if (!Serial) Serial.begin(9600);
@@ -106,7 +123,7 @@ AWidget::~AWidget() {
     AGUI::gfx->setClipRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1);
     AGUI::gfx->fillRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1, bgColor);
 
-    // Unlink this widget if at the head of the list of all widgets
+    // Unlink this widget if it resides at the head of the list of all widgets
     if (headOfWidgets == this) {
         // Unlink this widget from head of list
         headOfWidgets = this->next;
@@ -114,23 +131,33 @@ AWidget::~AWidget() {
         // Paranoia for dangling pointers
         this->next = NULL;
 
-        // Finished
-        return;
-    }
+    } else {
+        // Unlink this widget from somewhere in the midst of all widgets in the list
+        for (AWidget* scannedWidget = headOfWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
+            // Does scannedWidget precede this widget?
+            if (scannedWidget->next == this) {
+                // Yes, unlink this widget from list
+                scannedWidget->next = this->next;
 
-    // Unlink this widget from somewhere else in the list of all widgets
-    for (AWidget* scannedWidget = headOfWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
-        // Does scannedWidget precede this widget?
-        if (scannedWidget->next == this) {
-            // Yes, unlink this widget from list
-            scannedWidget->next = this->next;
+                // Paranoia for dangling pointers
+                this->next = NULL;
 
-            // Paranoia for dangling pointers
-            this->next = NULL;
-
-            break;  // Finished
+                break;  // Finished
+            }
         }
     }
+
+    // Repaint all widgets previously covered by this widget
+    for (AWidget* someWidget = headOfWidgets; someWidget != NULL; someWidget = someWidget->next) {
+        // If someWidget overlaps this widget then repaint someWidget
+        if (overlaps(someWidget)) {
+            DPRINTF("Overlap with %p\n", someWidget);
+            someWidget->repaint();
+        } else {
+            DPRINTF("No overlap with %p\n", someWidget);
+        }
+    }
+
 }  //~AWidget()
 
 /**
@@ -169,4 +196,22 @@ void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
  */
 bool AWidget::hasBorder() {
     return bdColor != bgColor;
+}
+
+/**
+ * @brief Determine if someWidget overlaps this widget
+ * @param someWidget The other widget which might overlap this widget
+ * @return true if the two widgets' screen areas overlap
+ *
+ * Two widgets overlap if any point on one, including their borders, overlaps any point on the other
+ */
+bool AWidget::overlaps(AWidget* someWidget) {
+    // Does one widget lie entirely to the left of the other?
+    if (someWidget->boundary.x2 < this->boundary.x1 || someWidget->boundary.x1 > this->boundary.x2) return false;
+
+    // Does one widget lie entirely below the other?
+    if (someWidget->boundary.y2 < this->boundary.y1 || someWidget->boundary.y1 > this->boundary.y2) return false;
+
+    // This and someWidget must overlap somehow
+    return true;
 }

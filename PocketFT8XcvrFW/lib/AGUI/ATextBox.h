@@ -16,7 +16,7 @@ class ATextBox : public AWidget {
    public:
     // Constructors/Destructors
     ATextBox(const char* txt, ACoord x1, ACoord y1, ALength w, ALength h, AColor border);
-    virtual ~ATextBox() {}
+    virtual ~ATextBox() override {} 
 
     // Public methods
     void setText(const char* str, AColor fg = A_WHITE);

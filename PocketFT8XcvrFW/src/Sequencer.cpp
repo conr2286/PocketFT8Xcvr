@@ -127,7 +127,7 @@
 #include <String.h>
 
 #include "Config.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "LogFactory.h"
 #include "PocketFT8Xcvr.h"
 #include "SequencerStates.h"
@@ -658,8 +658,32 @@ void Sequencer::clickDecodedMessageEvent(Decode* msg) {
     // Assert Target_Call==msg->field2 as this stuff could become FUBAR
     DFPRINTF("sequenceNumber=%lu, Target_Call='%s', msg->field2='%s', msg->sequenceNumber=%u, state=%u\n", sequenceNumber, Target_Call, msg->field2, msg->sequenceNumber, state);
 
-    // The required action depends upon which state the Synchronizer machine currently resides
+    // Sanity check
     if (msg != NULL) {
+        // We can only contact msgTypes known to include a usable callsign for the remote station
+        switch (msg->msgType) {
+            // We cannot respond to these FT8 message types
+            case MSG_BLANK:    // Hashed (unusable) callsign
+            case MSG_FREE:     // Free text (no callsign available)
+            case MSG_TELE:     // Telemetry
+            case MSG_UNKNOWN:  //
+            default:           //"...lost in the ozone again."
+                DPRINTF("Cannot respond to msgType %d\n", msg->msgType);
+                return;  // Ignore operator's selection
+                break;
+
+            // We will respond to these FT8 message types
+            case MSG_CQ:    // Normal response to remote's CQ
+            case MSG_LOC:   // Early Tail-ending
+            case MSG_RSL:   // Early Tail-ending
+            case MSG_RRSL:  // Early Tail-ending
+            case MSG_RR73:  // Tail-ending
+            case MSG_RRR:   // Tail-ending
+            case MSG_73:    // Tail-ending
+                break;
+        }  // msgType
+
+        // We will respond if not already entangled in something else
         switch (state) {
             // Operator wants to send our grid locator to Target_Call
             case IDLE:        // We are currently idle
@@ -683,8 +707,8 @@ void Sequencer::clickDecodedMessageEvent(Decode* msg) {
             default:
                 DTRACE();
                 break;
-        }
-    }
+        }  // state
+    }  // sanity
 
 }  // clickDecodedMessageEvent()
 

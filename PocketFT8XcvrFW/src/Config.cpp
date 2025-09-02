@@ -43,12 +43,24 @@ void readConfigFile() {
     configFile.close();
 
     // Report configuration
-    String configMsg = String("call=") + String(config.callsign) + String(" freq=") + String(config.frequency) + String(" kHz\n");
-    if (config.enableDuplicates) configMsg += String("enableDuplicates==1 ");
-    configMsg += String("log=") + String(config.logFilename) + String(" name=") + String(config.myName);
-    configMsg += String(" M0='") + String(config.m0) + String("'");
-    ui.applicationMsgs->setText(configMsg.c_str());
+    // String configMsg = String("call=") + String(config.callsign) + String(" freq=") + String(config.frequency) + String(" kHz\n");
+    // if (config.enableDuplicates) configMsg += String("enableDuplicates==1 ");
+    // configMsg += String("log=") + String(config.logFilename) + String(" name=") + String(config.myName);
+    // configMsg += String(" M0='") + String(config.m0) + String("'");
+    // ui.applicationMsgs->setText(configMsg.c_str());
 
-    // Let the config report linger on the display for a moment
-    delay(3000);
+    // Display the configuration
+    AListBox* popup = new AListBox(10, 10, 480 - 20, 320 - 20, A_RED);
+    popup->addItem(popup, String("call=") + String(config.callsign) + String(" freq=") + String(config.frequency) + String(" kHz\n"));
+    popup->addItem(popup, String("myName='") + String(config.myName) + String("'"));
+    popup->addItem(popup, String("enableDuplicates=") + String(config.enableDuplicates));
+    popup->addItem(popup, String("M0='") + String(config.m0) + String("'"));
+    popup->addItem(popup, String("M1='") + String(config.m1) + String("'"));
+    popup->addItem(popup, String("M2='") + String(config.m2) + String("'"));
+    popup->addItem(popup, String("my_sota_ref='") + String(config.my_sota_ref) + String("'"));
+    popup->addItem(popup, String(" "));
+
+    // Let the config report linger on the display before removing it
+    delay(5000);
+    delete popup;
 }

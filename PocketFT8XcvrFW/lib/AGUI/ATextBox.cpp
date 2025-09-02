@@ -77,6 +77,7 @@ ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AC
 }
 
 void ATextBox::onRepaintWidget(void) {
+    DTRACE();
     // Setup clipping rectangle without regard for rounded vs. squared corners
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);
 

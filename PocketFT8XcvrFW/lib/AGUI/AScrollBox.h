@@ -40,7 +40,7 @@ class AScrollBox : public AWidget {
    public:
     // Public methods
     AScrollBox(ACoord xCoord, ACoord yCoord, ALength w, ALength h, AColor bdColor);     // Build AScrollBox with default colors
-    virtual ~AScrollBox();                                                              // Destructor purges data struct and erases displayed items
+    virtual ~AScrollBox() override;                                                              // Destructor purges data struct and erases displayed items
     AScrollBoxItem* addItem(AScrollBox* pAScrollBox, String str, AColor fg = A_WHITE);  // Add item to bottom of this AScrollBox
     AScrollBoxItem* setItemColors(AScrollBoxItem* pItem, AColor fg, AColor bg);         // Change specified item's colors
     int getCount(void) const;                                                           // Get count of displayed items in this AScrollBox

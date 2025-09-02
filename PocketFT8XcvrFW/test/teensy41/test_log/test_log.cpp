@@ -8,7 +8,7 @@ ContactLogFile *testLog;  // The contact log file
 Contact testContact;      // A contact for testing
 
 void setUp(void) {
-    testContact.begin("T3ST", "AA0A", 7074, "FT8", "Ozone Blaster III", 1);  // Start gathering contact info
+    testContact.begin("T3ST", "AA0A", 7074, "FT8", "Ozone Blaster III", 1, "SOTA");  // Start gathering contact info
 }
 
 void tearDown(void) {

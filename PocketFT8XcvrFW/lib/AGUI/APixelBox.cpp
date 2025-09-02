@@ -10,6 +10,10 @@
  * Similar to many AGUI classes, the intended usage is for the application to inherit APixelBox
  * overriding its virtual methods.
  *
+ * LIMITATION:  APixelBox does not have a repaint() method and does not cache the displayed pixels
+ * for repainting.  Consequently, APixelBox is unable to repaint itself after a segment of its
+ * region has been uncovered by another GUI control.
+ *
  */
 
 #include "APixelBox.h"
@@ -100,5 +104,3 @@ void APixelBox::onTouchWidget(ACoord xScreen, ACoord yScreen) {
     DPRINTF("Invoking onTouchPixel(%u %u)\n", xPos, yPos);
     onTouchPixel(xPos, yPos);
 }
-
-
