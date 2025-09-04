@@ -304,10 +304,12 @@ FLASHMEM void setup(void) {
 
     ui.displayFrequency();
 
-    // Sync MCU clock with battery-backed RTC
+    // Arrange for the Teensy MCU to obtain and sync its data/time from the Teensy RTC
+    // Serial.printf("MM:DD:YY = %02d:%02d:%02d\n", month(), day(), year());
     setSyncProvider(getTeensy3Time);
     ui.displayDate();  // Likely not yet GPS disciplined
     ui.displayTime();  //...and thus displayed in YELLOW
+    // Serial.printf("MM:DD:YY = %02d:%02d:%02d\n", month(), day(), year());
 
     // Final station initialization
     thisStation.setRig(String("https://github.com/conr2286/PocketFT8Xcvr"));
@@ -401,11 +403,24 @@ FLASHMEM void loop() {
             // Inform operator
             ui.applicationMsgs->setText("GPS has acquired a fix");
 
+            // Set the battery-backed Teensy RTC to the GPS-derived time
+            // TimeElements gpsTime;
+            // gpsTime.Month = gpsHelper.month;
+            // gpsTime.Day = gpsHelper.day;
+            // gpsTime.Year = gpsHelper.year;
+            // gpsTime.Hour = gpsHelper.hour;
+            // gpsTime.Minute = gpsHelper.minute;
+            // gpsTime.Second = gpsHelper.second;
+            // Teensy3Clock.set(makeTime(gpsTime));
+
             // Set the MCU time to the GPS result
+            Serial.printf("0 RTC=%lu, now=%lu\n", Teensy3Clock.get(), now());
             setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
+            Serial.printf("1 RTC=%lu, now=%lu\n", Teensy3Clock.get(), now());
 
             // Now set the battery-backed Teensy RTC to the GPS-derived time in the MCU
             Teensy3Clock.set(now());
+            Serial.printf("2 RTC=%lu, now=%lu\n", Teensy3Clock.get(), now());
 
             // Use the GPS-derived locator unless config.json hardwired it to something else
             if (strlen(config.locator) == 0) {
@@ -416,6 +431,8 @@ FLASHMEM void loop() {
 
             // Arrange for the Teensy battery-backed RTC (UTC) to keep the MCU time accurate
             setSyncProvider(getTeensy3Time);
+
+            Serial.printf("3 RTC=%lu, now=%lu\n", Teensy3Clock.get(), now());
 
             // Record the locator gridsquare for logging
             set_Station_Coordinates(thisStation.getLocator());

@@ -3903,7 +3903,7 @@ Linker script and memory map
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o
-                0x0000000068b75d9f                __rtc_localtime = 0x68b75d9f
+                0x0000000068b89fc0                __rtc_localtime = 0x68b89fc0
 LOAD .pio/build/teensy41/src/Config.cpp.o
 LOAD .pio/build/teensy41/src/GPShelper.cpp.o
 LOAD .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
@@ -3968,100 +3968,100 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x0000000060001400                . = ALIGN (0x400)
  *fill*         0x000000006000102c      0x3d4 ff
 
-.text.code      0x0000000060001400     0x1ce8
+.text.code      0x0000000060001400     0x1d78
  *(.startup)
  .startup       0x0000000060001400      0x274 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
                 0x000000006000164c                ResetHandler
  *(.flashmem*)
  *fill*         0x0000000060001674        0x4 
- .flashmem      0x0000000060001678      0x5d8 .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
+ .flashmem      0x0000000060001678      0x658 .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
                 0x0000000060001678                loadSSB()
                 0x00000000600016c4                loop
-                0x00000000600018b8                setup
- .flashmem      0x0000000060001c50       0xf8 .pio/build/teensy41/libFrameworkArduino.a(AudioStream.cpp.o)
-                0x0000000060001c50                AudioStream::initialize_memory(audio_block_struct*, unsigned int)
- .flashmem      0x0000000060001d48      0x7fc .pio/build/teensy41/libFrameworkArduino.a(CrashReport.cpp.o)
-                0x0000000060001d48                CrashReportClass::clear()
-                0x0000000060001de4                CrashReportClass::printTo(Print&) const
-                0x00000000600024e8                CrashReportClass::operator bool()
- .flashmem      0x0000000060002544      0x500 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x0000000060002544                startup_early_hook
-                0x0000000060002544                startup_default_early_hook
-                0x0000000060002548                startup_middle_hook
-                0x0000000060002548                startup_default_middle_hook
-                0x000000006000254c                startup_default_late_hook
-                0x000000006000254c                startup_late_hook
-                0x0000000060002550                startup_debug_reset
-                0x0000000060002554                configure_cache
-                0x0000000060002664                configure_external_ram
-                0x00000000600029e8                usb_pll_start
- .flashmem      0x0000000060002a44      0x130 .pio/build/teensy41/libFrameworkArduino.a(tempmon.c.o)
-                0x0000000060002a44                tempmon_init
- .flashmem      0x0000000060002b74      0x13c .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
-                0x0000000060002b74                usb_init
-                0x0000000060002c5c                _reboot_Teensyduino_
- .flashmem      0x0000000060002cb0       0x54 .pio/build/teensy41/libFrameworkArduino.a(analog.c.o)
-                0x0000000060002cb0                analog_init
- .flashmem      0x0000000060002d04      0x17c .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
-                0x0000000060002d04                TwoWire::configSDApin(unsigned char)
-                0x0000000060002d38                TwoWire::setSDA(unsigned char)
-                0x0000000060002d8c                TwoWire::configSCLpin(unsigned char)
-                0x0000000060002dc0                TwoWire::setSCL(unsigned char)
-                0x0000000060002e18                TwoWire::begin()
-                0x0000000060002e80                . = ALIGN (0x4)
+                0x0000000060001934                setup
+ .flashmem      0x0000000060001cd0       0xf8 .pio/build/teensy41/libFrameworkArduino.a(AudioStream.cpp.o)
+                0x0000000060001cd0                AudioStream::initialize_memory(audio_block_struct*, unsigned int)
+ .flashmem      0x0000000060001dc8      0x7fc .pio/build/teensy41/libFrameworkArduino.a(CrashReport.cpp.o)
+                0x0000000060001dc8                CrashReportClass::clear()
+                0x0000000060001e64                CrashReportClass::printTo(Print&) const
+                0x0000000060002568                CrashReportClass::operator bool()
+ .flashmem      0x00000000600025c4      0x500 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x00000000600025c4                startup_early_hook
+                0x00000000600025c4                startup_default_early_hook
+                0x00000000600025c8                startup_middle_hook
+                0x00000000600025c8                startup_default_middle_hook
+                0x00000000600025cc                startup_default_late_hook
+                0x00000000600025cc                startup_late_hook
+                0x00000000600025d0                startup_debug_reset
+                0x00000000600025d4                configure_cache
+                0x00000000600026e4                configure_external_ram
+                0x0000000060002a68                usb_pll_start
+ .flashmem      0x0000000060002ac4      0x130 .pio/build/teensy41/libFrameworkArduino.a(tempmon.c.o)
+                0x0000000060002ac4                tempmon_init
+ .flashmem      0x0000000060002bf4      0x13c .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
+                0x0000000060002bf4                usb_init
+                0x0000000060002cdc                _reboot_Teensyduino_
+ .flashmem      0x0000000060002d30       0x54 .pio/build/teensy41/libFrameworkArduino.a(analog.c.o)
+                0x0000000060002d30                analog_init
+ .flashmem      0x0000000060002d84      0x17c .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
+                0x0000000060002d84                TwoWire::configSDApin(unsigned char)
+                0x0000000060002db8                TwoWire::setSDA(unsigned char)
+                0x0000000060002e0c                TwoWire::configSCLpin(unsigned char)
+                0x0000000060002e40                TwoWire::setSCL(unsigned char)
+                0x0000000060002e98                TwoWire::begin()
+                0x0000000060002f00                . = ALIGN (0x4)
  *(.init)
- .init          0x0000000060002e80        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
-                0x0000000060002e80                _init
- .init          0x0000000060002e84        0x8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtn.o
- *fill*         0x0000000060002e8c        0x4 
- .init.__stub   0x0000000060002e90      0x218 linker stubs
-                0x00000000600030a8                __preinit_array_start = .
+ .init          0x0000000060002f00        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
+                0x0000000060002f00                _init
+ .init          0x0000000060002f04        0x8 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtn.o
+ *fill*         0x0000000060002f0c        0x4 
+ .init.__stub   0x0000000060002f10      0x228 linker stubs
+                0x0000000060003138                __preinit_array_start = .
  *(.preinit_array)
-                0x00000000600030a8                __preinit_array_end = .
-                0x00000000600030a8                __init_array_start = .
+                0x0000000060003138                __preinit_array_end = .
+                0x0000000060003138                __init_array_start = .
  *(.init_array)
- .init_array    0x00000000600030a8        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
- .init_array    0x00000000600030ac        0x4 .pio/build/teensy41/src/Config.cpp.o
- .init_array    0x00000000600030b0        0x4 .pio/build/teensy41/src/GPShelper.cpp.o
- .init_array    0x00000000600030b4        0x4 .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
- .init_array    0x00000000600030b8        0x4 .pio/build/teensy41/src/Process_DSP.cpp.o
- .init_array    0x00000000600030bc        0x4 .pio/build/teensy41/src/Sequencer.cpp.o
- .init_array    0x00000000600030c0        0x4 .pio/build/teensy41/src/button.cpp.o
- .init_array    0x00000000600030c4        0x4 .pio/build/teensy41/src/decode_ft8.cpp.o
- .init_array    0x00000000600030c8        0x4 .pio/build/teensy41/src/gen_ft8.cpp.o
- .init_array    0x00000000600030cc        0x4 .pio/build/teensy41/src/traffic_manager.cpp.o
- .init_array    0x00000000600030d0        0x4 .pio/build/teensy41/lib341/libSD.a(SD.cpp.o)
- .init_array    0x00000000600030d4        0x4 .pio/build/teensy41/lib31e/libUserInterface.a(UserInterface.cpp.o)
- .init_array    0x00000000600030d8        0x4 .pio/build/teensy41/libc46/libAudio.a(input_adc.cpp.o)
- .init_array    0x00000000600030dc        0x4 .pio/build/teensy41/libFrameworkArduino.a(IntervalTimer.cpp.o)
- .init_array    0x00000000600030e0        0x4 .pio/build/teensy41/libe47/libtouchscreen.a(TouchScreen_I2C.cpp.o)
- .init_array    0x00000000600030e4        0x4 .pio/build/teensy41/libbf8/libMCP342x.a(MCP342x.cpp.o)
-                0x00000000600030e8                __init_array_end = .
-                0x00000000600030e8                . = ALIGN (0x4)
+ .init_array    0x0000000060003138        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
+ .init_array    0x000000006000313c        0x4 .pio/build/teensy41/src/Config.cpp.o
+ .init_array    0x0000000060003140        0x4 .pio/build/teensy41/src/GPShelper.cpp.o
+ .init_array    0x0000000060003144        0x4 .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
+ .init_array    0x0000000060003148        0x4 .pio/build/teensy41/src/Process_DSP.cpp.o
+ .init_array    0x000000006000314c        0x4 .pio/build/teensy41/src/Sequencer.cpp.o
+ .init_array    0x0000000060003150        0x4 .pio/build/teensy41/src/button.cpp.o
+ .init_array    0x0000000060003154        0x4 .pio/build/teensy41/src/decode_ft8.cpp.o
+ .init_array    0x0000000060003158        0x4 .pio/build/teensy41/src/gen_ft8.cpp.o
+ .init_array    0x000000006000315c        0x4 .pio/build/teensy41/src/traffic_manager.cpp.o
+ .init_array    0x0000000060003160        0x4 .pio/build/teensy41/lib341/libSD.a(SD.cpp.o)
+ .init_array    0x0000000060003164        0x4 .pio/build/teensy41/lib31e/libUserInterface.a(UserInterface.cpp.o)
+ .init_array    0x0000000060003168        0x4 .pio/build/teensy41/libc46/libAudio.a(input_adc.cpp.o)
+ .init_array    0x000000006000316c        0x4 .pio/build/teensy41/libFrameworkArduino.a(IntervalTimer.cpp.o)
+ .init_array    0x0000000060003170        0x4 .pio/build/teensy41/libe47/libtouchscreen.a(TouchScreen_I2C.cpp.o)
+ .init_array    0x0000000060003174        0x4 .pio/build/teensy41/libbf8/libMCP342x.a(MCP342x.cpp.o)
+                0x0000000060003178                __init_array_end = .
+                0x0000000060003178                . = ALIGN (0x4)
 
-.text.progmem   0x00000000600030e8     0x46d4
+.text.progmem   0x0000000060003178     0x46d4
  *(.progmem*)
- .progmem       0x00000000600030e8     0x3dd8 .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
- .progmem       0x0000000060006ec0       0x80 .pio/build/teensy41/src/Process_DSP.cpp.o
- .progmem       0x0000000060006f40      0x658 .pio/build/teensy41/lib31e/libUserInterface.a(UserInterface.cpp.o)
- .progmem       0x0000000060007598       0x2a .pio/build/teensy41/libc46/libAudio.a(input_adc.cpp.o)
- *fill*         0x00000000600075c2        0x2 
- .progmem       0x00000000600075c4      0x106 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
-                0x00000000600075c4                usb_string_product_name
-                0x00000000600075c4                usb_string_product_name_default
-                0x00000000600075dc                usb_string_manufacturer_name_default
-                0x00000000600075dc                usb_string_manufacturer_name
-                0x00000000600075f4                string0
-                0x00000000600075f8                usb_config_descriptor_12
-                0x000000006000765c                usb_config_descriptor_480
- *fill*         0x00000000600076ca        0x2 
- .progmem       0x00000000600076cc       0xf0 .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
-                0x00000000600076cc                TwoWire::i2c4_hardware
-                0x000000006000771c                TwoWire::i2c3_hardware
-                0x000000006000776c                TwoWire::i2c1_hardware
-                0x00000000600077bc                . = ALIGN (0x4)
+ .progmem       0x0000000060003178     0x3dd8 .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
+ .progmem       0x0000000060006f50       0x80 .pio/build/teensy41/src/Process_DSP.cpp.o
+ .progmem       0x0000000060006fd0      0x658 .pio/build/teensy41/lib31e/libUserInterface.a(UserInterface.cpp.o)
+ .progmem       0x0000000060007628       0x2a .pio/build/teensy41/libc46/libAudio.a(input_adc.cpp.o)
+ *fill*         0x0000000060007652        0x2 
+ .progmem       0x0000000060007654      0x106 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+                0x0000000060007654                usb_string_product_name
+                0x0000000060007654                usb_string_product_name_default
+                0x000000006000766c                usb_string_manufacturer_name_default
+                0x000000006000766c                usb_string_manufacturer_name
+                0x0000000060007684                string0
+                0x0000000060007688                usb_config_descriptor_12
+                0x00000000600076ec                usb_config_descriptor_480
+ *fill*         0x000000006000775a        0x2 
+ .progmem       0x000000006000775c       0xf0 .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
+                0x000000006000775c                TwoWire::i2c4_hardware
+                0x00000000600077ac                TwoWire::i2c3_hardware
+                0x00000000600077fc                TwoWire::i2c1_hardware
+                0x000000006000784c                . = ALIGN (0x4)
 
-.text.itcm      0x0000000000000000    0x2ef30 load address 0x00000000600077bc
+.text.itcm      0x0000000000000000    0x2ef30 load address 0x000000006000784c
                 0x0000000000000020                . = (. + 0x20)
  *fill*         0x0000000000000000       0x20 
  *(.fastrun)
@@ -7010,26 +7010,26 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x000000000002ef30                . = ALIGN (0x10)
  *fill*         0x000000000002ef30        0x0 
 
-.glue_7         0x000000000002ef30        0x0 load address 0x00000000600366ec
+.glue_7         0x000000000002ef30        0x0 load address 0x000000006003677c
  .glue_7        0x000000000002ef30        0x0 linker stubs
 
-.glue_7t        0x000000000002ef30        0x0 load address 0x00000000600366ec
+.glue_7t        0x000000000002ef30        0x0 load address 0x000000006003677c
  .glue_7t       0x000000000002ef30        0x0 linker stubs
 
-.vfp11_veneer   0x000000000002ef30        0x0 load address 0x00000000600366ec
+.vfp11_veneer   0x000000000002ef30        0x0 load address 0x000000006003677c
  .vfp11_veneer  0x000000000002ef30        0x0 linker stubs
 
-.v4_bx          0x000000000002ef30        0x0 load address 0x00000000600366ec
+.v4_bx          0x000000000002ef30        0x0 load address 0x000000006003677c
  .v4_bx         0x000000000002ef30        0x0 linker stubs
 
-.fini           0x000000000002ef30        0x4 load address 0x00000000600366ec
+.fini           0x000000000002ef30        0x4 load address 0x000000006003677c
  .fini          0x000000000002ef30        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
                 0x000000000002ef30                _fini
 
-.iplt           0x000000000002ef34        0x0 load address 0x00000000600366f0
+.iplt           0x000000000002ef34        0x0 load address 0x0000000060036780
  .iplt          0x000000000002ef34        0x0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 
-.ARM.exidx      0x000000000002ef34        0x8 load address 0x00000000600366f0
+.ARM.exidx      0x000000000002ef34        0x8 load address 0x0000000060036780
                 0x000000000002ef34                __exidx_start = .
  *(.ARM.exidx* .ARM.extab.text* .gnu.linkonce.armexidx.*)
  .ARM.exidx.text.__aeabi_atexit
@@ -7039,7 +7039,7 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                                           0x8 (size before relaxing)
                 0x000000000002ef3c                __exidx_end = .
 
-.data           0x0000000020000000    0x17ac0 load address 0x00000000600366f8
+.data           0x0000000020000000    0x17ac0 load address 0x0000000060036788
  *(.endpoint_queue)
  .endpoint_queue
                 0x0000000020000000      0x280 .pio/build/teensy41/libFrameworkArduino.a(usb.c.o)
@@ -7553,383 +7553,383 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
                 0x000000002000b158     0x4000 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_rfft_init_q15.o)
                 0x000000002000b158                realCoefBQ15
  .rodata.str1.4
-                0x000000002000f158       0xa5 .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
- *fill*         0x000000002000f1fd        0x3 
+                0x000000002000f158       0xf5 .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
+ *fill*         0x000000002000f24d        0x3 
  .rodata.str1.4
-                0x000000002000f200       0x16 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(Adafruit_GPS.cpp.o)
- *fill*         0x000000002000f216        0x2 
+                0x000000002000f250       0x16 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(Adafruit_GPS.cpp.o)
+ *fill*         0x000000002000f266        0x2 
  .rodata.str1.4
-                0x000000002000f218      0x8a5 .pio/build/teensy41/libFrameworkArduino.a(CrashReport.cpp.o)
+                0x000000002000f268      0x8a5 .pio/build/teensy41/libFrameworkArduino.a(CrashReport.cpp.o)
                                         0x8ae (size before relaxing)
- *fill*         0x000000002000fabd        0x3 
+ *fill*         0x000000002000fb0d        0x3 
  .rodata.str1.4
-                0x000000002000fac0       0x44 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
+                0x000000002000fb10       0x44 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
                                          0x4c (size before relaxing)
  .rodata.twiddleCoef_1024_q15
-                0x000000002000fb04      0xc00 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x000000002000fb04                twiddleCoef_1024_q15
+                0x000000002000fb54      0xc00 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x000000002000fb54                twiddleCoef_1024_q15
  .rodata.twiddleCoef_128_q15
-                0x0000000020010704      0x180 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0000000020010704                twiddleCoef_128_q15
+                0x0000000020010754      0x180 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0000000020010754                twiddleCoef_128_q15
  .rodata.twiddleCoef_16_q15
-                0x0000000020010884       0x30 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0000000020010884                twiddleCoef_16_q15
+                0x00000000200108d4       0x30 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x00000000200108d4                twiddleCoef_16_q15
  .rodata.twiddleCoef_2048_q15
-                0x00000000200108b4     0x1800 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x00000000200108b4                twiddleCoef_2048_q15
+                0x0000000020010904     0x1800 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0000000020010904                twiddleCoef_2048_q15
  .rodata.twiddleCoef_256_q15
-                0x00000000200120b4      0x300 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x00000000200120b4                twiddleCoef_256_q15
+                0x0000000020012104      0x300 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0000000020012104                twiddleCoef_256_q15
  .rodata.twiddleCoef_32_q15
-                0x00000000200123b4       0x60 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x00000000200123b4                twiddleCoef_32_q15
+                0x0000000020012404       0x60 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0000000020012404                twiddleCoef_32_q15
  .rodata.twiddleCoef_4096_q15
-                0x0000000020012414     0x3000 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0000000020012414                twiddleCoef_4096_q15
+                0x0000000020012464     0x3000 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0000000020012464                twiddleCoef_4096_q15
  .rodata.twiddleCoef_512_q15
-                0x0000000020015414      0x600 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0000000020015414                twiddleCoef_512_q15
+                0x0000000020015464      0x600 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0000000020015464                twiddleCoef_512_q15
  .rodata.twiddleCoef_64_q15
-                0x0000000020015a14       0xc0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0000000020015a14                twiddleCoef_64_q15
+                0x0000000020015a64       0xc0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0000000020015a64                twiddleCoef_64_q15
  .rodata.two_over_pi
-                0x0000000020015ad4      0x108 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libm.a(libm_a-e_rem_pio2.o)
+                0x0000000020015b24      0x108 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libm.a(libm_a-e_rem_pio2.o)
  .rodata.usb_descriptor_list
-                0x0000000020015bdc       0x84 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
-                0x0000000020015bdc                usb_descriptor_list
+                0x0000000020015c2c       0x84 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+                0x0000000020015c2c                usb_descriptor_list
  .rodata.zeroes.0
-                0x0000000020015c60       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
+                0x0000000020015cb0       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-svfprintf.o)
  .rodata.zeroes.0
-                0x0000000020015c70       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
+                0x0000000020015cc0       0x10 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-vfiprintf.o)
  .rodata._ZN6String15zeroterminationE
-                0x0000000020015c80        0x1 .pio/build/teensy41/libFrameworkArduino.a(WString.cpp.o)
-                0x0000000020015c80                String::zerotermination
+                0x0000000020015cd0        0x1 .pio/build/teensy41/libFrameworkArduino.a(WString.cpp.o)
+                0x0000000020015cd0                String::zerotermination
  *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.data*)))
- *fill*         0x0000000020015c81        0x7 
+ *fill*         0x0000000020015cd1        0x7 
  .data._impure_data
-                0x0000000020015c88      0x120 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-impure.o)
-                0x0000000020015c88                _impure_data
+                0x0000000020015cd8      0x120 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-impure.o)
+                0x0000000020015cd8                _impure_data
  .data.CrashReport
-                0x0000000020015da8        0x4 .pio/build/teensy41/libFrameworkArduino.a(CrashReport.cpp.o)
-                0x0000000020015da8                CrashReport
+                0x0000000020015df8        0x4 .pio/build/teensy41/libFrameworkArduino.a(CrashReport.cpp.o)
+                0x0000000020015df8                CrashReport
  .data.F_BUS_ACTUAL
-                0x0000000020015dac        0x4 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
-                0x0000000020015dac                F_BUS_ACTUAL
+                0x0000000020015dfc        0x4 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
+                0x0000000020015dfc                F_BUS_ACTUAL
  .data.F_CPU_ACTUAL
-                0x0000000020015db0        0x4 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
-                0x0000000020015db0                F_CPU_ACTUAL
- .data.SPI      0x0000000020015db4       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000020015db4                SPI
- .data.SPI1     0x0000000020015e04       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000020015e04                SPI1
- .data.SPI2     0x0000000020015e54       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
-                0x0000000020015e54                SPI2
- .data.Serial   0x0000000020015ea4       0x10 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
-                0x0000000020015ea4                Serial
- .data.Serial1  0x0000000020015eb4       0x60 .pio/build/teensy41/libFrameworkArduino.a(HardwareSerial1.cpp.o)
-                0x0000000020015eb4                Serial1
- .data.Wire     0x0000000020015f14      0x140 .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
-                0x0000000020015f14                Wire
- .data.Wire1    0x0000000020016054      0x140 .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
-                0x0000000020016054                Wire1
- .data.Wire2    0x0000000020016194      0x140 .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
-                0x0000000020016194                Wire2
+                0x0000000020015e00        0x4 .pio/build/teensy41/libFrameworkArduino.a(clockspeed.c.o)
+                0x0000000020015e00                F_CPU_ACTUAL
+ .data.SPI      0x0000000020015e04       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000020015e04                SPI
+ .data.SPI1     0x0000000020015e54       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000020015e54                SPI1
+ .data.SPI2     0x0000000020015ea4       0x50 .pio/build/teensy41/lib060/libSPI.a(SPI.cpp.o)
+                0x0000000020015ea4                SPI2
+ .data.Serial   0x0000000020015ef4       0x10 .pio/build/teensy41/libFrameworkArduino.a(usb_inst.cpp.o)
+                0x0000000020015ef4                Serial
+ .data.Serial1  0x0000000020015f04       0x60 .pio/build/teensy41/libFrameworkArduino.a(HardwareSerial1.cpp.o)
+                0x0000000020015f04                Serial1
+ .data.Wire     0x0000000020015f64      0x140 .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
+                0x0000000020015f64                Wire
+ .data.Wire1    0x00000000200160a4      0x140 .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
+                0x00000000200160a4                Wire1
+ .data.Wire2    0x00000000200161e4      0x140 .pio/build/teensy41/lib672/libWire.a(WireIMXRT.cpp.o)
+                0x00000000200161e4                Wire2
  .data._ZL10lastSecond
-                0x00000000200162d4        0x4 .pio/build/teensy41/lib31e/libUserInterface.a(UserInterface.cpp.o)
+                0x0000000020016324        0x4 .pio/build/teensy41/lib31e/libUserInterface.a(UserInterface.cpp.o)
  .data._ZL12syncInterval
-                0x00000000200162d8        0x4 .pio/build/teensy41/lib66f/libTime.a(Time.cpp.o)
+                0x0000000020016328        0x4 .pio/build/teensy41/lib66f/libTime.a(Time.cpp.o)
  .data._ZL7lastDay
-                0x00000000200162dc        0x4 .pio/build/teensy41/lib31e/libUserInterface.a(UserInterface.cpp.o)
+                0x000000002001632c        0x4 .pio/build/teensy41/lib31e/libUserInterface.a(UserInterface.cpp.o)
  .data._ZN13IntervalTimer14nvic_prioritesE
-                0x00000000200162e0        0x4 .pio/build/teensy41/libFrameworkArduino.a(IntervalTimer.cpp.o)
-                0x00000000200162e0                IntervalTimer::nvic_priorites
+                0x0000000020016330        0x4 .pio/build/teensy41/libFrameworkArduino.a(IntervalTimer.cpp.o)
+                0x0000000020016330                IntervalTimer::nvic_priorites
  .data._ZZN11ArduinoJson8V742PD226detail16DefaultAllocator8instanceEvE9allocator
-                0x00000000200162e4        0x4 .pio/build/teensy41/src/Config.cpp.o
-                0x00000000200162e4                ArduinoJson::V742PD22::detail::DefaultAllocator::instance()::allocator
+                0x0000000020016334        0x4 .pio/build/teensy41/src/Config.cpp.o
+                0x0000000020016334                ArduinoJson::V742PD22::detail::DefaultAllocator::instance()::allocator
  .data._ZZN12Adafruit_GPS9data_initEvE10COGWPlabel
-                0x00000000200162e8        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200162ef        0x1 
+                0x0000000020016338        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001633f        0x1 
  .data._ZZN12Adafruit_GPS9data_initEvE10DEPTHlabel
-                0x00000000200162f0        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200162f6        0x2 
+                0x0000000020016340        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016346        0x2 
  .data._ZZN12Adafruit_GPS9data_initEvE10LATWPlabel
-                0x00000000200162f8        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200162ff        0x1 
+                0x0000000020016348        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001634f        0x1 
  .data._ZZN12Adafruit_GPS9data_initEvE10LONWPlabel
-                0x0000000020016300        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016307        0x1 
+                0x0000000020016350        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016357        0x1 
  .data._ZZN12Adafruit_GPS9data_initEvE10PITCHlabel
-                0x0000000020016308        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x000000002001630e        0x2 
+                0x0000000020016358        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001635e        0x2 
  .data._ZZN12Adafruit_GPS9data_initEvE10RPM_M1unit
-                0x0000000020016310        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+                0x0000000020016360        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  .data._ZZN12Adafruit_GPS9data_initEvE10VMGWPlabel
-                0x0000000020016314        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x000000002001631b        0x1 
+                0x0000000020016364        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001636b        0x1 
  .data._ZZN12Adafruit_GPS9data_initEvE11DISTWPlabel
-                0x000000002001631c        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+                0x000000002001636c        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  .data._ZZN12Adafruit_GPS9data_initEvE11HUMIDITYfmt
-                0x0000000020016324        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x000000002001632a        0x2 
+                0x0000000020016374        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001637a        0x2 
  .data._ZZN12Adafruit_GPS9data_initEvE11RPM_M1label
-                0x000000002001632c        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+                0x000000002001637c        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  .data._ZZN12Adafruit_GPS9data_initEvE11RPM_M2label
-                0x0000000020016334        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+                0x0000000020016384        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  .data._ZZN12Adafruit_GPS9data_initEvE12BAROMETERfmt
-                0x000000002001633c        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016342        0x2 
+                0x000000002001638c        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016392        0x2 
  .data._ZZN12Adafruit_GPS9data_initEvE12BoatSpeedfmt
-                0x0000000020016344        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x000000002001634a        0x2 
+                0x0000000020016394        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001639a        0x2 
  .data._ZZN12Adafruit_GPS9data_initEvE12HUMIDITYunit
-                0x000000002001634c        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016351        0x3 
+                0x000000002001639c        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200163a1        0x3 
  .data._ZZN12Adafruit_GPS9data_initEvE12MagAngleunit
-                0x0000000020016354        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+                0x00000000200163a4        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  .data._ZZN12Adafruit_GPS9data_initEvE12WindSpeedfmt
-                0x000000002001635c        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016362        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE13BAROMETERunit
-                0x0000000020016364        0x3 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016367        0x1 
- .data._ZZN12Adafruit_GPS9data_initEvE13BoatAngleunit
-                0x0000000020016368        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE13CURRENT_M1fmt
-                0x0000000020016370        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016376        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE13HUMIDITYlabel
-                0x0000000020016378        0x9 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016381        0x3 
- .data._ZZN12Adafruit_GPS9data_initEvE13TrueAngleunit
-                0x0000000020016384        0x9 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x000000002001638d        0x3 
- .data._ZZN12Adafruit_GPS9data_initEvE13VOLTAGE_M1fmt
-                0x0000000020016390        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016396        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE14BAROMETERlabel
-                0x0000000020016398        0xa .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200163a2        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE14CURRENT_M1unit
-                0x00000000200163a4        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200163a9        0x3 
- .data._ZZN12Adafruit_GPS9data_initEvE14PRESSURE_M1fmt
                 0x00000000200163ac        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  *fill*         0x00000000200163b2        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE14VOLTAGE_M1unit
-                0x00000000200163b4        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200163ba        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE15CURRENT_M1label
-                0x00000000200163bc        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE15CURRENT_M2label
-                0x00000000200163c4        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE15PRESSURE_M1unit
-                0x00000000200163cc        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE15VOLTAGE_M1label
-                0x00000000200163d0        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE15VOLTAGE_M2label
-                0x00000000200163d8        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE16PRESSURE_M1label
+ .data._ZZN12Adafruit_GPS9data_initEvE13BAROMETERunit
+                0x00000000200163b4        0x3 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200163b7        0x1 
+ .data._ZZN12Adafruit_GPS9data_initEvE13BoatAngleunit
+                0x00000000200163b8        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE13CURRENT_M1fmt
+                0x00000000200163c0        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200163c6        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE13HUMIDITYlabel
+                0x00000000200163c8        0x9 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200163d1        0x3 
+ .data._ZZN12Adafruit_GPS9data_initEvE13TrueAngleunit
+                0x00000000200163d4        0x9 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200163dd        0x3 
+ .data._ZZN12Adafruit_GPS9data_initEvE13VOLTAGE_M1fmt
                 0x00000000200163e0        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  *fill*         0x00000000200163e6        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE16PRESSURE_M2label
-                0x00000000200163e8        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200163ee        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE17TEMPERATURE_M1fmt
-                0x00000000200163f0        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200163f6        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE18TEMPERATURE_AIRfmt
-                0x00000000200163f8        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200163fe        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE18TEMPERATURE_M1unit
-                0x0000000020016400        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016406        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE19TEMPERATURE_AIRunit
-                0x0000000020016408        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x000000002001640e        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE19TEMPERATURE_M1label
-                0x0000000020016410        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016417        0x1 
- .data._ZZN12Adafruit_GPS9data_initEvE19TEMPERATURE_M2label
-                0x0000000020016418        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x000000002001641f        0x1 
- .data._ZZN12Adafruit_GPS9data_initEvE1c
-                0x0000000020016420        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE20TEMPERATURE_AIRlabel
-                0x0000000020016424        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE20TEMPERATURE_WATERfmt
-                0x0000000020016428        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x000000002001642e        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE21TEMPERATURE_WATERunit
+ .data._ZZN12Adafruit_GPS9data_initEvE14BAROMETERlabel
+                0x00000000200163e8        0xa .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200163f2        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE14CURRENT_M1unit
+                0x00000000200163f4        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200163f9        0x3 
+ .data._ZZN12Adafruit_GPS9data_initEvE14PRESSURE_M1fmt
+                0x00000000200163fc        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016402        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE14VOLTAGE_M1unit
+                0x0000000020016404        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001640a        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE15CURRENT_M1label
+                0x000000002001640c        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE15CURRENT_M2label
+                0x0000000020016414        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE15PRESSURE_M1unit
+                0x000000002001641c        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE15VOLTAGE_M1label
+                0x0000000020016420        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE15VOLTAGE_M2label
+                0x0000000020016428        0x8 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE16PRESSURE_M1label
                 0x0000000020016430        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  *fill*         0x0000000020016436        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE22TEMPERATURE_WATERlabel
+ .data._ZZN12Adafruit_GPS9data_initEvE16PRESSURE_M2label
                 0x0000000020016438        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  *fill*         0x000000002001643e        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE6LATfmt
+ .data._ZZN12Adafruit_GPS9data_initEvE17TEMPERATURE_M1fmt
                 0x0000000020016440        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  *fill*         0x0000000020016446        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE6LOGfmt
+ .data._ZZN12Adafruit_GPS9data_initEvE18TEMPERATURE_AIRfmt
                 0x0000000020016448        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  *fill*         0x000000002001644e        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE6XTEfmt
+ .data._ZZN12Adafruit_GPS9data_initEvE18TEMPERATURE_M1unit
                 0x0000000020016450        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  *fill*         0x0000000020016456        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE7LATunit
-                0x0000000020016458        0x9 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016461        0x3 
- .data._ZZN12Adafruit_GPS9data_initEvE7LOGRfmt
-                0x0000000020016464        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x000000002001646a        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE7LOGunit
-                0x000000002001646c        0x3 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE19TEMPERATURE_AIRunit
+                0x0000000020016458        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001645e        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE19TEMPERATURE_M1label
+                0x0000000020016460        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016467        0x1 
+ .data._ZZN12Adafruit_GPS9data_initEvE19TEMPERATURE_M2label
+                0x0000000020016468        0x7 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  *fill*         0x000000002001646f        0x1 
- .data._ZZN12Adafruit_GPS9data_initEvE7XTEunit
-                0x0000000020016470        0x3 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016473        0x1 
- .data._ZZN12Adafruit_GPS9data_initEvE8AWAlabel
+ .data._ZZN12Adafruit_GPS9data_initEvE1c
+                0x0000000020016470        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE20TEMPERATURE_AIRlabel
                 0x0000000020016474        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8AWSlabel
-                0x0000000020016478        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8Anglefmt
-                0x000000002001647c        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016482        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE8COGlabel
-                0x0000000020016484        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8DEPTHfmt
+ .data._ZZN12Adafruit_GPS9data_initEvE20TEMPERATURE_WATERfmt
+                0x0000000020016478        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001647e        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE21TEMPERATURE_WATERunit
+                0x0000000020016480        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016486        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE22TEMPERATURE_WATERlabel
                 0x0000000020016488        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  *fill*         0x000000002001648e        0x2 
- .data._ZZN12Adafruit_GPS9data_initEvE8HDGlabel
-                0x0000000020016490        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8HDTlabel
-                0x0000000020016494        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8HEELunit
-                0x0000000020016498        0x9 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200164a1        0x3 
- .data._ZZN12Adafruit_GPS9data_initEvE8LATlabel
-                0x00000000200164a4        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8LOGlabel
-                0x00000000200164a8        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8LONlabel
-                0x00000000200164ac        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8SOGlabel
-                0x00000000200164b0        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8TWAlabel
-                0x00000000200164b4        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8TWDlabel
-                0x00000000200164b8        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8TWSlabel
-                0x00000000200164bc        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8VMGlabel
-                0x00000000200164c0        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8VTWlabel
+ .data._ZZN12Adafruit_GPS9data_initEvE6LATfmt
+                0x0000000020016490        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016496        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE6LOGfmt
+                0x0000000020016498        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001649e        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE6XTEfmt
+                0x00000000200164a0        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200164a6        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE7LATunit
+                0x00000000200164a8        0x9 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200164b1        0x3 
+ .data._ZZN12Adafruit_GPS9data_initEvE7LOGRfmt
+                0x00000000200164b4        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200164ba        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE7LOGunit
+                0x00000000200164bc        0x3 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200164bf        0x1 
+ .data._ZZN12Adafruit_GPS9data_initEvE7XTEunit
+                0x00000000200164c0        0x3 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200164c3        0x1 
+ .data._ZZN12Adafruit_GPS9data_initEvE8AWAlabel
                 0x00000000200164c4        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- .data._ZZN12Adafruit_GPS9data_initEvE8XTElabel
+ .data._ZZN12Adafruit_GPS9data_initEvE8AWSlabel
                 0x00000000200164c8        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8Anglefmt
+                0x00000000200164cc        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200164d2        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE8COGlabel
+                0x00000000200164d4        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8DEPTHfmt
+                0x00000000200164d8        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200164de        0x2 
+ .data._ZZN12Adafruit_GPS9data_initEvE8HDGlabel
+                0x00000000200164e0        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8HDTlabel
+                0x00000000200164e4        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8HEELunit
+                0x00000000200164e8        0x9 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x00000000200164f1        0x3 
+ .data._ZZN12Adafruit_GPS9data_initEvE8LATlabel
+                0x00000000200164f4        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8LOGlabel
+                0x00000000200164f8        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8LONlabel
+                0x00000000200164fc        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8SOGlabel
+                0x0000000020016500        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8TWAlabel
+                0x0000000020016504        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8TWDlabel
+                0x0000000020016508        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8TWSlabel
+                0x000000002001650c        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8VMGlabel
+                0x0000000020016510        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8VTWlabel
+                0x0000000020016514        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ .data._ZZN12Adafruit_GPS9data_initEvE8XTElabel
+                0x0000000020016518        0x4 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
  .data._ZZN12Adafruit_GPS9data_initEvE9DEPTHunit
-                0x00000000200164cc        0x2 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200164ce        0x2 
+                0x000000002001651c        0x2 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001651e        0x2 
  .data._ZZN12Adafruit_GPS9data_initEvE9HDOPlabel
-                0x00000000200164d0        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200164d5        0x3 
+                0x0000000020016520        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016525        0x3 
  .data._ZZN12Adafruit_GPS9data_initEvE9HEELlabel
-                0x00000000200164d8        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200164dd        0x3 
+                0x0000000020016528        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001652d        0x3 
  .data._ZZN12Adafruit_GPS9data_initEvE9LOGRlabel
-                0x00000000200164e0        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200164e5        0x3 
+                0x0000000020016530        0x5 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016535        0x3 
  .data._ZZN12Adafruit_GPS9data_initEvE9PITCHunit
-                0x00000000200164e8        0xb .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200164f3        0x1 
+                0x0000000020016538        0xb .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016543        0x1 
  .data._ZZN12Adafruit_GPS9data_initEvE9RPM_M1fmt
-                0x00000000200164f4        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x00000000200164fa        0x2 
+                0x0000000020016544        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x000000002001654a        0x2 
  .data._ZZN12Adafruit_GPS9data_initEvE9Speedunit
-                0x00000000200164fc        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
- *fill*         0x0000000020016502        0x2 
+                0x000000002001654c        0x6 .pio/build/teensy41/lib6d5/libAdafruit GPS Library.a(NMEA_data.cpp.o)
+ *fill*         0x0000000020016552        0x2 
  .data._ZZN16AudioInputAnalog6updateEvE7prior_p
-                0x0000000020016504        0x4 .pio/build/teensy41/libc46/libAudio.a(input_adc.cpp.o)
+                0x0000000020016554        0x4 .pio/build/teensy41/libc46/libAudio.a(input_adc.cpp.o)
  .data.__atexit_recursive_mutex
-                0x0000000020016508        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-__call_atexit.o)
-                0x0000000020016508                __atexit_recursive_mutex
+                0x0000000020016558        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-__call_atexit.o)
+                0x0000000020016558                __atexit_recursive_mutex
  .data.__brkval
-                0x000000002001650c        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
-                0x000000002001650c                __brkval
+                0x000000002001655c        0x4 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
+                0x000000002001655c                __brkval
  .data.__dso_handle
-                0x0000000020016510        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
-                0x0000000020016510                __dso_handle
+                0x0000000020016560        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
+                0x0000000020016560                __dso_handle
  .data.__global_locale
-                0x0000000020016514      0x16c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
-                0x0000000020016514                __global_locale
+                0x0000000020016564      0x16c /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-locale.o)
+                0x0000000020016564                __global_locale
  .data.__malloc_av_
-                0x0000000020016680      0x408 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
-                0x0000000020016680                __malloc_av_
+                0x00000000200166d0      0x408 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
+                0x00000000200166d0                __malloc_av_
  .data.__malloc_sbrk_base
-                0x0000000020016a88        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
-                0x0000000020016a88                __malloc_sbrk_base
+                0x0000000020016ad8        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
+                0x0000000020016ad8                __malloc_sbrk_base
  .data.__malloc_trim_threshold
-                0x0000000020016a8c        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
-                0x0000000020016a8c                __malloc_trim_threshold
- .data.__sglue  0x0000000020016a90        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
-                0x0000000020016a90                __sglue
+                0x0000000020016adc        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-mallocr.o)
+                0x0000000020016adc                __malloc_trim_threshold
+ .data.__sglue  0x0000000020016ae0        0xc /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-findfp.o)
+                0x0000000020016ae0                __sglue
  .data._impure_ptr
-                0x0000000020016a9c        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-impure.o)
-                0x0000000020016a9c                _impure_ptr
+                0x0000000020016aec        0x4 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/libc.a(libc_a-impure.o)
+                0x0000000020016aec                _impure_ptr
  .data.device_descriptor
-                0x0000000020016aa0       0x12 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
- *fill*         0x0000000020016ab2        0x2 
+                0x0000000020016af0       0x12 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+ *fill*         0x0000000020016b02        0x2 
  .data.isr_table_gpio1
-                0x0000000020016ab4       0x80 .pio/build/teensy41/libFrameworkArduino.a(interrupt.c.o)
-                0x0000000020016ab4                isr_table_gpio1
+                0x0000000020016b04       0x80 .pio/build/teensy41/libFrameworkArduino.a(interrupt.c.o)
+                0x0000000020016b04                isr_table_gpio1
  .data.isr_table_gpio2
-                0x0000000020016b34       0x80 .pio/build/teensy41/libFrameworkArduino.a(interrupt.c.o)
-                0x0000000020016b34                isr_table_gpio2
+                0x0000000020016b84       0x80 .pio/build/teensy41/libFrameworkArduino.a(interrupt.c.o)
+                0x0000000020016b84                isr_table_gpio2
  .data.isr_table_gpio3
-                0x0000000020016bb4       0x80 .pio/build/teensy41/libFrameworkArduino.a(interrupt.c.o)
-                0x0000000020016bb4                isr_table_gpio3
+                0x0000000020016c04       0x80 .pio/build/teensy41/libFrameworkArduino.a(interrupt.c.o)
+                0x0000000020016c04                isr_table_gpio3
  .data.isr_table_gpio4
-                0x0000000020016c34       0x80 .pio/build/teensy41/libFrameworkArduino.a(interrupt.c.o)
-                0x0000000020016c34                isr_table_gpio4
+                0x0000000020016c84       0x80 .pio/build/teensy41/libFrameworkArduino.a(interrupt.c.o)
+                0x0000000020016c84                isr_table_gpio4
  .data.kGenerator
-                0x0000000020016cb4      0x3e4 .pio/build/teensy41/libbb7/libft8.a(constants.cpp.o)
-                0x0000000020016cb4                kGenerator
- .data.kMn      0x0000000020017098      0x20a .pio/build/teensy41/libbb7/libft8.a(constants.cpp.o)
-                0x0000000020017098                kMn
- *fill*         0x00000000200172a2        0x2 
- .data.kNm      0x00000000200172a4      0x245 .pio/build/teensy41/libbb7/libft8.a(constants.cpp.o)
-                0x00000000200172a4                kNm
- *fill*         0x00000000200174e9        0x3 
- .data.kNrw     0x00000000200174ec       0x53 .pio/build/teensy41/libbb7/libft8.a(constants.cpp.o)
-                0x00000000200174ec                kNrw
- *fill*         0x000000002001753f        0x1 
+                0x0000000020016d04      0x3e4 .pio/build/teensy41/libbb7/libft8.a(constants.cpp.o)
+                0x0000000020016d04                kGenerator
+ .data.kMn      0x00000000200170e8      0x20a .pio/build/teensy41/libbb7/libft8.a(constants.cpp.o)
+                0x00000000200170e8                kMn
+ *fill*         0x00000000200172f2        0x2 
+ .data.kNm      0x00000000200172f4      0x245 .pio/build/teensy41/libbb7/libft8.a(constants.cpp.o)
+                0x00000000200172f4                kNm
+ *fill*         0x0000000020017539        0x3 
+ .data.kNrw     0x000000002001753c       0x53 .pio/build/teensy41/libbb7/libft8.a(constants.cpp.o)
+                0x000000002001753c                kNrw
+ *fill*         0x000000002001758f        0x1 
  .data.message_limit
-                0x0000000020017540        0x4 .pio/build/teensy41/src/decode_ft8.cpp.o
-                0x0000000020017540                message_limit
+                0x0000000020017590        0x4 .pio/build/teensy41/src/decode_ft8.cpp.o
+                0x0000000020017590                message_limit
  .data.microsoft_os_compatible_id_desc
-                0x0000000020017544       0x28 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+                0x0000000020017594       0x28 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
  .data.microsoft_os_string_desc
-                0x000000002001756c       0x12 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
- *fill*         0x000000002001757e        0x2 
+                0x00000000200175bc       0x12 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+ *fill*         0x00000000200175ce        0x2 
  .data.usb_string_serial_number_default
-                0x0000000020017580       0x16 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
-                0x0000000020017580                usb_string_serial_number_default
-                0x0000000020017580                usb_string_serial_number
+                0x00000000200175d0       0x16 .pio/build/teensy41/libFrameworkArduino.a(usb_desc.c.o)
+                0x00000000200175d0                usb_string_serial_number_default
+                0x00000000200175d0                usb_string_serial_number
  .data._ZL11m_errorCode
-                0x0000000020017596        0x1 .pio/build/teensy41/lib8e9/libSdFat.a(SdioTeensy.cpp.o)
- .data.address  0x0000000020017597        0x1 .pio/build/teensy41/libe47/libtouchscreen.a(TouchScreen_I2C.cpp.o)
-                0x0000000020017597                address
+                0x00000000200175e6        0x1 .pio/build/teensy41/lib8e9/libSdFat.a(SdioTeensy.cpp.o)
+ .data.address  0x00000000200175e7        0x1 .pio/build/teensy41/libe47/libtouchscreen.a(TouchScreen_I2C.cpp.o)
+                0x00000000200175e7                address
  *(.vectorsram)
- *fill*         0x0000000020017598      0x268 
+ *fill*         0x00000000200175e8      0x218 
  .vectorsram    0x0000000020017800      0x2c0 .pio/build/teensy41/libFrameworkArduino.a(startup.c.o)
                 0x0000000020017800                _VectorsRam
 
 .tm_clone_table
-                0x0000000020017ac0        0x0 load address 0x000000006004e1b8
+                0x0000000020017ac0        0x0 load address 0x000000006004e248
  .tm_clone_table
                 0x0000000020017ac0        0x0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
  .tm_clone_table
                 0x0000000020017ac0        0x0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtend.o
 
-.igot.plt       0x0000000020017ac0        0x0 load address 0x000000006004e1b8
+.igot.plt       0x0000000020017ac0        0x0 load address 0x000000006004e248
  .igot.plt      0x0000000020017ac0        0x0 /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 
 .bss            0x0000000020017ac0     0xfce0
@@ -8540,20 +8540,20 @@ LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../
  *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.externalram)))
                 0x0000000070000000                . = ALIGN (0x20)
 
-.text.csf       0x000000006004e1b8      0xe48
+.text.csf       0x000000006004e248      0xdb8
  FILL mask 0xff
                 0x000000006004e400                . = ALIGN (0x400)
- *fill*         0x000000006004e1b8      0x248 ff
+ *fill*         0x000000006004e248      0x1b8 ff
  *(.csf)
  .csf           0x000000006004e400      0xc00 .pio/build/teensy41/libFrameworkArduino.a(bootdata.c.o)
                 0x000000006004e400                hab_csf
                 0x000000006004f000                __text_csf_end = .
                 0x0000000000000000                _stext = ADDR (.text.itcm)
                 0x000000000002ef38                _etext = ((ADDR (.text.itcm) + SIZEOF (.text.itcm)) + SIZEOF (.ARM.exidx))
-                0x00000000600077bc                _stextload = LOADADDR (.text.itcm)
+                0x000000006000784c                _stextload = LOADADDR (.text.itcm)
                 0x0000000020000000                _sdata = ADDR (.data)
                 0x0000000020017ac0                _edata = (ADDR (.data) + SIZEOF (.data))
-                0x00000000600366f8                _sdataload = LOADADDR (.data)
+                0x0000000060036788                _sdataload = LOADADDR (.data)
                 0x0000000020017ac0                _sbss = ADDR (.bss)
                 0x00000000200277a0                _ebss = (ADDR (.bss) + SIZEOF (.bss))
                 0x000000002022d520                _heap_start = (ADDR (.bss.dma) + SIZEOF (.bss.dma))
