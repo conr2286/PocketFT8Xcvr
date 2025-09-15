@@ -98,6 +98,7 @@ Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out
 5. Using PlatformIO, install support for the required libraries (documented in the PocketFT8XcvrFW folder)
 6. Copy Extras/AudioStream6400.h into
  .../Library/Arduino15/packages/teensy/hardware/avr/1.59.0/cores/teens4 asArduinoStream.h --- This file redefines AUDIO_SAMPLE_RATE_EXACT enabling Teensy 4.1 to operate the audio stream at 6400 samples/second (required).  You absolutely *must* do this; PocketFT8XcvrFW.cpp will not compile if you forget.
+7. Modify the definitions of MINIMUM_FREQUENCY and MAXIMUM_FREQUENCY in PocketFT8XcvrFW.cpp for your choice of amateur band.
 7. Build the firmware with PlatformIO.  The src files build without warnings; library files... not so much.
 
 # Hardware Notes
