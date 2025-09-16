@@ -3,3 +3,4 @@
 *.o
 compile_commands.json
 *.FCBak
+*.map

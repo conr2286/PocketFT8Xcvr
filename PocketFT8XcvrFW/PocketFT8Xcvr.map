@@ -3903,7 +3903,7 @@ Linker script and memory map
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crti.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard/crtbegin.o
 LOAD /Users/jconrad/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard/crt0.o
-                0x0000000068c8466d                __rtc_localtime = 0x68c8466d
+                0x0000000068c9be73                __rtc_localtime = 0x68c9be73
 LOAD .pio/build/teensy41/src/Config.cpp.o
 LOAD .pio/build/teensy41/src/GPShelper.cpp.o
 LOAD .pio/build/teensy41/src/PocketFT8XcvrFW.cpp.o
