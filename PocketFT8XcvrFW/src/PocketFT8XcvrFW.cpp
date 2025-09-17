@@ -131,7 +131,9 @@ Si5351 si5351;                                              // Transmitter/recei
 // Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
 AudioInputAnalog adc1;  // xy=132,104
 AudioRecordQueue queue1;
-AudioConnection patchCord2(adc1, queue1);
+AudioAmplifier amp1;
+AudioConnection patchCord1(adc1, amp1);
+AudioConnection patchCord2(amp1, queue1);
 static const unsigned audioQueueSize = 100;  // Number of blocks in the Teensy audio queue (one symbol's period requires 8 blocks)
 
 // Audio pipeline buffers
@@ -211,6 +213,17 @@ static void gpsCallback(unsigned seconds) {
 FLASHMEM void setup(void) {
     // Get the USB serial port running before something else goes wrong
     Serial.begin(9600);
+
+
+
+    Wire.setSDA(PIN_SDA);
+    Wire.setSCL(PIN_SCL);
+    Wire.begin();
+
+    Wire1.setSDA(PIN_SDA2);
+    Wire1.setSCL(PIN_SCL2);
+    Wire1.begin();
+
     DTRACE();
 
     // Is Teensy recovering from a crash?
@@ -248,12 +261,19 @@ FLASHMEM void setup(void) {
 
     // Initialize the SI5351 clock generator.  NOTE:  PocketFT8Xcvr boards use CLKIN input (supposedly less jitter than XTAL).
     si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          // KQ7B's counter isn't accurate enough to calculate a correction
+    delay(10);
     si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  // We are using cmos CLKIN, not a XTAL input!!!
-    si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  // All PLLs using CLKIN
-    si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);              // Fixed point division offers less jitter
+    delay(10);
+   // si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  // All PLLs using CLKIN
+   // delay(10);
+   // si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);              // Fixed point division offers less jitter
+   // delay(10);
     si5351.set_freq(3276800, SI5351_CLK2);                      // Receiver's fixed frequency clock for Si4735
+    delay(10);
     si5351.output_enable(SI5351_CLK2, 1);                       // Receiver's clock is always on
+    delay(10);
     si5351.output_enable(SI5351_CLK0, 0);                       // Disable transmitter for now
+    delay(10);
 
     // Gets and sets the Si47XX I2C bus address
     int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
@@ -276,6 +296,7 @@ FLASHMEM void setup(void) {
     // Initialize the SI4735 receiver
     delay(10);
     et1 = millis();
+    Serial.println("Patch_Load_Start");
     loadSSB();
     et2 = millis();
     delay(10);
@@ -294,9 +315,10 @@ FLASHMEM void setup(void) {
     //(e.g. 20) were sometimes exhausted, especially following certain HX8357 graphics activity.
     // It can run on less than 100, but you'll occasionally miss a receive timeslot.
     AudioMemory(audioQueueSize);  // Number of Teensy audio queue blocks
-
     // Start the audio pipeline
     queue1.begin();
+
+    amp1.gain(5);
 
     // Set operating frequency
     set_startup_freq();
@@ -373,6 +395,8 @@ FLASHMEM void loop() {
         DSP_Flag = 0;
         ui.displayDate();
         ui.displayTime();
+
+        
 
     }  // DSP_Flag
 
@@ -476,8 +500,11 @@ FLASHMEM void loadSSB() {
     // SMUTESEL - SSB Soft-mute Based on RSSI or SNR (0 or 1).
     // DSP_AFCDIS - DSP AFC Disable or enable; 0=SYNC MODE, AFC enable; 1=SSB MODE, AFC disable.
     // si4735.setSSBConfig(bandwidthIdx, 1, 0, 1, 0, 1);
+    delay(50);
     si4735.setSSBConfig(2, 1, 0, config.enableAVC, 0, 1);  // 2 = 3 kc bandwidth
     // DPRINTF("SI4735 AVC = %u\n", config.enableAVC);
+    delay(50);
+    Serial.println("Patch_Load_Finish");
 }
 
 /**
