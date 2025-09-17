@@ -124,7 +124,7 @@
 #include "Sequencer.h"
 
 #include <Arduino.h>
-#include <String.h>
+#include <string.h>
 
 #include "Config.h"
 #include "DEBUG.h"
