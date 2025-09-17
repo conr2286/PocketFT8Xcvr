@@ -23,7 +23,9 @@ typedef struct Config {
 } ConfigType;
 
 // Default configuration
-#define DEFAULT_FREQUENCY 7074                // kHz
+#define MINIMUM_FREQUENCY 14000               // Min freq supported by HW filters
+#define MAXIMUM_FREQUENCY 14350               // Max freq supported by HW filters
+#define DEFAULT_FREQUENCY 14074               // kHz
 #define DEFAULT_CALLSIGN ""                   // There's no realistic default callsign
 #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  // Default of 0 seconds disables audio recording
 #define DEFAULT_ENABLE_AVC 1                  // SI4735 AVC enabled by default

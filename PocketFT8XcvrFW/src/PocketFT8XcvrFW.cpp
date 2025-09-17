@@ -118,8 +118,6 @@ static void copy_to_fft_buffer(void *, const void *);
 #define USB 2
 
 // Build the receiver (20 Meter version)
-#define MINIMUM_FREQUENCY 14000  // Min freq supported by HW filters
-#define MAXIMUM_FREQUENCY 14350  // Max freq supported by HW filters
 SI4735 si4735;                   // The receiver
 
 // Define the static objects widely referenced throughout PocketFT8Xcvr
