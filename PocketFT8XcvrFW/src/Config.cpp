@@ -22,10 +22,14 @@ typedef struct BandLimit {
  *
  * @note The Si4735 can't support the higher HF bands.  Furthermore, the hardware
  * low-pass filter must be appropriate for the frequency configured in CONFIG.JSON
+ *
+ * The getLowerBandLimit() and getUpperBandLimit() functions search this table to
+ * determine which band, if any, a specified frequency lies.
  */
 static BandLimitType amateurBandLimits[] = {
-    {1800, 2000},    // 160 meters
-    {3500, 4000},    // 80 meters
+    {1800, 2000},  // 160 meters
+    {3500, 4000},  // 80 meters
+    // Can the Si4735 support 60 meter channels???
     {7000, 7300},    // 40 meters
     {10130, 10150},  // 30 meters
     {14000, 14350},  // 20 meters

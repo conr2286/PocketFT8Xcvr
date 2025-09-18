@@ -1,6 +1,6 @@
 /**
  * SYNOPSIS
- *  Sequencer --- (AKA RoboOp) Implements a state machine for automated sequencing of FT8 QSOs
+ *  Sequencer --- (AKA "RoboOp") Implements a state machine for automated sequencing of FT8 QSOs
  *
  * !!!DON'T PANIC!!!
  *  Following the progress of a large state machine like this is challenging.
@@ -185,20 +185,19 @@ void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
  *  A "timeslot" refers to the 15 second FT8 intervals beginning at 0, 15, 30 and 45
  *  seconds past the minute.
  *
- *  The FT8 timeslot synchronizer notifies this event handler when a new timeslot
- *  is about to begin (we get notified before loop() takes any action in that timeslot).
- *  The Sequencer uses the timeslot's sequenceNumber to determine whether
+ *  loop() notifies this event handler when a new timeslot begins.
+ *  Sequencer uses the timeslot's sequenceNumber to determine whether
  *  transmissions to a remote station should occur in even or odd numbered timeslots,
  *  an important consideration ensuring our transmissions do not "double" with those
- *  of a remote station in our QSO.
+ *  of a remote station.
  *
  **/
 void Sequencer::timeslotEvent() {
     DPRINTF("%s sequenceNumber=%lu, state=%u\n", __FUNCTION__, sequenceNumber, state);
 
-    // Review and purge ancient messages from UI
-    ui.stationMsgs->reviewTimeStamps();  // Station messages
-    ui.decodedMsgs->reviewTimeStamps();  // Decoded messages
+    // Review and purge ancient messages from UI (this is how we dispose of old messages)
+    ui.stationMsgs->reviewTimeStamps();  // Messages sent to our station
+    ui.decodedMsgs->reviewTimeStamps();  // All decoded messages
 
     // Sequencer state determines what action to take
     switch (state) {
@@ -209,30 +208,32 @@ void Sequencer::timeslotEvent() {
             // DTRACE();
             break;
 
-        // Time to start the transmitter sending previously prepared Tx6 CQ message
+        // We are awaiting any timeslot to transmit our CQ message.  To do this, we request
+        // pendXmit() start the transmitter in this odd/even sequence numbered timeslot.
         case CQ_PENDING:
             DTRACE();
-            pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Set modulation flag for loop()
+            pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Start transmiting CQ in *this* timeslot
             break;
 
-        // Time to start transmitter sending free text msg
+        // We are awaiting any timeslot to transmit a "free text" message.  To do this, we request
+        // pendXmit() start the transmitter in this odd/even sequence numbered timeslot.
         case MSG_PENDING:
             DTRACE();
-            pendXmit(ODD(sequenceNumber), XMIT_MSG);  // Start the FSK modulator in loop()
+            pendXmit(ODD(sequenceNumber), XMIT_MSG);  // Start transmitting free text in *this* timeslot
             break;
 
-        // Time to listen for replies to our Tx6 CQ transmission.  The loop()
-        // has already stopped transmitting symbols and switched us to receive mode.
-        // Our job is to prepare to process a possible response to our CQ.
+        // We previously transmitted our CQ message and it is now time to listen
+        // for replies.  The loop() modulator already stopped transmitting symbols
+        // and switched us to receive mode.  We expect the remote station will
+        // transmit their locator msg (e.g. KQ7B W1AW FN31) to us.
         case XMIT_CQ:
             DTRACE();
-            state = LISTEN_LOC;  // We are now listening for a response to our CQ
-            // ui.applicationMsgs->setText(get_message(), A_DARK_GREEN);
+            state = LISTEN_LOC;  // We are now listening for a locator response to our CQ
             break;
 
         // We have finished transmitting a free text message.  No further transmission
-        // nor response is expected.  Free text messages are not part of a logged QSO
-        // so we don't have anything to do with logging/etc.
+        // nor response is expected.  Free text messages are not part of the standardized
+        // FT8 QSO.
         case XMIT_MSG:
             DTRACE();
             state = IDLE;    // No further transmission nor response expected
@@ -241,20 +242,20 @@ void Sequencer::timeslotEvent() {
             ui.b6->reset();
             break;
 
-        // We have listened for responders to our CQ and heard nothing.  At the next timeslot,
-        // we'll retransmit the CQ message.
+        // In the previous timeslot, we listened for a locator response to our previous
+        // CQ but heard nothing.  So... in the next timeslot, we'll retransmit our CQ.
         case LISTEN_LOC:
             DTRACE();
             pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Arm transmitter now if needed in next timeslot
             break;
 
-        // We have heard a Tx1 response to our Tx6 CQ, prepared an RSL reply message, and will transmit
-        // that RSL reply in the next appropriate timeslot.
-        // Note:  qso records whether the responder transmits in an even or odd timeslot.  Our
-        // sequenceNumber indicates the current timeslot's sequence number, not the timeslot that
-        // is about to begin (we increment timeslot below).  So... if the currentSequence number
-        // is even and our responder transmits in even, then we will transmit in the next (odd)
-        // about-to-start timeslot when responder will be listening.
+        // We have heard a Tx1 (Locator) response to our CQ, prepared an RSL reply message, and
+        // will transmit that RSL in the next appropriate timeslot.
+        // Note:  qso records whether the responder transmits in an even or odd timeslot.  The
+        // sequenceNumber variable indicates the previous timeslot's sequence number, not that
+        // about to begin (we increment timeslot below).  So... if the currentSequence number
+        // is even and the remote station transmits in even, then we will transmit in the next
+        // (odd, the one about-to-start) timeslot when our remote station should be listening.
         case RSL_PENDING:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_RSL);  // Arm transmitter now if needed in next timeslot
