@@ -28,7 +28,7 @@
 #define DISPLAY_SELECTED_X 360
 #define DISPLAY_SELECTED_Y 60
 
-// Define location of current frequency (kHz) on display
+// Define location of current operatingFrequency (kHz) on display
 #define DISPLAY_FREQUENCY_X 360
 #define DISPLAY_FREQUENCY_Y 40
 
@@ -83,8 +83,8 @@
 //     INDICATOR_ICON_TUNING = 3
 // } IndicatorIconType;
 
-//char* strlpad(char* str, int size, char c);
-//char* strlpad(char* dst, char* src, char c, unsigned size);
+// char* strlpad(char* str, int size, char c);
+// char* strlpad(char* dst, char* src, char c, unsigned size);
 
 // void display_frequency(int x, int y, int value);
 // // void erase_value(int x, int y);
@@ -94,4 +94,4 @@
 // void displayInfoMsg(const char* msg);
 // void displayInfoMsg(const char* msg, uint16_t color);
 
-//void setXmitRecvIndicator(IndicatorIconType indicator);
+// void setXmitRecvIndicator(IndicatorIconType indicator);

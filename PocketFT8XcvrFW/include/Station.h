@@ -11,15 +11,16 @@
 
 class Station {
    public:
-    Station(unsigned minF, unsigned maxF) : minFreq(minF), maxFreq(maxF), frequency(0), cursorFreq(0), qsoTimeout(0), enableDuplicates(false), enableTransmit(false) {
+    Station() : operatingFrequency(0), cursorFreq(0), qsoTimeout(0), enableDuplicates(false), enableTransmit(false) {
     }  // Station()
 
     // Determine if this Station has everything required to transmit
     bool canTransmit(void) {
-        if (((frequency >= minFreq) && (frequency <= maxFreq)) && (strlen(callsign.c_str()) > 0) && (strlen(locator.c_str()) > 0))
+        if ((operatingFrequency > 0) && (strlen(callsign.c_str()) > 0) && (strlen(locator.c_str()) > 0)) {
             return true;
-        else
+        } else {
             return false;
+        }
     }  // canTransmit()
 
     // The getters
@@ -27,9 +28,9 @@ class Station {
     const char* getLocator(void) { return locator.c_str(); }
     const char* getSOTAref(void) { return mySOTAref.c_str(); }
     const char* getRig(void) { return rig.c_str(); }
-    const char* getMyName(void) { return myName.c_str(); }  // Operator's name, not callsign
-    unsigned getFrequency(void) { return frequency; }       // kHz
-    uint16_t getCursorFreq(void) { return cursorFreq; }     // Hz
+    const char* getMyName(void) { return myName.c_str(); }      // Operator's name, not callsign
+    unsigned getFrequency(void) { return operatingFrequency; }  // kHz
+    uint16_t getCursorFreq(void) { return cursorFreq; }         // Hz
     bool getEnableDuplicates(void) { return enableDuplicates; }
     bool getEnableTransmit(void) { return enableTransmit; }
     unsigned getQSOtimeout(void) { return qsoTimeout; }
@@ -40,24 +41,24 @@ class Station {
     void setRig(String s) { rig = s; }
     void setSOTAref(String s) { mySOTAref = s; }
     void setMyName(String s) { myName = s; }
-    void setFrequency(unsigned kHz) { frequency = kHz; }
+    void setFrequency(unsigned kHz) { operatingFrequency = kHz; }
     void setCursorFreq(uint16_t hz) { cursorFreq = hz; }
     void setEnableDuplicates(bool enabled) { enableDuplicates = enabled; }
     void setEnableTransmit(bool enabled) { enableTransmit = enabled; }
     void setQSOtimeout(unsigned seconds) { qsoTimeout = seconds; }
 
    private:
-    String callsign;        // My callsign
-    String locator;         // My Maidenhead Gridsquare
-    String rig;             // My rig
-    String myName;          // My name
-    String mySOTAref;       // This station's SOTA Reference number
-    unsigned minFreq;       // Minimum freq supported by HW filters
-    unsigned maxFreq;       // Maximum freq supported by HW filters
-    unsigned frequency;     // Carrier kHz
-    uint16_t cursorFreq;    // FSK "tone" offset from carrier in Hz
-    unsigned qsoTimeout;    // QSO timeout seconds
-    bool enableDuplicates;  // true==>enable RoboOp to respond to duplicate (previously logged) callsigns
-    bool enableTransmit;    // true==>enable transmitter
+    String callsign;   // My callsign
+    String locator;    // My Maidenhead Gridsquare
+    String rig;        // My rig
+    String myName;     // My name
+    String mySOTAref;  // This station's SOTA Reference number
+    // unsigned minFreq;             // Minimum freq supported by HW filters
+    // unsigned maxFreq;             // Maximum freq supported by HW filters
+    unsigned operatingFrequency;  // Carrier kHz
+    uint16_t cursorFreq;          // FSK "tone" offset from carrier in Hz
+    unsigned qsoTimeout;          // QSO timeout seconds
+    bool enableDuplicates;        // true==>enable RoboOp to respond to duplicate (previously logged) callsigns
+    bool enableTransmit;          // true==>enable transmitter
     // TODO:  move cursor_line here
 };

@@ -5,9 +5,33 @@
 #include <ArduinoJson.h>
 #include <SD.h>
 
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "PocketFT8Xcvr.h"
 #include "UserInterface.h"
+
+/**
+ * @brief Define the struct to record the low/high frequency in each band
+ */
+typedef struct BandLimit {
+    unsigned low;   // Lowest frequency in this band
+    unsigned high;  // Highest frequency in this band
+} BandLimitType;
+
+/**
+ * @brief Define the low/high frequency limits of each supported amateur band
+ *
+ * @note The Si4735 can't support the higher HF bands.  Furthermore, the hardware
+ * low-pass filter must be appropriate for the frequency configured in CONFIG.JSON
+ */
+static BandLimitType amateurBandLimits[] = {
+    {1800, 2000},    // 160 meters
+    {3500, 4000},    // 80 meters
+    {7000, 7300},    // 40 meters
+    {10130, 10150},  // 30 meters
+    {14000, 14350},  // 20 meters
+    {18068, 18168},  // 17 meters
+    {21000, 21450}   // 15 meters
+};
 
 extern UserInterface ui;
 
@@ -27,7 +51,7 @@ void readConfigFile() {
 
     // Extract the configuration parameters from doc or assign their defaults to the config struct
     strlcpy(config.callsign, doc["callsign"] | DEFAULT_CALLSIGN, sizeof(config.callsign));               // Station callsign
-    config.frequency = doc["frequency"] | DEFAULT_FREQUENCY;                                             // Carrier freq in kHz
+    config.operatingFrequency = doc["frequency"] | DEFAULT_FREQUENCY;                                    // Carrier freq in kHz
     strlcpy(config.locator, doc["locator"] | "", sizeof(config.locator));                                // Four char maidenhead grid locator
     config.enableAVC = doc["enableAVC"] | DEFAULT_ENABLE_AVC;                                            // Enable automatic volume control
     config.gpsTimeout = doc["gpsTimeout"] | DEFAULT_GPS_TIMEOUT;                                         // GPS timeout
@@ -49,9 +73,17 @@ void readConfigFile() {
     // configMsg += String(" M0='") + String(config.m0) + String("'");
     // ui.applicationMsgs->setText(configMsg.c_str());
 
+    // Determine the amateur band's min/max frequencies for the configured operating frequency (needed by Si4735)
+    config.lowerFrequencyLimit = getLowerBandLimit(config.operatingFrequency);  // kHz
+    config.upperFrequencyLimit = getUpperBandLimit(config.operatingFrequency);  // kHz
+
+    // Check for invalid operating frequency
+    DPRINTF("lowerFrequencyLimit=%u, operatingFrequency=%u, upperFrequencyLimit=%u\n", config.lowerFrequencyLimit, config.operatingFrequency, config.upperFrequencyLimit);
+    if (config.lowerFrequencyLimit == 0 || config.upperFrequencyLimit == 0) config.operatingFrequency = 0;  // Short between the headsets :(
+
     // Display the configuration
     AListBox* popup = new AListBox(10, 10, 480 - 20, 320 - 20, A_RED);
-    popup->addItem(popup, String("call=") + String(config.callsign) + String(" freq=") + String(config.frequency) + String(" kHz\n"));
+    popup->addItem(popup, String("call=") + String(config.callsign) + String(" freq=") + String(config.operatingFrequency) + String(" kHz\n"));
     popup->addItem(popup, String("myName='") + String(config.myName) + String("'"));
     popup->addItem(popup, String("enableDuplicates=") + String(config.enableDuplicates));
     popup->addItem(popup, String("M0='") + String(config.m0) + String("'"));
@@ -63,4 +95,28 @@ void readConfigFile() {
     // Let the config report linger on the display before removing it
     delay(5000);
     delete popup;
+}  // readConfigFile()
+
+/**
+ * @brief Find the amateur band's lower frequency limit for operating frequency f
+ * @param f Desired operating frequency in kHz
+ * @return Lower limit in kHz or 0 if f is an invalid frequency
+ */
+unsigned getLowerBandLimit(unsigned f) {
+    for (unsigned i = 0; i < sizeof(amateurBandLimits); i++) {
+        if ((f >= amateurBandLimits[i].low) && (f <= amateurBandLimits[i].high)) return amateurBandLimits[i].low;
+    }
+    return 0;  // Oopsie... Short between the headsets
+}
+
+/**
+ * @brief Find the amateur band's upper frequency limit for operating frequency f
+ * @param f Desired operating frequency in kHz
+ * @return Upper limit in kHz or 0 if f is an invalid frequency
+ */
+unsigned getUpperBandLimit(unsigned f) {
+    for (unsigned i = 0; i < sizeof(amateurBandLimits); i++) {
+        if ((f >= amateurBandLimits[i].low) && (f <= amateurBandLimits[i].high)) return amateurBandLimits[i].high;
+    }
+    return 0;  // Oopsie... Short between the headsets
 }
