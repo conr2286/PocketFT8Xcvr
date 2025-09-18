@@ -103,11 +103,11 @@ void UserInterface::begin() {
 }
 
 /**
- * @brief Display nominal operating frequency
+ * @brief Display nominal operating operatingFrequency
  * @param kHz Frequency in kHz
  * @param fg Foreground color
  *
- * The display contains frequency in kHz and the offset in Hz
+ * The display contains operatingFrequency in kHz and the offset in Hz
  */
 void UserInterface::displayFrequency() {
     String s = String(thisStation.getFrequency()) + "  " + String(thisStation.getCursorFreq());

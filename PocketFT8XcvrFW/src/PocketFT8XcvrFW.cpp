@@ -117,16 +117,14 @@ static void copy_to_fft_buffer(void *, const void *);
 #define AM_FUNCTION 1
 #define USB 2
 
-// Build the receiver (40 Meter version)
-#define MINIMUM_FREQUENCY 7000  // Min freq supported by HW filters
-#define MAXIMUM_FREQUENCY 7300  // Max freq supported by HW filters
-SI4735 si4735;                   // The receiver
+// Build the receiver (20 Meter version)
+SI4735 si4735;  // The receiver
 
 // Define the static objects widely referenced throughout PocketFT8Xcvr
-Station thisStation(MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY);  // Station model
-ConfigType config;                                          // RAM-resident copy of CONFIG.JSON parameters
-UserInterface ui;                                           // User Interface
-Si5351 si5351;                                              // Transmitter/receiver's clock
+Station thisStation;  // Station model
+ConfigType config;    // RAM-resident copy of CONFIG.JSON parameters
+UserInterface ui;     // User Interface
+Si5351 si5351;        // Transmitter/receiver's clock
 
 // Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
 AudioInputAnalog adc1;  // xy=132,104
@@ -214,8 +212,6 @@ FLASHMEM void setup(void) {
     // Get the USB serial port running before something else goes wrong
     Serial.begin(9600);
 
-
-
     Wire.setSDA(PIN_SDA);
     Wire.setSCL(PIN_SCL);
     Wire.begin();
@@ -260,19 +256,19 @@ FLASHMEM void setup(void) {
     }
 
     // Initialize the SI5351 clock generator.  NOTE:  PocketFT8Xcvr boards use CLKIN input (supposedly less jitter than XTAL).
-    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);          // KQ7B's counter isn't accurate enough to calculate a correction
+    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);  // KQ7B's counter isn't accurate enough to calculate a correction
     delay(10);
     si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  // We are using cmos CLKIN, not a XTAL input!!!
     delay(10);
-   // si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  // All PLLs using CLKIN
-   // delay(10);
-   // si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);              // Fixed point division offers less jitter
-   // delay(10);
-    si5351.set_freq(3276800, SI5351_CLK2);                      // Receiver's fixed frequency clock for Si4735
+    // si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  // All PLLs using CLKIN
+    // delay(10);
+    // si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);              // Fixed point division offers less jitter
+    // delay(10);
+    si5351.set_freq(3276800, SI5351_CLK2);  // Receiver's fixed frequency clock for Si4735
     delay(10);
-    si5351.output_enable(SI5351_CLK2, 1);                       // Receiver's clock is always on
+    si5351.output_enable(SI5351_CLK2, 1);  // Receiver's clock is always on
     delay(10);
-    si5351.output_enable(SI5351_CLK0, 0);                       // Disable transmitter for now
+    si5351.output_enable(SI5351_CLK0, 0);  // Disable transmitter for now
     delay(10);
 
     // Gets and sets the Si47XX I2C bus address
@@ -286,12 +282,18 @@ FLASHMEM void setup(void) {
 
     // Digest the CONFIG.JSON file
     readConfigFile();
-    thisStation.setCallsign(config.callsign);      // Extract callsign from CONFIG.JSON
-    thisStation.setLocator(config.locator);        // Extract optional locator from CONFIG.JSON
-    thisStation.setFrequency(config.frequency);    // Extract frequency from CONFIG.JSON
-    thisStation.setMyName(config.myName);          // Operator's personal name (not callsign)
-    thisStation.setQSOtimeout(config.qsoTimeout);  // Seconds RoboOp will retransmit without receiving a response
-    thisStation.setSOTAref(config.my_sota_ref);    // This station's SOTA Reference if any
+    thisStation.setCallsign(config.callsign);             // Extract callsign from CONFIG.JSON
+    thisStation.setLocator(config.locator);               // Extract optional locator from CONFIG.JSON
+    thisStation.setFrequency(config.operatingFrequency);  // Extract frequency from CONFIG.JSON
+    thisStation.setMyName(config.myName);                 // Operator's personal name (not callsign)
+    thisStation.setQSOtimeout(config.qsoTimeout);         // Seconds RoboOp will retransmit without receiving a response
+    thisStation.setSOTAref(config.my_sota_ref);           // This station's SOTA Reference if any
+
+    // Check for invalid operating frequency
+    if (config.operatingFrequency == 0) {
+        ui.applicationMsgs->setText("FATAL:  Invalid frequency configuration");
+        while (1) continue;  // Fatal
+    }
 
     // Initialize the SI4735 receiver
     delay(10);
@@ -302,7 +304,7 @@ FLASHMEM void setup(void) {
     delay(10);
     si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
     delay(10);
-    si4735.setSSB(MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, config.frequency, 1, USB);  // FT8 is *always* USB
+    si4735.setSSB(config.lowerFrequencyLimit, config.upperFrequencyLimit, config.operatingFrequency, 1, USB);  // FT8 is *always* USB
     delay(10);
     // currentFrequency = si4735.getFrequency();
     si4735.setVolume(50);
@@ -340,7 +342,10 @@ FLASHMEM void setup(void) {
     ui.displayCallsign();                                           // Display station callsigne
 
     // Notify operator if transmitter is disabled
-    if (!thisStation.canTransmit()) ui.applicationMsgs->setText("Transmitter disabled");
+    if (!thisStation.canTransmit()) {
+        ui.applicationMsgs->setText("Transmitter disabled");
+        delay(5000);
+    }
 
     // Start the QSO Sequencer (RoboOp) and receiver
     seq.begin(thisStation.getQSOtimeout(), config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
@@ -395,8 +400,6 @@ FLASHMEM void loop() {
         DSP_Flag = 0;
         ui.displayDate();
         ui.displayTime();
-
-        
 
     }  // DSP_Flag
 

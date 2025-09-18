@@ -8,7 +8,9 @@
 typedef struct Config {
     char callsign[12];                     // 11 chars and NUL
     char locator[5];                       // 4 char maidenhead locator and NUL
-    unsigned frequency;                    // Operating frequency in kHz
+    unsigned lowerFrequencyLimit;          // Band's lower limit
+    unsigned operatingFrequency;           // Operating operatingFrequency in kHz
+    unsigned upperFrequencyLimit;          // Band's upper limit
     unsigned long audioRecordingDuration;  // Seconds or 0 to disable audio recording
     unsigned enableAVC;                    // 0=disable, 1=enable SI47xx AVC
     unsigned gpsTimeout;                   // GPS timeout (seconds) to obtain a fix
@@ -23,7 +25,9 @@ typedef struct Config {
 } ConfigType;
 
 // Default configuration
-#define DEFAULT_FREQUENCY 7074                // kHz
+#define MINIMUM_FREQUENCY 14000               // Min freq supported by HW filters
+#define MAXIMUM_FREQUENCY 14350               // Max freq supported by HW filters
+#define DEFAULT_FREQUENCY 14074               // kHz
 #define DEFAULT_CALLSIGN ""                   // There's no realistic default callsign
 #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  // Default of 0 seconds disables audio recording
 #define DEFAULT_ENABLE_AVC 1                  // SI4735 AVC enabled by default
@@ -34,3 +38,5 @@ typedef struct Config {
 #define DEFAULT_MY_NAME ""                    // Operator's personal name (not callsign)
 
 void readConfigFile(void);
+unsigned getLowerBandLimit(unsigned f);  // Calculate lower band limit for operating frequency f
+unsigned getUpperBandLimit(unsigned f);  // Calculate upper band limit for operating frequency f
