@@ -209,17 +209,17 @@ void Sequencer::timeslotEvent() {
             break;
 
         // We are awaiting any timeslot to transmit our CQ message.  To do this, we request
-        // pendXmit() start the transmitter in this odd/even sequence numbered timeslot.
+        // pendXmit() start the transmitter in the forthcoming timeslot.
         case CQ_PENDING:
             DTRACE();
-            pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Start transmiting CQ in *this* timeslot
+            pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Start transmiting CQ in forthcoming timeslot
             break;
 
         // We are awaiting any timeslot to transmit a "free text" message.  To do this, we request
-        // pendXmit() start the transmitter in this odd/even sequence numbered timeslot.
+        // pendXmit() start the transmitter in the forthcoming timeslot.
         case MSG_PENDING:
             DTRACE();
-            pendXmit(ODD(sequenceNumber), XMIT_MSG);  // Start transmitting free text in *this* timeslot
+            pendXmit(ODD(sequenceNumber), XMIT_MSG);  // Start transmitting free text in the forthcoming timeslot
             break;
 
         // We previously transmitted our CQ message and it is now time to listen
@@ -250,8 +250,9 @@ void Sequencer::timeslotEvent() {
             break;
 
         // We have heard a Tx1 (Locator) response to our CQ, prepared an RSL reply message, and
-        // will transmit that RSL in the next appropriate timeslot.
-        // Note:  qso records whether the responder transmits in an even or odd timeslot.  The
+        // will transmit our RSL in the next appropriate timeslot.
+        // Note:  contact records whether the responder transmits in an even or odd timeslot.  Sadly,
+        // at least for now, we assume they will *remain* in that even/odd timeslot.  The
         // sequenceNumber variable indicates the previous timeslot's sequence number, not that
         // about to begin (we increment timeslot below).  So... if the currentSequence number
         // is even and the remote station transmits in even, then we will transmit in the next
@@ -261,36 +262,37 @@ void Sequencer::timeslotEvent() {
             pendXmit(contact.oddEven, XMIT_RSL);  // Arm transmitter now if needed in next timeslot
             break;
 
-        // We have transmitted their RSL reply to their remote station.  Now we expect to
-        // hear them send our RRSL signal report to us.  Receiver is already running.
+        // We finished transmission of our RSL reply to their remote station.  Now we expect to
+        // hear them send our RRSL signal report to us.  Receiver is already running (loop() turns
+        // it on after our last symbol is clocked through the modulator).
         case XMIT_RSL:
             DTRACE();
             state = LISTEN_RRSL;  // We are expecting to receive our signal report from remote station
             break;
 
-        // After transmitting Tx2 RSL to the remote station, we have not heard a Tx3 RRSL response.
-        // We will retransmit when the odd/even timeslot expects remote to be listening for us.
+        // After transmitting our Tx2 RSL to the remote station, we have not heard a Tx3 RRSL response.
+        // We retransmit our RSL when the odd/even timeslot expects the remote to be listening for us.
         case LISTEN_RRSL:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_RSL);  // Arm transmitter now if needed in next timeslot
             break;
 
-        // We are waiting for an appropriate even/odd timeslot to transmit our prepared Tx4 RRR to remote station
+        // We awaiting an appropriate even/odd timeslot to transmit our prepared Tx4 RRR to remote station
         case RRR_PENDING:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_RRR);  // Arm transmitter now if needed in next timeslot
             break;
 
-        // We have transmitted our Tx4 RRR to the remote station.  The QSO is complete as we expect to receive
-        // nothing else but their 73.  We could log the QSO either here or only after we receive their 73.
-        // Our receiver is already running.
+        // We transmitted our Tx4 RRR to the remote station.  The contact is complete as we expect to receive
+        // nothing else but their 73.  We *could* log the contact either here or after we receive their 73.
+        // Lets log it later.  Our receiver is already running.
         case XMIT_RRR:
             DTRACE();
             state = LISTEN_73;  // Listen for their 73
             break;
 
         // We listened for the remote station's 73-type msg but have heard nothing.
-        // Let's retransmit our previous msg to tease-out a response from remote and
+        // Let's retransmit an RRSL to tease-out a response from remote and
         // rely on the timer to close the QSO if it's hopeless.  Our state remains
         // unchanged while we continue to listen.
         case LISTEN_73:
@@ -299,21 +301,21 @@ void Sequencer::timeslotEvent() {
             pendXmit(contact.oddEven, XMIT_RRSL);  // Retransmit our RRSL to remote
             break;
 
-        // We are waiting to contact a displayed station after operator clicked on their message.  We
-        // expect clickDecodedMessageEvent() to have previously initialized the QSO struct and prepared the
-        // outbound message containing our own location.
+        // We await contacting a displayed station after our operator clicked on remote's message (i.e. we
+        // may have the remote station's locator).  We expect clickDecodedMessageEvent() to have previously
+        // initialized the QSO struct and prepared our outbound locator message.
         case LOC_PENDING:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_LOC);  // Arm transmitter now if needed in next timeslot
             break;
 
-        // We have transmitted our location to the remote station and are now hopefully receiving their RSL
+        // We have transmitted our location to the remote station and await reception of their RSL
         case XMIT_LOC:
             DTRACE();
             state = LISTEN_RSL;  // We will listen for our RSL from the remote station
             break;
 
-        // We were listening for remote's RSL message to us but heard nothing.  Retransmit LOC.
+        // We listened for remote's RSL message to us but heard nothing.  Retransmit our LOC.
         case LISTEN_RSL:
             DTRACE();
             pendXmit(contact.oddEven, XMIT_LOC);  // Arm transmitter now if needed in next timeslot
@@ -337,7 +339,7 @@ void Sequencer::timeslotEvent() {
             pendXmit(contact.oddEven, XMIT_73);  // Arm transmitter now if needed in next timeslot
             break;
 
-        // We have transmitted the 73 message to the remote station
+        // We have transmitted the 73 message to the remote station.  Another QSO in the bag. :)
         case XMIT_73:
             DTRACE();
             endQSO();
@@ -350,7 +352,7 @@ void Sequencer::timeslotEvent() {
             break;
     }
 
-    // Always increment the sequenceNumber to coordinate QSO transmissions in their odd/even timeslot
+    // Increment sequenceNumber to begin the next timeslot
     sequenceNumber++;
 
 }  // timeSlotEvent()
