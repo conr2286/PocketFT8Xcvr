@@ -27,9 +27,9 @@ class Sequencer {
 
     // Define the events arising from analysis of received messages
     void locatorEvent(Decode *msg);   // Received their maidenhead locator in msg
-    void rslEvent(Decode *msg);       // Received our signal report in msg
-    void eotEvent(Decode *msg);       // Received an EOT (e.g. 73) that doesn't expect a reply
-    void eotReplyEvent(Decode *msg);  // Received an EOT (e.g. RRR or RR73) that expects a reply
+    void rslMsgEvent(Decode *msg);       // Received our signal report in msg
+    void eotMsgNoReplyEvent(Decode *msg);       // Received an EOT (e.g. 73) that doesn't expect a reply
+    void eotMsgReplyEvent(Decode *msg);  // Received an EOT (e.g. RRR or RR73) that expects a reply
     void cqMsgEvent(Decode *msg);     // Received a non-directed CQ
 
     // Other internally-generated events
