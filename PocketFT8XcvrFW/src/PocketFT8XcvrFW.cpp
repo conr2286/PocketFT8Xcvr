@@ -320,7 +320,7 @@ FLASHMEM void setup(void) {
     // Start the audio pipeline
     queue1.begin();
 
-    amp1.gain(5);
+    amp1.gain(10);
 
     // Set operating frequency
     set_startup_freq();
