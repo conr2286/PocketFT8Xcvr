@@ -128,7 +128,8 @@ static void copy_to_fft_buffer(void *, const void *);
 #define USB 2
 
 // Build the receiver
-SI4735 si4735;  // The receiver
+SI4735 si4735;                 // The receiver
+static int BFO_Offset = -100;  // Receiver's BFO offset adjustment
 
 // Define global objects widely referenced throughout PocketFT8Xcvr
 Station thisStation;  // Station model
@@ -321,6 +322,7 @@ FLASHMEM void setup(void) {
     delay(10);
     // currentFrequency = si4735.getFrequency();
     si4735.setVolume(50);
+    si4735.setSSBBfo(BFO_Offset);  // Adjust receiver BFO so we receive at expected freq
 
     // Initialize the receiver's DSP chain
     init_DSP();
