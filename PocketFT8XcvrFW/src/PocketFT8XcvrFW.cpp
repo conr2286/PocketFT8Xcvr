@@ -15,6 +15,7 @@
 **    + Powered by 0.37 Amps from a single +5V USB power source
 **    + SD Card logging to ADIF file
 **    + Station configuration JSON file
+**    + "RoboOp" FT8 QSO sequencer
 **    + Plugable filters
 **    + GPS disciplined UTC time and location
 **    + Optional Adafruit Ultimate GPS automates time synchronization and Maidenhead Grid Square locator
@@ -27,12 +28,20 @@
 **  + QRPP == battery life for portable work
 **  + While the SI4735 receiver's performance likely lags that available from a Tayloe detector,
 **  it offers considerable simplicity and effectiveness for SOTA/POTA FT8 operation and will
-**  likely stations that here the QRPP signal
+**  likely receive most stations that hear our QRPP transmissions
 **
 ** FUTURE
 **    + Consider using a real touchscreen controller to replace the MCP342X ADC
 **    + Bug fixes (see https://github.com/conr2286/PocketFT8Xcvr Issues)
 **    + Update the FT8 library with Karlis' more recent code
+**
+** DEBUGGING
+**  Because the Teensy 4.1 MCU lacks a JTAG or related debugging port, we are debugging everything
+**  with the USB Serial port.  To facilitate this, Pocket FT8 code is laced with DPRINTF() and
+**  DTRACE() macros, defined in DEBUG.h or NODEBUG.h.  The DPRINTF() macro works more or less like
+**  a Serial.printf() while DTRACE() merely outputs a source filename and line number.  A source
+**  file can enable debugging by including DEBUG.h or disable all its debug output messages by
+**  including NODEBUG.h.  See examples in the code.  ;)
 **
 ** KQ7B (conr2286 AT gmail.com)
 **  Retired engineer living in north central Idaho (USA), stereotype "old guy"
@@ -45,6 +54,7 @@
 **  1.10 Working firmware and transmitter but SI4735 suffers serious I2C noise issues.  Avoid this one too.
 **  2.00 Revised board/firmware overcomes I2C noise problems.  Requires one patch wire for GPS.
 **  2.10 Firmware implements bug fixes, ADIF logging, and the "RoboOp" QSO Sequencer.  Uses V2.00 boards.
+**  3.00 New PCB artwork eliminates need for PPS patch wire... but awaits satisfactory tariff solution
 **
 ** ATTRIBUTION
 **  https://github.com/Rotron/Pocket-FT8  Charley Hill's original Pocket FT8 project
@@ -106,30 +116,30 @@ void process_data();
 void update_synchronization();
 static void copy_to_fft_buffer(void *, const void *);
 
-// Enable comments in the JSON configuration file
+// Enable comments in the JSON configuration file (Pure JSON doesn't support them... we're not that pure)
 #define ARDUINOJSON_ENABLE_COMMENTS 1
 #include <ArduinoJson.h>
 
-// We include .../teensy4/AudioStream.h only to confirm AUDIO_SAMPLE_RATE_EXACT is 6400.0f
+// We include .../teensy4/AudioStream.h here only to confirm AUDIO_SAMPLE_RATE_EXACT is 6400.0f
 #include <AudioStream.h>
 
 // Si4735
 #define AM_FUNCTION 1
 #define USB 2
 
-// Build the receiver (20 Meter version)
+// Build the receiver
 SI4735 si4735;  // The receiver
 
-// Define the static objects widely referenced throughout PocketFT8Xcvr
+// Define global objects widely referenced throughout PocketFT8Xcvr
 Station thisStation;  // Station model
 ConfigType config;    // RAM-resident copy of CONFIG.JSON parameters
 UserInterface ui;     // User Interface
 Si5351 si5351;        // Transmitter/receiver's clock
 
 // Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
-AudioInputAnalog adc1;  // xy=132,104
-AudioRecordQueue queue1;
-AudioAmplifier amp1;
+AudioInputAnalog adc1;    // xy=132,104
+AudioRecordQueue queue1;  // Received audio sample FIFO
+AudioAmplifier amp1;      // Receiver and waterfall perform *much* better with a digital amplifier
 AudioConnection patchCord1(adc1, amp1);
 AudioConnection patchCord2(amp1, queue1);
 static const unsigned audioQueueSize = 100;  // Number of blocks in the Teensy audio queue (one symbol's period requires 8 blocks)
@@ -173,12 +183,12 @@ int Transmit_Armned;
 int ft8_xmit_counter;
 int master_decoded;
 
-int tune_flag;
+int tune_flag;  // Yep... true when we transmit a dead carrier for tuning
 
-int log_flag, logging_on;  // TODO:  deprecate
+int log_flag, logging_on;  // TODO:  deprecate old, old logging stuff
 
 // Get a reference to the QSO Sequencer machine implementing a robo-like operator handling
-// QSOs arising from our own CQ and calls to a remote station
+// FT8 QSO sequencing.
 Sequencer &seq = Sequencer::getSequencer();
 
 // Build the GPSHelper encapsulating the details of operating the GPS receiver
@@ -193,7 +203,7 @@ GPShelper gpsHelper(9600);
  *
  * Note:  The display must be initialized before GPShelper calls here
  *
- * TODO:  Deprecated
+ * TODO:  Deprecated.  We're using the PPS interrupt in V3.00 firmware.
  *
  **/
 static void gpsCallback(unsigned seconds) {
@@ -205,7 +215,7 @@ static void gpsCallback(unsigned seconds) {
 /**
  ** @brief Sketch initialization
  **
- ** The FLASHMEM qualifier places the setup() function in the Teensy 4.1 flash memory, thereby
+ ** @note The FLASHMEM qualifier places the setup() function in the Teensy 4.1 flash memory, thereby
  ** saving RAM1 for high performance code/data.
  **/
 FLASHMEM void setup(void) {
@@ -249,7 +259,9 @@ FLASHMEM void setup(void) {
     digitalWrite(PIN_RCV, HIGH);  // Disable the PA and disconnect receiver's RF input from antenna
     digitalWrite(PIN_PTT, LOW);   // Unground the receiver's RF input
 
-    // Initialize the SD library if the card is available
+    // Initialize the SD library if the card is available.  Without an SD card, we have no CONFIG info.  :(
+    // If it were ever important, we could save CONFIG info in EEPROM and only use the SD card to install
+    // a new configuration.
     if (!SD.begin(BUILTIN_SDCARD)) {
         ui.applicationMsgs->setText("ERROR:  Unable to access SD card");
         delay(2000);
@@ -264,7 +276,7 @@ FLASHMEM void setup(void) {
     // delay(10);
     // si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);              // Fixed point division offers less jitter
     // delay(10);
-    si5351.set_freq(3276800, SI5351_CLK2);  // Receiver's fixed frequency clock for Si4735
+    si5351.set_freq(3276800, SI5351_CLK2);  // Receiver's fixed frequency clock for Si4735 PLL
     delay(10);
     si5351.output_enable(SI5351_CLK2, 1);  // Receiver's clock is always on
     delay(10);
@@ -274,8 +286,8 @@ FLASHMEM void setup(void) {
     // Gets and sets the Si47XX I2C bus address
     int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
     if (si4735Addr == 0) {
-        ui.applicationMsgs->setText("FATAL:  Si473x not found");
-        while (1) continue;  // Fatal
+        ui.applicationMsgs->setText("FATAL:  Si473x not found");  // Oops... we don't have a receiver
+        while (1) continue;                                       // Fatal
     } else {
         // DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
     }
@@ -286,10 +298,11 @@ FLASHMEM void setup(void) {
     thisStation.setLocator(config.locator);               // Extract optional locator from CONFIG.JSON
     thisStation.setFrequency(config.operatingFrequency);  // Extract frequency from CONFIG.JSON
     thisStation.setMyName(config.myName);                 // Operator's personal name (not callsign)
-    thisStation.setQSOtimeout(config.qsoTimeout);         // Seconds RoboOp will retransmit without receiving a response
+    thisStation.setQSOtimeout(config.qsoTimeout);         // Seconds RoboOp will retransmit without receiving a suitable response
     thisStation.setSOTAref(config.my_sota_ref);           // This station's SOTA Reference if any
 
-    // Check for invalid operating frequency
+    // Check for invalid operating frequency.  Note:  readConfigFile() sets config.operatingFrequency to 0 if
+    // the requested frequency lies outside a supported amateur radio band.
     if (config.operatingFrequency == 0) {
         ui.applicationMsgs->setText("FATAL:  Invalid frequency configuration");
         while (1) continue;  // Fatal
@@ -298,7 +311,7 @@ FLASHMEM void setup(void) {
     // Initialize the SI4735 receiver
     delay(10);
     et1 = millis();
-    Serial.println("Patch_Load_Start");
+    DPRINTF("Patch_Load_Start\n");
     loadSSB();
     et2 = millis();
     delay(10);
@@ -320,34 +333,43 @@ FLASHMEM void setup(void) {
     // Start the audio pipeline
     queue1.begin();
 
-    amp1.gain(10);
+    amp1.gain(10);  // Charley's most recent recommendation for the amplifier gain
 
-    // Set operating frequency
-    set_startup_freq();
+    // Display frequencies.  FT8 literature uses AFSK terminology.  Thus, the "carrier" frequency
+    // is where you'd set your transceiver VFO dial (e.g. 7074 kHz), and the "cursor" frequency is
+    // the unmodulated audio tone's offset from the carrier (e.g. +1000 Hz).  When an FT8 AFSK
+    // transmitter modulates, it transmits tones around (and very close to) that offset.  Pocket
+    // FT8 uses a direct FSK modulator which leaves this old AFSK terminology a bit confusing.
+    set_startup_freq();  // Initial cursor frequency.
     delay(10);
-
-    ui.displayFrequency();
+    ui.displayFrequency();  // Displays carrier and cursor frequency in Station Messages box
 
     // Arrange for the Teensy MCU to obtain and sync its data/time from the Teensy RTC
     // Serial.printf("MM:DD:YY = %02d:%02d:%02d\n", month(), day(), year());
+    // TODO:  There's a bug in here somewhere... we aren't properly restoring UTC time
+    // from a previously initialized RTC.
     setSyncProvider(getTeensy3Time);
     ui.displayDate();  // Likely not yet GPS disciplined
     ui.displayTime();  //...and thus displayed in YELLOW
     // Serial.printf("MM:DD:YY = %02d:%02d:%02d\n", month(), day(), year());
 
     // Final station initialization
-    thisStation.setRig(String("https://github.com/conr2286/PocketFT8Xcvr"));
-    set_Station_Coordinates(thisStation.getLocator());              // Configure the Maidenhead Locator library with grid square
-    ui.displayLocator(String(thisStation.getLocator()), A_YELLOW);  // Display the locator with caution yellow until we get GPS fix
-    ui.displayCallsign();                                           // Display station callsigne
+    thisStation.setRig(String("https://github.com/conr2286/PocketFT8Xcvr"));  // That's our rig!
+    set_Station_Coordinates(thisStation.getLocator());                        // Configure the Maidenhead Locator library with grid square
+    ui.displayLocator(String(thisStation.getLocator()), A_YELLOW);            // Display the locator with caution yellow until we get GPS fix
+    ui.displayCallsign();                                                     // Display station callsigne
 
-    // Notify operator if transmitter is disabled
+    // Notify operator if transmitter is disabled.  This arises when we don't have a callsign, suitable operating
+    // frequency, or maidenhead grid square locator for our station.  ToDo:  Find a better way to explain all this
+    // to our operator as the transmitter is always disabled until we get a GPS fix when CONFIG.JSON doesn't specify
+    // a locator.  For now, we'll only display a warning if debugging messages are enabled.
     if (!thisStation.canTransmit()) {
-        ui.applicationMsgs->setText("Transmitter disabled");
-        delay(5000);
+        // ui.applicationMsgs->setText("Transmitter disabled");
+        DPRINTF("The transmitter is not yet enabled\n");
+        // delay(5000);
     }
 
-    // Start the QSO Sequencer (RoboOp) and receiver
+    // Start the QSO Sequencer (RoboOp) and our receiver
     seq.begin(thisStation.getQSOtimeout(), config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
     receive_sequence();                                          // Setup to receive at start of first timeslot
 
@@ -507,7 +529,7 @@ FLASHMEM void loadSSB() {
     si4735.setSSBConfig(2, 1, 0, config.enableAVC, 0, 1);  // 2 = 3 kc bandwidth
     // DPRINTF("SI4735 AVC = %u\n", config.enableAVC);
     delay(50);
-    Serial.println("Patch_Load_Finish");
+    DPRINTF("Patch_Load_Finish\n");
 }
 
 /**

@@ -16,6 +16,7 @@ class Station {
 
     // Determine if this Station has everything required to transmit
     bool canTransmit(void) {
+        // DPRINTF("operatingFrequency=%u, callsign=%s, locator=%s\n", operatingFrequency, callsign.c_str(), locator.c_str());
         if ((operatingFrequency > 0) && (strlen(callsign.c_str()) > 0) && (strlen(locator.c_str()) > 0)) {
             return true;
         } else {

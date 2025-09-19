@@ -38,7 +38,7 @@ class Sequencer {
     void stopTimer(void);                    // Stop timeout Timer
 
     // Define the actions taken by the Sequencing State Machine
-    void pendXmit(unsigned oddEven, SequencerStateType newState);  // Start transmitter in next timeslot
+    void actionPendXmit(unsigned oddEven, SequencerStateType newState);  // Start transmitter in next timeslot
 
     // Helper methods
     bool isMsgForUs(Decode *msg);              // Determines if received msg is of interest to us

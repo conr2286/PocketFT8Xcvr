@@ -11,15 +11,15 @@
  *  Timeslot  CurrentState  Event           Action              NextState   Commentary
  *    0       IDLE          timeslotEvent   N/A                 IDLE        We are monitoring FT8 traffic
  *    0       IDLE          cqButtonEvent   Prepare CQ msg      CQ_PENDING  Operator pressed CQ button
- *    1       CQ_PENDING    timeslotEvent   pendXmit
+ *    1       CQ_PENDING    timeslotEvent   actionPendXmit
  *            XMIT_CQ       Arm the transmitter for CQ
  *    1       XMIT_CQ       timeslotEvent   N/A                 LISTEN_LOC  Transmit CQ
  *    2       LISTEN_LOC    locatorEvent    Prepare RSL msg     RSL_PENDING Receive grid locator
- *    2       RSL_PENDING   timeslotEvent   pendXmit
+ *    2       RSL_PENDING   timeslotEvent   actionPendXmit
  *            XMIT_RSL      Arm transmitter for RSL
  *    3       XMIT_RSL      timeslotEvent   N/A                 LISTEN_RRSL Transmit RSL
  *    3       LISTEN_RRSL   rslMsgEvent        Prepare RRR msg     RRR_PENDING Receive RRSL
- *    4       RRR_PENDING   timeslotEvent   pendXmit
+ *    4       RRR_PENDING   timeslotEvent   actionPendXmit
  *            XMIT_RRR      Arm transmitter for RRR
  *    4       XMIT_RRR      timeslotEvent   N/A                 LISTEN_73   Transmit RRR
  *    5       LISTEN_73     eotMsgNoReplyEvent        N/A                 IDLE        QSO finished normally
@@ -209,17 +209,17 @@ void Sequencer::timeslotEvent() {
             break;
 
         // We are awaiting any timeslot to transmit our CQ message.  To do this, we request
-        // pendXmit() start the transmitter in the forthcoming timeslot.
+        // actionPendXmit() start the transmitter in the forthcoming timeslot.
         case CQ_PENDING:
             DTRACE();
-            pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Start transmiting CQ in forthcoming timeslot
+            actionPendXmit(ODD(sequenceNumber), XMIT_CQ);  // Start transmiting CQ in forthcoming timeslot
             break;
 
         // We are awaiting any timeslot to transmit a "free text" message.  To do this, we request
-        // pendXmit() start the transmitter in the forthcoming timeslot.
+        // actionPendXmit() start the transmitter in the forthcoming timeslot.
         case MSG_PENDING:
             DTRACE();
-            pendXmit(ODD(sequenceNumber), XMIT_MSG);  // Start transmitting free text in the forthcoming timeslot
+            actionPendXmit(ODD(sequenceNumber), XMIT_MSG);  // Start transmitting free text in the forthcoming timeslot
             break;
 
         // We previously transmitted our CQ message and it is now time to listen
@@ -246,7 +246,7 @@ void Sequencer::timeslotEvent() {
         // CQ but heard nothing.  So... in the next timeslot, we'll retransmit our CQ.
         case LISTEN_LOC:
             DTRACE();
-            pendXmit(ODD(sequenceNumber), XMIT_CQ);  // Arm transmitter now if needed in next timeslot
+            actionPendXmit(ODD(sequenceNumber), XMIT_CQ);  // Arm transmitter now if needed in next timeslot
             break;
 
         // We have heard a Tx1 (Locator) response to our CQ, prepared an RSL reply message, and
@@ -259,7 +259,7 @@ void Sequencer::timeslotEvent() {
         // (odd, the one about-to-start) timeslot when our remote station should be listening.
         case RSL_PENDING:
             DTRACE();
-            pendXmit(contact.oddEven, XMIT_RSL);  // Arm transmitter now if needed in next timeslot
+            actionPendXmit(contact.oddEven, XMIT_RSL);  // Arm transmitter now if needed in next timeslot
             break;
 
         // We finished transmission of our RSL reply to their remote station.  Now we expect to
@@ -274,13 +274,13 @@ void Sequencer::timeslotEvent() {
         // We retransmit our RSL when the odd/even timeslot expects the remote to be listening for us.
         case LISTEN_RRSL:
             DTRACE();
-            pendXmit(contact.oddEven, XMIT_RSL);  // Arm transmitter now if needed in next timeslot
+            actionPendXmit(contact.oddEven, XMIT_RSL);  // Arm transmitter now if needed in next timeslot
             break;
 
         // We awaiting an appropriate even/odd timeslot to transmit our prepared Tx4 RRR to remote station
         case RRR_PENDING:
             DTRACE();
-            pendXmit(contact.oddEven, XMIT_RRR);  // Arm transmitter now if needed in next timeslot
+            actionPendXmit(contact.oddEven, XMIT_RRR);  // Arm transmitter now if needed in next timeslot
             break;
 
         // We transmitted our Tx4 RRR to the remote station.  The contact is complete as we expect to receive
@@ -298,7 +298,7 @@ void Sequencer::timeslotEvent() {
         case LISTEN_73:
         case LISTEN_RRR:
             DTRACE();
-            pendXmit(contact.oddEven, XMIT_RRSL);  // Retransmit our RRSL to remote
+            actionPendXmit(contact.oddEven, XMIT_RRSL);  // Retransmit our RRSL to remote
             break;
 
         // We await contacting a displayed station after our operator clicked on remote's message (i.e. we
@@ -306,7 +306,7 @@ void Sequencer::timeslotEvent() {
         // initialized the QSO struct and prepared our outbound locator message.
         case LOC_PENDING:
             DTRACE();
-            pendXmit(contact.oddEven, XMIT_LOC);  // Arm transmitter now if needed in next timeslot
+            actionPendXmit(contact.oddEven, XMIT_LOC);  // Arm transmitter now if needed in next timeslot
             break;
 
         // We have transmitted our location to the remote station and await reception of their RSL
@@ -318,13 +318,13 @@ void Sequencer::timeslotEvent() {
         // We listened for remote's RSL message to us but heard nothing.  Retransmit our LOC.
         case LISTEN_RSL:
             DTRACE();
-            pendXmit(contact.oddEven, XMIT_LOC);  // Arm transmitter now if needed in next timeslot
+            actionPendXmit(contact.oddEven, XMIT_LOC);  // Arm transmitter now if needed in next timeslot
             break;
 
         // We are waiting for an appropriate even/odd timeslot to transmit an RRSL message to remote station
         case RRSL_PENDING:
             DTRACE();
-            pendXmit(contact.oddEven, XMIT_RRSL);  // Arm transmitter now if needed in next timeslot
+            actionPendXmit(contact.oddEven, XMIT_RRSL);  // Arm transmitter now if needed in next timeslot
             break;
 
         // We have transmitted their RRSL message to the remote station and are now receiving their response
@@ -336,7 +336,7 @@ void Sequencer::timeslotEvent() {
         // We are waiting for an appropriate even/odd timeslot to transmit a 73 message to remote station
         case M73_PENDING:
             DTRACE();
-            pendXmit(contact.oddEven, XMIT_73);  // Arm transmitter now if needed in next timeslot
+            actionPendXmit(contact.oddEven, XMIT_73);  // Arm transmitter now if needed in next timeslot
             break;
 
         // We have transmitted the 73 message to the remote station.  Another QSO in the bag. :)
@@ -639,9 +639,9 @@ void Sequencer::cqButtonEvent() {
 }
 
 /**
- *  Clicked a decoded message to initiate a QSO
+ *  Our operator clicked a decoded message to initiate a QSO
  *
- *  This event handler initiates a QSO by contacting a displayed, received message.
+ *  These overloaded event handlers initiate a QSO by contacting a displayed, received message.
  *
  *  Note the overloaded function can be called with either a msgIndex or with a pointer
  *  to a decoded msg.
@@ -717,24 +717,24 @@ void Sequencer::clickDecodedMessageEvent(Decode* msg) {
 }  // clickDecodedMessageEvent()
 
 /**
- * @brief Static callback function notified if/when timeout Timer expires
+ * @brief Static callback function notified if/when the timeout Timer expires
  * @param thisTimer Pointer to the expiring Timer (not actually used)
  *
  * The timeout Timer limits the duration of a run-on QSO or TUNING activity.
  * The Timer was created by begin(), started at the beginning of a QSO/TUNE
  * activity, and is normally stopped when that QSO/TUNE completes normally.
- * The duration was established by begin().
+ * The duration was established by begin() and configurable in CONFIG.JSON.
  *
  * NOTE:  Timer events are not fully asynchronous (we don't have to worry
- * about them interrupting us doing something else).  Timers are polled
- * by loop(), synchronizing them with our other activities.
+ * about them interrupting us doing something else --- there are no critical
+ * section worries here).
  */
 void Sequencer::onTimerEvent(Timer* thisTimer) {
-    // Because onTimerEvent() is static, we have to find the singleton Sequencer object as we have no this pointer
+    // Because onTimerEvent() is static, we have to find the Sequencer singleton object as we have no this pointer
     Sequencer& theSequencer = Sequencer::getSequencer();
     DFPRINTF("sequenceNumber=%lu, state=%u\n", theSequencer.sequenceNumber, theSequencer.state);
 
-    // The Timer *always* halts the RoboOp from responding to CQs
+    // The expiring Timer *always* halts the RoboOp from responding to CQs
     setAutoReplyToCQ(false);
 
     // Decide what to do
@@ -881,10 +881,13 @@ void Sequencer::rslMsgEvent(Decode* msg) {
 }  // rslMsgEvent()
 
 /**
- * Received an EOT message that does not expect a reply from us
+ * @brief Received an EOT message that does not expect a reply from us
+ *
+ * @note An End-of-Transmission (EOT) is any kind of 73-like message from
+ * the remote station indicating we shouldn't expect to receive further
+ * messages from them.
  *
  * @param msg Their decoded EOT message
- *
  *
  **/
 void Sequencer::eotMsgNoReplyEvent(Decode* msg) {
@@ -921,11 +924,14 @@ void Sequencer::eotMsgNoReplyEvent(Decode* msg) {
 }  // eotMsgNoReplyEvent()
 
 /**
- * Received an EOT message that expects our 73 reply
+ * @brief Received an EOT message that expects our 73 reply
  *
  * @param msg Their decoded EOT message
  *
- * Their RRR and RR73 messages expect our 73 reply
+ * @note An End-of-Transmission (EOT) is any kind of 73-like message from
+ * the remote station indicating we shouldn't expect to receive further
+ * messages from them.  However, their RRR and RR73 messages expect a 73
+ * reply from us.
  *
  * We listen either for a 73 or an RRR, never an RR73.  If they send
  * us an RR73 then we treat it like an RRR and transmit a 73 reply.
@@ -947,14 +953,14 @@ void Sequencer::eotMsgReplyEvent(Decode* msg) {
             break;
 
         // We were trying to get a CQ transmission underway and can ignore the EOT which
-        // presumably is left-over from a previous QSO.
+        // presumably is left-over from a previous QSO.  Yes, this really happens.
         case CQ_PENDING:
         case XMIT_CQ:
         case LISTEN_LOC:
             DTRACE();
             break;
 
-        // We were somewhere in a QSO when the remote station 73'd.  QSO maybe incomplete.
+        // We were somewhere in a QSO when the remote station suddenly 73'd.  QSO maybe incomplete.
         default:
             DTRACE();
             endQSO();
@@ -1015,14 +1021,13 @@ void Sequencer::locatorEvent(Decode* msg) {
  *
  *  @return true if interesting, false if not
  *
- *  Examples of messages [not] of interest to KQ7B:
- *
- *  CQ AG0E EN15          //Interesting
- *  KQ7B AG0E -9          //Interesting
- *  CQ POTA AG0E EN15     //Not interesting (TODO someday)
- *. KQ7B/R AG0E EN15      //Interesting
- *  F4CQS KX8XX EN74      //Not interesting
- *. KQ7BA AG0E EN15       //Not interesting
+ *  Examples of messages that may or may not be of interest to KQ7B:
+ *    CQ AG0E EN15          //Interesting
+ *    KQ7B AG0E -9          //Interesting
+ *    CQ POTA AG0E EN15     //Not interesting (TODO someday???)
+ *.   KQ7B/R AG0E EN15      //Interesting
+ *    F4CQS KX8XX EN74      //Not interesting
+ *.   KQ7BA AG0E EN15       //Not interesting
  *
  **/
 bool Sequencer::isMsgForUs(Decode* msg) {
@@ -1039,11 +1044,14 @@ bool Sequencer::isMsgForUs(Decode* msg) {
  *  @param oddEven begin modulation in 1==odd, 0==even-numbered timeslot
  *  @param newState new state value if transmitter is armed
  *
- *  We don't actually modulate anything here, all we do is setup the global
- *  flags so loop() will begin transmitting FSK modulated symbols.
+ *  @note An "action" routine implements a complex response to a
+ *  significant Sequencer state machine event
+ *
+ *  @note We don't actually modulate anything here, all we do is setup the global
+ *  flags so loop() will begin transmitting FSK modulated symbol tones.
  *
  *  + You must invoke set_message() to prepare the outbound message tones prior
- *  to invoking pendXmit
+ *  to invoking actionPendXmit
  *
  *  + Upon entry, sequenceNumber identifies the *current* timeslot,
  *  not the next timeslot.  The oddEven parameter specifies whether our
@@ -1054,7 +1062,7 @@ bool Sequencer::isMsgForUs(Decode* msg) {
  *  We do nothing if the next timeslot is not appropriate.
  *
  **/
-void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
+void Sequencer::actionPendXmit(unsigned oddEven, SequencerStateType newState) {
     oddEven &= 0x01;  // Force binary value:  1==odd, 0==even-numbered timeslot
 
     DFPRINTF("oddEven=%u, sequenceNumber=%lu newState=%u\n", oddEven, sequenceNumber, newState);
@@ -1080,10 +1088,10 @@ void Sequencer::pendXmit(unsigned oddEven, SequencerStateType newState) {
         ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Transmission pending appropriate time slot
     }
 
-}  // pendXmit()
+}  // actionPendXmit()
 
 /**
- *  Helper routine to retrieve pointer to a decoded message
+ *  @brief Helper routine to retrieve pointer to a decoded message
  *
  *  @param msgIndex Index of decoded message
  *
@@ -1099,7 +1107,7 @@ Decode* Sequencer::getDecodedMsg(unsigned msgIndex) {
 }
 
 /**
- * Getter for debugging sequenceNumber problems
+ * @brief Getter for debugging sequenceNumber problems
  *
  * @return sequenceNumber
  *
@@ -1119,9 +1127,12 @@ SequencerStateType Sequencer::getState() {
 /**
  * @brief Start the QSO timeout timer
  *
- * The Timer was created and its interval established by begin().
+ * The Timer was created and its interval established by begin().  Starting
+ * a Timer effectively sets an alarm to expire at some later time.
  *
- * If/when the Timer expires, it notifies onTimerEvent() callback function.
+ * If/when a Timer expires, it notifies our onTimerEvent() callback function.
+ * They typically expire when something expected fails to occur after some
+ * reasonable time.
  *
  */
 void Sequencer::startTimer() {
@@ -1130,6 +1141,8 @@ void Sequencer::startTimer() {
 
 /**
  * @brief Stop the running timeout timer
+ *
+ * @note Timers are normally cancelled (stopped) as a QSO progresses normally.
  */
 void Sequencer::stopTimer() {
     timeoutTimer->stop();
@@ -1138,7 +1151,7 @@ void Sequencer::stopTimer() {
 /**
  * @brief Terminate a QSO
  *
- * Helper routine manages a variety of details involved in ending a QSO:
+ * @note Helper routine manages a myriad of details involved in ending a QSO:
  *
  *  + Log a contact if possible
  *  + Clear an outstanding FT8 message, if any
@@ -1155,13 +1168,15 @@ void Sequencer::stopTimer() {
 void Sequencer::endQSO() {
     DTRACE();
 
-    // Add info to log
-    contact.setRig(thisStation.getRig());
-    contact.setPwr(0.250);
-    contact.setMyLocator(thisStation.getLocator());
-    contact.setMyName(thisStation.getMyName());
+    // Add contact info to log
+    contact.setRig(thisStation.getRig());            // Pocket FT8 description
+    contact.setPwr(0.250);                           // Watts
+    contact.setMyLocator(thisStation.getLocator());  // Maidenhead grid square
+    contact.setMyName(thisStation.getMyName());      // Operator's name if available
 
-    // Log the contact if we collected sufficient data about the remote station
+    // Log the contact if we collected sufficient data about the remote station.  We
+    // are overly strict here (see the isValid() code) compared to LoTW, but
+    // comparable to SOTA/POTA conventions.
     if (contact.isActive() && contact.isValid()) {
         DTRACE();
         contactLog->logContact(&contact);
@@ -1178,24 +1193,29 @@ void Sequencer::endQSO() {
     clearOutboundMessageDisplay();  // Clear displayed outbound message, if any
     receive_sequence();             // Only need to do this if in-progress transmission aborted
 
-    // Clean-up  leftovers
-    ui.b0->reset();  // Reset highlighted button
-    ui.b2->reset();  // Reset highlighted button
+    // Reset toggling GUI buttons
+    ui.b0->reset();  // Reset highlighted CQ button
+    ui.b2->reset();  // Reset highlighted TU button
+    // Hmmm... are there others?  Should we just reset them all?  ToDo:  Look into this.
 
-    // Reset the RoboOp auto reply
+    // Reset RoboOp's auto reply to received CQ messages.  If we left this active, RoboOp
+    // would continue to make QSOs while we enjoy refreshments in the shade.
     setAutoReplyToCQ(false);
 
     // We are finished with this contact whether we had enough data to log it or not
     contact.reset();
     ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // We are receiving again
-}
+}  // endQSO()
 
 /**
  * @brief Setter for autoReplyToCQ
  * @param x true enables auto reply to CQ
  *
  * The RoboOp sequencer automatically replies to a non-directed CQ message if
- * autoReplyToCQ==true.  We also reset the Tx button when autoReply clears.
+ * autoReplyToCQ==true.
+ *
+ * Our Operator uses the TX button to enable auto-replies.  We reset the Tx
+ * button when autoReply clears.
  *
  */
 void setAutoReplyToCQ(bool x) {
@@ -1216,6 +1236,10 @@ bool getAutoReplyToCQ() {
 
 /**
  * @brief Highlight the lastTransmittedMsg if it timed-out
+ *
+ * @note Rather than consume additional UI space informing the operator of
+ * the time-out, we simply highlight (recolor) our message that never
+ * received a satisfactory response from the remote station.
  */
 void Sequencer::highlightAbortedTransmission() {
     String thisTransmittedMsg = String(get_message());  // The pending outbound message text
