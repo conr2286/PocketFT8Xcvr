@@ -88,7 +88,7 @@
 #include "HX8357_t3n.h"  //WARNING:  Adafruit_GFX.h must include prior to HX8357_t3n.h
 #include "LogFactory.h"
 #include "MCP342x.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "PocketFT8Xcvr.h"
 #include "Process_DSP.h"
 #include "Sequencer.h"
@@ -239,6 +239,8 @@ FLASHMEM void setup(void) {
         delay(5000);
     }
 
+    DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
+
     // Get the UI running
     ui.begin();
     ui.applicationMsgs->setText("Starting");
@@ -351,12 +353,13 @@ FLASHMEM void setup(void) {
     // TODO:  There's a bug in here somewhere... we aren't properly restoring UTC time
     // from a previously initialized RTC.
     setSyncProvider(getTeensy3Time);
+    DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
     ui.displayDate();  // Likely not yet GPS disciplined
     ui.displayTime();  //...and thus displayed in YELLOW
     // Serial.printf("MM:DD:YY = %02d:%02d:%02d\n", month(), day(), year());
 
     // Final station initialization
-    thisStation.setRig(String("https://github.com/conr2286/PocketFT8Xcvr"));  // That's our rig!
+    thisStation.setRig(String("https://github.com/conr2286/PocketFT8Xcvr"));  // Hey!  That's us!  :)
     set_Station_Coordinates(thisStation.getLocator());                        // Configure the Maidenhead Locator library with grid square
     ui.displayLocator(String(thisStation.getLocator()), A_YELLOW);            // Display the locator with caution yellow until we get GPS fix
     ui.displayCallsign();                                                     // Display station callsigne
@@ -454,24 +457,27 @@ FLASHMEM void loop() {
             // Inform operator
             ui.applicationMsgs->setText("GPS has acquired a fix");
 
-            // Set the battery-backed Teensy RTC to the GPS-derived time
-            // TimeElements gpsTime;
-            // gpsTime.Month = gpsHelper.month;
-            // gpsTime.Day = gpsHelper.day;
-            // gpsTime.Year = gpsHelper.year;
-            // gpsTime.Hour = gpsHelper.hour;
-            // gpsTime.Minute = gpsHelper.minute;
-            // gpsTime.Second = gpsHelper.second;
-            // Teensy3Clock.set(makeTime(gpsTime));
+            // Set the battery-backed Teensy RTC to the GPS-derived UTC time
+            TimeElements gpsTime;
+            gpsTime.Month = gpsHelper.month;
+            gpsTime.Day = gpsHelper.day;
+            gpsTime.Year = gpsHelper.year + 30;  // Teensy3Clock.set() wants to see offset from 1970
+            gpsTime.Hour = gpsHelper.hour;
+            gpsTime.Minute = gpsHelper.minute;
+            gpsTime.Second = gpsHelper.second;
+            DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
+            Teensy3Clock.set(makeTime(gpsTime));
+            DPRINTF("gpsHH:gpsMM:gpsSS = %02u:%02u:%02u\n", gpsTime.Hour, gpsTime.Minute, gpsTime.Second);
+            DPRINTF("gpsMO:gpsDY:gpsYY = %02u/%02u/%04u\n", gpsTime.Month, gpsTime.Day, gpsTime.Year);
+            DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
 
             // Set the MCU time to the GPS result
-            Serial.printf("0 RTC=%lu, now=%lu\n", Teensy3Clock.get(), now());
+            DPRINTF("gpsHelper.year=%04u\n", gpsHelper.year);
             setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
-            Serial.printf("1 RTC=%lu, now=%lu\n", Teensy3Clock.get(), now());
 
             // Now set the battery-backed Teensy RTC to the GPS-derived time in the MCU
-            Teensy3Clock.set(now());
-            Serial.printf("2 RTC=%lu, now=%lu\n", Teensy3Clock.get(), now());
+            // Teensy3Clock.set(now());
+            DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
 
             // Use the GPS-derived locator unless config.json hardwired it to something else
             if (strlen(config.locator) == 0) {
@@ -482,8 +488,7 @@ FLASHMEM void loop() {
 
             // Arrange for the Teensy battery-backed RTC (UTC) to keep the MCU time accurate
             setSyncProvider(getTeensy3Time);
-
-            Serial.printf("3 RTC=%lu, now=%lu\n", Teensy3Clock.get(), now());
+            DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
 
             // Record the locator gridsquare for logging
             set_Station_Coordinates(thisStation.getLocator());
