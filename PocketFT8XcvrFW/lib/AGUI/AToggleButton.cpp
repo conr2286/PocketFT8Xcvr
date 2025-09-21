@@ -23,7 +23,8 @@
  * @param w Width
  * @param h Height
  *
- * Toggle buttons maintain a state variable toggled when touched.
+ * @note Toggle buttons maintain a state variable that is toggled when touched.  This may
+ * be used as an "on" or "off" indication.
  *
  * Warning:  Buttons save a copy of the pointer to their text label string, not the string
  * itself.  Applications must not unintentionally modify or destroy that char[] string as

@@ -96,7 +96,6 @@ AScrollBoxItem* AScrollBox::addItem(AScrollBox* pAScrollBox, String str, AColor 
     if (nDisplayedItems >= maxItems) return nullptr;
 
     // Build the new Item
-    // fgColor = fg;
     AScrollBoxItem* pNewItem = new AScrollBoxItem(str, fg, bgColor, pAScrollBox);  // Build item using widget's default colors
     pNewItem->timeStamp = millis();                                                // Record timestamp when item created
 
@@ -121,7 +120,7 @@ AScrollBoxItem* AScrollBox::addItem(AScrollBox* pAScrollBox, String str, AColor 
 /**
  * @brief Repaint the entire AScrollBox
  *
- * Erases our widget's screen and then repaints each item individually
+ * Erases our widget's screen area and then repaints each item individually
  */
 void AScrollBox::onRepaintWidget() {
     DTRACE();
@@ -130,7 +129,7 @@ void AScrollBox::onRepaintWidget() {
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);        // Configure clip window to our boundary
     AGUI::fillRect(boundary.x1, boundary.y1, boundary.w, boundary.h, bgColor);  // Erase everything within boundary box
 
-    // Paint the boundary box
+    // Paint the boundary box.  Our AWidget determines if corners are rounded.
     if (radius > 0) {
         AGUI::drawRoundRect(boundary.x1, boundary.y1, boundary.w, boundary.h, radius, bdColor);  // Draw boundary Box  rounded corners
     } else {
@@ -320,6 +319,9 @@ void AScrollBox::reset() {
     onRepaintWidget();
 }  // reset()
 
+/**
+ * @brief Destructor erases item from display and frees the data structs
+ */
 AScrollBox::~AScrollBox() {
     DTRACE();
 
@@ -356,7 +358,7 @@ int AScrollBox::removeItem(int index) {
 }
 
 /**
- * @brief Override AWidgetvto receive touch events for this AScrollBox
+ * @brief Override AWidget::onTouchWidget to receive touch events for this AScrollBox
  * @param xTouch Screen coordinate of touch event
  * @param yTouch Screen coordinate of touch event
  *
@@ -403,6 +405,8 @@ AScrollBoxItem* AScrollBox::getSelectedItem(ACoord xClick, ACoord yClick) const 
  * @brief Review top item timestamp and scroll up if ancient
  *
  * @note The timeout period is hardwired to 6 minutes
+ *
+ * We only remove the *top* item in the box, we don't check for holes
  */
 void AScrollBox::reviewTimeStamps() {
     unsigned long now = millis();

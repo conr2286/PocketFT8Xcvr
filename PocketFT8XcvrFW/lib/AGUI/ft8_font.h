@@ -1,4 +1,4 @@
-
+// This is a bitmap font for AGUI apps
 
 const uint8_t FT8Bitmaps[] PROGMEM = {
     0xAA, 0xA8, 0x0C, 0xAA, 0xA8, 0x0C, 0xED, 0x24, 0x92, 0x48, 0x24, 0x48,
@@ -171,7 +171,7 @@ const GFXglyph FT8Glyphs[] PROGMEM = {
     {845, 7, 3, 11, 2, -6}     // 0x7E '~'
 };
 
-const GFXfont PROGMEM FT8Font  = {
+const GFXfont PROGMEM FT8Font = {
     (uint8_t *)FT8Bitmaps,
     (GFXglyph *)FT8Glyphs, 0x20, 0x7E, 18};
 

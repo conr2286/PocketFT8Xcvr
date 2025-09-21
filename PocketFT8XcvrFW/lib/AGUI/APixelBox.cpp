@@ -5,14 +5,14 @@
  * interactively processing touch events on those pixels.
  *
  * Method parameters in this class using screen coordinates refer to them as xScreen/yScreen of type
- * ACoord while those referring to pixel positions within APixelBox refer to y/x of type APixelPos.
+ * ACoord while those referring to relative pixel positions within APixelBox refer to y/x of type APixelPos.
  *
  * Similar to many AGUI classes, the intended usage is for the application to inherit APixelBox
- * overriding its virtual methods.
+ * overriding its virtual methods (i.e. onTouchPixel).
  *
  * LIMITATION:  APixelBox does not have a repaint() method and does not cache the displayed pixels
  * for repainting.  Consequently, APixelBox is unable to repaint itself after a segment of its
- * region has been uncovered by another GUI control.
+ * region has been uncovered by another GUI control.  Perhaps this should be improved someday.
  *
  */
 
@@ -28,11 +28,11 @@
  * @brief Constuctor for APixelBox using AWidget defaults
  * @param x1 Screen coordinate of upper-left corner
  * @param y1 Screen coordinate of upper-left corner
- * @param nRows Number of bitmap pixel rows
- * @param nCols Number of bitmap pixel columns
+ * @param nRows Number of bitmap pixel rows inside the box
+ * @param nCols Number of bitmap pixel columns inside the box
  *
  * @note Unlike other AGUI widgets, the width and height of APixelBox is expressed
- * in terms of the number of rows and columns of the bitmap that must fit within
+ * in terms of the number of rows and columns of the bitmap that must fit *within*
  * the box (to ensure space for the application's image).
  *
  */
@@ -48,7 +48,7 @@ APixelBox::APixelBox(ACoord x1, ACoord y1, APixelPos nRows, APixelPos nCols) {
     ACoord h = nRows + radius;  // Height of box
 
     // Decorate the box using AWidget defaults.  If AWidget's radius is 0, then we decorate
-    // a squared rectangle, else a rounded rectangle.
+    // a squared rectangle, else a rounded rectangle.  The inherited AWidget determines this.
     AGUI::setClipRect();                    // Clear any existing clip
     AGUI::fillRect(x1, y1, w, h, bgColor);  // Erase everything within boundary box
     if (radius > 0) {
@@ -68,8 +68,8 @@ APixelBox::APixelBox(ACoord x1, ACoord y1, APixelPos nRows, APixelPos nCols) {
  * @param y Pixel col
  * @param color Pixel color
  *
- * The y and column positions are relative to the location of the APixelBox.  Thus,
- * position (0,0) refers to the upper-left *visible* pixel of the box (inside of the
+ * The y and column positions are relative to the upper-left corner of the APixelBox.
+ * Thus position (0,0) refers to the upper-left *visible* pixel of the box (inside of the
  * border, if any;).
  */
 void APixelBox::drawPixel(APixelPos x, APixelPos y, AColor color) const {
@@ -80,14 +80,14 @@ void APixelBox::drawPixel(APixelPos x, APixelPos y, AColor color) const {
 }
 
 /**
- * @brief Override notified when this widget is touched
- * @param xScreen Screen touch coordinate
- * @param yScreen Screen touch coordinate
+ * @brief This override will be notified when this widget is touched
+ * @param xScreen Screen touch coordinate (not relative row/col)
+ * @param yScreen Screen touch coordinate (not relative row/col)
  *
  * Our job is to determine which pixel was touched and notify the application
  *
- * @note The touch coordinate passed to application's onTouchPixel are the pixel coordinates
- * inside the box (relative to bitmap location), not the screen coordinates.
+ * @note The touch coordinate passed to an application's onTouchPixel are the pixel coordinates
+ * inside the box (relative to upper-left corner), not the screen coordinates.
  */
 void APixelBox::onTouchWidget(ACoord xScreen, ACoord yScreen) {
     DTRACE();
