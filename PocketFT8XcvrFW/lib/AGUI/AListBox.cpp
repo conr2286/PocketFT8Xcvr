@@ -3,12 +3,15 @@
  *
  * New items (lines of text) are added to AListBox starting at the top, and then
  * downward.  Long lines are clipped; each item occupies a single line of text.
- * When a newly added item won't fit at the bottom of the box, existing lines are
- * scrolled up to make room for the new item at the bottom.
+ * If a newly added item won't fit, it will be clipped from the display.
  *
  * DESIGN:  Why isn't repaint(item) a member of AListBoxItem?  Much of the data
  * required to repaint an item seems to belong to the AListBox containing the
  * item. If this changes, then consider refactoring repaint.
+ *
+ * TIMEOUTS:  AListBox implements an unusual feature.  Each item added to the list
+ * receives a timeStamp.  The reviewTimeStamps() method reviews the items'
+ * timeStamps, and can remove expired items from the list.
  *
  */
 
@@ -21,8 +24,8 @@
 #include "NODEBUG.h"
 
 /**
- * @brief Build an item for AListBox
- * @param pContainer Pointer to AListBox containing this item
+ * @brief Build an item (an entry) for AListBox
+ * @param pContainer Pointer to the AListBox containing this item
  * @param s Text String
  * @param fg Foreground color
  * @param bg Background color
@@ -35,7 +38,7 @@ AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
     fgColor = fg;             // Item's foreground color
     bgColor = bg;             // Item's background color
     selected = false;         // Item is not selected
-    listBoxContainer = pBox;  // Backlink from item to Scroll box container
+    listBoxContainer = pBox;  // Backlink from item to the list box container
     timeStamp = millis();     // Init the timestamp
 }  // AListBoxItem()
 
@@ -79,7 +82,7 @@ AListBoxItem& AListBoxItem::operator=(const AListBoxItem& that) {
 }  // AListBoxItem assignment
 
 /**
- * @brief Set an items fg/bg colors
+ * @brief Set an item's fg/bg colors
  * @param fg Foreground color
  * @param bg Background color
  */
@@ -96,7 +99,7 @@ void AListBoxItem::setItemColors(AColor fg, AColor bg) {
 }
 
 /**
- * @brief Change an item's text
+ * @brief Change an item's text string
  * @param s New String
  * @param fg Color
  */
@@ -114,8 +117,11 @@ void AListBoxItem::setItemText(const String& s, AColor fg) {
 }
 
 /**
- * @brief Determine if this item has termed-out
+ * @brief Determine if this item has timed-out
  * @return true if timed-out, false otherwise
+ *
+ * @note In this current implementation, the timeout period is hardwired
+ * to 6 minutes.  This might easily be changed or made more flexible.
  */
 bool AListBoxItem::timedOut() const {
     unsigned long now = millis();
@@ -139,7 +145,7 @@ AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
     // Initialize the member variables
     boundary.setCorners(x, y, w, h);  // Our boundary box
     leading = AGUI::getLeading();     // Get the leading (in pixels) for application's font
-    nDisplayedItems = 0;              // There are no items in this AListBox at this time
+    nDisplayedItems = 0;              // There are no items in this new AListBox at this time
     this->bdColor = bdColor;          // Border color
 
     // Reset the items[] arrays
@@ -182,7 +188,8 @@ AListBox::AListBox(const AListBox& existing) : AWidget(existing) {
  * @param fg Text color
  * @return Pointer to the newly added item or nullptr if error
  *
- * No scrolling in a list box; that which doesn't fit clips
+ * AListBox does not scroll.  If the new item won't fit in the bottom of the box,
+ * it will be clipped from the display (but remain in the list data structures).
  *
  */
 AListBoxItem* AListBox::addItem(AListBox* pListBox, const String str, AColor fg) {
@@ -195,12 +202,12 @@ AListBoxItem* AListBox::addItem(AListBox* pListBox, const String str, AColor fg)
     AListBoxItem* pNewItem = new AListBoxItem(str, fg, bgColor, pListBox);  // Build item using widget's default colors
     if (pNewItem == nullptr) return nullptr;
 
-    // Record the new item
+    // Record the new item in the data structs
     int newItemIndex = nDisplayedItems;       // Savev index into displayedItems[] where new item will reside
     nDisplayedItems++;                        // Bump count of displayed items
     displayedItems[newItemIndex] = pNewItem;  // Record new item at bottom of box
 
-    // Paint the new item
+    // Paint just the new item
     repaint(pNewItem);
 
     // Return pointer to the new item
@@ -208,13 +215,14 @@ AListBoxItem* AListBox::addItem(AListBox* pListBox, const String str, AColor fg)
 }  // addItem()
 
 /**
- * @brief Create an item at specified index
+ * @brief Create an item at specified index in the box
  * @param index New item's index
  * @param str New item's text String
  * @param fg New item's fgColor
  * @return index or -1 if error
  *
- * @note Creating a new item can create "holes" (indices without items) in the list
+ * @note Creating a new item can create "holes" (indices without items) in the list.
+ * @note If an item already exists at index, it will be replaced.
  */
 int AListBox::setItem(int index, const String& str, AColor fg, AColor bg) {
     // Sanity checks
@@ -222,7 +230,7 @@ int AListBox::setItem(int index, const String& str, AColor fg, AColor bg) {
 
     // Perhaps we are replacing an existing item?
     if (displayedItems[index] != NULL) {
-        removeItem(index);  // Yes, remove existing item
+        removeItem(index);  // Yes, remove the existing item
     }
 
     // Build the new Item
@@ -251,7 +259,7 @@ void AListBox::onRepaintWidget() {
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);        // Configure clip window to our boundary
     AGUI::fillRect(boundary.x1, boundary.y1, boundary.w, boundary.h, bgColor);  // Erase everything within boundary box
 
-    // Paint the boundary box
+    // Paint the boundary box.  The parent widget may have rounded corners (radius>0).
     if (radius > 0) {
         AGUI::drawRoundRect(boundary.x1, boundary.y1, boundary.w, boundary.h, radius, bdColor);  // Draw boundary Box  rounded corners
     } else {
@@ -425,7 +433,7 @@ AListBox::~AListBox() {
  * @param index Specifies which item
  * @return index of removed item or -1 if error
  *
- * @note Does not update the display, just cleans data structs
+ * @note Does not update the display, just cleans the data structs
  *
  * @note WARNING:  nullptr replaces the removed AListBoxItem pointer
  *
@@ -449,7 +457,7 @@ int AListBox::removeItem(int index) {
 }
 
 /**
- * @brief Override AWidge to receive touch events for this AListBox
+ * @brief Override AWidget to receive touch events for this AListBox
  * @param xTouch Screen coordinate of touch event
  * @param yTouch Screen coordinate of touch event
  *
@@ -493,9 +501,10 @@ AListBoxItem* AListBox::getSelectedItem(ACoord xClick, ACoord yClick) const {
 }  // getSelectedItem()
 
 /**
- * @brief Review top item timestamp and scroll up if ancient
+ * @brief Remove timed-out items from the list
  *
- * @note The timeout period is hardwired to 6 minutes
+ * @note The timeout period is hardwired to 6 minutes in timedOut().
+ * @note The removeItem() method updates the display which may create a hole
  */
 void AListBox::reviewTimeStamps() {
     // Review items' timestamps
