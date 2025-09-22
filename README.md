@@ -24,7 +24,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 # CopyLeft GPL License (applies to the SI5351 library)
 * Copyright (C) 2015-2019 Jason Milldrum and Dana H. Myers
 
-
 # Features
 * Single band, FT8 Tranceiver
 * Designed for 160-15 meters, tested on 40m
@@ -41,16 +40,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 # DSP Audio Architecture
 Decoding FT8 requires significant data storage and processing speed.  To optimize program storage and processing speed so the Teensy is not over taxed, the Teensy Audio Library has been modified to allow Analog to Digital conversion to be run at the rate of 6400 samples per second. This allows audio data processing to be done at 3200 Hz. The 3200 Hz audio processing with a 2048 FTT to process the received audio for FT8 decoding yields a bin spacing of 3.125 Hz.  For Teensy 4.1, the revised sample rate requires replacement of the core AudioStream.h file with the AudioStream6400.h file in the PocketFT8FW sketch folder.
 
-The algorithms developed by Karlis Goba use the 3.125 Hz spaced FFT bins to be screened in both frequency and time so that errors in symbol frequency and time reception  can be overcome to provide really great FT8 decoding. The end spacing of the FT8 algorithms is 6.25 Hz.
+The algorithms developed by Karlis Goba use the 3.125 Hz spaced FFT bins to be screened in both frequency and time so that errors in symbol frequency and time reception can be overcome to provide really great FT8 decoding. The end spacing of the FT8 algorithms is 6.25 Hz.
 
 # Motivation and Related Projects
-In the mid-60s, the ARRL Handbook published a receiver design known as the Junior Miser's Dream offering so much with so little.  Today, Charley Hill's concept for a self-contained FT8 transceiver, ideal for portable operation, again achieves so much with so little.  The entire transceiver fits in a small enclosure, powered by a USB power block.  Pocket FT8 Revisited is a derivative of Charley's original concept.
+In the mid-60s, the ARRL Handbook published a receiver design known as the Junior Miser's Dream offering so much with so little.  Today, Charley Hill's concept for a self-contained FT8 transceiver, ideal for portable operation, again achieves so much with so little.  The entire transceiver fits in a small enclosure, powered by a USB power brick.  Pocket FT8 Revisited is a derivative of Charley's original concept.
 
-Unlike the uSDX and related multi-mode designs, Pocket FT8 focuses entirely on FT8.
+Unlike the uSDX and related multi-mode designs, Pocket FT8 focuses entirely on FT8.  If you need CW, SSB, etc then Pocket FT8 is not for you.
 
-Charley and Barb have progressed with another Pocket FT8 derivative, DX FT8, at https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER, most notably replacing the SI4735 with a Tayloe receiver.  Pocket FT8 Revisited may someday
-    take that route but, for the moment, the SI4735 (whose spec'd AM sensitivy
-    is absymal) seems able to QSO with any station receiving its 375 mW transmission.
+Charley and Barb have progressed with another Pocket FT8 derivative, DX FT8, at https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER, most notably replacing the SI4735 with a Tayloe receiver.
 
 # Manifest
 * BenchTests:  Arduino sketches for incremental tests of the hardware
@@ -60,12 +57,10 @@ Charley and Barb have progressed with another Pocket FT8 derivative, DX FT8, at 
 * Examples:  Sample JSON configuration and ADIF log files
 * Extras:  Modified Teensy AudioStream6400.h header (you *need* this)
 * Investigations:  Code and simulations exploring technologies for this project
-* Legacy:  Some old files I'm still hoarding 
 * Mfg:  BOM files for assembly.  V2.00 has been built; the current BOM awaits tariff issues.
 * PocketFT8XcvrFW:  The transceiver firmware sources
 * PocketFT8XcvrHW:  KiCad files for the PCB
 * RFFilters:  Investigations into various filter designs
-* Mfg:  Files associated with PCB manufacturing
 * Extras:  Contains Teensy AudioStream.h modified for 6400 samples/second.  You *need* this.
 * Schematics:  PDFs of hardware schematics.  V2.00 matches V2.00 BOM.
 * SpectralPurity:  Results of investigations into transmitter output using V2.00 hardware.
@@ -75,14 +70,11 @@ Charley and Barb have progressed with another Pocket FT8 derivative, DX FT8, at 
 * V1.10 Transmitter works.  Receiver occasionally decodes FT8 messages.  See Issue #23 on github.
 * V2.00 Revised PCB moves the SI5351 and MCP342x to Wire1 to avoid I2C noise (Issue #23) hampering the SI4735
 * V2.10 Implements GPS, ADIF logging and the RoboOp QSO sequencer.  Uses V2.00 hardware with patch wires for GPS connector.  The GPS is optional but *strongly* recommended.
-
-
-# Status
-* August, 2025:  Patched (for GPS PPS) V2.00 hardware tested with most current firmware on 40M.  The schematic and PCB are at V3.00 awaiting a satisfactory tariff prior to fabrication (I'm currently quoted $400+ to build just two boards).  The V3.00 hardware replaces the patch wires supporting the GPS PPS signal on V2.00 boards, and adds an expansion connector to implement future functionality.
+* V3.00 continues with the same firmware, but the hardware eliminates the requirement for the PPS patch wire and adds an expansion connector to break-out a few GPIO signals.  The V3.00 board fabrication awaits a satisfactory tariff solution.
 
 # Implementationi Notes
 * The receiver is based upon the SI4735 chip offering a compact, low-power approach for most HF bands  Following up on a tip from the SI4735's application notes, the chip was found to be extremely sensitive to noise from other I2C traffic on the same bus as the SI4735.  The V2.00 boards address this issue by moving the touchscreen (MCP342X) and SI5351 traffic from the Wire to the Wire1 I2C bus, isolating the SI4735 on Wire.  Likewise, the V2.00 boards pay more attention to signal routing adjacent to noise-sensitive circuitry.
-* Many clock designs use a TCXO driving one of the SI5351's XTAL pins and often in conflict with the SI5351 application notes recommendations.  Many designers have commented (not always of one voice;) on this approach.  Following up on a now-misplaced tip re. phase noise, this design employs a low jitter TCXO driving the SI5351's CLKIN pin.  Following up on yet another misplaced tip regarding the SI5351's phase noise when driving heavy loads, the V2.00 boards buffer the XCLK signal from the SI5351.  All this may be overkill but it was easy to implement.
+* Many clock designs use a TCXO driving one of the SI5351's XTAL pins and often in conflict with the SI5351 application notes recommendations.  Many designers have commented (not of one voice;) on this approach.  Following up on a now-misplaced tip re. phase noise, this design employs a low jitter TCXO driving the SI5351's CLKIN pin.  Following up on yet another misplaced tip regarding the SI5351's phase noise when driving heavy loads, the V2.00 boards buffer the XCLK signal from the SI5351.  All this may be overkill but it was easy to implement.
 * The V2.00 boards and the original Pocket FT8 project use an external MCP342x ADC to poll the touchscreen.  With a non-blocking ADC library, the Teensy 4.1 could likely use the second internal ADC but this idea has not yet been tested (it can be achieved using a patch to the V2.00 boards).  Alternative approaches include using a touchscreen controller.  These are considered for a future V4.00.
 * The V1.10 LP filter lacked rejection of received signals below the operating frequency.  Spectral investigations into the found surprisingly strong signals in the 500..7000 kHz range having the potential to limit the receiver's performance.  The V2.00 board filter plugins offer a chance to explore a bandpass design to protect the receiver's front end.  Suitable bandpass filters have been modeled but not yet been tested.
 * The V2.00 boards support the Adafruit Ultimate GPS Breakout board.  The firmware supports using the PPS digital interrupt signal to determine when the GPS acquires a fix; however, the V2.00 PCB requires a patch wire to connect the PPS pin to Teensy Digital Pin 2, and the GPS connector has the PPS pin in an awkward location for a ribbon cable.  This will hopefull be fixed in the V3.00 hardware when tariffs permit.  The patch is easy to solder and I strongly recommend it.
@@ -97,12 +89,11 @@ Pocket FT8 Revisited is not a kit.  If you seek a kit-like experience, check-out
 4. Using PlatformIO, install support for the Teensy 4.1 platform
 5. Using PlatformIO, install support for the required libraries (documented in the PocketFT8XcvrFW folder)
 6. Copy Extras/AudioStream6400.h into
- .../Library/Arduino15/packages/teensy/hardware/avr/1.59.0/cores/teens4 asArduinoStream.h --- This file redefines AUDIO_SAMPLE_RATE_EXACT enabling Teensy 4.1 to operate the audio stream at 6400 samples/second (required).  You absolutely *must* do this; PocketFT8XcvrFW.cpp will not compile if you forget.
-7. Modify the definitions of MINIMUM_FREQUENCY and MAXIMUM_FREQUENCY in PocketFT8XcvrFW.cpp for your choice of amateur band.
-7. Build the firmware with PlatformIO.  The src files build without warnings; library files... not so much.
+ .../Library/Arduino15/packages/teensy/hardware/avr/1.59.0/cores/teens4 asArduinoStream.h --- This file redefines AUDIO_SAMPLE_RATE_EXACT enabling Teensy 4.1 to operate the audio stream at 6400 samples/second (required).  You absolutely *must* do this; PocketFT8XcvrFW.cpp will not execute if you forget.
+7. Build the firmware with PlatformIO.  The project src files build without warnings; library files... not so much.
 
 # Hardware Notes
-Pocket FT8 Revisited was designed with KiCAD, and the V2.00 PCBs were fabbed and the SMD assembled by PCBWay.  There are two boards, the main board (PocketFT8XcvrHW) and a daughter board for the filter (RFFilters).  I used the 5Pole40MLPFilter in the SpectralPurity test.
+Pocket FT8 Revisited was designed with KiCAD, and the V2.00 PCBs were fabbed and the SMD assembled by PCBWay.  There are two boards, the main board (PocketFT8XcvrHW) and a daughter board for the filter (RFFilters).  I used the 5Pole40MLPFilter in the SpectralPurity test.  The V3.00 boards are designed and checked but await a satisfactory tariff solution for fabrication and assembly.
 
 # Building the Hardware
 1. Attach the Teensy 4.1 MPU to the board using *low profile* headers.
@@ -117,7 +108,7 @@ Pocket FT8 Revisited was designed with KiCAD, and the V2.00 PCBs were fabbed and
 10. Build and execute each of the BenchTests (with Arduino IDE 2.00) in numerical order to individually check-out the circuit subsystems.
 
 # Putting Pocket FT8 Revisited On-the-Air
-1. Create an SD file, config.json, to configure the Pocket FT8 for your station (see the sample file in Examples).  The required parameters are, callsign and frequency.  If you don't have a GPS, you'll also need location.  Install the SD card in Teensy (*not* in the Adafruit display).
+1. Create an SD file, CONFIG.JSON, to configure the Pocket FT8 for your station (see the sample file in Examples).  The required parameters are, callsign and frequency.  If you don't have a GPS, you'll also need location.  Install the SD card in Teensy (*not* in the Adafruit display which also has an SD slot).
 2. If you are using a GPS, connect it now.
 3. Connect an antenna 
 4. Connect your host computer and load your firmware
@@ -129,17 +120,33 @@ During setup(), the rig reads the config.json file, if available, from the Teens
 * frequency     Operating frequency in kHz (default is 7074).
 * locator       Four letter Maidenhead grid square (Required if no GPS).
 * enableAVC     Enable/disable SI4735 AVC (default is enabled).
-* gpsTimeout    Seconds setup() will wait for the GPS to acquire a fix
 * qsoTimeout    Seconds the QSO Sequencer will retransmit a msg without receiving a usable response from remote station (default is 180)
 
 ## GPS
-If available, the rig will use the current UTC time and location (Maidenhead grid square) from an attached GPS.  The V2.00 hardware requires a patch wire to connect the GPS PPS connector pin to Teensy digital pin 2.  The firmware monitors PPS interrupts and begins using the UTC time and location only when/if the GPS has acquired a satellite fix.  Without a GPS fix, the firmware uses the date/time from the battery-backed Teensy Real Time Clock (RTC) and displays that date/time in red.  After a fix is obtained, the date/time display appears in green.  The GPS is not required but *greatly* facilitates logging and accurate synchronization with FT8 timeslots.
+If available, the rig will use the current UTC date, time and location (Maidenhead grid square) from an attached GPS.  The V2.00 hardware requires a patch wire to connect the GPS PPS connector pin to Teensy digital pin 2.  The firmware monitors PPS interrupts and begins using the UTC time and location only when/if the GPS acquires a satellite fix.  
+Without a GPS fix, the firmware uses the date/time from the battery-backed Teensy Real Time Clock (RTC) and displays that date/time in yellow.  After a fix is obtained, the date/time displays in green.  The GPS is not required but *greatly* facilitates UTC logging and accurate synchronization with FT8 timeslots.
 
 ## Logging
-Pocket FT8 logs successful contacts to an ADIF file on the Teensy SD disk.  The date/time are recorded in UTC after the rig acquires a GPS fix.  If the rig has never had a GPS fix, the date/time come from the RTC initialized when the firmware was last loaded into Teensy by your host computer --- that may work for FT8 but the UTC timezone (for log) is unknown.  You really do want the GPS.  The logging software considers a contact successful when the rig obtains the remote station's callsign and signal report (yes, that's a little more severe than required by ARRL's LoTW).  Without a GPS, the grid locator can be obtained from the configuration file.
+Pocket FT8 logs successful contacts to an ADIF file on the Teensy SD disk.  The date/time are recorded in UTC if the rig has acquired a GPS fix.  If the rig has never had a GPS fix, the date/time come from the boot loader and the computer that installed the firmware --- that may work for FT8 but the UTC date/time will be incorrect in the ADIF log.  You really do want the GPS.  The logging software considers a contact successful when the rig obtains the remote station's callsign and signal report (yes, that's a little more severe than required by ARRL's LoTW).  Without a GPS, the grid locator can be obtained from the configuration file.
 
 ## Robo-Op
-Pocket FT8 firmware includes a sequencer somewhat akin (or ajar...;) to that used in wsjtx and DX FT8.  The sequencer conducts a standard FT8 QSO initiated with your station's CQ, or with your reply to a station calling CQ.  The sequencer automagically coordinates its transmissions with those of the remote station to avoid "doubling" (transmitting in the same timeslot as the remote transmission).  In most cases, the sequencer prepares a reply during the FT8 "dwell" time (between timeslots) and can transmit in the very next timeslot.  If not... well... it will wait for an appriopriate timeslot.
-The sequencer is implemented as a giant state machine that attempts to make the best of difficult conditions/responses to complete a troubled QSO.  The sequencer has a configurable QSO Timeout feature to abort a run-on QSO (including CQ) arising from QRM, QRN, or a QRT/QLF remote station.  As with most large state machines... the code is difficult to follow, but is mitigated with an abundance of comments that attempt to explain what's happening in the various event handlers and their resulting actions.
+Pocket FT8 firmware includes a "RoboOp" "sequencer somewhat akin (or ajar...;) to those used in wsjtx and DX FT8.  The sequencer conducts a standard FT8 QSO initiated with your station's CQ, or with your reply to a station calling CQ.  The sequencer automagically coordinates its transmissions with those of the remote station to avoid "doubling" (transmitting in the same timeslot as the remote transmission).  In most cases, the sequencer prepares a reply during the FT8 "dwell" time (between timeslots) and can transmit in the very next timeslot.  If not... well... it will wait for an appriopriate even/odd timeslot.
+The sequencer is implemented as a giant state machine that attempts to make the best of difficult conditions/responses to complete a troubled QSO.  The sequencer has a configurable QSO Timeout feature to abort a run-on QSO (including CQ) arising from QRM, QRN, or a QRT/QLF remote station.  As with most large state machines... the code is difficult to follow, but is mitigated with an abundance of comments that attempt to explain what's happening in the various event handlers and their actions.
+
+## CQ Button
+The CQ button directs RoboOp to begin calling CQ in the next FT8 timeslot.  RoboOp will continue calling CQ until either a response is received, a timeout occurs, the operator toggles the CQ button, or clicks the ABort button.
+
+## TU Button
+The TUne button transmits a dead carrier at the CONFIG.JSON specified operating frequency.  Toggling the TUne button or clicking ABort drops the carrier.
+
+## AB Button
+The ABort button aborts a transmission in-progress.
+
+## TX Button
+The TX button directs RoboOp to respond to the first received CQ message.  Unless CONFIG.JSON has configured otherwise, RoboOp ignores recent duplicates already in the log.  Toggling the TX button or the completion of a QSO disables the TX mode auto-responses.
+
+## M0, M1 and M2 Buttons
+These buttons transmit a free-text FT8 message specified in CONFIG.JSON.
+
 
 
