@@ -11,6 +11,7 @@ typedef struct Config {
     unsigned lowerFrequencyLimit;          // Band's lower limit
     unsigned operatingFrequency;           // Operating operatingFrequency in kHz
     unsigned upperFrequencyLimit;          // Band's upper limit
+    long tcxoCorrection;                   // HZ correction factor used by Si5351
     unsigned long audioRecordingDuration;  // Seconds or 0 to disable audio recording
     unsigned enableAVC;                    // 0=disable, 1=enable SI47xx AVC
     unsigned gpsTimeout;                   // GPS timeout (seconds) to obtain a fix
@@ -28,6 +29,7 @@ typedef struct Config {
 #define MINIMUM_FREQUENCY 14000               // Min freq supported by HW filters
 #define MAXIMUM_FREQUENCY 14350               // Max freq supported by HW filters
 #define DEFAULT_FREQUENCY 14074               // kHz
+#define DEFAULT_TCXO_CORRECTION 0             // Hz
 #define DEFAULT_CALLSIGN ""                   // There's no realistic default callsign
 #define DEFAULT_AUDIO_RECORDING_DURATION 0UL  // Default of 0 seconds disables audio recording
 #define DEFAULT_ENABLE_AVC 1                  // SI4735 AVC enabled by default

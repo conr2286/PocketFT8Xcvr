@@ -128,8 +128,8 @@ static void copy_to_fft_buffer(void *, const void *);
 #define USB 2
 
 // Build the receiver
-SI4735 si4735;                 // The receiver
-static int BFO_Offset = -100;  // Receiver's BFO offset adjustment
+SI4735 si4735;                // The receiver
+static int BFO_Offset = -80;  // Receiver's BFO offset adjustment
 
 // Define global objects widely referenced throughout PocketFT8Xcvr
 Station thisStation;  // Station model
@@ -270,8 +270,19 @@ FLASHMEM void setup(void) {
         delay(2000);
     }
 
+    // Digest the CONFIG.JSON file
+    readConfigFile();
+    thisStation.setCallsign(config.callsign);             // Extract callsign from CONFIG.JSON
+    thisStation.setLocator(config.locator);               // Extract optional locator from CONFIG.JSON
+    thisStation.setFrequency(config.operatingFrequency);  // Extract frequency from CONFIG.JSON
+    thisStation.setMyName(config.myName);                 // Operator's personal name (not callsign)
+    thisStation.setQSOtimeout(config.qsoTimeout);         // Seconds RoboOp will retransmit without receiving a suitable response
+    thisStation.setSOTAref(config.my_sota_ref);           // This station's SOTA Reference if any
+
     // Initialize the SI5351 clock generator.  NOTE:  PocketFT8Xcvr boards use CLKIN input (supposedly less jitter than XTAL).
-    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);  // KQ7B's counter isn't accurate enough to calculate a correction
+    // Note:  si5351.init() wants the correction factor expressed as parts-per-billion while config has it as parts-per-million.
+    DPRINTF("si5351 correction=%ld\n", config.tcxoCorrection * 1000);
+    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, config.tcxoCorrection * 1000);  // KQ7B's counter isn't accurate enough to calculate a correction
     delay(10);
     si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  // We are using cmos CLKIN, not a XTAL input!!!
     delay(10);
@@ -294,15 +305,6 @@ FLASHMEM void setup(void) {
     } else {
         // DPRINTF("The Si473X I2C address is 0x%2x\n", si4735Addr);
     }
-
-    // Digest the CONFIG.JSON file
-    readConfigFile();
-    thisStation.setCallsign(config.callsign);             // Extract callsign from CONFIG.JSON
-    thisStation.setLocator(config.locator);               // Extract optional locator from CONFIG.JSON
-    thisStation.setFrequency(config.operatingFrequency);  // Extract frequency from CONFIG.JSON
-    thisStation.setMyName(config.myName);                 // Operator's personal name (not callsign)
-    thisStation.setQSOtimeout(config.qsoTimeout);         // Seconds RoboOp will retransmit without receiving a suitable response
-    thisStation.setSOTAref(config.my_sota_ref);           // This station's SOTA Reference if any
 
     // Check for invalid operating frequency.  Note:  readConfigFile() sets config.operatingFrequency to 0 if
     // the requested frequency lies outside a supported amateur radio band.
