@@ -1205,6 +1205,9 @@ void Sequencer::endQSO() {
     // We are finished with this contact whether we had enough data to log it or not
     contact.reset();
     ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // We are receiving again
+
+
+
 }  // endQSO()
 
 /**

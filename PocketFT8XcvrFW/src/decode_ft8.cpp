@@ -35,7 +35,7 @@ char erase[] = "                   ";
 
 const int kLDPC_iterations = 10;
 const int kMax_candidates = 20;
-const int kMax_decoded_messages = 6;  // chhh 27 feb
+const int kMax_decoded_messages = 9;  // chhh 27 feb
 const int kMax_message_length = 24;   // Was 22 (KQ7B)
 
 const int kMin_score = 40;  // Minimum sync score threshold for candidates (40)
