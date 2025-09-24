@@ -67,6 +67,7 @@ void readConfigFile() {
     strlcpy(config.m1, doc["M1"] | "", sizeof(config.m1));                                               // Free text msg 1
     strlcpy(config.m2, doc["M2"] | "", sizeof(config.m2));                                               // Free text msg 2
     strlcpy(config.my_sota_ref, doc["my_sota_ref"] | "", sizeof(config.my_sota_ref));                    // My station's SOTA Reference
+    config.tcxoCorrection = doc["tcxoCorrection"] | DEFAULT_TCXO_CORRECTION;
 
     configFile.close();
 

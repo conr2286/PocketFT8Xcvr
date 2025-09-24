@@ -4,7 +4,7 @@
 //
 //  NOTES
 //  + There is no reasonable default for the station callsign; it must be configured
-//  + There is no reasonable default for the operating frequency; it too must be configured
+//  + There is no reasonable default for the station operating frequency
 //  + The 4-character maidenhead locator is optional if you have a working GPS
 //  + The Si4735 AVC can normally be enabled though your mileage may vary
 //  + The FT8 protocol limits free text messages to a maximum of 13 chars
@@ -13,8 +13,7 @@
 //  The operating frequency may be configured for any amateur band between 160 and 12 meters subject
 //  to the following restrictions:  The chosen frequency (e.g. 7074 kHz) must align with the chosen
 //  low pass filter installed in the hardware.  The Si4735 is limited to a maximum frequency of ~26 mHz.
-//  The firmware does not verify the operating frequency lies within an amateur radio band. The
-//  firmware and hardware have only been tested on 40 meters.
+//  The firmware and hardware have only been tested on 40 meters.
 //
 //  If you have a working GPS, the locator is obtained from the satellites if unspecified.  The
 //  locator you specify overides the GPS if that's what you really want.  If your GPS is not working
@@ -33,6 +32,7 @@
 {
    "callsign": "KQ7B",              //REQUIRED:  Station callsign
    "frequency": 7074,               //REQUIRED:  Operating frequency in kHz
+   "tcxoCorrection": -5,            //OPTIONAL:  TCXO frequency correction in Hz
    "locator": "",                   //OPTIONAL:  Station maidenhead gridsquare (four-characters)
    "enableAVC": true,               //OPTIONAL:  0=disabled, 1=enabled SI4735 AVC (default is enabled)
    "qsoTimeout": 180,               //OPTIONAL:  Seconds RoboOp sequencer retries w/o response from remote

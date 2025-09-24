@@ -21,11 +21,11 @@
  *  + This is a minimalist approach with an Adafruit accent for a GUI library.  Consider
  *    LGVL for a more full-featured solution.
  *  + This adapter should probably become a singleton as multiple displays are forbidden
- *    due to the use of static member variables. 
+ *    due to the use of static member variables.
  *  + There is no dependency on nor interaction with the touchscreen system here.  See
  *    AWidget's static processTouch() method which is the bridge between the touch and
- *    display worlds. 
- *  + Not every GFX method is adapted here.  You may need to implement something. 
+ *    display worlds.
+ *  + Not every GFX method is adapted here.  You may need to implement something.
  *
  * DEPENDENCIES
  *  + https://github.com/adafruit/Adafruit_HX8357_Library
@@ -47,13 +47,10 @@
 #include <SPI.h>
 
 #include "Adafruit_GFX.h"  //HX8357_t3n requires you #include GFX before...
-// #include "Fonts/FreeSans9pt7b.h"
-#include "HX8357_t3n.h"  //you #include the HX8357 variation.
-#include "NODEBUG.h"     //For printf-style debugging on a Teensy sans JTAG :(
-// #include "ft8_font.h"    //Include a default font
+#include "HX8357_t3n.h"    //you #include the HX8357 variation.
+#include "NODEBUG.h"       //For printf-style debugging on a Teensy sans JTAG :(
 
 //-----------------------------------------------------------------------------
-
 HX8357_t3n* AGUI::gfx;
 const GFXfont* AGUI::appFont;  // Default font for this application
 
@@ -66,10 +63,14 @@ const GFXfont* AGUI::appFont;  // Default font for this application
  * @param tft Pointer to an Adafruit display driver (e.g. HX8357_t3n) object
  * @param rotation GFX screen rotation parameter
  * @param font Pointer to a default GFX font structure
+ *
+ * @note The design imagined AGUI as a singleton (one display), however the
+ * implementation didn't go out of its way to limit you to a single display.
+ *
  */
 AGUI::AGUI(HX8357_t3n* tft, uint8_t rotation, const GFXfont* font) {
-    //if (!Serial) Serial.begin(9600);
-    //Serial.print("AGUI()=");
+    // if (!Serial) Serial.begin(9600);
+    // Serial.print("AGUI()=");
 
     // Record configuration params
     gfx = tft;                  // Adafruit display object
@@ -86,7 +87,11 @@ AGUI::AGUI(HX8357_t3n* tft, uint8_t rotation, const GFXfont* font) {
 }
 
 //-----------------------------------------------------------------------------
-//  Graphical methods
+//  Graphical methods: these *very* closely map into GFX.  Their implementation
+//  here as a shim here attempts to provide some minimal independence of the
+//  the higher-level code from the GFX display driver.
+//
+//  Coordinate and distance units are almost always given in pixels
 //-----------------------------------------------------------------------------
 
 /**
@@ -142,8 +147,7 @@ void AGUI::fillRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor col
  * @param r Radius of the rounded corners
  * @param color Fill color
  */
-void AGUI::fillRoundRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, ACoord r,
-                         AColor color) {
+void AGUI::fillRoundRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, ACoord r, AColor color) {
     gfx->fillRoundRect(xCoord, yCoord, w, h, r, color);
 }
 
@@ -174,7 +178,8 @@ void AGUI::drawRoundRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, ACoor
 }
 
 //-----------------------------------------------------------------------------
-//  Text methods
+//  Text methods.  The underlying GFX library supports multiple font systems,
+//  GFX and ILI9341, which are not abstracted by AGUI.
 //-----------------------------------------------------------------------------
 
 /**

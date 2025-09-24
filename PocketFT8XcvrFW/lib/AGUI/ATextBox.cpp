@@ -1,7 +1,7 @@
 /**
  * @brief ATextBox is a non-interactive widget for displaying text
  *
- * @note ATextBox stores a copy of the text string and can repaint itself
+ * @note ATextBox stores a copy of the single text string and can repaint itself
  *
  * @note Caution:  Avoid confusion with Java Swing --- ATextBox does not
  * enable the operator to interactively edit the text.  That would be an
@@ -41,7 +41,7 @@ ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AC
     // Setup clipping rectangle without regard for rounded vs. squared corners
     AGUI::setClipRect(x, y, w, h);
 
-    // Decorate the text box
+    // Decorate the text box whose AWidget might specify rounded corners
     if (radius > 0) {
         AGUI::fillRoundRect(x, y, w, h, radius, bgColor);                          // Erase background
         if (bdColor != bgColor) AGUI::drawRoundRect(x, y, w, h, radius, bdColor);  // Draw rounded border if we need it
@@ -74,8 +74,13 @@ ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AC
     AGUI::setCursor(drawX, drawY);
     AGUI::writeText((uint8_t *)txt, strlen(txt));  // Output text to box
     AGUI::setClipRect();
-}
+}  // ATextBox()
 
+/**
+ * @brief Override the AWidget repaint method
+ *
+ * @note Since we stored the text, we can repaint without help from application callback
+ */
 void ATextBox::onRepaintWidget(void) {
     DTRACE();
     // Setup clipping rectangle without regard for rounded vs. squared corners

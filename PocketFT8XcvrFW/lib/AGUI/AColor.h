@@ -6,6 +6,10 @@
  * the HX8357 in the original implementation.  This design should be
  * able to support different displays so long as its colors can be
  * expressed as the integer (int16, int32...) values of an enumeration.
+ *
+ * If your favorite color is missing, there is no good reason why you
+ * can't define additional colors here as long as your display supports
+ * them.
  */
 #include <Adafruit_GFX.h>  //Must #include prior to HX8357
 #include <SPI.h>
@@ -19,7 +23,7 @@ typedef enum {
     A_BLACK = HX8357_BLACK,
     A_RED = HX8357_RED,
     A_GREEN = HX8357_GREEN,
-    A_DARK_GREEN= HX8357_DARKGREEN,
+    A_DARK_GREEN = HX8357_DARKGREEN,
     A_BLUE = HX8357_BLUE,
     A_CYAN = HX8357_CYAN,
     A_MAGENTA = HX8357_MAGENTA,

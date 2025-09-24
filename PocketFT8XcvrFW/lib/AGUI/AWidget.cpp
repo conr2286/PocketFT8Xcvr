@@ -1,18 +1,16 @@
 /**
- * AWidget is the base class for all AGUI controls
+ * AWidget is the base class for nearly all AGUI controls
  *
  * Notes:
  *  + AGUI controls have limited support for repainting an underlying control
  *  when an overlying control is deleted.
  *  + AGUI controls repaint by recalculating what appears within them; AGUI does
  *  not store a shadow pixel map of the display as do most modern GUIs.
- *  + When a deleted control covers another's displayed screen area, AWidget
- *  invokes the repaint method of the overlapped control.
+ *  + When a deleted control uncovers another's displayed screen area, AWidget
+ *  invokes the repaint method of the uncovered control.
  *  + The result of nested overlaps is undefined when one is deleted as the
  *  list of all AWidgets is linear without knowledge of nested overlaps and
  *  thus the order of repaints is indeterminate.
- *  + Because APixelBox does not implement a "real" repaint() method, it is unable to
- *  repaint the display after being uncovered by another control.
  */
 
 #include "AWidget.h"
@@ -50,12 +48,12 @@ AWidget::AWidget() {
     this->bdColor = AGUI::bdColor;  // Border color
     this->spColor = AGUI::spColor;  // Special color (e.g. selected item color)
 
-    // Initially config the widget font to the application's default
+    // Initially config the widget font to the application's default font
     DPRINTF("txtFont=%p\n", AGUI::appFont);
     this->font = AGUI::appFont;  // Widget's font
 
     // TODO:  Refactor such that radius==0 ==> squared corners rather than rounded
-    this->radius = 7;  // Radius of rounded corners in this widget
+    this->radius = 7;  // Hardwired radius of rounded corners in this widget
 }
 
 /**
@@ -112,8 +110,8 @@ AWidget& AWidget::operator=(const AWidget& that) {
  * unordered list of all widgets, stomp some dangling pointers, and erase
  * the widget from the display.
  *
- * If someday AGUI needs to deal with overlapping widgets, this is where we
- * would notify widgets uncovered by this vanishing widget.
+ * There is some limited support for uncovering an underlying widget
+ * when this widget is destroyed.
  */
 AWidget::~AWidget() {
     DPRINTF("~AWidget()=0x%x\n", this);
@@ -147,7 +145,7 @@ AWidget::~AWidget() {
         }
     }
 
-    // Repaint all widgets previously covered by this widget
+    // Repaint all underlying widgets previously covered by this widget
     for (AWidget* someWidget = headOfWidgets; someWidget != NULL; someWidget = someWidget->next) {
         // If someWidget overlaps this widget then repaint someWidget
         if (overlaps(someWidget)) {
@@ -165,15 +163,15 @@ AWidget::~AWidget() {
  * @param xCoord Touch screen x-coordinate
  * @param yCoord Touch screen y-coordinate
  *
- * This is where all widget touch notifications begin in AGUI.
+ * This is where all widget touch notifications begin in AGUI
  *
- * Scans the list of all widgets to determine which, if any, were touched.  When
+ * We scan the list of all widgets to determine which, if any, were touched.  When
  * the app's loop() function detects a touch event, it should pass the touch coordinates
  * to this static class method.
  *
  * Note:  We are not, at least for now, handling overlapping widgets on the
  * screen.  If overlapping widgets have been created and touched, we notify
- * only the first in the list.
+ * only the first in the list.  Perhaps this will change someday???
  */
 void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
     DTRACE();
@@ -185,8 +183,7 @@ void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
             scannedWidget->onTouchWidget(xCoord, yCoord);
         }
     }
-    // delay(50);  //Cheap debounce
-}
+}  // processTouch()
 
 /**
  * @brief Determine if a widget has a drawn border
