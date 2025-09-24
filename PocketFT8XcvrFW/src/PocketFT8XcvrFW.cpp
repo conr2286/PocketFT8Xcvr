@@ -129,7 +129,7 @@ static void copy_to_fft_buffer(void *, const void *);
 
 // Build the receiver
 SI4735 si4735;                 // The receiver
-static int BFO_Offset = -100;  // Receiver's BFO offset adjustment
+static int BFO_Offset = -80;  // Receiver's BFO offset adjustment
 
 // Define global objects widely referenced throughout PocketFT8Xcvr
 Station thisStation;  // Station model
@@ -271,7 +271,7 @@ FLASHMEM void setup(void) {
     }
 
     // Initialize the SI5351 clock generator.  NOTE:  PocketFT8Xcvr boards use CLKIN input (supposedly less jitter than XTAL).
-    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, 0);  // KQ7B's counter isn't accurate enough to calculate a correction
+    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000, -5000);  // KQ7B's counter isn't accurate enough to calculate a correction
     delay(10);
     si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  // We are using cmos CLKIN, not a XTAL input!!!
     delay(10);
@@ -324,7 +324,9 @@ FLASHMEM void setup(void) {
     delay(10);
     // currentFrequency = si4735.getFrequency();
     si4735.setVolume(50);
+    delay(10);
     si4735.setSSBBfo(BFO_Offset);  // Adjust receiver BFO so we receive at expected freq
+    delay(10);
 
     // Initialize the receiver's DSP chain
     init_DSP();

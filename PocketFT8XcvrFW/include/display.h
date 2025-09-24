@@ -38,7 +38,7 @@
 
 //------Decoded messages region of the display-----------------------------------------------------
 #define DISPLAY_DECODED_CHARS 21                                 // #chars in a line of decoded text
-#define DISPLAY_DECODED_LINES 6                                  // #lines of messages in this region
+#define DISPLAY_DECODED_LINES 9                                  // #lines of messages in this region
 #define DISPLAY_DECODED_X 0                                      // Upper-left corner X
 #define DISPLAY_DECODED_Y 100                                    // Upper-left corner Y
 #define DISPLAY_DECODED_W (DISPLAY_DECODED_CHARS * TEXT2_WIDTH)  // Width in pixels

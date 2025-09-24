@@ -48,7 +48,7 @@ void transmit_sequence(void) {
     digitalWrite(PIN_RCV, LOW);
 
     // Set receiver's volume down low
-    si4735.setVolume(/*35*/ 0);
+    si4735.setVolume(20);
 
     // Enable the transmitter clock
     si5351.drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);  // Set for max power if desired
@@ -104,7 +104,7 @@ void tune_On_sequence(void) {
     si5351.set_freq(tuneFreq, SI5351_CLK0);  // Freq is in hundreths of a HZ
 
     // Drop the receiver's volume
-    si4735.setVolume(0);
+    si4735.setVolume(20);
 
     // Turn-on the transmitter clock
     if (thisStation.getEnableTransmit()) si5351.output_enable(SI5351_CLK0, 1);

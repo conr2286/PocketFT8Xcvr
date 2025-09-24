@@ -34,7 +34,7 @@ static const APixelPos WaterfallCols = 353;  // #Pixel cols inside Waterfall wid
 static const ACoord DecodedMsgsX = 0;     // Upper-left corner
 static const ACoord DecodedMsgsY = 114;   // Upper-left corner
 static const ALength DecodedMsgsW = 260;  // Width
-static const ALength DecodedMsgsH = 112;  // Height
+static const ALength DecodedMsgsH = 172;  // Height
 
 // Define our Station Messages widget's boundary and extent
 static const ACoord StationMsgsX = 262;   // Upper-left corner
@@ -49,9 +49,9 @@ static const ALength InfoW = 119;  // Width
 static const ALength InfoH = 112;  // Height
 
 // Define Application Message boundary and extent
-static const ACoord AppMsgX = 0;     // Upper-left corner
+static const ACoord AppMsgX = 262;     // Upper-left corner
 static const ACoord AppMsgY = 228;   // Upper-left corner
-static const ALength AppMsgW = 480;  // Width
+static const ALength AppMsgW = 218;  // Width
 static const ALength AppMsgH = 60;   // Height
 
 // Define the Button widgets' boundaries and extents
