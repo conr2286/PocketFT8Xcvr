@@ -47,6 +47,7 @@ static Sequencer& seq = Sequencer::getSequencer();  // Get a reference to the Se
 
 //
 extern Config config;
+extern void sync_FT8(void);
 
 // GPS Access
 extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
@@ -347,9 +348,13 @@ void MenuButton::onTouchButton(int buttonId) {
             break;
 
         // Ignore unknown button identifiers
-        default:
-            DPRINTF("Unknown button\n");
-            break;
+        case 7:
+        DPRINTF("Sy\n");
+        sync_FT8();
+        ui.b7->setState(false);       // Turn button "off" (it doesn't really toggle)
+        ui.b7->onRepaintWidget();     // Repaint the now "off" button
+        break;
+
     }
 #endif
 }  // onTouchButton()
@@ -507,3 +512,13 @@ StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pSt
 
     return pNewItem;
 }
+
+
+    void display_value(int x, int y, int value){
+    char string[7];   // print format stuff
+    sprintf(string,"%6i",value);
+    tft.setTextColor(HX8357_YELLOW , HX8357_BLACK);
+    tft.setTextSize(0);
+    tft.setCursor(x, y);
+    tft.print(string);
+    }
