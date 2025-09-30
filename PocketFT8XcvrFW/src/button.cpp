@@ -59,7 +59,7 @@ extern int log_flag, logging_on;
 static Sequencer& seq = Sequencer::getSequencer();
 
 // Reference the GPS wait-for-it synchronizer
-void waitForFT8timeslot(void);
+//void waitForFT8timeslot(void);  chh thinks this is unnesscary
 
 // Setter for Sequencer's RoboOp response to a received CQ message
 void setAutoReplyToCQ(bool);
