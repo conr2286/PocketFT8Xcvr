@@ -37,6 +37,7 @@ class Sequencer {
     void startTimer(void);                   // Start timeout Timer
     void stopTimer(void);                    // Stop timeout Timer
 
+
     // Define the actions taken by the Sequencing State Machine
     void actionPendXmit(unsigned oddEven, SequencerStateType newState);  // Start transmitter in next timeslot
 
@@ -68,6 +69,7 @@ class Sequencer {
     void tuneButtonEvent(void);                                    // TUNE button clicked
     void clickDecodedMessageEvent(unsigned msgIndex);              // Received message clicked this index
     void clickDecodedMessageEvent(Decode *msg);                    // Received messages clicked this decoded msg
+    
 
     // void abortEvent(void);                  // Abort transmission request
     static void onTimerEvent(void);  // Timeout (QSO taking too long)

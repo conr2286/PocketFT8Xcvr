@@ -163,7 +163,11 @@ void tune_Off_sequence(void) {
  */
 void set_Xmit_Freq() {
     F_Long = (uint64_t)((thisStation.getFrequency() * 1000 + thisStation.getCursorFreq() /* + offset_freq*/) * 100);
+    si5351.output_enable(SI5351_CLK0, 0);
     si5351.set_freq(F_Long, SI5351_CLK0);
+    delay(1);
+    si5351.output_enable(SI5351_CLK0, 0);  //I think there is a sneak path in Si5351 that turns on clock when setting freq
+
 }  // set_Xmit_Freq()
 
 /**

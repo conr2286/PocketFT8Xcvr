@@ -17,9 +17,9 @@ extern Station thisStation; // Station params
  * @brief Initialize cursor frequencies
  */
 void set_startup_freq(void) {
-    cursor_line = 100;
+    cursor_line = 112;
     // start_up_offset_freq = EEPROMReadInt(10);     //Charlie
-    start_up_offset_freq = 0;  // KQ7B
+    start_up_offset_freq = 112;  // KQ7B
     thisStation.setCursorFreq((uint16_t)((float)(cursor_line + ft8_min_bin) * FFT_Resolution));
     //offset_freq = start_up_offset_freq;
     // DPRINTF("set_startup_freq:  start_up_offset_freq=%d, cursor_freq=%d, offset_freq=%d\n", start_up_offset_freq, cursor_freq, offset_freq);

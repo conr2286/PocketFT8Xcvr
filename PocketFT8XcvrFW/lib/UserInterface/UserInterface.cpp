@@ -45,6 +45,8 @@ static AGUI* gui;
 static Sequencer& seq = Sequencer::getSequencer();  // Get a reference to the Sequencer (RoboOp)
 #endif
 
+int auto_flag;
+
 //
 extern Config config;
 extern void sync_FT8(void);
@@ -111,7 +113,8 @@ void UserInterface::begin() {
  * The display contains operatingFrequency in kHz and the offset in Hz
  */
 void UserInterface::displayFrequency() {
-    String s = String(thisStation.getFrequency()) + "  " + String(thisStation.getCursorFreq());
+    //String s = String(thisStation.getFrequency()) + "  " + String(thisStation.getCursorFreq());
+    String s = String(thisStation.getFrequency()) + " " + String(thisStation.getCursorFreq());
     itemFrequency->setItemText(s, A_GREEN);
 }  // displayFrequency()
 
@@ -319,13 +322,15 @@ void MenuButton::onTouchButton(int buttonId) {
             if (getState()) {
                 setAutoReplyToCQ(true);  // If button is on then enable RoboOp
                 if (config.enableDuplicates) {
-                    ui.applicationMsgs->setText("RoboOp is enabled and will automatically\nreply to CQs from any station, even dups");
+                    ui.applicationMsgs->setText("Robo reply dup");
                 } else {
-                    ui.applicationMsgs->setText("RoboOp is enabled and will automatically\nreply to CQ from an unlogged station");
+                    ui.applicationMsgs->setText("Robo ignore logged");
+                auto_flag = 1;
                 }
             } else {
                 setAutoReplyToCQ(false);  // Else disable RoboOp
-                ui.applicationMsgs->setText("RoboOp is disabled");
+                ui.applicationMsgs->setText("Robo disabled");
+                auto_flag = 0;
             }
             break;
 
