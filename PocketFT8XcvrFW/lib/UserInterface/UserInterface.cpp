@@ -113,7 +113,7 @@ void UserInterface::begin() {
  * The display contains operatingFrequency in kHz and the offset in Hz
  */
 void UserInterface::displayFrequency() {
-    //String s = String(thisStation.getFrequency()) + "  " + String(thisStation.getCursorFreq());
+    // String s = String(thisStation.getFrequency()) + "  " + String(thisStation.getCursorFreq());
     String s = String(thisStation.getFrequency()) + " " + String(thisStation.getCursorFreq());
     itemFrequency->setItemText(s, A_GREEN);
 }  // displayFrequency()
@@ -325,12 +325,12 @@ void MenuButton::onTouchButton(int buttonId) {
                     ui.applicationMsgs->setText("Robo reply dup");
                 } else {
                     ui.applicationMsgs->setText("Robo ignore logged");
-                auto_flag = 1;
+                    auto_flag = 1;  // Enable RoboOp to continuously respond to received CQ msgs
                 }
             } else {
                 setAutoReplyToCQ(false);  // Else disable RoboOp
                 ui.applicationMsgs->setText("Robo disabled");
-                auto_flag = 0;
+                auto_flag = 0;  // Ensure RoboOp will not respond continuously
             }
             break;
 
@@ -354,12 +354,11 @@ void MenuButton::onTouchButton(int buttonId) {
 
         // Ignore unknown button identifiers
         case 7:
-        DPRINTF("Sy\n");
-        sync_FT8();
-        ui.b7->setState(false);       // Turn button "off" (it doesn't really toggle)
-        ui.b7->onRepaintWidget();     // Repaint the now "off" button
-        break;
-
+            DPRINTF("Sy\n");
+            sync_FT8();
+            ui.b7->setState(false);    // Turn button "off" (it doesn't really toggle)
+            ui.b7->onRepaintWidget();  // Repaint the now "off" button
+            break;
     }
 #endif
 }  // onTouchButton()
@@ -518,12 +517,11 @@ StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pSt
     return pNewItem;
 }
 
-
-    void display_value(int x, int y, int value){
-    char string[7];   // print format stuff
-    sprintf(string,"%6i",value);
-    tft.setTextColor(HX8357_YELLOW , HX8357_BLACK);
+void display_value(int x, int y, int value) {
+    char string[7];  // print format stuff
+    sprintf(string, "%6i", value);
+    tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
     tft.setTextSize(0);
     tft.setCursor(x, y);
     tft.print(string);
-    }
+}

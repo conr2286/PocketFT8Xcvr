@@ -6,7 +6,7 @@
 #include "HX8357_t3n.h"
 #include "NODEBUG.h"
 #include "decode_ft8.h"
-//#include "display.h"
+// #include "display.h"
 #include "gen_ft8.h"
 #include "traffic_manager.h"
 // #include <Encoder.h>
@@ -46,10 +46,10 @@ int test;
 
 extern int master_decoded;
 extern void sync_FT8(void);
-//extern uint16_t cursor_freq;
+// extern uint16_t cursor_freq;
 extern int tune_flag;
-//extern uint16_t cursor_line;
-//extern int offset_freq;
+// extern uint16_t cursor_line;
+// extern int offset_freq;
 
 const float ft8_shift = 6.25;  // FT8 Hz/bin???
 // int start_up_offset_freq;
@@ -59,11 +59,10 @@ extern int log_flag, logging_on;
 static Sequencer& seq = Sequencer::getSequencer();
 
 // Reference the GPS wait-for-it synchronizer
-//void waitForFT8timeslot(void);  chh thinks this is unnesscary
+// void waitForFT8timeslot(void);  chh thinks this is unnesscary
 
 // Setter for Sequencer's RoboOp response to a received CQ message
 void setAutoReplyToCQ(bool);
-
 
 #define numButtons 9
 #define button_height BUTTON_BAR_H  // TODO:  Clean-up old definitions for height and top line location

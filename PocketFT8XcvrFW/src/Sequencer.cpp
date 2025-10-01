@@ -149,9 +149,9 @@ extern int Target_RSL;       // Remote station's RSL
 extern int auto_flag;
 extern void display_value(int x, int y, int value);
 int target_frequency;
-extern uint16_t cursor_line;  
+extern uint16_t cursor_line;
 
-void set_Target_Frequency (int CQ_freq);
+void set_Target_Frequency(int CQ_freq);
 
 // Our statics
 static bool autoReplyToCQ;  // RoboOp automatically transmits reply to CQ
@@ -181,7 +181,7 @@ void Sequencer::begin(unsigned timeoutSeconds, const char* logfileName) {
     state = IDLE;                                                            // Reset state to idle
     timeoutTimer = Timer::buildTimer(timeoutSeconds * 1000L, onTimerEvent);  // Build the QSO/tuning timeout-timer
     contactLog = LogFactory::buildADIFlog(logfileName);
-    //contactLog = LogFactory::buildCSVlog(logfileName);
+    // contactLog = LogFactory::buildCSVlog(logfileName);
     setAutoReplyToCQ(false);                          // Disable auto reply to CQ and clear button
     ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // Display RECEIVE icon
     lastReceivedMsg = String("");                     // We haven't received anything yet
@@ -498,8 +498,6 @@ void Sequencer::cqMsgEvent(Decode* msg) {
         return;  // RoboOp ignores stations already in the log
     }
 
-    
-
     // Automatically respond to received CQ message if we are not already engaged in a QSO
     switch (state) {
         case IDLE:
@@ -513,9 +511,9 @@ void Sequencer::cqMsgEvent(Decode* msg) {
             startTimer();         // Start the Timer to terminate a run-on QSO
             state = LOC_PENDING;  // Await appropriate timeslot to transmit to Target_Call
             ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
-            target_frequency =  msg->freq_hz;
+            target_frequency = msg->freq_hz;
             display_value(270, 258, target_frequency);
-            set_Target_Frequency (target_frequency);
+            set_Target_Frequency(target_frequency);
             break;
 
         // Automatic responses are disabled if we are calling CQ or otherwise engaged
@@ -749,14 +747,13 @@ void Sequencer::onTimerEvent(Timer* thisTimer) {
     Sequencer& theSequencer = Sequencer::getSequencer();
     DFPRINTF("sequenceNumber=%lu, state=%u\n", theSequencer.sequenceNumber, theSequencer.state);
 
-    // The expiring Timer *always* halts the RoboOp from responding to CQs
-   // setAutoReplyToCQ(false);
-    if(auto_flag == 1)  
-    setAutoReplyToCQ(true);
+    // auto_flag enables RoboOp to continue to respond to received CQ messages
+    if (auto_flag == 1)
+        setAutoReplyToCQ(true);
     else
-    setAutoReplyToCQ(false);
+        setAutoReplyToCQ(false);
 
-    // Decide what to do
+    // Decide what to do about the time-out
     switch (theSequencer.state) {
         // We don't do anything if we were IDLE.  Not sure why we had a Timer active.
         case IDLE:
@@ -1219,8 +1216,8 @@ void Sequencer::endQSO() {
 
     // Reset RoboOp's auto reply to received CQ messages.  If we left this active, RoboOp
     // would continue to make QSOs while we enjoy refreshments in the shade.
-    //setAutoReplyToCQ(false);
-    
+    // setAutoReplyToCQ(false);
+
     // We are finished with this contact whether we had enough data to log it or not
     contact.reset();
     ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // We are receiving again
@@ -1268,15 +1265,13 @@ void Sequencer::highlightAbortedTransmission() {
     }
 }  // highlightAbortedTransmission()
 
-
-void set_Target_Frequency (int CQ_freq) {
+void set_Target_Frequency(int CQ_freq) {
     thisStation.setCursorFreq((float)CQ_freq);
     set_Xmit_Freq();
     String str = String("Cursor freq = ") + String(thisStation.getCursorFreq()) + String(" Hz");
     // DPRINTF("%s\n", str.c_str());
     // ui.applicationMsgs->setText(str);
     ui.displayFrequency();  // Update station info display too
-    cursor_line =   (uint16_t ) ((float) CQ_freq / FFT_Resolution);
+    cursor_line = (uint16_t)((float)CQ_freq / FFT_Resolution);
     cursor_line = cursor_line - ft8_min_bin;
-
 }

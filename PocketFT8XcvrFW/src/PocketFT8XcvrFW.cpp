@@ -188,8 +188,8 @@ int tune_flag;  // Yep... true when we transmit a dead carrier for tuning
 
 int log_flag, logging_on;  // TODO:  deprecate old, old logging stuff
 
-//extern int auto_flag;
-//extern void display_value(int x, int y, int value);
+// extern int auto_flag;
+// extern void display_value(int x, int y, int value);
 
 // Get a reference to the QSO Sequencer machine implementing a robo-like operator handling
 // FT8 QSO sequencing.
@@ -667,7 +667,7 @@ void update_synchronization() {
         // Notify sequencer
         seq.timeslotEvent();  // Increments sequence number for upcoming timeslot
 
-        //display_value(270, 258, auto_flag);
+        // display_value(270, 258, auto_flag);
 
         // Debug missed timeslots (we are too late to receive the first symbol)
         if (current_time > nextTimeSlot + 160) {
