@@ -1,9 +1,11 @@
+
+#include <string.h>
+
 #include "msgTypes.h"
 #include "DEBUG.h"
 #include "unpack.h"
 #include "text.h"
-
-#include <string.h>
+#include "FT8CallsignHashTable.h"
 
 // extern _Bool true;
 // extern _Bool false;
@@ -12,6 +14,9 @@
 const uint32_t MAX22 = 4194304L;
 const uint32_t NTOKENS = 2063592L;
 const uint16_t MAXGRID4 = 32400L;
+
+// Implement the callsign hash table
+FT8CallsignHashTable callsignHashTable;
 
 /**
  * SYNOPSIS
@@ -100,6 +105,7 @@ int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
         // call hash22(n22,c13)     !Retrieve result from hash table
         // TODO: implement
         // strcpy(result, "<...>");
+        DPRINTF("lookup_callsign for %u\n", n28);
         result[0] = '<';
         int_to_dd(result + 1, n28, 7, true);
         result[8] = '>';
@@ -136,6 +142,8 @@ int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
             strcat(result, "/P");
         }
     }
+
+    // DPRINTF("save_callsign %s\n", result);  // Why would ft8_lib want to save a standard callsign in hash table???
 
     return 0;  // Success
 }
@@ -189,7 +197,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
     // Fix "CQ_" to "CQ " -> already done in unpack28()
 
     // Debugging
-    DPRINTF("field1=%s field2=%s\n", field1, field2);
+    // DPRINTF("field1=%s field2=%s\n", field1, field2);
 
     // TODO: add to recent calls. (This is needed for non-standard, hashed calls)
     // if (field1[0] != '<' && strlen(field1) >= 4) {
@@ -271,7 +279,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
 }  // unpack_type1()
 
 /**
- * Unpack 13 char "free" text
+ * Unpack the FT8 13 char "free" text message
  *
  * @param a71 The packed text
  * @param text Unpacked text
@@ -304,6 +312,12 @@ int unpack_text(const uint8_t *a71, char *text) {
     return 0;  // Success
 }  // unpack_text()
 
+/**
+ * @brief Unpack the FT8 "telemetry" message
+ * @param a71
+ * @param telemetry
+ * @return 0==success
+ */
 int unpack_telemetry(const uint8_t *a71, char *telemetry) {
     uint8_t b71[9];
 
@@ -328,23 +342,30 @@ int unpack_telemetry(const uint8_t *a71, char *telemetry) {
     return 0;
 }
 
-// none standard for wsjt-x 2.0
-// by KD8CEC
+/**
+ * @brief Unpack the FT8 "nonstandard" messaage (with hashed callsign)
+ * @author KD8CEC (for wsjtx???)
+ * @param a77 The packed, non-standard message bits
+ * @param field1 Unpacked first callsign
+ * @param field2 Unpacked second callsign
+ * @param field3 RRR, RR73, 73
+ * @param msgType Sequencer's MsgType enumerations (CQ)
+ */
 int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *field3, MsgType *msgType) {
-    /*
-          wsjt-x 2.1.0 rc5
-          read(c77,1050) n12,n58,iflip,nrpt,icq
-          1050 format(b12,b58,b1,b2,b1)
-  */
+    DTRACE();
 
-    // Assume MSG_UNKNOWN type for now
+    // Assume Sequencer's MSG_UNKNOWN type for now
     *msgType = MSG_UNKNOWN;
 
-    uint32_t n12, iflip, nrpt, icq;
+    // Declare the FT8 tag fields per "The FT4 and FT8 Communication Protocalls" in QEX
+    uint32_t h12, h1, r2, icq;
     uint64_t n58;
-    n12 = (a77[0] << 4);   // 11 ~4  : 8
-    n12 |= (a77[1] >> 4);  // 3~0 : 12
 
+    // Unpack the 12-bit hash (h12) value
+    h12 = (a77[0] << 4);   // 11 ~4  : 8
+    h12 |= (a77[1] >> 4);  // 3~0 : 12
+
+    // Unpack the 58-bit compressed callsign
     n58 = ((uint64_t)(a77[1] & 0x0F) << 54);  // 57 ~ 54 : 4
     n58 |= ((uint64_t)a77[2] << 46);          // 53 ~ 46 : 12
     n58 |= ((uint64_t)a77[3] << 38);          // 45 ~ 38 : 12
@@ -354,53 +375,65 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
     n58 |= ((uint64_t)a77[7] << 6);           // 13 ~ 6 : 12
     n58 |= ((uint64_t)a77[8] >> 2);           // 5 ~ 0 : 765432 10
 
-    iflip = (a77[8] >> 1) & 0x01;  // 76543210
-    nrpt = ((a77[8] & 0x01) << 1);
-    nrpt |= (a77[9] >> 7);  // 76543210
-    icq = ((a77[9] >> 6) & 0x01);
+    // Unpack etc
+    h1 = (a77[8] >> 1) & 0x01;     // 1==hashed callsign is second callsign, else 0
+    r2 = ((a77[8] & 0x01) << 1);   // 0==blank, 1==RRR, 2==RR73, 3==73
+    r2 |= (a77[9] >> 7);           //
+    icq = ((a77[9] >> 6) & 0x01);  // c1 (1==first callsign is CQ and ignore h12)
 
+    // Decompress the 58-bit callsign into c11 (with leading spaces)
     char c11[12];
     c11[11] = '\0';
-
     for (int i = 10; /* no condition */; --i) {
         c11[i] = charn(n58 % 38, 5);
         if (i == 0) break;
         n58 /= 38;
     }
 
-    char call_3[15];
-    // should replace with hash12(n12, call_3);
-    // strcpy(call_3, "<...>");
-    call_3[0] = '<';
-    int_to_dd(call_3 + 1, n12, 4, true);
-    call_3[5] = '>';
-    call_3[6] = '\0';
+    // Trim leading/trailing spaces from right-adjusted, uncompressed callsign
+    char *uncompressedCallsign = trim(c11);
 
-    char *call_1 = (iflip) ? c11 : call_3;
-    char *call_2 = (iflip) ? call_3 : c11;
-    // save_hash_call(c11_trimmed);
-    DPRINTF("call_1=%s call_2=%s iflip=%d icq=%d nrpt=%d n12=%04x\n", call_1, call_2, iflip, icq, nrpt, n12);
+    // Save the uncompressed callsign in 12-bit hash table
+    // TODO:  Do we need to confirm strlen of callsign >= 3
+    DPRINTF("save_callsign '%s'\n", uncompressedCallsign);
 
-    // Is it some form of end-of-transmission (EOT)
+    // Decode the other callsign from the 12-bit hash table
+    char unhashedCallsign[15];  // Allow room for 12-char callsign, 2 angle brackets, and the NUL
+    DPRINTF("lookup_callsign for %u\n", h12);
+    unhashedCallsign[0] = '<';
+    int_to_dd(unhashedCallsign + 1, h12, 4, true);
+    unhashedCallsign[5] = '>';
+    unhashedCallsign[6] = '\0';
+
+    // Possibly flip them around
+    char *call_1 = (h1) ? uncompressedCallsign : unhashedCallsign;
+    char *call_2 = (h1) ? unhashedCallsign : uncompressedCallsign;
+
+    // Unpack the message type
     if (icq == 0) {
-        *msgType = MSG_BLANK;  // Assume mystery and let the Sequencer choke on it
-        strcpy(field1, trim(call_1));
-        if (nrpt == 1)
+        *msgType = MSG_BLANK;          // Assume blank (TODO:  Sequencer may choke)
+        strcpy(field1, trim(call_1));  // Destination station's callsign
+        if (r2 == 1) {
             strcpy(field3, "RRR");
-        else if (nrpt == 2)
+            *msgType = MSG_RRR;
+        } else if (r2 == 2) {
             strcpy(field3, "RR73");
-        else if (nrpt == 3)
+            *msgType = MSG_RR73;
+        } else if (r2 == 3) {
             strcpy(field3, "73");
-        else {
-            field3[0] = '\0';      // No, it appears to be a blank field3 (ie. AG0E KQ7B).  For reestablishing contact???  Who knows.
-            *msgType = MSG_BLANK;  // Report blank
+            *msgType = MSG_73;
+        } else {
+            field3[0] = '\0';      // No, it's just one station calling another (e.g. "W1AW KQ7B") without extra info
+            *msgType = MSG_BLANK;  // Report blank (TODO:  Sequencer may choke)
         }
     } else {
-        *msgType = MSG_CQ;  // It's a CQ with hashed callsign and no locator
+        *msgType = MSG_CQ;  // It's a CQ message from a hashed callsign sans locator (TODO:  Sequencer must handle no locator)
         strcpy(field1, "CQ");
-        field3[0] = '\0';
+        field3[0] = '\0';  // Non-standard CQ messages do not include a locator
     }
-    strcpy(field2, trim(call_2));
+    strcpy(field2, trim(call_2));  // Origin station's callsign
+
+    DPRINTF("Unpacked nonstandard '%s' '%s' '%s' msgType=%u\n", field1, field2, field3, *msgType);
 
     return 0;
 }
@@ -476,6 +509,7 @@ int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3
     //     // Type 3: ARRL RTTY Contest
     // }
     else if (i3 == 4) {
+        DTRACE();
         //     // Type 4: Nonstandard calls, e.g. <WA9XYZ> PJ4/KA1ABC RR73
         //     // One hashed call or "CQ"; one compound or nonstandard call with up
         //     // to 11 characters; and (if not "CQ") an optional RRR, RR73, or 73.

@@ -166,14 +166,14 @@ int ft8_decode(void) {
         int rc = unpack77_fields(a91, field1, field2, field3, &msgType);
         if (rc < 0) continue;  // Unpack failure???
 
-        snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);
+        snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);  // Duplicate decodes appear possible???
         // DPRINTF("message='%s', msgType=%u\n", message, msgType);
 
-        // Check for duplicate messages (TODO: use hashing)
-        bool found = false;
+        // Have we previously decoded this message?
+        bool duplicateMessage = false;
         for (int i = 0; i < num_decoded; ++i) {
             if (0 == strcmp(decoded[i], message)) {
-                found = true;
+                duplicateMessage = true;
                 break;
             }
         }
@@ -186,7 +186,8 @@ int ft8_decode(void) {
         char rtc_string[10];  // print format stuff
         snprintf(rtc_string, sizeof(rtc_string), "%02i:%02i:%02i", hour(), minute(), second());
 
-        if (!found && num_decoded < kMax_decoded_messages) {
+        // Skip duplicaates
+        if (!duplicateMessage && num_decoded < kMax_decoded_messages) {
             if (strlen(message) < kMax_message_length) {
                 strlcpy(decoded[num_decoded], message, kMax_message_length);
 
@@ -269,7 +270,7 @@ void display_messages(int decoded_messages) {
                 color = A_WHITE;  // CQ messages appear in white
             }
             // For now, don't display messages with hashed callsigns as our FT8 library doesn't support them
-            if (strchr(message, '<') == NULL) ui.decodedMsgs->addItem(ui.decodedMsgs, message, color);  // Display received message
+            /*if (strchr(message, '<') == NULL)*/ ui.decodedMsgs->addItem(ui.decodedMsgs, message, color);  // Display received message
         }
     }
 
