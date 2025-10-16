@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "text.h"
 
 // TODO: This is wasteful, should figure out something more elegant
@@ -279,7 +279,7 @@ void packtext77(const char *text, uint8_t *b77) {
 }
 
 int pack77(const char *msg, uint8_t *c77) {
-    // DPRINTF("pack77('%s',...)\n", msg);
+    DPRINTF("pack77('%s',...)\n", msg);
     //  Check Type 1 (Standard 77-bit message) or Type 2, with optional "/P"
     if (0 == pack77_1(msg, c77)) {
         return 0;

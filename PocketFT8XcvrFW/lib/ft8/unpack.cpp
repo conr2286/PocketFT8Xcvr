@@ -101,15 +101,20 @@ int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
 
     n28 = n28 - NTOKENS;
     if (n28 < MAX22) {
-        // This is a 22-bit hash of a result
-        // call hash22(n22,c13)     !Retrieve result from hash table
-        // TODO: implement
-        // strcpy(result, "<...>");
-        DPRINTF("lookup_callsign for %u\n", n28);
-        result[0] = '<';
-        int_to_dd(result + 1, n28, 7, true);
-        result[8] = '>';
-        result[9] = '\0';
+        // This n28 is actually a 22-bit hash of a result
+
+        String s = callsignHashTable.lookup(n28);  // Map the 22-bit hash key to a callsign string
+        if (s.length() != 0) {
+            s = String("<") + s + String(">");  // Enclose callsign in angle brackets
+        } else {
+            s = "<...>";  // Deal with an unknown hash key
+        }
+        strlcpy(result, s.c_str(), sizeof(result));  // Legacy C code expects a char[]
+        DPRINTF("lookup(%u)='%s'\n", n28, result);
+        // result[0] = '<';
+        // int_to_dd(result + 1, n28, 7, true);
+        // result[8] = '>';
+        // result[9] = '\0';
         return 0;
     }
 
@@ -143,7 +148,7 @@ int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
         }
     }
 
-    // DPRINTF("save_callsign %s\n", result);  // Why would ft8_lib want to save a standard callsign in hash table???
+    DPRINTF("legacy save_callsign '%s'\n", result);  // Why would ft8_lib want to save a standard callsign in hash table???
 
     return 0;  // Success
 }
@@ -395,15 +400,23 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
 
     // Save the uncompressed callsign in 12-bit hash table
     // TODO:  Do we need to confirm strlen of callsign >= 3
-    DPRINTF("save_callsign '%s'\n", uncompressedCallsign);
+    FT8Hash12 err = callsignHashTable.add12(String(uncompressedCallsign));
+    DPRINTF("add12(%s)=%u\n", uncompressedCallsign, err);
 
     // Decode the other callsign from the 12-bit hash table
-    char unhashedCallsign[15];  // Allow room for 12-char callsign, 2 angle brackets, and the NUL
-    DPRINTF("lookup_callsign for %u\n", h12);
-    unhashedCallsign[0] = '<';
-    int_to_dd(unhashedCallsign + 1, h12, 4, true);
-    unhashedCallsign[5] = '>';
-    unhashedCallsign[6] = '\0';
+    char unhashedCallsign[15];                 // Allow room for 12-char callsign, 2 angle brackets, and the NUL
+    String s = callsignHashTable.lookup(h12);  // Map the 12-bit hash key to its associated callsign string
+    if (s.length() != 0) {
+        s = String("<") + s + String(">");  // Enclose found callsign in angle brackets
+    } else {
+        s = "<...>";  // Report an unknown hash key
+    }
+    strlcpy(unhashedCallsign, s.c_str(), sizeof(unhashedCallsign));  // Legacy code expects char[]
+    DPRINTF("lookup(%u)='%s'\n", h12, unhashedCallsign);
+    // unhashedCallsign[0] = '<';
+    // int_to_dd(unhashedCallsign + 1, h12, 4, true);
+    // unhashedCallsign[5] = '>';
+    // unhashedCallsign[6] = '\0';
 
     // Possibly flip them around
     char *call_1 = (h1) ? uncompressedCallsign : unhashedCallsign;

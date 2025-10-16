@@ -64,52 +64,58 @@ FT8Hash FT8CallsignHashTable::error = 0xffffffff;  // Faked hash key for error i
 /**
  * @brief Add an entry to the FT8 nonstandard callsign table
  * @param callsign The callsign text String
- * @return The FT8Hash key value (all available bits)
+ * @return The FT8Hash12 key value
  *
- * @note FT8 callsign hash keys appear as 10, 12 and 22-bit types, but this implementation
- * always hashes the callsign into the FT8Hash type that can accomodate any FT8 key.  You
- * can convert any native FT8Hash type to a 12-bit key, for example, using shrinkKey12().
- *
- * @note Even though the nonstandard callsign table is implemented as an ordered map rather
- * than an unordered hash table, we still have to hash callsigns because the FT8 protocol
- * transmits the 10, 12 and 22-bit hash keys within its message fields.  Thus, we must
- * use the FT8-defined hash algorithm and we must expose those keys for use by other code.
  */
-FT8Hash FT8CallsignHashTable::add(String callsign) {
+FT8Hash12 FT8CallsignHashTable::add12(String callsign) {
     DPRINTF("add(%s)\n", callsign.c_str());
-    FT8Hash key22 = hashCallsign(callsign);                          // Generate a base-type 22-bit FT8 hash key
-    if (key22 != error) nonStandardCallsignTable[key22] = callsign;  // Map the FT8 hash key to the specified callsign
-    return key22;                                                    // Return the key or error
+    FT8Hash22 key22 = hashCallsign(callsign);  // Always generate a 22-bit FT8 hash key
+    if (key22 != error) {
+        FT8Hash12 key12 = key22 >> 10;               // Make a 12-bit key
+        nonStandardCallsignTable[key12] = callsign;  // Record mapping of the FT8 hash key to the specified callsign
+        return key12;                                // Return the 12-bit key
+    } else {
+        return error;  // Return the error indicator (invalid or too many chars in the callsign)
+    }
 }
 
 /**
- * @brief Retrieve a nonstandard callsign string
- * @param key The base key (containing all the implemented bits)
- * @return The nonstandard callsign string (zero-length if the key was not recognized)
+ * @brief Add an entry to the FT8 nonstandard callsign table
+ * @param callsign The callsign text String
+ * @return The FT8Hash22 key value
  *
- * @note 10-bit and 12-bit keys must be extended to 22-bits
  */
-String FT8CallsignHashTable::retrieve(FT8Hash key22) {
+FT8Hash12 FT8CallsignHashTable::add22(String callsign) {
+    DPRINTF("add(%s)\n", callsign.c_str());
+    FT8Hash22 key22 = hashCallsign(callsign);  // Always generate a 22-bit FT8 hash key
+    if (key22 != error) {
+        nonStandardCallsignTable[key22] = callsign;  // Record mapping of the FT8 hash key to the specified callsign
+        return key22;                                // Return the 12-bit key
+    } else {
+        return error;  // Return the error indicator (invalid or too many chars in the callsign)
+    }
+}
+
+/**
+ * @brief Retrieve a nonstandard callsign string from the map
+ * @param key The hash key
+ * @return The nonstandard callsign string (zero-length if the key is not recognized)
+ *
+ */
+String FT8CallsignHashTable::lookup(FT8Hash key22) {
+    String callsign;
     DPRINTF("retrieve(%u)\n", key22);
-    return nonStandardCallsignTable[key22];
+    callsign = nonStandardCallsignTable[key22];
+    DPRINTF("lookup(%u) = %s\n", key22, callsign);
+    return callsign;
 }
 
 /**
- * @brief Shrink a base key to only 12-bits
- * @param key The base key (containing all 22 implemented bits)
- * @return A 12-bit key
- */
-FT8Hash12 FT8CallsignHashTable::shrinkKey12(FT8Hash key) {
-    DPRINTF("shrinkKey12(%u)\n", key);
-    return key >> 10;  // Really... that's how FT8 makes a 12-bit key from a 22-bit key
-}
-
-/**
- * @brief FT8-defined hash function
+ * @brief The FT8-prescribed hash function
  * @param s String to be hashed
- * @return A base key (containing all implemented bits) or FT8CallsignHashTable::error
+ * @return A 22-bit key or FT8CallsignHashTable::error
  *
- * @note FT8 expects and we validate the string to be hashed consists of 1..11
+ * @note FT8 expects and we validate the string to consist of 1..11
  * characters chosen from A-Z, 0-9, ' ' and '/'.
  *
  * @author Derivative of the github ft8_lib save_callsign() implementation
@@ -142,5 +148,5 @@ FT8Hash FT8CallsignHashTable::hashCallsign(String s) {
     FT8Hash n22 = ((47055833459ull * n58) >> (64 - 22)) & (0x3FFFFFul);
     DPRINTF("Hashed '%s' to %lu\n", s.c_str(), n22);
 
-    return n22;  // We always and only return the 22-bit base result
+    return n22;  // We always and only return the 22-bit result
 }
