@@ -82,7 +82,7 @@ char* get_message() {
 }
 
 /**
- *  Builds an outbound FT8 message[] for later transmission
+ *  Builds an outbound FT8 standard message[] for later transmission
  *
  *  Constructs and displays the specified FT8 outbound message and sets the
  *  message_state flag indicating message[] is valid.  Does not actually
@@ -95,6 +95,7 @@ char* get_message() {
  *    TargetRSL --      Worked station's Received Signal Level
  *    message[] --      The outbound message is constructed here
  *    message_state --  Status of message[]: 0==Invalid, 1==Valid
+ *    tones[] --        Outbound message tones for the modulator
  *
  *  @param index Specifies the outbound FT8 message type, e.g.
  *              0 -- CQ KQ7B DN15
@@ -106,17 +107,14 @@ char* get_message() {
  *
  **/
 void set_message(uint16_t index) {
-    // char big_gulp[60];
     uint8_t packed[K_BYTES];
-    // char blank[] = "                   ";
     char seventy_three[] = "RR73";
-    // char Reply_State[20];
 
     // DPRINTF("set_message(%u)\n", index);
 
-    getTeensy3Time();
-    char rtc_string[10];  // print format stuff
-    snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
+    // getTeensy3Time();
+    // char rtc_string[10];  // print format stuff
+    // snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
 
     // strlcpy(message, blank, sizeof(message));
     clearOutboundMessageText();
@@ -158,14 +156,17 @@ void set_message(uint16_t index) {
     DPRINTF("message='%s'\n", message);
     ui.applicationMsgs->setText(message);
 
-    // TODO:  Check for empty message???
-    pack77_1(message, packed);
+    //  TODO:  Nonstandard callsigns
+    //  Messages sent from our nonstandard callsign:
+    //      CQ KQ7B/IDAHO           -- MSG_CQ  packs as type 4, nonstandard message
+    //      W1AW KQ7B/IDAHO DN15    -- MSG_LOC packs as type 4, nonstandard message sans the locator
+    //  Messages sent to a nonstandard callsign:
+    //  CN/W1AW KQ7B DN15       -- MSG_LOC packs as type 1, standard message with hashed dest callsign
+    // pack77_1(message, packed);
+    pack77(message, packed);
     genft8(packed, tones);
 
     message_state = 1;
-
-    //	sprintf(big_gulp,"%s %s", rtc_string, message);
-    //	if (logging_on == 1) write_log_data(big_gulp);
 
     // DPRINTF("message='%s'\n", message);
 
@@ -192,13 +193,11 @@ void set_message(char* freeText) {
     ui.applicationMsgs->setText(message);
 
     // Prepare the outbound message as an array of tones for the FSK modulator
-    packtext77(message, packed);  // Pack text into compressed bits
-    genft8(packed, tones);        // Generate the FT8 tones for modulator
+    // packtext77(message, packed);  // Pack text into compressed bits
+    pack77(message, packed);  // Pack text into compressed bits
+    genft8(packed, tones);    // Generate the FT8 tones for modulator
 
     message_state = 1;
-
-    //	sprintf(big_gulp,"%s %s", rtc_string, message);
-    //	if (logging_on == 1) write_log_data(big_gulp);
 
     // DPRINTF("message='%s'\n", message);
 }

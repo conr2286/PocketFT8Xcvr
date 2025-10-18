@@ -16,7 +16,7 @@ const uint32_t NTOKENS = 2063592L;
 const uint16_t MAXGRID4 = 32400L;
 
 // Implement the callsign hash table
-FT8CallsignHashTable callsignHashTable;
+FT8CallsignHashTable nonstandardCallsignTable;
 
 /**
  * SYNOPSIS
@@ -64,7 +64,7 @@ FT8CallsignHashTable callsignHashTable;
  * @param result[] plaintext callsign
  *
  **/
-int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
+int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char* result) {
     // Check for special tokens DE, QRZ, CQ, CQ_nnn, CQ_aaaa
     if (n28 < NTOKENS) {
         if (n28 <= 2) {
@@ -101,15 +101,15 @@ int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
 
     n28 = n28 - NTOKENS;
     if (n28 < MAX22) {
-        // This n28 is actually a 22-bit hash of a result
+        // This n28 now has a 22-bit hash of a callsign hopefully recorded in the table
 
-        String s = callsignHashTable.lookup(n28);  // Map the 22-bit hash key to a callsign string
+        String s = nonstandardCallsignTable.lookup(n28);  // Map the 22-bit hash key to a callsign string
         if (s.length() != 0) {
             s = String("<") + s + String(">");  // Enclose callsign in angle brackets
         } else {
-            s = "<...>";  // Deal with an unknown hash key
+            s = "<...>";  // The hash key didn't map to anything
         }
-        strlcpy(result, s.c_str(), sizeof(result));  // Legacy C code expects a char[]
+        strcpy(result, s.c_str());  // Legacy C code expects a char[]
         DPRINTF("lookup(%u)='%s'\n", n28, result);
         // result[0] = '<';
         // int_to_dd(result + 1, n28, 7, true);
@@ -148,7 +148,9 @@ int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
         }
     }
 
-    DPRINTF("legacy save_callsign '%s'\n", result);  // Why would ft8_lib want to save a standard callsign in hash table???
+    // Why did legacy code save standard callsigns in hash map!  Is someone sending nonstandard message with standard callsign?
+    unsigned key = nonstandardCallsignTable.add12(String(result));
+    // DPRINTF("ft8_lib saved '%s' as %d\n", result, key);  // Why would ft8_lib want to save a standard callsign in hash table???
 
     return 0;  // Success
 }
@@ -168,7 +170,7 @@ int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, char *result) {
  * Reference:  https://wsjt.sourceforge.io/FT4_FT8_QEX.pdf
  *
  **/
-int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, char *field3, MsgType *msgType) {
+int unpack_type1(const uint8_t* a77, uint8_t i3, char* field1, char* field2, char* field3, MsgType* msgType) {
     uint32_t n28a, n28b;
     uint16_t igrid4;
     uint8_t ir;
@@ -217,7 +219,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
     if (igrid4 <= MAXGRID4) {
         // DPRINTF("igrid4=%u, MAXGRID4=%u\n",igrid4, MAXGRID4);
         //  Extract 4 symbol grid locator into field3
-        char *dst = field3;
+        char* dst = field3;
         uint16_t n = igrid4;
         if (ir > 0) {
             // In case of ir=1 add an "R" before grid
@@ -263,7 +265,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
             strcpy(field3, "73");  // Best regards
             *msgType = MSG_73;
         } else if (irpt >= 5) {
-            char *dst = field3;
+            char* dst = field3;
             *msgType = MSG_RSL;       // It's a signal report (RSL)
             if (ir > 0) {             // Or perhaps an RRSL?
                 *dst++ = 'R';         // Add "R" before report
@@ -290,7 +292,7 @@ int unpack_type1(const uint8_t *a77, uint8_t i3, char *field1, char *field2, cha
  * @param text Unpacked text
  * @return 0==success
  **/
-int unpack_text(const uint8_t *a71, char *text) {
+int unpack_text(const uint8_t* a71, char* text) {
     // TODO: test
     uint8_t b71[9];
 
@@ -323,7 +325,7 @@ int unpack_text(const uint8_t *a71, char *text) {
  * @param telemetry
  * @return 0==success
  */
-int unpack_telemetry(const uint8_t *a71, char *telemetry) {
+int unpack_telemetry(const uint8_t* a71, char* telemetry) {
     uint8_t b71[9];
 
     // Shift bits in a71 right by 1
@@ -356,7 +358,7 @@ int unpack_telemetry(const uint8_t *a71, char *telemetry) {
  * @param field3 RRR, RR73, 73
  * @param msgType Sequencer's MsgType enumerations (CQ)
  */
-int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *field3, MsgType *msgType) {
+int unpack_nonstandard(const uint8_t* a77, char* field1, char* field2, char* field3, MsgType* msgType) {
     DTRACE();
 
     // Assume Sequencer's MSG_UNKNOWN type for now
@@ -395,32 +397,32 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
         n58 /= 38;
     }
 
+    DPRINTF("h12=%u h1=%d r2=%d icq=%d c11='%s'\n", h12, h1, r2, icq, c11);
+
     // Trim leading/trailing spaces from right-adjusted, uncompressed callsign
-    char *uncompressedCallsign = trim(c11);
+    char* uncompressedCallsign = trim(c11);
 
     // Save the uncompressed callsign in 12-bit hash table
     // TODO:  Do we need to confirm strlen of callsign >= 3
-    FT8Hash12 err = callsignHashTable.add12(String(uncompressedCallsign));
-    DPRINTF("add12(%s)=%u\n", uncompressedCallsign, err);
+    FT8Hash12 err = nonstandardCallsignTable.add12(String(uncompressedCallsign));
+    DPRINTF("add12 uncompressedCallsign '%s' returned %u\n", uncompressedCallsign, err);
 
-    // Decode the other callsign from the 12-bit hash table
-    char unhashedCallsign[15];                 // Allow room for 12-char callsign, 2 angle brackets, and the NUL
-    String s = callsignHashTable.lookup(h12);  // Map the 12-bit hash key to its associated callsign string
+    // Decode the other callsign from the 12-bit hash table (Not necessary if this is a CQ???)
+    char unhashedCallsign[15];                        // Allow room for 12-char callsign, 2 angle brackets, and the NUL
+    String s = nonstandardCallsignTable.lookup(h12);  // Map the 12-bit hash key to its associated callsign string
+    DPRINTF("lookup %d returned '%s'\n", h12, s.c_str());
     if (s.length() != 0) {
         s = String("<") + s + String(">");  // Enclose found callsign in angle brackets
     } else {
         s = "<...>";  // Report an unknown hash key
     }
     strlcpy(unhashedCallsign, s.c_str(), sizeof(unhashedCallsign));  // Legacy code expects char[]
-    DPRINTF("lookup(%u)='%s'\n", h12, unhashedCallsign);
-    // unhashedCallsign[0] = '<';
-    // int_to_dd(unhashedCallsign + 1, h12, 4, true);
-    // unhashedCallsign[5] = '>';
-    // unhashedCallsign[6] = '\0';
+    // DPRINTF("lookup(%u) will display as '%s'\n", h12, unhashedCallsign);
 
     // Possibly flip them around
-    char *call_1 = (h1) ? uncompressedCallsign : unhashedCallsign;
-    char *call_2 = (h1) ? unhashedCallsign : uncompressedCallsign;
+    char* call_1 = (h1) ? uncompressedCallsign : unhashedCallsign;  // if h1 then field1 <-- uncompressedCallsign else unhashedCallsign
+    char* call_2 = (h1) ? unhashedCallsign : uncompressedCallsign;  // if h1 then field2 <-- unhashedCallsign else uncompressedCallsign
+    DPRINTF("h1=%d call_1=%s, call_2=%s\n", h1, call_1, call_2);
 
     // Unpack the message type
     if (icq == 0) {
@@ -440,9 +442,9 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
             *msgType = MSG_BLANK;  // Report blank (TODO:  Sequencer may choke)
         }
     } else {
-        *msgType = MSG_CQ;  // It's a CQ message from a hashed callsign sans locator (TODO:  Sequencer must handle no locator)
-        strcpy(field1, "CQ");
-        field3[0] = '\0';  // Non-standard CQ messages do not include a locator
+        *msgType = MSG_CQ;     // It's a CQ message from a compressed callsign (TODO:  Sequencer must handle no locator)
+        strcpy(field1, "CQ");  // Overwrite field1 with "CQ"
+        field3[0] = '\0';      // Non-standard CQ messages do not include a locator
     }
     strcpy(field2, trim(call_2));  // Origin station's callsign
 
@@ -476,7 +478,7 @@ int unpack_nonstandard(const uint8_t *a77, char *field1, char *field2, char *fie
  * Reference:  https://wsjt.sourceforge.io/FT4_FT8_QEX.pdf
  *
  **/
-int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3, MsgType *msgType) {
+int unpack77_fields(const uint8_t* a77, char* field1, char* field2, char* field3, MsgType* msgType) {
     uint8_t n3, i3;
 
     // Extract n3 (bits 71..73) and i3 (bits 74..76)
@@ -536,26 +538,3 @@ int unpack77_fields(const uint8_t *a77, char *field1, char *field2, char *field3
     // unknown type, should never get here.  msgType is MSG_UNKNOWN.
     return -1;
 }
-
-// Appears to be dead code?
-//
-//  int unpack77(const uint8_t *a77, char *message) {
-//    char field1[14];
-//    char field2[14];
-//    char field3[7];
-//    MsgType msgType;
-//    int rc = unpack77_fields(a77, field1, field2, field3, &msgType);
-//    if (rc < 0) return rc;
-
-//   char *dst = message;
-//   // int msg_sz = strlen(field1) + strlen(field2) + strlen(field3) + 2;
-
-//   dst = stpcpy(dst, field1);
-//   *dst++ = ' ';
-//   dst = stpcpy(dst, field2);
-//   *dst++ = ' ';
-//   dst = stpcpy(dst, field3);
-//   *dst = '\0';
-
-//   return 0;
-// }

@@ -22,7 +22,7 @@ const char AA4[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 // Pack a special token, a 22-bit hash code, or a valid base call
 // into a 28-bit integer.
-int32_t pack28(const char *callsign) {
+int32_t pack28(const char* callsign) {
     // constexpr int32_t NTOKENS = 2063592L;
     // constexpr int32_t MAX22   = 4194304L;
 
@@ -35,7 +35,7 @@ int32_t pack28(const char *callsign) {
     if (starts_with(callsign, "CQ ")) return 2;
 
     if (starts_with(callsign, "CQ_")) {
-        //int nnum = 0, nlet = 0;
+        // int nnum = 0, nlet = 0;
 
         // TODO:
         // if(nnum.eq.3 .and. nlet.eq.0) then n28=3+nqsy
@@ -109,7 +109,7 @@ int32_t pack28(const char *callsign) {
 // Check if a string could be a valid standard callsign or a valid
 // compound callsign.
 // Return base call "bc" and a logical "cok" indicator.
-bool chkcall(const char *call, char *bc) {
+bool chkcall(const char* call, char* bc) {
     int length = strlen(call);  // n1=len_trim(w)
     if (length > 11) return false;
     if (0 != strchr(call, '.')) return false;
@@ -129,7 +129,7 @@ bool chkcall(const char *call, char *bc) {
     return true;
 }
 
-uint16_t packgrid(const char *grid4) {
+uint16_t packgrid(const char* grid4) {
     // constexpr uint16_t MAXGRID4 = 32400;
     uint16_t MAXGRID4 = 32400;
 
@@ -172,13 +172,13 @@ uint16_t packgrid(const char *grid4) {
 }
 
 // Pack Type 1 (Standard 77-bit message) and Type 2 (ditto, with a "/P" call)
-int pack77_1(const char *msg, uint8_t *b77) {
+int pack77_1(const char* msg, uint8_t* b77) {
     // Locate the first delimiter
-    const char *s1 = strchr(msg, ' ');
+    const char* s1 = strchr(msg, ' ');
     if (s1 == 0) return -1;
 
-    const char *call1 = msg;     // 1st call
-    const char *call2 = s1 + 1;  // 2nd call
+    const char* call1 = msg;     // 1st call
+    const char* call2 = s1 + 1;  // 2nd call
 
     int32_t n28a = pack28(call1);
     int32_t n28b = pack28(call2);
@@ -188,7 +188,7 @@ int pack77_1(const char *msg, uint8_t *b77) {
     uint16_t igrid4;
 
     // Locate the second delimiter
-    const char *s2 = strchr(s1 + 1, ' ');
+    const char* s2 = strchr(s1 + 1, ' ');
     if (s2 != 0) {
         igrid4 = packgrid(s2 + 1);
     } else {
@@ -225,7 +225,7 @@ int pack77_1(const char *msg, uint8_t *b77) {
     return 0;
 }
 
-void packtext77(const char *text, uint8_t *b77) {
+void packtext77(const char* text, uint8_t* b77) {
     int length = strlen(text);
 
     // Skip leading and trailing spaces
@@ -278,7 +278,15 @@ void packtext77(const char *text, uint8_t *b77) {
     b77[9] &= 0x00;
 }
 
-int pack77(const char *msg, uint8_t *c77) {
+/**
+ * @brief Pack text message into a 77-bit message for transmission
+ * @param msg The ASCII char[] string to pack
+ * @param c77 Bfr to receive the 77-bit packed messageg
+ * @return 0==success
+ *
+ * @note
+ */
+int pack77(const char* msg, uint8_t* c77) {
     DPRINTF("pack77('%s',...)\n", msg);
     //  Check Type 1 (Standard 77-bit message) or Type 2, with optional "/P"
     if (0 == pack77_1(msg, c77)) {
@@ -306,7 +314,7 @@ int pack77(const char *msg, uint8_t *c77) {
 using namespace std;
 
 bool test1() {
-    const char *inputs[] = {
+    const char* inputs[] = {
         "",
         " ",
         "ABC",
@@ -328,7 +336,7 @@ bool test1() {
 }
 
 bool test2() {
-    const char *inputs[] = {
+    const char* inputs[] = {
         "CQ LL3JG",
         "CQ LL3JG KO26",
         "L0UAA LL3JG KO26",

@@ -64,6 +64,20 @@ void test_lookup_valid(void) {
 }
 
 /**
+ * @brief Exercise repeated hashes of the same callsign
+ */
+void test_repeated_callsign(void) {
+    String callsign = "KQ7B/W8";                                 // Nonstandard callsign
+    FT8Hash12 key1 = table.add12(callsign);                      // Record this callsign in the map
+    TEST_ASSERT(key1 != FT8CallsignHashTable::error);            // Confirm success
+    FT8Hash12 key2 = table.add12(callsign);                      // Record this callsign in the map
+    TEST_ASSERT(key2 != FT8CallsignHashTable::error);            // Confirm success
+    TEST_ASSERT_EQUAL_UINT32(key1, key2);                        // Expect identical resulting keys
+    String result = table.lookup(key2);                          // Map key to the associated callsign
+    TEST_ASSERT_EQUAL_STRING(callsign.c_str(), result.c_str());  // Confirm retrieval of recorded callsign
+}
+
+/**
  * @brief Confirm lookup of unknown key returns an empty String
  */
 void test_lookup_unknown(void) {
@@ -91,6 +105,7 @@ void setup() {
     RUN_TEST(test_hash_values);
     RUN_TEST(test_lookup_valid);
     RUN_TEST(test_lookup_unknown);
+    RUN_TEST(test_repeated_callsign);
 
     // Finished
     UNITY_END();

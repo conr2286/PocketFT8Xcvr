@@ -48,7 +48,7 @@
  */
 #include <Arduino.h>
 #include <map>
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "FT8CallsignHashTable.h"
 
 // Define the implementation of the static error class member
@@ -104,9 +104,9 @@ FT8Hash12 FT8CallsignHashTable::add22(String callsign) {
  */
 String FT8CallsignHashTable::lookup(FT8Hash key22) {
     String callsign;
-    DPRINTF("retrieve(%u)\n", key22);
+    // DPRINTF("lookup(%u)\n", key22);
     callsign = nonStandardCallsignTable[key22];
-    DPRINTF("lookup(%u) = %s\n", key22, callsign);
+    DPRINTF("lookup(%u) = '%s'\n", key22, callsign.c_str());
     return callsign;
 }
 
@@ -146,7 +146,7 @@ FT8Hash FT8CallsignHashTable::hashCallsign(String s) {
 
     // Calculate the 32-bit base hash key a la other FT8 implementations
     FT8Hash n22 = ((47055833459ull * n58) >> (64 - 22)) & (0x3FFFFFul);
-    DPRINTF("Hashed '%s' to %lu\n", s.c_str(), n22);
+    // DPRINTF("Hashed '%s' to %lu\n", s.c_str(), n22);
 
     return n22;  // We always and only return the 22-bit result
 }

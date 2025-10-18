@@ -27,7 +27,8 @@
 #include "encode.h"
 #include "gen_ft8.h"
 #include "ldpc.h"
-#include "unpack.h"
+#include "ft8LibIfce.h"
+#include "message.h"
 
 extern HX8357_t3n tft;
 
@@ -94,14 +95,14 @@ extern time_t getTeensy3Time();
 extern int log_flag, logging_on;
 
 // Get a reference to the Sequencer singleton
-static Sequencer &seq = Sequencer::getSequencer();
+static Sequencer& seq = Sequencer::getSequencer();
 
 /**
  *  Retrieve address of the new_decoded[] messages
  *
  *
  **/
-Decode *getNewDecoded() {
+Decode* getNewDecoded() {
     return new_decoded;
 }
 
@@ -163,13 +164,14 @@ int ft8_decode(void) {
         char field2[14];
         char field3[7];
         MsgType msgType;
+        // ftx_message_offsets_t offsets[3];
         int rc = unpack77_fields(a91, field1, field2, field3, &msgType);
         if (rc < 0) continue;  // Unpack failure???
 
         snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);  // Duplicate decodes appear possible???
         // DPRINTF("message='%s', msgType=%u\n", message, msgType);
 
-        // Have we previously decoded this message?
+        // Have we previously decoded this message?  TODO:  We could use the new ft8_lib's hashed messages.
         bool duplicateMessage = false;
         for (int i = 0; i < num_decoded; ++i) {
             if (0 == strcmp(decoded[i], message)) {
