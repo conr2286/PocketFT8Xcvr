@@ -36,6 +36,8 @@ ATTRIBUTION
 
 #define DEBUG_STREAM Serial
 
+
+
 #define DPRINTF(...)                                             \
     {                                                            \
         DEBUG_STREAM.printf("%s:%u ", __SOURCEFILE__, __LINE__); \
@@ -75,4 +77,25 @@ ATTRIBUTION
 #else
 // Disable all debugging in all locations in all files
 #include "NODEBUG.h"
+#endif
+
+//---------------------------------------------------
+// The following definitions support ft8_lib debugging
+//---------------------------------------------------
+#define LOG_DEBUG 0
+#define LOG_INFO 1
+#define LOG_WARN 2
+#define LOG_ERROR 3
+#define LOG_FATAL 4
+
+#ifdef LOG_LEVEL
+#ifndef LOG_PRINTF
+#include <stdio.h>
+#define LOG_PRINTF(...) fprintf(stderr, __VA_ARGS__)
+#endif
+#define LOG(level, ...)     \
+    if (level >= LOG_LEVEL) \
+    DPRINTF(__VA_ARGS__)
+#else  // ifdef LOG_LEVEL
+#define LOG(level, ...)
 #endif

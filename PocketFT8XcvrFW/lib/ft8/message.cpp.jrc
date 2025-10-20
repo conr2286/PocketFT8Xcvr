@@ -2,10 +2,7 @@
 #include "text.h"
 #include <stdlib.h>
 #include <string.h>
-
-#define LOG_LEVEL LOG_WARN
-// #include "debug.h"
-#include "DEBUG.h"
+#include "DEBUG.h"  //Pocket FT8 Debugging macros
 
 #define MAX22 ((uint32_t)4194304ul)
 #define NTOKENS ((uint32_t)2063592ul)
@@ -108,7 +105,14 @@ ftx_message_type_t ftx_message_get_type(const ftx_message_t* msg) {
     }
 }
 
-ftx_message_rc_t ftx_message_encode(ftx_message_t* msg, ftx_callsign_hash_interface_t* hash_if, const char* message_text) {
+/**
+ * @brief Pack any supported FT8 text message into a 77-bit array
+ * @param result Array to receive the packed message
+ * @param hash table interface/abstractor (can be NULL)
+ * @param message_text Message to be packed
+ * @return 0==success
+ */
+ftx_message_rc_t ftx_message_encode(ftx_message_t* result, ftx_callsign_hash_interface_t* hash_if, const char* message_text) {
     char call_to[12];
     char call_de[12];
     char extra[20];
@@ -121,7 +125,7 @@ ftx_message_rc_t ftx_message_encode(ftx_message_t* msg, ftx_callsign_hash_interf
 
         // copy the next token temporarily (for the debug message)
         copy_token(call_de, 12, parse_position);
-        LOG(LOG_DEBUG, "next token after CQ: '%s' in '%s'\n", call_de, message_text);
+        DPRINTF("next token after CQ: '%s' in '%s'\n", call_de, message_text);
 
         // see if the word after CQ matches the a[bcd] or nnn pattern, and append to call_to
         int cq_modifier_v = parse_cq_modifier(message_text);
@@ -130,7 +134,7 @@ ftx_message_rc_t ftx_message_encode(ftx_message_t* msg, ftx_callsign_hash_interf
             // copy the CQ and then the next token to call_to
             memcpy(call_to, "CQ \0", 4);
             parse_position = copy_token(call_to + 3, sizeof(call_to) - 3, parse_position);
-            LOG(LOG_DEBUG, "CQ modifier encoding %d; parse_pos after CQ: %s in %s\n", cq_modifier_v, parse_position, message_text);
+            DPRINTF("CQ modifier encoding %d; parse_pos after CQ: %s in %s\n", cq_modifier_v, parse_position, message_text);
         } else {
             memcpy(call_to, "CQ\0", 3);
             // the next token should be call_de, which we will get below
@@ -144,7 +148,7 @@ ftx_message_rc_t ftx_message_encode(ftx_message_t* msg, ftx_callsign_hash_interf
     // and the word after that may be a grid or signal report
     parse_position = copy_token(extra, sizeof(extra), parse_position);
 
-    LOG(LOG_DEBUG, "ftx_message_encode: parsed '%s' '%s' '%s'; remaining chars '%s'\n", call_to, call_de, extra, parse_position);
+    DPRINTF("ftx_message_encode: parsed '%s' '%s' '%s'; remaining chars '%s'\n", call_to, call_de, extra, parse_position);
 
     if (call_to[sizeof(call_to) - 1] != '\0') {
         // token too long
@@ -162,31 +166,40 @@ ftx_message_rc_t ftx_message_encode(ftx_message_t* msg, ftx_callsign_hash_interf
     ftx_message_rc_t rc;
     if (!parse_position[0]) {
         // up to 3 tokens with no leftovers
-        rc = ftx_message_encode_std(msg, hash_if, call_to, call_de, extra);
+        rc = ftx_message_encode_std(result, hash_if, call_to, call_de, extra);
         if (rc == FTX_MESSAGE_RC_OK)
             return rc;
-        LOG(LOG_DEBUG, "   ftx_message_encode_std failed: %d\n", rc);
-        rc = ftx_message_encode_nonstd(msg, hash_if, call_to, call_de, extra);
+        DPRINTF("   ftx_message_encode_std failed: %d\n", rc);
+        rc = ftx_message_encode_nonstd(result, hash_if, call_to, call_de, extra);
         if (rc == FTX_MESSAGE_RC_OK)
             return rc;
-        LOG(LOG_DEBUG, "   ftx_message_encode_nonstd failed: %d\n", rc);
+        DPRINTF("   ftx_message_encode_nonstd failed: %d\n", rc);
     }
-    rc = ftx_message_encode_free(msg, message_text);
+    rc = ftx_message_encode_free(result, message_text);
     if (rc == FTX_MESSAGE_RC_OK)
         return rc;
-    LOG(LOG_DEBUG, "   ftx_message_encode_free failed: %d\n", rc);
+    DPRINTF("   ftx_message_encode_free failed: %d\n", rc);
 
     return rc;
-}
+}  // ftx_message_encode()
 
-ftx_message_rc_t ftx_message_encode_std(ftx_message_t* msg, ftx_callsign_hash_interface_t* hash_if, const char* call_to, const char* call_de, const char* extra) {
+/**
+ * @brief Pack standard message text into a 77-bit buffer
+ * @param result Buffer to receive the packed message
+ * @param hash table interface/abstractor
+ * @param call_to Destination station's callsign
+ * @param call_de Source station's callsign
+ * @param extra Field3 (e.g. 73, R73, RR73, locator...)
+ * @return 0==success
+ */
+ftx_message_rc_t ftx_message_encode_std(ftx_message_t* result, ftx_callsign_hash_interface_t* hash_if, const char* call_to, const char* call_de, const char* extra) {
     uint8_t ipa, ipb;
 
-    LOG(LOG_DEBUG, "ftx_message_encode_std '%s' '%s' '%s'\n", call_to, call_de, extra);
+    DPRINTF("ftx_message_encode_std '%s' '%s' '%s'\n", call_to, call_de, extra);
 
     int32_t n28a = pack28(call_to, hash_if, &ipa);
     int32_t n28b = pack28(call_de, hash_if, &ipb);
-    LOG(LOG_DEBUG, "   n29a = %d, n29b = %d\n", n28a, n28b);
+    DPRINTF("   n29a = %d, n29b = %d\n", n28a, n28b);
 
     if (n28a < 0)
         return FTX_MESSAGE_RC_ERROR_CALLSIGN1;
@@ -208,7 +221,7 @@ ftx_message_rc_t ftx_message_encode_std(ftx_message_t* msg, ftx_callsign_hash_in
     }
 
     uint16_t igrid4 = packgrid(extra);
-    LOG(LOG_DEBUG, "igrid4 = %d\n", igrid4);
+    DPRINTF("igrid4 = %d\n", igrid4);
 
     // Shift in ipa and ipb bits into n28a and n28b
     uint32_t n29a = ((uint32_t)n28a << 1) | ipa;
@@ -223,24 +236,35 @@ ftx_message_rc_t ftx_message_encode_std(ftx_message_t* msg, ftx_callsign_hash_in
     }
 
     // Pack into (28 + 1) + (28 + 1) + (1 + 15) + 3 bits
-    msg->payload[0] = (uint8_t)(n29a >> 21);
-    msg->payload[1] = (uint8_t)(n29a >> 13);
-    msg->payload[2] = (uint8_t)(n29a >> 5);
-    msg->payload[3] = (uint8_t)(n29a << 3) | (uint8_t)(n29b >> 26);
-    msg->payload[4] = (uint8_t)(n29b >> 18);
-    msg->payload[5] = (uint8_t)(n29b >> 10);
-    msg->payload[6] = (uint8_t)(n29b >> 2);
-    msg->payload[7] = (uint8_t)(n29b << 6) | (uint8_t)(igrid4 >> 10);
-    msg->payload[8] = (uint8_t)(igrid4 >> 2);
-    msg->payload[9] = (uint8_t)(igrid4 << 6) | (uint8_t)(i3 << 3);
+    result->payload[0] = (uint8_t)(n29a >> 21);
+    result->payload[1] = (uint8_t)(n29a >> 13);
+    result->payload[2] = (uint8_t)(n29a >> 5);
+    result->payload[3] = (uint8_t)(n29a << 3) | (uint8_t)(n29b >> 26);
+    result->payload[4] = (uint8_t)(n29b >> 18);
+    result->payload[5] = (uint8_t)(n29b >> 10);
+    result->payload[6] = (uint8_t)(n29b >> 2);
+    result->payload[7] = (uint8_t)(n29b << 6) | (uint8_t)(igrid4 >> 10);
+    result->payload[8] = (uint8_t)(igrid4 >> 2);
+    result->payload[9] = (uint8_t)(igrid4 << 6) | (uint8_t)(i3 << 3);
 
     return FTX_MESSAGE_RC_OK;
-}
+}  // ftx_message_encode_std()
 
-ftx_message_rc_t ftx_message_encode_nonstd(ftx_message_t* msg, ftx_callsign_hash_interface_t* hash_if, const char* call_to, const char* call_de, const char* extra) {
+/**
+ * @brief Pack a nonstandard message text into a 77-bit buffer
+ * @param result Buffer to receive the packed message
+ * @param hash table interface/abstractor
+ * @param call_to Destination callsign
+ * @param call_de Source callsign
+ * @param extra Field3 (73, R73 or RR73)
+ * @return 0==success
+ *
+ * @note An FT8 non-standard messae does not include a locator
+ */
+ftx_message_rc_t ftx_message_encode_nonstd(ftx_message_t* result, ftx_callsign_hash_interface_t* hash_if, const char* call_to, const char* call_de, const char* extra) {
     uint8_t i3 = 4;
 
-    LOG(LOG_DEBUG, "ftx_message_encode_nonstd '%s' '%s' '%s'\n", call_to, call_de, extra);
+    DPRINTF("ftx_message_encode_nonstd '%s' '%s' '%s'\n", call_to, call_de, extra);
 
     uint8_t icq = (uint8_t)equals(call_to, "CQ") || starts_with(call_to, "CQ ");
     int len_call_to = strlen(call_to);
@@ -271,11 +295,12 @@ ftx_message_rc_t ftx_message_encode_nonstd(ftx_message_t* msg, ftx_callsign_hash
         if (!save_callsign(hash_if, call12, NULL, &n12, NULL)) {
             return FTX_MESSAGE_RC_ERROR_CALLSIGN1;
         }
+
     } else {
         iflip = 0;
         n12 = 0;
         call58 = call_de;
-        LOG(LOG_DEBUG, "CQ: 58-bit '%s'; omitting grid '%s'\n", call58, extra);
+        DPRINTF("CQ: 58-bit '%s'; omitting grid '%s'\n", call58, extra);
     }
 
     if (!pack58(hash_if, call58, &n58)) {
@@ -296,21 +321,27 @@ ftx_message_rc_t ftx_message_encode_nonstd(ftx_message_t* msg, ftx_callsign_hash
     // Pack into 12 + 58 + 1 + 2 + 1 + 3 == 77 bits
     // write(c77,1010) n12,n58,iflip,nrpt,icq,i3
     // format(b12.12,b58.58,b1,b2.2,b1,b3.3)
-    msg->payload[0] = (uint8_t)(n12 >> 4);
-    msg->payload[1] = (uint8_t)(n12 << 4) | (uint8_t)(n58 >> 54);
-    msg->payload[2] = (uint8_t)(n58 >> 46);
-    msg->payload[3] = (uint8_t)(n58 >> 38);
-    msg->payload[4] = (uint8_t)(n58 >> 30);
-    msg->payload[5] = (uint8_t)(n58 >> 22);
-    msg->payload[6] = (uint8_t)(n58 >> 14);
-    msg->payload[7] = (uint8_t)(n58 >> 6);
-    msg->payload[8] = (uint8_t)(n58 << 2) | (uint8_t)(iflip << 1) | (uint8_t)(nrpt >> 1);
-    msg->payload[9] = (uint8_t)(nrpt << 7) | (uint8_t)(icq << 6) | (uint8_t)(i3 << 3);
+    result->payload[0] = (uint8_t)(n12 >> 4);
+    result->payload[1] = (uint8_t)(n12 << 4) | (uint8_t)(n58 >> 54);
+    result->payload[2] = (uint8_t)(n58 >> 46);
+    result->payload[3] = (uint8_t)(n58 >> 38);
+    result->payload[4] = (uint8_t)(n58 >> 30);
+    result->payload[5] = (uint8_t)(n58 >> 22);
+    result->payload[6] = (uint8_t)(n58 >> 14);
+    result->payload[7] = (uint8_t)(n58 >> 6);
+    result->payload[8] = (uint8_t)(n58 << 2) | (uint8_t)(iflip << 1) | (uint8_t)(nrpt >> 1);
+    result->payload[9] = (uint8_t)(nrpt << 7) | (uint8_t)(icq << 6) | (uint8_t)(i3 << 3);
 
     return FTX_MESSAGE_RC_OK;
-}
+}  // ftx_message_encode_nonstd()
 
-ftx_message_rc_t ftx_message_encode_free(ftx_message_t* msg, const char* text) {
+/**
+ * @brief Pack a 13-char free text message into a 77-bit buffer
+ * @param result Buffer to receive the packed message
+ * @param text The free text message to pack
+ * @return 0==success
+ */
+ftx_message_rc_t ftx_message_encode_free(ftx_message_t* result, const char* text) {
     uint8_t str_len = strlen(text);
     if (str_len > 13) {
         // Too long text
@@ -339,27 +370,48 @@ ftx_message_rc_t ftx_message_encode_free(ftx_message_t* msg, const char* text) {
             rem = rem >> 8;
         }
     }
-    ftx_message_rc_t ret = ftx_message_encode_telemetry(msg, b71);
-    msg->payload[9] = 0;  // i3.n3 = 0.0; etc.
+    ftx_message_rc_t ret = ftx_message_encode_telemetry(result, b71);
+    result->payload[9] = 0;  // i3.n3 = 0.0; etc.
     return ret;
-}
+}  // ftx_message_encode_free()
 
 // TODO set byte 9? or must the caller do it?
-ftx_message_rc_t ftx_message_encode_telemetry(ftx_message_t* msg, const uint8_t* telemetry) {
+
+/**
+ * @brief Pack a telemetry message into a 77-bit buffer
+ * @param result Buffer to receive the packed message
+ * @param telemetry The telemetry text
+ * @return 0==OK
+ *
+ * TODO set byte 9? or must the caller do it?
+ *
+ * @note Does anyone know what this is for???
+ */
+ftx_message_rc_t ftx_message_encode_telemetry(ftx_message_t* result, const uint8_t* telemetry) {
     // Shift bits in telemetry left by 1 bit to right-align the data
     uint8_t carry = 0;
     for (int i = 8; i >= 0; --i) {
-        msg->payload[i] = (telemetry[i] << 1) | (carry >> 7);
+        result->payload[i] = (telemetry[i] << 1) | (carry >> 7);
         carry = telemetry[i] & 0x80;
     }
     return FTX_MESSAGE_RC_OK;
-}
+}  // ftx_message_encode_telemetry()
 
+/**
+ * @brief Unpack a 77-bit FT8 message
+ * @param msg Bfr containing the 77-bit message to unpack
+ * @param hash table interface/abstractor
+ * @param message Buffer to receive the unpacked message
+ * @param offsets The message[] indices for FIELD1, FIELD2 and FIELD3
+ * @return 0==OK
+ *
+ * @note Supports only the FT8 standard, nonstandard call, free text and telemetry messages
+ */
 ftx_message_rc_t ftx_message_decode(const ftx_message_t* msg, ftx_callsign_hash_interface_t* hash_if, char* message, ftx_message_offsets_t* offsets) {
     ftx_message_rc_t rc;
 
-    char buf[35];  // 13 + 13 + 6 (std/nonstd) / 14 (free text) / 19 (telemetry)
-    char* field1 = buf;
+    char buf[35];        // 13 + 13 + 6 (std/nonstd) / 14 (free text) / 19 (telemetry)
+    char* field1 = buf;  // All three NUL-terminated fields get unpacked into one buf[]
     char* field2 = buf + 14;
     char* field3 = buf + 14 + 14;
 
@@ -395,7 +447,6 @@ ftx_message_rc_t ftx_message_decode(const ftx_message_t* msg, ftx_callsign_hash_
             rc = FTX_MESSAGE_RC_ERROR_TYPE;
             break;
     }
-    DPRINTF("field1=%s field2=%s field3=%s\n", field1, field2, field3);
 
     if (field1 != NULL) {
         // TODO join fields via whitespace
@@ -415,8 +466,92 @@ ftx_message_rc_t ftx_message_decode(const ftx_message_t* msg, ftx_callsign_hash_
     }
 
     return rc;
-}
+}  // ftx_message_decode()
 
+/**
+ * @brief Unpack a 77-bit FT8 message
+ * @param msg Bfr containing the 77-bit message to unpack
+ * @param hash table interface/abstractor
+ * @param field1 14-char bfr to receive field1
+ * @param field2 14-char bfr to receive field2
+ * @param field3 14-char bfr to receive field3
+ * @param message 35-char bfr to receive complete unpacked message
+ * @param offsets The types and offsets of the fields in message
+ * @return 0==OK
+ *
+ * @note Supports only the FT8 standard, nonstandard call, free text and telemetry messages
+ */
+ftx_message_rc_t ftx_message_decode(const ftx_message_t* msg, ftx_callsign_hash_interface_t* hash_if, char* message, char* field1, char* field2, char* field3, ftx_message_offsets_t* offsets) {
+    ftx_message_rc_t rc;
+
+    // char buf[35];  // 13 + 13 + 6 (std/nonstd) / 14 (free text) / 19 (telemetry)
+    // char* field1 = buf;             //All three NUL-terminated fields get unpacked into one buf[]
+    // char* field2 = buf + 14;
+    // char* field3 = buf + 14 + 14;
+
+    message[0] = '\0';
+    for (int i = 0; i < FTX_MAX_MESSAGE_FIELDS; ++i) {
+        offsets->types[i] = FTX_FIELD_UNKNOWN;
+        offsets->offsets[i] = -1;
+    }
+
+    ftx_message_type_t msg_type = ftx_message_get_type(msg);
+    switch (msg_type) {
+        case FTX_MESSAGE_TYPE_STANDARD:
+            rc = ftx_message_decode_std(msg, hash_if, field1, field2, field3, offsets->types);
+            break;
+        case FTX_MESSAGE_TYPE_NONSTD_CALL:
+            rc = ftx_message_decode_nonstd(msg, hash_if, field1, field2, field3, offsets->types);
+            break;
+        case FTX_MESSAGE_TYPE_FREE_TEXT:
+            ftx_message_decode_free(msg, field1);
+            field2 = NULL;
+            field3 = NULL;
+            rc = FTX_MESSAGE_RC_OK;
+            break;
+        case FTX_MESSAGE_TYPE_TELEMETRY:
+            ftx_message_decode_telemetry_hex(msg, field1);
+            field2 = NULL;
+            field3 = NULL;
+            rc = FTX_MESSAGE_RC_OK;
+            break;
+        default:
+            // not handled yet
+            field1 = NULL;
+            rc = FTX_MESSAGE_RC_ERROR_TYPE;
+            break;
+    }
+
+    if (field1 != NULL) {
+        // TODO join fields via whitespace
+        const char* message_start = message;
+        message = append_string(message, field1);
+        offsets->offsets[0] = 0;
+        if (field2 != NULL) {
+            message = append_string(message, " ");
+            offsets->offsets[1] = message - message_start;
+            message = append_string(message, field2);
+            if ((field3 != NULL) && (field3[0] != 0)) {
+                message = append_string(message, " ");
+                offsets->offsets[2] = message - message_start;
+                message = append_string(message, field3);
+            }
+        }
+    }
+
+    return rc;
+}  // ftx_message_decode()
+
+/**
+ * @brief Unpack an FT8 standard 77-bit message
+ * @param msg Buffer containing the 77-bit message to unpack
+ * @param hash table interface/abstractor
+ * @param call_to Destination station's callsign field
+ * @param call_de Source station's callsign field
+ * @param extra Extra (e.g. 73, R73, etc) field
+ * @param field_types Identifies the type of each of the three fields
+ * @return 0==success
+ */
 ftx_message_rc_t ftx_message_decode_std(const ftx_message_t* msg, ftx_callsign_hash_interface_t* hash_if,
                                         char* call_to, char* call_de, char* extra, ftx_field_t field_types[FTX_MAX_MESSAGE_FIELDS]) {
     uint32_t n29a, n29b;
@@ -440,7 +575,7 @@ ftx_message_rc_t ftx_message_decode_std(const ftx_message_t* msg, ftx_callsign_h
 
     // Extract i3 (bits 74..76)
     uint8_t i3 = (msg->payload[9] >> 3) & 0x07u;
-    LOG(LOG_DEBUG, "decode_std() n28a=%d ipa=%d n28b=%d ipb=%d ir=%d igrid4=%d i3=%d\n", n29a >> 1, n29a & 1u, n29b >> 1, n29b & 1u, ir, igrid4, i3);
+    DPRINTF("decode_std() n28a=%d ipa=%d n28b=%d ipb=%d ir=%d igrid4=%d i3=%d\n", n29a >> 1, n29a & 1u, n29b >> 1, n29b & 1u, ir, igrid4, i3);
 
     call_to[0] = call_de[0] = extra[0] = '\0';
 
@@ -455,11 +590,22 @@ ftx_message_rc_t ftx_message_decode_std(const ftx_message_t* msg, ftx_callsign_h
         return FTX_MESSAGE_RC_ERROR_GRID;
     }
 
-    LOG(LOG_INFO, "Decoded standard (type %d) message [%s] [%s] [%s]\n", i3, call_to, call_de, extra);
+    DPRINTF("Decoded standard (type %d) message [%s] [%s] [%s]\n", i3, call_to, call_de, extra);
     return FTX_MESSAGE_RC_OK;
-}
+}  // ftx_message_decode_std()
 
-// non-standard messages, code originally by KD8CEC
+/**
+ * @brief Unpack a non-standard call message
+ * @param msg The 77-bit buffer containing the packed message
+ * @param hash table interface/abstractor
+ * @param call_to Destination station's callsign field1
+ * @param call_de Source station's callsign field2
+ * @param extra Field3 (e.g. R73, RR73, 73)
+ * @param field_types Identifies the type of each of the three fields
+ * @return 0==success
+ *
+ * @author KD8CEC and others
+ */
 ftx_message_rc_t ftx_message_decode_nonstd(const ftx_message_t* msg, ftx_callsign_hash_interface_t* hash_if,
                                            char* call_to, char* call_de, char* extra, ftx_field_t field_types[FTX_MAX_MESSAGE_FIELDS]) {
     uint16_t n12, iflip, nrpt, icq;
@@ -483,7 +629,7 @@ ftx_message_rc_t ftx_message_decode_nonstd(const ftx_message_t* msg, ftx_callsig
 
     // Extract i3 (bits 74..76)
     uint8_t i3 = (msg->payload[9] >> 3) & 0x07u;
-    LOG(LOG_DEBUG, "decode_nonstd() n12=%04x n58=%08llx iflip=%d nrpt=%d icq=%d i3=%d\n", n12, n58, iflip, nrpt, icq, i3);
+    DPRINTF("decode_nonstd() n12=%04x n58=%08llx iflip=%d nrpt=%d icq=%d i3=%d\n", n12, n58, iflip, nrpt, icq, i3);
 
     // Decode one of the calls from 58 bit encoded string
     char call_decoded[14];
@@ -521,10 +667,15 @@ ftx_message_rc_t ftx_message_decode_nonstd(const ftx_message_t* msg, ftx_callsig
     }
     strcpy(call_de, call_2);
     field_types[1] = FTX_FIELD_CALL;
-    LOG(LOG_INFO, "Decoded non-standard (type %d) message [%s] [%s] [%s]\n", i3, call_to, call_de, extra);
+    DPRINTF("Decoded non-standard (type %d) message [%s] [%s] [%s]\n", i3, call_to, call_de, extra);
     return FTX_MESSAGE_RC_OK;
-}
+}  // ftx_message_decode_nonstd()
 
+/**
+ * @brief Unpack a free text message
+ * @param msg Includes the 77-bit message to unpack
+ * @param text Buffer to receive the unpacked message
+ */
 void ftx_message_decode_free(const ftx_message_t* msg, char* text) {
     uint8_t b71[9];
 
@@ -544,12 +695,17 @@ void ftx_message_decode_free(const ftx_message_t* msg, char* text) {
     }
 
     strcpy(text, trim(c14));
-}
+}  // ftx_message_decode_free()
 
-void ftx_message_decode_telemetry_hex(const ftx_message_t* msg, char* telemetry_hex) {
+/**
+ * @brief Unpack a telemetry hex message (Don't know much about these;)
+ * @param result
+ * @param telemetry_hex
+ */
+void ftx_message_decode_telemetry_hex(const ftx_message_t* result, char* telemetry_hex) {
     uint8_t b71[9];
 
-    ftx_message_decode_telemetry(msg, b71);
+    ftx_message_decode_telemetry(result, b71);
 
     // Convert b71 to hexadecimal string
     for (int i = 0; i < 9; ++i) {
@@ -562,30 +718,21 @@ void ftx_message_decode_telemetry_hex(const ftx_message_t* msg, char* telemetry_
     }
 
     telemetry_hex[18] = '\0';
-}
+}  // ftx_message_decode_telemetry_hex()
 
-void ftx_message_decode_telemetry(const ftx_message_t* msg, uint8_t* telemetry) {
+/**
+ * @brief Does anyone know what these telemetry messages are used for?
+ * @param result
+ * @param telemetry
+ */
+void ftx_message_decode_telemetry(const ftx_message_t* result, uint8_t* telemetry) {
     // Shift bits in payload right by 1 bit to right-align the data
     uint8_t carry = 0;
     for (int i = 0; i < 9; ++i) {
-        telemetry[i] = (carry << 7) | (msg->payload[i] >> 1);
-        carry = (msg->payload[i] & 0x01u);
+        telemetry[i] = (carry << 7) | (result->payload[i] >> 1);
+        carry = (result->payload[i] & 0x01u);
     }
-}
-
-#ifdef FTX_DEBUG_PRINT
-#include <stdio.h>
-
-void ftx_message_print(ftx_message_t* msg) {
-    printf("[");
-    for (int i = 0; i < FTX_PAYLOAD_LENGTH_BYTES; ++i) {
-        if (i > 0)
-            printf(" ");
-        printf("%02x", msg->payload[i]);
-    }
-    printf("]");
-}
-#endif
+}  // ftx_message_decode_telemetry()
 
 /////////////////////////////////////////////////////////// Static functions /////////////////////////////////////////////////////////////////
 
@@ -596,6 +743,15 @@ static void add_brackets(char* result, const char* original, int length) {
     result[length + 2] = '\0';
 }
 
+/**
+ * @brief Save a callsign in the callsign map
+ * @param hash_if Ignored
+ * @param callsign Callsign to save
+ * @param n22_out NULL or receives 22-bit hash key
+ * @param n12_out NULL or receives 12-bit hash key
+ * @param n10_out NULL or receives 10-bit hash key
+ * @return true==success
+ */
 static bool save_callsign(const ftx_callsign_hash_interface_t* hash_if, const char* callsign, uint32_t* n22_out, uint16_t* n12_out, uint16_t* n10_out) {
     uint64_t n58 = 0;
     int i = 0;
@@ -615,7 +771,7 @@ static bool save_callsign(const ftx_callsign_hash_interface_t* hash_if, const ch
     uint32_t n22 = ((47055833459ull * n58) >> (64 - 22)) & (0x3FFFFFul);
     uint32_t n12 = n22 >> 10;
     uint32_t n10 = n22 >> 12;
-    LOG(LOG_DEBUG, "save_callsign('%s') = [n22=%d, n12=%d, n10=%d]\n", callsign, n22, n12, n10);
+    DPRINTF("save_callsign('%s') = [n22=%d, n12=%d, n10=%d]\n", callsign, n22, n12, n10);
 
     if (n22_out != NULL)
         *n22_out = n22;
@@ -628,8 +784,16 @@ static bool save_callsign(const ftx_callsign_hash_interface_t* hash_if, const ch
         hash_if->save_hash(callsign, n22);
 
     return true;
-}
+}  // save_callsign()
 
+/**
+ * @brief Retrieve callsign from map using an FT8 hash key
+ * @param hash_if Ignored
+ * @param hash_type Identifies #bits in hash key
+ * @param hash The hash key
+ * @param callsign Buffer for retrieved callsign
+ * @return true==success
+ */
 static bool lookup_callsign(const ftx_callsign_hash_interface_t* hash_if, ftx_callsign_hash_type_t hash_type, uint32_t hash, char* callsign) {
     char c11[12];
 
@@ -644,7 +808,7 @@ static bool lookup_callsign(const ftx_callsign_hash_interface_t* hash_if, ftx_ca
     } else {
         add_brackets(callsign, c11, strlen(c11));
     }
-    LOG(LOG_DEBUG, "lookup_callsign(n%s=%d) = '%s'\n", (hash_type == FTX_CALLSIGN_HASH_22_BITS ? "22" : (hash_type == FTX_CALLSIGN_HASH_12_BITS ? "12" : "10")), hash, callsign);
+    DPRINTF("lookup_callsign(n%s=%d) = '%s'\n", (hash_type == FTX_CALLSIGN_HASH_22_BITS ? "22" : (hash_type == FTX_CALLSIGN_HASH_12_BITS ? "12" : "10")), hash, callsign);
     return found;
 }
 
@@ -682,7 +846,7 @@ int32_t pack_basecall(const char* callsign, int length) {
         int i5 = nchar(c6[5], FT8_CHAR_TABLE_LETTERS_SPACE);
         if ((i0 >= 0) && (i1 >= 0) && (i2 >= 0) && (i3 >= 0) && (i4 >= 0) && (i5 >= 0)) {
             // This is a standard callsign
-            LOG(LOG_DEBUG, "Encoding basecall [%.6s]\n", c6);
+            DPRINTF("Encoding basecall [%.6s]\n", c6);
             int32_t n = i0;
             n = n * 36 + i1;
             n = n * 10 + i2;
@@ -715,19 +879,32 @@ static int parse_cq_modifier(const char* string) {
             return -1;
         }
     }
-    LOG(LOG_DEBUG, "CQ_nnn/CQ_a[bcd] '%s' %d/%d\n", string, nnum, nlet);
+    DPRINTF("CQ_nnn/CQ_a[bcd] '%s' %d/%d\n", string, nnum, nlet);
     if (nnum == 3 && nlet == 0) {
-        LOG(LOG_DEBUG, "CQ_nnn detected: %d\n", atoi(string + 3));
+        DPRINTF("CQ_nnn detected: %d\n", atoi(string + 3));
         return atoi(string + 3);
     } else if (nnum == 0 && nlet <= 4) {
-        LOG(LOG_DEBUG, "CQ_a[bcd] detected: m %d\n", m);
+        DPRINTF("CQ_a[bcd] detected: m %d\n", m);
         return 1000 + m;
     }
     return -1;  // not a special CQ
 }
 
+/**
+ * @brief Pack a standard callsign into a 28-bit result
+ * @param callsign Callsign text
+ * @param hash table interface/abstractor
+ * @param ip modifier???
+ * @return See below
+ *    -1 error
+ *     0 DE
+ *     1 QRZ
+ *     2 CQ
+ *     ? CQ modifier
+ *     ? Packed callsign
+ */
 static int32_t pack28(const char* callsign, const ftx_callsign_hash_interface_t* hash_if, uint8_t* ip) {
-    LOG(LOG_DEBUG, "pack28() callsign [%s]\n", callsign);
+    DPRINTF("pack28() callsign [%s]\n", callsign);
     *ip = 0;
 
     // Check for special tokens first
@@ -739,12 +916,12 @@ static int32_t pack28(const char* callsign, const ftx_callsign_hash_interface_t*
         return 2;
 
     int length = strlen(callsign);
-    LOG(LOG_DEBUG, "Callsign length = %d\n", length);
+    DPRINTF("Callsign length = %d\n", length);
 
     if (starts_with(callsign, "CQ ") && length < 8) {
         int v = parse_cq_modifier(callsign);
         if (v < 0) {
-            LOG(LOG_WARN, "CQ_nnn/CQ_a[bcd] '%s' not allowed\n", callsign);
+            DPRINTF("CQ_nnn/CQ_a[bcd] '%s' not allowed\n", callsign);
             return -1;
         }
         return 3 + v;
@@ -753,7 +930,7 @@ static int32_t pack28(const char* callsign, const ftx_callsign_hash_interface_t*
     // Detect /R and /P suffix for basecall check
     int length_base = length;
     if (ends_with(callsign, "/P") || ends_with(callsign, "/R")) {
-        LOG(LOG_DEBUG, "Suffix /P or /R detected\n");
+        DPRINTF("Suffix /P or /R detected\n");
         *ip = 1;
         length_base = length - 2;
     }
@@ -768,10 +945,10 @@ static int32_t pack28(const char* callsign, const ftx_callsign_hash_interface_t*
 
     if ((length >= 3) && (length <= 11)) {
         // Treat this as a nonstandard callsign: compute its 22-bit hash
-        LOG(LOG_DEBUG, "Encoding '%s' as non-standard callsign\n", callsign);
+        DPRINTF("Encoding '%s' as non-standard callsign\n", callsign);
         uint32_t n22;
         if (!save_callsign(hash_if, callsign, &n22, NULL, NULL)) {
-            LOG(LOG_DEBUG, "   Failed to save '%s'\n", callsign);
+            DPRINTF("   Failed to save '%s'\n", callsign);
             return -1;  // Error (some problem with callsign contents)
         }
         *ip = 0;
@@ -782,7 +959,7 @@ static int32_t pack28(const char* callsign, const ftx_callsign_hash_interface_t*
 }
 
 static int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, const ftx_callsign_hash_interface_t* hash_if, char* result, ftx_field_t* field_type) {
-    LOG(LOG_DEBUG, "unpack28() n28=%d i3=%d\n", n28, i3);
+    DPRINTF("unpack28() n28=%d i3=%d\n", n28, i3);
     // Check for special tokens DE, QRZ, CQ, CQ nnn, CQ a[bcd]
     if (n28 < NTOKENS) {
         if (n28 <= 2u) {
@@ -910,7 +1087,7 @@ static bool pack58(const ftx_callsign_hash_interface_t* hash_if, const char* cal
         return false;
 
     *n58 = result;
-    LOG(LOG_DEBUG, "pack58('%s')=%016llx\n", callsign, *n58);
+    DPRINTF("pack58('%s')=%016llx\n", callsign, *n58);
     return true;
 }
 
@@ -928,7 +1105,7 @@ static bool unpack58(uint64_t n58, const ftx_callsign_hash_interface_t* hash_if,
     // The decoded string will be right-aligned, so trim all whitespace (also from back just in case)
     trim_copy(callsign, c11);
 
-    LOG(LOG_DEBUG, "unpack58(%016llx)=%s\n", n58_backup, callsign);
+    DPRINTF("unpack58(%016llx)=%s\n", n58_backup, callsign);
 
     // Save the decoded call in a hash table for later
     if (strlen(callsign) >= 3)

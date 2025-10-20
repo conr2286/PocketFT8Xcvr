@@ -31,6 +31,8 @@ extern HX8357_t3n tft;
 #include "traffic_manager.h"
 #include "PocketFT8Xcvr.h"
 
+#include "message.h"
+
 char Your_Call[] = "W5XXX";
 char Your_Locator[] = "AA00";
 
@@ -57,6 +59,8 @@ char ft8_time_string[] = "15:44:15";
 extern UserInterface ui;
 
 int max_displayed_messages = 8;
+
+static bool isStandardCallsign(const char* s);
 
 /**
  * Setup required parameters for constructing messages to remote target station
@@ -120,13 +124,19 @@ void set_message(uint16_t index) {
     clearOutboundMessageText();
     clearOutboundMessageDisplay();
 
+    const char* locator = thisStation.getLocator();
+    const char* ourCall = thisStation.getCallsign();
+    const char* nil = "";
+
     switch (index) {
-        case MSG_CQ:  // We are calling CQ from our Locator, e.g. CQ KQ7B DN15
-            snprintf(message, sizeof(message), "%s %s %s", "CQ", thisStation.getCallsign(), thisStation.getLocator());
+        case MSG_CQ:                                          // We are calling CQ from our Locator, e.g. CQ KQ7B DN15
+            if (!isStandardCallsign(ourCall)) locator = nil;  // Nonstandard calls xmit as nonstandard message
+            snprintf(message, sizeof(message), "%s %s %s", "CQ", ourCall, locator);
             break;
 
-        case MSG_LOC:  // We are calling target from our Locator, e.g. AG0E KQ7B DN15
-            snprintf(message, sizeof(message), "%s %s %s", Target_Call, thisStation.getCallsign(), thisStation.getLocator());
+        case MSG_LOC:                                                                             // We are calling target station from our Locator, e.g. W1AW KQ7B DN15
+            if (!isStandardCallsign(ourCall) || !isStandardCallsign(Target_Call)) locator = nil;  // Nonstandard calls xmit as nonstandard message
+            snprintf(message, sizeof(message), "%s %s %s", Target_Call, ourCall, locator);
             break;
 
         case MSG_RSL:  // We are responding to target with their signal report, e.g. AG0E KQ7B -12
@@ -153,7 +163,7 @@ void set_message(uint16_t index) {
             DPRINTF("***** ERROR:  Invalid set_message(%d) index\n", index);
             break;
     }
-    DPRINTF("message='%s'\n", message);
+    DPRINTF("generated text message='%s'\n", message);
     ui.applicationMsgs->setText(message);
 
     //  TODO:  Nonstandard callsigns
@@ -222,4 +232,14 @@ void clearOutboundMessageDisplay(void) {
 //?????
 void clear_reply_message_box(void) {
     tft.fillRect(0, 100, 400, 140, HX8357_BLACK);
+}
+
+/**
+ * @brief Determine if a callsign is an FT8 standard callsign
+ * @param callsign text string
+ * @return true==standard
+ */
+bool isStandardCallsign(const char* callsign) {
+    if (pack_basecall(callsign, strlen(callsign)) < 0) return false;
+    return true;  // Will report CQ as a callsign
 }

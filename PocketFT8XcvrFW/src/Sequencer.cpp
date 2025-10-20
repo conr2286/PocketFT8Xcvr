@@ -127,7 +127,7 @@
 #include <string.h>
 
 #include "Config.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "LogFactory.h"
 #include "PocketFT8Xcvr.h"
 #include "SequencerStates.h"
@@ -457,7 +457,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
                 break;
 
             // The Sequencer does not currently process certain message types.  We don't restart the Timer for unsupported msgs.
-            case MSG_BLANK:
+            // case MSG_BLANK:
             case MSG_FREE:  // TODO:  we should try to handle this one someday somewhere.
             case MSG_TELE:
             case MSG_UNKNOWN:
@@ -466,6 +466,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
                 break;
         }  // switch
     }
+    DTRACE();
 
 }  // receivedMsgEvent()
 
@@ -484,7 +485,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
  * low end of 20 meters.  ;)
  */
 void Sequencer::cqMsgEvent(Decode* msg) {
-    // Has the operated enabled RoboOp's automatic replies with the Tx button?
+    // Has the operateR enabled RoboOp's automatic replies with the Tx button?
     if (!autoReplyToCQ) return;  // No... nothing to do here
 
     // Avoid responding to previously logged duplicates unless enabled by CONFIG.JSON
@@ -679,7 +680,7 @@ void Sequencer::clickDecodedMessageEvent(Decode* msg) {
         // We can only contact msgTypes known to include a usable callsign for the remote station
         switch (msg->msgType) {
             // We cannot respond to these FT8 message types
-            case MSG_BLANK:    // Hashed (unusable) callsign (sorry)
+            // case MSG_BLANK:    // Hashed (unusable) callsign (sorry)
             case MSG_FREE:     // Free text (no callsign in free text messages)
             case MSG_TELE:     // Telemetry
             case MSG_UNKNOWN:  //
@@ -845,6 +846,7 @@ void Sequencer::abortButtonEvent() {
  *
  **/
 void Sequencer::rslMsgEvent(Decode* msg) {
+    DPRINTF("state=%d\n", state);
     // Action to be taken depends upon the Sequencer's current state
     switch (state) {
         // Remote station sent RRSL.  We'll send them an RRR to wrap things up.
@@ -1047,6 +1049,8 @@ void Sequencer::locatorEvent(Decode* msg) {
  *
  **/
 bool Sequencer::isMsgForUs(Decode* msg) {
+    DPRINTF("isMsgForUs('%s')\n", msg->field1);
+
     // A received msg is "for us" if our callsign or CQ appears as the destination station's callsign
     bool myCall = strncmp(msg->field1, thisStation.getCallsign(), sizeof(msg->field1)) == 0;  // Sent directly to us?
     bool cq = strcmp(msg->field1, "CQ") == 0;
