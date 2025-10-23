@@ -30,7 +30,6 @@ extern HX8357_t3n tft;
 #include "msgTypes.h"
 #include "traffic_manager.h"
 #include "PocketFT8Xcvr.h"
-
 #include "message.h"
 
 char Your_Call[] = "W5XXX";
@@ -40,16 +39,16 @@ char test_station[] = "W5BAA";
 char test_target[] = "W5ITU";
 char test_RSL[] = "R-15";
 
-char Target_Call[7];     // six character call sign + /0
-char Target_Locator[5];  // four character locator  + /0
-int Target_RSL;          // their RSL
-char CQ_Target_Call[7];
+char Target_Call[FTX_NONSTANDARD_CALLSIGN_BFRSIZE];     // 11 character call sign + /0
+char Target_Locator[5];                                 // four character locator  + /0
+int Target_RSL;                                         // their RSL
+char CQ_Target_Call[FTX_NONSTANDARD_CALLSIGN_BFRSIZE];  // 11 character call sign + /0
 
-char reply_message[18];
-char reply_message_list[18][8];
+char reply_message[FTX_MAX_MESSAGE_LENGTH];
+char reply_message_list[FTX_MAX_MESSAGE_LENGTH][8];
 int reply_message_count;
-char message[18];   // FT8 message text pending transmission.
-int message_state;  // Non-zero => message[] is valid/ready (but nothing checks it???)
+char message[FTX_MAX_MESSAGE_LENGTH];  // FT8 message text pending transmission (w/hashed callsigns)
+int message_state;                     // Non-zero => message[] is valid/ready (but nothing checks it???)
 
 extern int log_flag, logging_on;
 extern time_t getTeensy3Time();

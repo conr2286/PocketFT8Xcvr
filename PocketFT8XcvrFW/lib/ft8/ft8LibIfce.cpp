@@ -19,28 +19,47 @@ std::map<uint32_t, String> nonStandardCallsignTable;  // Surprise:  Implemented 
 /**
  * @brief Record an entry in the nonStandardCallsignTable map for key
  * @param callsign The callsign to be associated with key
- * @param key The key
+ * @param key22 Apparently caller always supplies a 22-bit key
  *
- * @note We don't actually use a hash table as it would consume quite a bit of memory
- * unless we rehashed, and Pocket FT8 already used the ordered map elsewhere
+ * @note We don't actually use a hash table as we've already loaded std::map
  *
- * @note Recording an entry with a previously used key will overwrite the existing entry
+ * @note Recording an entry with a previously used key overwrites the existing entry
  */
-static void save_hash(const char* callsign, uint32_t key) {
-    DPRINTF("save_hash('%s',%d)\n", callsign, key);
-    nonStandardCallsignTable[key] = callsign;
+static void save_hash(const char* callsign, uint32_t key22) {
+    uint32_t key10 = (key22 >> 12) & 0x3ff;  // Entries are apparently recorded using a 10-bit key
+    DPRINTF("save_hash('%s',key22=%d) will use key10=%d\n", callsign, key22, key10);
+    nonStandardCallsignTable[key10] = callsign;
 }  // add()
 
 /**
  * @brief Lookup an entry in the nonStandardCallsignTable for key
- * @param hash_type Ignored
- * @param key The key
+ * @param hash_type #bits in the supplied key
+ * @param key The supplied key
  * @param c11 Buffer to receive the callsign
  * @return true==success
  */
 static bool lookup_hash(ftx_callsign_hash_type_t hash_type, uint32_t key, char* c11) {
-    String s = nonStandardCallsignTable[key];
-    DPRINTF("lookup_hash(%d)='%s'\n", key, s.c_str());
+    DPRINTF("lookup_hash(hash_type=%d, key=%d)\n", hash_type, key);
+    // Callsigns apparently are always recorded and retrieved using a 10-bit key
+    uint32_t key10;  // A 10-bit version of key
+    switch (hash_type) {
+        case FTX_CALLSIGN_HASH_10_BITS:  // Caller supplied a 10-bit key
+            key10 = key;                 // Use supplied key as-is
+            break;
+        case FTX_CALLSIGN_HASH_12_BITS:  // Caller supplied a 12-bit key
+            key10 = key >> 2;            // Make a 10-bit key
+            break;
+        case FTX_CALLSIGN_HASH_22_BITS:  // Caller supplied a 22-bit key
+            key10 = key >> 12;           // Make a 10-bit key
+            break;
+        default:         // Caller supplied nonsense
+            key10 = -1;  // Then use nonsense key
+            break;
+    }
+    key10 = key10 & 0x3ff;
+    DPRINTF("Calculated key10=%d\n", key10);
+    String s = nonStandardCallsignTable[key10];  // Always lookup callsign using a 10-bit key
+    DPRINTF("lookup_hash(key10=%d) retrieved '%s'\n", key10, s.c_str());
     if (s.length() > 0) {
         strlcpy(c11, s.c_str(), 12);
         return true;
@@ -65,7 +84,6 @@ static ftx_callsign_hash_interface_t hashingIfce = {lookup_hash, save_hash};
  * @param msgType Returns legacy ft8_lib MsgType
  * @return 0==success
  *
- * @note Presently, we trim the brackets from callsigns in field1 and/or field2 unless they are elipses, "<...>"
  */
 int unpack77_fields(const uint8_t* a77, char* field1, char* field2, char* field3, MsgType* msgType) {
     ftx_message_t demodMsg;
@@ -74,7 +92,7 @@ int unpack77_fields(const uint8_t* a77, char* field1, char* field2, char* field3
 
     DTRACE();
 
-    // Supply some default values for the results
+    // Initialize a few things
     field1[0] = field2[0] = field3[0] = 0;  // The fields are all empty strings
 
     // Build ft8_lib's demodulated message structure
@@ -86,20 +104,20 @@ int unpack77_fields(const uint8_t* a77, char* field1, char* field2, char* field3
     ftx_message_rc_t rc = ftx_message_decode(&demodMsg, &hashingIfce, resultTxt, &resultFields);
     DTRACE();
 
-    // Extract field1 from resultTxt.  TODO:  fix this... it's damaging resultTxt and leaves brackets in place
+    // Extract field1 from resultTxt
     if (resultFields.types[0] != FTX_FIELD_NONE) {
         strlcpy(field1, strtok(resultTxt + resultFields.offsets[0], delimitors), 14);
-        if (resultFields.types[0] == FTX_FIELD_CALL && strcmp(field1, "<...>") != 0) {
-            DPRINTF("trim_brackets('%s')\n", field1);
-            trim_brackets(field1);
-            DPRINTF("trim_brackets('%s')\n", field1);
-        }
     }
+
+    // Extract field2 from resultTxt
     if (resultFields.types[1] != FTX_FIELD_NONE) {
         strlcpy(field2, strtok(resultTxt + resultFields.offsets[1], delimitors), 14);
-        if (resultFields.types[0] == FTX_FIELD_CALL && strcmp(field2, "<...>") != 0) trim_brackets(field2);
     }
-    if (resultFields.types[2] != FTX_FIELD_NONE) strlcpy(field3, strtok(resultTxt + resultFields.offsets[2], delimitors), 7);
+
+    // Extract field3 from resultTxt
+    if (resultFields.types[2] != FTX_FIELD_NONE) {
+        strlcpy(field3, strtok(resultTxt + resultFields.offsets[2], delimitors), 7);
+    }
 
     // Recover the legacy ft8_lib msgType from today's field types and content returned by ftx_message_decode().
     // Note:  Avoid confusion between the legacy MsgType and today's ftx_message_type_t --- they're related but different.

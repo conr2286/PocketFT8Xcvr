@@ -5,19 +5,22 @@
 #include <stdbool.h>
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-#define FTX_PAYLOAD_LENGTH_BYTES 10 ///< number of bytes to hold 77 bits of FTx payload data
-#define FTX_MAX_MESSAGE_LENGTH   35 ///< max message length = callsign[13] + space + callsign[13] + space + report[6] + terminator
-#define FTX_MAX_MESSAGE_FIELDS   3  // may need to get longer for multi-part messages (DXpedition, contest etc.)
+#define FTX_PAYLOAD_LENGTH_BYTES 10  ///< number of bytes to hold 77 bits of FTx payload data
+#define FTX_MAX_MESSAGE_LENGTH 35    ///< max message length = callsign[13] + space + callsign[13] + space + report[6] + terminator
+#define FTX_MAX_MESSAGE_FIELDS 3     // may need to get longer for multi-part messages (DXpedition, contest etc.)
+
+#define FTX_NONSTANDARD_CALLSIGN_LENGTH 11             // strlen(Nonstandard callsign) without brackets
+#define FTX_NONSTANDARD_CALLSIGN_BFRSIZE 12            // sizeof(bfr) to store nonstandard callsign without brackets
+#define FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE 14  // sizeof(bfr) to store nonstandard call, brackets and NUL terminator
 
 /// Structure that holds the decoded message
 typedef struct
 {
     uint8_t payload[FTX_PAYLOAD_LENGTH_BYTES];
-    uint16_t hash; ///< Hash value to be used in hash table and quick checking for duplicates
+    uint16_t hash;  ///< Hash value to be used in hash table and quick checking for duplicates
 } ftx_message_t;
 
 // ----------------------------------------------------------------------------------
@@ -37,25 +40,23 @@ typedef struct
 // 4     <WA9XYZ> PJ4/KA1ABC RR73           12 58 1 2 1      74   Nonstandard calls
 // 5     TU; W9XYZ K1ABC R-07 FN            1 28 28 1 7 9    74   WWROF contest ?
 
-typedef enum
-{
-    FTX_MESSAGE_TYPE_FREE_TEXT,   // 0.0   FREE TEXT MSG                      71               71   Free text
-    FTX_MESSAGE_TYPE_DXPEDITION,  // 0.1   K1ABC RR73; W9XYZ <KH1/KH7Z> -12   28 28 10 5       71   DXpedition Mode
-    FTX_MESSAGE_TYPE_EU_VHF,      // 0.2   PA3XYZ/P R 590003 IO91NP           28 1 1 3 12 25   70   EU VHF contest
-    FTX_MESSAGE_TYPE_ARRL_FD,     // 0.3   WA9XYZ KA1ABC R 16A EMA            28 28 1 4 3 7    71   ARRL Field Day
-                                  // 0.4   WA9XYZ KA1ABC R 32A EMA            28 28 1 4 3 7    71   ARRL Field Day
-    FTX_MESSAGE_TYPE_TELEMETRY,   // 0.5   0123456789abcdef01                 71               71   Telemetry (18 hex)
-    FTX_MESSAGE_TYPE_CONTESTING,  // 0.6   K1ABC RR73; CQ W9XYZ EN37          28 28 15         71   Contesting
-    FTX_MESSAGE_TYPE_STANDARD,    // 1     WA9XYZ/R KA1ABC/R R FN42           28 1 28 1 1 15   74   Standard msg
-                                  // 2     PA3XYZ/P GM4ABC/P R JO22           28 1 28 1 1 15   74   EU VHF contest
-    FTX_MESSAGE_TYPE_ARRL_RTTY,   // 3     TU; W9XYZ K1ABC R 579 MA           1 28 28 1 3 13   74   ARRL RTTY Roundup
-    FTX_MESSAGE_TYPE_NONSTD_CALL, // 4     <WA9XYZ> PJ4/KA1ABC RR73           12 58 1 2 1      74   Nonstandard calls
-    FTX_MESSAGE_TYPE_WWROF,       // 5     TU; W9XYZ K1ABC R-07 FN            1 28 28 1 7 9    74   WWROF contest ?
-    FTX_MESSAGE_TYPE_UNKNOWN      // Unknown or invalid type
+typedef enum {
+    FTX_MESSAGE_TYPE_FREE_TEXT,    // 0.0   FREE TEXT MSG                      71               71   Free text
+    FTX_MESSAGE_TYPE_DXPEDITION,   // 0.1   K1ABC RR73; W9XYZ <KH1/KH7Z> -12   28 28 10 5       71   DXpedition Mode
+    FTX_MESSAGE_TYPE_EU_VHF,       // 0.2   PA3XYZ/P R 590003 IO91NP           28 1 1 3 12 25   70   EU VHF contest
+    FTX_MESSAGE_TYPE_ARRL_FD,      // 0.3   WA9XYZ KA1ABC R 16A EMA            28 28 1 4 3 7    71   ARRL Field Day
+                                   // 0.4   WA9XYZ KA1ABC R 32A EMA            28 28 1 4 3 7    71   ARRL Field Day
+    FTX_MESSAGE_TYPE_TELEMETRY,    // 0.5   0123456789abcdef01                 71               71   Telemetry (18 hex)
+    FTX_MESSAGE_TYPE_CONTESTING,   // 0.6   K1ABC RR73; CQ W9XYZ EN37          28 28 15         71   Contesting
+    FTX_MESSAGE_TYPE_STANDARD,     // 1     WA9XYZ/R KA1ABC/R R FN42           28 1 28 1 1 15   74   Standard msg
+                                   // 2     PA3XYZ/P GM4ABC/P R JO22           28 1 28 1 1 15   74   EU VHF contest
+    FTX_MESSAGE_TYPE_ARRL_RTTY,    // 3     TU; W9XYZ K1ABC R 579 MA           1 28 28 1 3 13   74   ARRL RTTY Roundup
+    FTX_MESSAGE_TYPE_NONSTD_CALL,  // 4     <WA9XYZ> PJ4/KA1ABC RR73           12 58 1 2 1      74   Nonstandard calls
+    FTX_MESSAGE_TYPE_WWROF,        // 5     TU; W9XYZ K1ABC R-07 FN            1 28 28 1 7 9    74   WWROF contest ?
+    FTX_MESSAGE_TYPE_UNKNOWN       // Unknown or invalid type
 } ftx_message_type_t;
 
-typedef enum
-{
+typedef enum {
     FTX_CALLSIGN_HASH_22_BITS,
     FTX_CALLSIGN_HASH_12_BITS,
     FTX_CALLSIGN_HASH_10_BITS
@@ -69,8 +70,7 @@ typedef struct
     void (*save_hash)(const char* callsign, uint32_t n22);
 } ftx_callsign_hash_interface_t;
 
-typedef enum
-{
+typedef enum {
     FTX_MESSAGE_RC_OK,
     FTX_MESSAGE_RC_ERROR_CALLSIGN1,
     FTX_MESSAGE_RC_ERROR_CALLSIGN2,
@@ -79,12 +79,11 @@ typedef enum
     FTX_MESSAGE_RC_ERROR_TYPE
 } ftx_message_rc_t;
 
-typedef enum
-{
+typedef enum {
     FTX_FIELD_UNKNOWN,
     FTX_FIELD_NONE,
-    FTX_FIELD_TOKEN,          // RRR, RR73, 73, DE, QRZ, CQ, ...
-    FTX_FIELD_TOKEN_WITH_ARG, // CQ nnn, CQ abcd
+    FTX_FIELD_TOKEN,           // RRR, RR73, 73, DE, QRZ, CQ, ...
+    FTX_FIELD_TOKEN_WITH_ARG,  // CQ nnn, CQ abcd
     FTX_FIELD_CALL,
     FTX_FIELD_GRID,
     FTX_FIELD_RST
@@ -157,4 +156,4 @@ void ftx_message_print(ftx_message_t* msg);
 }
 #endif
 
-#endif // _INCLUDE_MESSAGE_H_
+#endif  // _INCLUDE_MESSAGE_H_

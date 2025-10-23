@@ -153,6 +153,9 @@ extern uint16_t cursor_line;
 
 void set_Target_Frequency(int CQ_freq);
 
+// Helper functions
+static void trimCallsign(char* s);  // Trims angle brackets from callsigns in-place
+
 // Our statics
 static bool autoReplyToCQ;  // RoboOp automatically transmits reply to CQ
 
@@ -399,6 +402,10 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
 
     // When debugging, print some things from the received message
     DPRINTF("%s %s %s %s msgType=%u, sequenceNumber=%lu state=%u\n", __FUNCTION__, msg->field1, msg->field2, msg->field3, msg->msgType, sequenceNumber, state);
+
+    // Remove angle brackets in-place from field1 and field2 callsigns (if present)
+    trimCallsign(msg->field1);
+    trimCallsign(msg->field2);
 
     // Build a String of the received message fields for us to display
     static const String sp(" ");
@@ -1279,3 +1286,27 @@ void set_Target_Frequency(int CQ_freq) {
     cursor_line = (uint16_t)((float)CQ_freq / FFT_Resolution);
     cursor_line = cursor_line - ft8_min_bin;
 }
+
+/**
+ * @brief Trim angle brackets from a callsign string in-place
+ * @param s Callsign string (may be NULL), too-short, or even empty
+ *
+ * @note The callsign string may or may not actually include angle brackets
+ *
+ * @note If angle brackets are present, the callsign string is modified in-place
+ */
+static void trimCallsign(char* s) {
+    DPRINTF("trimCallsign('%s')\n", s);
+    // Check for strings we can ignore
+    if (s == NULL) return;                             // No string to trim
+    int len = strlen(s);                               //
+    if (len < 3) return;                               // Too short to be a hashed callsign with brackets?
+    if (len > 13) return;                              // Too long to be any valid FT8 callsign?
+    if ((s[0] != '<') || (s[len - 1] != '>')) return;  // Perhaps the brackets are missing?
+
+    // Trim angle brackets from the hashed callsign in s
+    memmove(s, s + 1, len - 1);  // Remove the first bracket from s
+    s[len - 2] = 0;              // Remove the second bracket from s
+    DPRINTF("trimCallsign()='%s'\n", s);
+
+}  // trimCallsign
