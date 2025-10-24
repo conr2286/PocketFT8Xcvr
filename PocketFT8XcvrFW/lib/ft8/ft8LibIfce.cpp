@@ -167,3 +167,31 @@ int pack77(const char* msg, uint8_t* b77) {
 
     return rc;
 }  // pack77()
+
+/**
+ * @brief Trim angle brackets from a callsign string in-place
+ * @param s Callsign string (may be NULL), too-short, or even empty
+ *
+ * @note The callsign string may or may not actually include angle brackets
+ *
+ * @note If angle brackets are present, the callsign string is modified in-place.
+ *       The modified string will be shorter than the original.
+ *
+ * @note Malformed strings (too short, too long, missing brackets, NULL)
+ *       remain unmodified.
+ */
+void trimBracketsFromCallsign(char* s) {
+    DPRINTF("trimCallsign('%s')\n", s);
+    //  Check for malformed callsign strings we can ignore
+    if (s == NULL) return;                             // No string to trim
+    int len = strlen(s);                               //
+    if (len < 3) return;                               // Too short to be a hashed callsign with brackets?
+    if (len > 13) return;                              // Too long to be any valid FT8 callsign?
+    if ((s[0] != '<') || (s[len - 1] != '>')) return;  // Perhaps the brackets are missing?
+
+    // Trim angle brackets from the hashed callsign in s
+    memmove(s, s + 1, len - 1);  // Remove the first bracket from s
+    s[len - 2] = 0;              // Remove the second bracket from s
+    // DPRINTF("trimCallsign()='%s'\n", s);
+
+}  // trimCallsign

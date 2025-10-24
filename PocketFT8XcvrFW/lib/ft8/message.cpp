@@ -5,7 +5,7 @@
 
 #define LOG_LEVEL LOG_WARN
 // #include "debug.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 #define MAX22 ((uint32_t)4194304ul)
 #define NTOKENS ((uint32_t)2063592ul)
@@ -481,9 +481,12 @@ ftx_message_rc_t ftx_message_decode_nonstd(const ftx_message_t* msg, ftx_callsig
     nrpt |= (msg->payload[9] >> 7);  // 76543210
     icq = ((msg->payload[9] >> 6) & 0x01u);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
     // Extract i3 (bits 74..76)
-    uint8_t i3 = (msg->payload[9] >> 3) & 0x07u;
+    uint8_t i3 = (msg->payload[9] >> 3) & 0x07u;  // Used for debugging
     LOG(LOG_DEBUG, "decode_nonstd() n12=%04x n58=%08llx iflip=%d nrpt=%d icq=%d i3=%d\n", n12, n58, iflip, nrpt, icq, i3);
+#pragma GCC diagnostic pop
 
     // Decode one of the calls from 58 bit encoded string
     char call_decoded[14];
@@ -914,11 +917,13 @@ static bool pack58(const ftx_callsign_hash_interface_t* hash_if, const char* cal
     return true;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
 static bool unpack58(uint64_t n58, const ftx_callsign_hash_interface_t* hash_if, char* callsign) {
     // Decode one of the calls from 58 bit encoded string
     char c11[12];
     c11[11] = '\0';
-    uint64_t n58_backup = n58;
+    uint64_t n58_backup = n58;  // Used for debugging
     for (int i = 10; /* no condition */; --i) {
         c11[i] = charn(n58 % 38, FT8_CHAR_TABLE_ALPHANUM_SPACE_SLASH);
         if (i == 0)
@@ -936,6 +941,7 @@ static bool unpack58(uint64_t n58, const ftx_callsign_hash_interface_t* hash_if,
 
     return false;
 }
+#pragma GCC diagnostic pop
 
 static uint16_t packgrid(const char* grid4) {
     if (grid4 == 0 || grid4[0] == '\0') {

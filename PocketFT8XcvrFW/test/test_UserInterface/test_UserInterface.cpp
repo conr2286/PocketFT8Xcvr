@@ -33,6 +33,7 @@ void test_DecodedMsgs(void) {
     ui.decodedMsgs->setMsg(3, "WA3ABC AG0E -13 S3");
     ui.decodedMsgs->setMsg(4, "WA4ABC AG0E -13 S3");
     ui.decodedMsgs->setMsg(5, "WA5ABC AG0E -13 S3");
+    ui.decodedMsgs->setMsg(6, "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     delay(1000);
     // AWidget::processTouch(20, 124); //Highlight item 0
     delay(1000);

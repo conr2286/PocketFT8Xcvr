@@ -25,20 +25,41 @@ char* trim(char* str) {
     return str;
 }
 
-/**
- * @brief Trim leading/trailing brackets from char[] string
- * @param str The string
- * @return Pointer to the first non-bracket char in str
- *
- * @note Char[] string str is modified by replacement of the first trailing bracket
- * with a NUL char
- */
-char* trim_brackets(char* str) {
-    str = (char*)trim_front(str, '<');
-    trim_back(str, '>');
-    // return a pointer to the first non-whitespace character
-    return str;
-}
+// /**
+//  * @brief Trim leading/trailing brackets from char[] string
+//  * @param str The string
+//  * @return Pointer to the first non-bracket char in str
+//  *
+//  * @note Char[] string str is modified (i.e. trim "in place").
+//  *
+//  * @note sizeof(str) should not exceed FTX_MAX_MESSAGE_LENGTH
+//  */
+// char* trimCallsign(char* str) {
+//     char* p1 = str;  // Move from here
+//     char* p2 = str;  // Move to here
+//     int n = 0;       // Number chars placed in destination
+//     // DPRINTF("str='%s'\n", str);
+
+//     // Loop executed once for each char in original string, never to exceed
+//     // FTX_MAX_MESSAGE_LENGTH (defined in message.h, here as 35)
+//     while (*p1 != 0 && n < 35) {
+//         switch (*p1) {
+//             case '<':
+//                 break;  // Skip leading bracket
+//             case '>':
+//                 *p2++ = 0;  // Replace trailing bracket with NUL
+//                 n++;        // Increment count of chars in dest
+//                 break;
+//             default:
+//                 *p2++ = *p1;  // Move this non-bracket char
+//                 n++;          // Increment count of chars in dest
+//                 break;
+//         }
+//         p1++;  // Increment pointer scanning chars from original str
+//     }
+//     // DPRINTF("str='%s'\n", str);
+//     return str;
+// }
 
 void trim_copy(char* trimmed, const char* str) {
     str = (char*)trim_front(str, ' ');

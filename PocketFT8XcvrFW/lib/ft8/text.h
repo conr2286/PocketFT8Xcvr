@@ -26,7 +26,7 @@ void trim_copy(char* trimmed, const char* str);
 /// 1) trims the back by changing > to '\0'
 /// 2) trims the front by skipping <
 /// @return trimmed string (pointer to first non-whitespace character)
-char* trim_brackets(char* str);
+char* trimCallsign(char* str);
 
 char to_upper(char c);
 bool is_digit(char c);

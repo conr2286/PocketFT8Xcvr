@@ -24,3 +24,6 @@ int unpack77(const uint8_t* a77, char* message);
 
 // Pack any supported FT8 text message into a 77-bit array
 int pack77(const char* msg, uint8_t* a77);  // Pack any supported FT8 message into c77
+
+// Unlike trimCallsign(), this function trims brackets in-place from a callsign string
+void trimBracketsFromCallsign(char* s);  // Trims angle brackets from callsign in-place
