@@ -27,8 +27,9 @@ std::map<uint32_t, String> nonStandardCallsignTable;  // Surprise:  Implemented 
  */
 static void save_hash(const char* callsign, uint32_t key22) {
     uint32_t key10 = (key22 >> 12) & 0x3ff;  // Entries are apparently recorded using a 10-bit key
-    DPRINTF("save_hash('%s',key22=%d) will use key10=%d\n", callsign, key22, key10);
     nonStandardCallsignTable[key10] = callsign;
+    DPRINTF("save_hash('%s',key22=%d) used key10=%d, size=%d\n", callsign, key22, key10, nonStandardCallsignTable.size());
+
 }  // add()
 
 /**
@@ -131,9 +132,9 @@ int unpack77_fields(const uint8_t* a77, char* field1, char* field2, char* field3
     } else if (resultFields.types[2] == FTX_FIELD_GRID) {
         *msgType = MSG_LOC;  // Locator
     } else if (resultFields.types[2] == FTX_FIELD_TOKEN) {
-        if (strcmp(resultTxt + resultFields.offsets[2], "73") == 0) *msgType = MSG_73;
-        if (strcmp(resultTxt + resultFields.offsets[2], "RR73") == 0) *msgType = MSG_RR73;
-        if (strcmp(resultTxt + resultFields.offsets[2], "RRR") == 0) *msgType = MSG_RRR;
+        if (strncmp(resultTxt + resultFields.offsets[2], "73", 6) == 0) *msgType = MSG_73;
+        if (strncmp(resultTxt + resultFields.offsets[2], "RR73", 6) == 0) *msgType = MSG_RR73;
+        if (strncmp(resultTxt + resultFields.offsets[2], "RRR", 6) == 0) *msgType = MSG_RRR;
     } else {
         *msgType = MSG_UNKNOWN;
     }

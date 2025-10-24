@@ -88,8 +88,8 @@ extern float Target_Distance(char target[]);
 
 extern int CQ_State;
 
-extern char Target_Call[7];
-extern int Target_RSL;  // four character RSL  + /0
+extern char Target_Call[FTX_NONSTANDARD_CALLSIGN_BFRSIZE];  // Defined in gen_ft8.cpp
+extern int Target_RSL;                                      // four character RSL  + /0
 
 extern time_t getTeensy3Time();
 extern int log_flag, logging_on;
@@ -159,10 +159,10 @@ int ft8_decode(void) {
 
         // We have finally decoded the FT8 message bits and verified a valid CRC.  The message looks good.
         // Now we can unpack the FT8 encoding (see reference) into human-readable fields.
-        char message[kMax_message_length];
-        char field1[14];
-        char field2[14];
-        char field3[7];
+        char message[FTX_MAX_MESSAGE_LENGTH];
+        char field1[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];
+        char field2[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];
+        char field3[FTX_REPORTS_BFRSIZE];
         MsgType msgType;
         // ftx_message_offsets_t offsets[3];
         int rc = unpack77_fields(a91, field1, field2, field3, &msgType);
@@ -284,7 +284,7 @@ void display_messages(int decoded_messages) {
 
 // Displays specified decoded message's callsign and signal strength
 void display_selected_call(int index) {
-    char selected_station[18];
+    char selected_station[FTX_MAX_MESSAGE_LENGTH];
     char blank[] = "        ";
     strlcpy(Target_Call, new_decoded[index].field2, sizeof(Target_Call));
     Target_RSL = new_decoded[index].snr;

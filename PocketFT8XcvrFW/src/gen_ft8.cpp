@@ -32,15 +32,15 @@ extern HX8357_t3n tft;
 #include "PocketFT8Xcvr.h"
 #include "message.h"
 
-char Your_Call[] = "W5XXX";
-char Your_Locator[] = "AA00";
+// char Your_Call[] = "W5XXX";
+// char Your_Locator[] = "AA00";
 
-char test_station[] = "W5BAA";
-char test_target[] = "W5ITU";
-char test_RSL[] = "R-15";
+// char test_station[] = "W5BAA";
+// char test_target[] = "W5ITU";
+// char test_RSL[] = "R-15";
 
 char Target_Call[FTX_NONSTANDARD_CALLSIGN_BFRSIZE];     // 11 character call sign + /0
-char Target_Locator[5];                                 // four character locator  + /0
+char Target_Locator[FTX_REPORTS_BFRSIZE];               // four character locator  + /0
 int Target_RSL;                                         // their RSL
 char CQ_Target_Call[FTX_NONSTANDARD_CALLSIGN_BFRSIZE];  // 11 character call sign + /0
 
@@ -50,14 +50,14 @@ int reply_message_count;
 char message[FTX_MAX_MESSAGE_LENGTH];  // FT8 message text pending transmission (w/hashed callsigns)
 int message_state;                     // Non-zero => message[] is valid/ready (but nothing checks it???)
 
-extern int log_flag, logging_on;
+// extern int log_flag, logging_on;
 extern time_t getTeensy3Time();
 
-char ft8_time_string[] = "15:44:15";
+// char ft8_time_string[] = "15:44:15";
 
 extern UserInterface ui;
 
-int max_displayed_messages = 8;
+const int max_displayed_messages = 8;
 
 static bool isStandardCallsign(const char* s);
 

@@ -16,6 +16,8 @@ extern "C" {
 #define FTX_NONSTANDARD_CALLSIGN_BFRSIZE 12            // sizeof(bfr) to store nonstandard callsign without brackets
 #define FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE 14  // sizeof(bfr) to store nonstandard call, brackets and NUL terminator
 
+#define FTX_REPORTS_BFRSIZE 7  // report[6] + NUL terminator
+
 /// Structure that holds the decoded message
 typedef struct
 {

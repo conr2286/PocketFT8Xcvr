@@ -448,6 +448,10 @@ void StationMessages::onTouchItem(AScrollBoxItem* pItem) {
     if ((strcmp(pMsgItem->msg.field2, thisStation.getCallsign()) == 0)) return;
 #endif
 
+    // Ignore touch on unknown hashed/trashed callsigns
+    if (strlen(pMsgItem->msg.field2) < 2) return;             // Callsign too short?
+    if (strstr(pMsgItem->msg.field2, "...") != NULL) return;  // Unrecognized hashed callsign?
+
     // Highlight the touched Station Message
     pMsgItem->setItemColors(A_BLACK, A_LIGHT_GREY);
 
@@ -518,10 +522,10 @@ StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pSt
 }
 
 void display_value(int x, int y, int value) {
-    char string[7];  // print format stuff
-    sprintf(string, "%6i", value);
+    char bfr[7];  // print format stuff
+    snprintf(bfr, sizeof(bfr), "%6i", value);
     tft.setTextColor(HX8357_YELLOW, HX8357_BLACK);
     tft.setTextSize(0);
     tft.setCursor(x, y);
-    tft.print(string);
+    tft.print(bfr);
 }
