@@ -4,7 +4,7 @@
 #include "Contact.h"
 #include "LogFactory.h"
 
-ContactLogFile *testLog;  // The contact log file
+ContactLogFile* testLog;  // The contact log file
 Contact testContact;      // A contact for testing
 
 void setUp(void) {
@@ -44,8 +44,6 @@ int runUnityTests(void) {
 
 void setup() {
     Serial.begin(9600);
-
-    delay(2000);
 
     testLog = LogFactory::buildADIFlog("TESTLOG.ADIF");
 

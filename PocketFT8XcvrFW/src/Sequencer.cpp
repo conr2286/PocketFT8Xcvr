@@ -127,7 +127,7 @@
 #include <string.h>
 
 #include "Config.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "LogFactory.h"
 #include "PocketFT8Xcvr.h"
 #include "SequencerStates.h"
@@ -431,13 +431,13 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
         switch (msg->msgType) {
             // Did we receive a station's Tx6 CQ?
             case MSG_CQ:
-                DTRACE();
+                // DTRACE();
                 cqMsgEvent(msg);  // Yes, we heard someone's CQ
                 break;
 
             // Did we receive their Tx1 locator message?
             case MSG_LOC:
-                DTRACE();
+                // DTRACE();
                 startTimer();       // Keep this QSO alive as long as remote station is responding
                 locatorEvent(msg);  // They are responding to us with a locator
                 break;
@@ -445,21 +445,21 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             // Did we receive an [R]RSL containing our signal report?
             case MSG_RSL:
             case MSG_RRSL:
-                DTRACE();
+                // DTRACE();
                 startTimer();      // Keep this QSO alive while remote station continues to respond
                 rslMsgEvent(msg);  // They sent our signal report
                 break;
 
             // Did we receive their EOT that does not expect a reply?  We don't restart the Timer for EOT.  Let 'er die.
             case MSG_73:
-                DTRACE();
+                // DTRACE();
                 eotMsgNoReplyEvent(msg);  // No reply to 73 msg.
                 break;
 
             // Did we receive their EOT that expects a reply?  We don't restart the Timer for EOT.
             case MSG_RR73:
             case MSG_RRR:
-                DTRACE();
+                // DTRACE();
                 eotMsgReplyEvent(msg);  // We reply to RR73/RRR msg
                 break;
 
@@ -473,7 +473,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
                 break;
         }  // switch
     }
-    DTRACE();
+    // DTRACE();
 
 }  // receivedMsgEvent()
 

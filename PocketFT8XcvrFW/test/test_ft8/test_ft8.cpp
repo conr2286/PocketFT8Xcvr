@@ -323,7 +323,6 @@ void test_free_text(void) {
  */
 void setup() {
     Serial.begin(9600);
-    delay(1000);
 
     // Initialize unity
     UNITY_BEGIN();

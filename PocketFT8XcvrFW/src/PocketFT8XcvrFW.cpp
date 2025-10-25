@@ -114,7 +114,7 @@ time_t getTeensy3Time();
 void waitForFT8timeslot();
 void process_data();
 void update_synchronization();
-static void copy_to_fft_buffer(void *, const void *);
+static void copy_to_fft_buffer(void*, const void*);
 
 // Enable comments in the JSON configuration file (Pure JSON doesn't support them... we're not that pure)
 #define ARDUINOJSON_ENABLE_COMMENTS 1
@@ -193,7 +193,7 @@ int log_flag, logging_on;  // TODO:  deprecate old, old logging stuff
 
 // Get a reference to the QSO Sequencer machine implementing a robo-like operator handling
 // FT8 QSO sequencing.
-Sequencer &seq = Sequencer::getSequencer();
+Sequencer& seq = Sequencer::getSequencer();
 
 // Build the GPSHelper encapsulating the details of operating the GPS receiver
 GPShelper gpsHelper(9600);
@@ -592,9 +592,9 @@ void process_data() {
  * The AUDIO_BLOCK_SIZE appears to be cast-in-brass at 128 in AudioStream6400.h
  *
  **/
-static void copy_to_fft_buffer(void *destination, const void *source) {
-    const uint16_t *src = (const uint16_t *)source;
-    uint16_t *dst = (uint16_t *)destination;
+static void copy_to_fft_buffer(void* destination, const void* source) {
+    const uint16_t* src = (const uint16_t*)source;
+    uint16_t* dst = (uint16_t*)destination;
     for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
         *dst++ = *src++;  // real sample plus a zero for imaginary
     }
