@@ -5,7 +5,7 @@
 
 #define LOG_LEVEL LOG_WARN
 // #include "debug.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 #define MAX22 ((uint32_t)4194304ul)
 #define NTOKENS ((uint32_t)2063592ul)
@@ -365,7 +365,7 @@ ftx_message_rc_t ftx_message_decode(const ftx_message_t* msg, ftx_callsign_hash_
 
     message[0] = '\0';
     for (int i = 0; i < FTX_MAX_MESSAGE_FIELDS; ++i) {
-        offsets->types[i] = FTX_FIELD_UNKNOWN;
+        offsets->types[i] = /*FTX_FIELD_UNKNOWN*/ FTX_FIELD_NONE;  // Nothing in this field yet
         offsets->offsets[i] = -1;
     }
 
@@ -379,12 +379,14 @@ ftx_message_rc_t ftx_message_decode(const ftx_message_t* msg, ftx_callsign_hash_
             break;
         case FTX_MESSAGE_TYPE_FREE_TEXT:
             ftx_message_decode_free(msg, field1);
+            offsets->types[0] = FTX_FIELD_FREETEXT;
             field2 = NULL;
             field3 = NULL;
             rc = FTX_MESSAGE_RC_OK;
             break;
         case FTX_MESSAGE_TYPE_TELEMETRY:
             ftx_message_decode_telemetry_hex(msg, field1);
+            offsets->types[0] = FTX_FIELD_FREETEXT;  // TODO:  Special field type for telemetry
             field2 = NULL;
             field3 = NULL;
             rc = FTX_MESSAGE_RC_OK;
@@ -444,7 +446,7 @@ ftx_message_rc_t ftx_message_decode_std(const ftx_message_t* msg, ftx_callsign_h
 
     call_to[0] = call_de[0] = extra[0] = '\0';
 
-    // Unpack both callsigns
+    // Unpack both callsigns and extra
     if (unpack28(n29a >> 1, n29a & 1u, i3, hash_if, call_to, &field_types[0]) < 0) {
         return FTX_MESSAGE_RC_ERROR_CALLSIGN1;
     }
@@ -786,6 +788,7 @@ static int32_t pack28(const char* callsign, const ftx_callsign_hash_interface_t*
 
 static int unpack28(uint32_t n28, uint8_t ip, uint8_t i3, const ftx_callsign_hash_interface_t* hash_if, char* result, ftx_field_t* field_type) {
     LOG(LOG_DEBUG, "unpack28() n28=%d i3=%d\n", n28, i3);
+
     // Check for special tokens DE, QRZ, CQ, CQ nnn, CQ a[bcd]
     if (n28 < NTOKENS) {
         if (n28 <= 2u) {

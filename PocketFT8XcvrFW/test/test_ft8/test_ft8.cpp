@@ -22,6 +22,9 @@ void setUp(void) {
 void tearDown(void) {
 }
 
+/**
+ * @brief Exercise the trimBracketsFromCallsign() function
+ */
 void test_trim_brackets(void) {
     char s1[35];
     char s2[35];
@@ -100,6 +103,7 @@ void test_standard_message(void) {
     strlcat(tempBfr, " ", sizeof(tempBfr));                                                  // Assemble received msg text in tempBfr
     strlcat(tempBfr, field3, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
     TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_CQ, msgType);                                                // Verify expected msgType
 
     // Exercise standard station call
     strcpy(textMsg, "AA0AAA AA9AAA EN50");                                                   // TX1
@@ -111,6 +115,7 @@ void test_standard_message(void) {
     strlcat(tempBfr, " ", sizeof(tempBfr));                                                  // Assemble received msg text in tempBfr
     strlcat(tempBfr, field3, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
     TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_LOC, msgType);                                               // Verify expected msgType
 
     // Exercise RSL
     strcpy(textMsg, "AA9AAA AA0AAA -10");                                                    // TX2
@@ -122,6 +127,7 @@ void test_standard_message(void) {
     strlcat(tempBfr, " ", sizeof(tempBfr));                                                  // Assemble received msg text in tempBfr
     strlcat(tempBfr, field3, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
     TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_RSL, msgType);                                               // Verify expected msgType
 
     // Exercise RRSL
     strcpy(textMsg, "AA0AAA AA9AAA R-12");                                                   // TX3
@@ -133,6 +139,7 @@ void test_standard_message(void) {
     strlcat(tempBfr, " ", sizeof(tempBfr));                                                  // Assemble received msg text in tempBfr
     strlcat(tempBfr, field3, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
     TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_RSL, msgType);                                               // Modern ft8_lib reports RSL for RRSL
 
     // Exercise RRR
     strcpy(textMsg, "AA9AAA AA0AAA RRR");                                                    // TX4
@@ -144,6 +151,7 @@ void test_standard_message(void) {
     strlcat(tempBfr, " ", sizeof(tempBfr));                                                  // Assemble received msg text in tempBfr
     strlcat(tempBfr, field3, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
     TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_RRR, msgType);                                               // Verify expected msgType
 
     // Exercise 73
     strcpy(textMsg, "AA0AAA AA9AAA 73");                                                     // TX5
@@ -155,6 +163,8 @@ void test_standard_message(void) {
     strlcat(tempBfr, " ", sizeof(tempBfr));                                                  // Assemble received msg text in tempBfr
     strlcat(tempBfr, field3, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
     TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_73, msgType);                                                // Verify expected msgType
+
 }  // test_standard_message()
 
 /**
@@ -247,6 +257,68 @@ void test_nonstandard_cq(void) {
 }  // test_nonstandard_cq()
 
 /**
+ * @brief Exercise free text messages
+ */
+void test_free_text(void) {
+    char textMsg[80];                                         // Unpacked plain text message
+    uint8_t pckdMsg[FTX_PAYLOAD_LENGTH_BYTES];                // Packed FT8 message
+    char field1[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];  // Received field1
+    char field2[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];  // Received field2
+    char field3[7];                                           // Received field3
+    char tempBfr[FTX_MAX_MESSAGE_LENGTH];                     // Temporary text buffer
+    MsgType msgType;                                          // Received message type
+
+    // Exercise well-formed free text
+    strcpy(textMsg, "NAME HR JIMC");                                                         // Free text msg
+    TEST_ASSERT_EQUAL_INT32(0, pack77(textMsg, pckdMsg));                                    // Pack text into bfr
+    TEST_ASSERT_EQUAL_INT32(0, unpack77_fields(pckdMsg, field1, field2, field3, &msgType));  // Unpack bfr into temp
+    TEST_ASSERT_EQUAL_INT32(MSG_FREE, msgType);                                              // Verify expected msgType
+    strlcpy(tempBfr, field1, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
+    TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+
+    // Exercise short free text msg
+    strcpy(textMsg, "X");                                                                    // Free text msg
+    TEST_ASSERT_EQUAL_INT32(0, pack77(textMsg, pckdMsg));                                    // Pack text into bfr
+    TEST_ASSERT_EQUAL_INT32(0, unpack77_fields(pckdMsg, field1, field2, field3, &msgType));  // Unpack bfr into temp
+    strlcpy(tempBfr, field1, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
+    TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_FREE, msgType);                                              // Verify expected msgType
+
+    // Exercise special chars in free text msg
+    strcpy(textMsg, "AZ09+-./?");                                                            // Free text msg
+    TEST_ASSERT_EQUAL_INT32(0, pack77(textMsg, pckdMsg));                                    // Pack text into bfr
+    TEST_ASSERT_EQUAL_INT32(0, unpack77_fields(pckdMsg, field1, field2, field3, &msgType));  // Unpack bfr into temp
+    strlcpy(tempBfr, field1, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
+    TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_FREE, msgType);                                              // Verify expected msgType
+
+    // Exercise empty free text msg
+    strcpy(textMsg, "");                                                                     // Free text msg
+    TEST_ASSERT_EQUAL_INT32(0, pack77(textMsg, pckdMsg));                                    // Pack text into bfr
+    TEST_ASSERT_EQUAL_INT32(0, unpack77_fields(pckdMsg, field1, field2, field3, &msgType));  // Unpack bfr into temp
+    strlcpy(tempBfr, field1, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
+    TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_UNKNOWN, msgType);                                           // Verify expected msgType
+
+    // Exercise longest allowed free text msg
+    strcpy(textMsg, "123456789AB");                                                          // Free text msg
+    TEST_ASSERT_EQUAL_INT32(0, pack77(textMsg, pckdMsg));                                    // Pack text into bfr
+    TEST_ASSERT_EQUAL_INT32(0, unpack77_fields(pckdMsg, field1, field2, field3, &msgType));  // Unpack bfr into temp
+    strlcpy(tempBfr, field1, sizeof(tempBfr));                                               // Assemble received msg text in tempBfr
+    TEST_ASSERT_EQUAL_STRING(textMsg, tempBfr);                                              // Should recover orignal message text
+    TEST_ASSERT_EQUAL_INT32(MSG_FREE, msgType);                                              // Verify expected msgType
+
+    // Exercise oversized free text msg
+    strcpy(textMsg, "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");    // Free text msg
+    TEST_ASSERT_NOT_EQUAL_INT32(0, pack77(textMsg, pckdMsg));  // Pack text into bfr
+
+    // Exercise illegal chars in free text msg
+    strcpy(textMsg, "$100.00");                                // Free text msg
+    TEST_ASSERT_NOT_EQUAL_INT32(0, pack77(textMsg, pckdMsg));  // Pack text into bfr
+
+}  // test_free_text()
+
+/**
  * @brief This is the Arduino setup() function invoked when program starts
  */
 void setup() {
@@ -260,6 +332,7 @@ void setup() {
     RUN_TEST(test_trim_brackets);
     RUN_TEST(test_standard_message);
     RUN_TEST(test_nonstandard_cq);
+    RUN_TEST(test_free_text);
 
     // Finished
     UNITY_END();

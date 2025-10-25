@@ -24,12 +24,12 @@ extern const uint8_t kGray_map[8];
 
 // Parity generator matrix for (174,91) LDPC code, stored in bitpacked format (MSB first)
 // extern const uint8_t kGenerator[M][K_BYTES];
-extern uint8_t kGenerator[83][12];
+extern const uint8_t kGenerator[83][12];
 
 // Column order (permutation) in which the bits in codeword are stored
 // (Not really used in FT8 v2 - instead the Nm, Mn and generator matrices are already permuted)
 // extern const uint8_t kColumn_order[N];
-extern uint8_t kColumn_order[174];
+extern const uint8_t kColumn_order[174];
 
 // this is the LDPC(174,91) parity check matrix.
 // 83 rows.
@@ -38,7 +38,7 @@ extern uint8_t kColumn_order[174];
 // the codeword bits mentioned in each row must xor to zero.
 // From WSJT-X's ldpc_174_91_c_reordered_parity.f90.
 // extern const uint8_t kNm[M][7];
-extern uint8_t kNm[83][7];
+extern const uint8_t kNm[83][7];
 
 // Mn from WSJT-X's bpdecode174.f90.
 // each row corresponds to a codeword bit.
@@ -47,11 +47,11 @@ extern uint8_t kNm[83][7];
 // 1-origin.
 
 // extern const uint8_t kMn[N][3];
-extern uint8_t kMn[174][3];
+extern const uint8_t kMn[174][3];
 
 // Number of rows (columns in C/C++) in the array Nm.
 // extern const uint8_t kNrw[M];
-extern uint8_t kNrw[83];
+extern const uint8_t kNrw[83];
 
 void initalize_constants(void);
 

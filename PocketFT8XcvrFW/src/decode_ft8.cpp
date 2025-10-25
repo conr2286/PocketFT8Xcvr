@@ -159,10 +159,10 @@ int ft8_decode(void) {
 
         // We have finally decoded the FT8 message bits and verified a valid CRC.  The message looks good.
         // Now we can unpack the FT8 encoding (see reference) into human-readable fields.
-        char message[FTX_MAX_MESSAGE_LENGTH];
-        char field1[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];
-        char field2[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];
-        char field3[FTX_REPORTS_BFRSIZE];
+        char message[FTX_MAX_MESSAGE_LENGTH];                     // 13 + space + 13 + space + 6 + NUL terminator
+        char field1[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];  // Free text msg can be 13 chars + NUL terminator
+        char field2[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];  // bracket + 11 + bracket + NUL terminator
+        char field3[FTX_REPORTS_BFRSIZE];                         // 6 + NUL terminator
         MsgType msgType;
         // ftx_message_offsets_t offsets[3];
         int rc = unpack77_fields(a91, field1, field2, field3, &msgType);

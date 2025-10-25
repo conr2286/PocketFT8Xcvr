@@ -4,7 +4,7 @@
  * @note The github ft8_lib code underwent substantial changes independent of the
  * Pocket FT8 development.  Here we implement the legacy ft8_lib interface to the
  * October 2025 version of ft8_lib (to allow use of the new lib code without
- * massive changes to the Pocket FT8 code).
+ * massive changes to the Pocket FT8 code), and minimal changes to ft8_lib.
  */
 
 #include <Arduino.h>
@@ -28,7 +28,7 @@ std::map<uint32_t, String> nonStandardCallsignTable;  // Surprise:  Implemented 
 static void save_hash(const char* callsign, uint32_t key22) {
     uint32_t key10 = (key22 >> 12) & 0x3ff;  // Entries are apparently recorded using a 10-bit key
     nonStandardCallsignTable[key10] = callsign;
-    DPRINTF("save_hash('%s',key22=%d) used key10=%d, size=%d\n", callsign, key22, key10, nonStandardCallsignTable.size());
+    DPRINTF("save_hash('%s',key22=%d) used key10=%d, size()=%d\n", callsign, key22, key10, nonStandardCallsignTable.size());
 
 }  // add()
 
@@ -95,38 +95,52 @@ int unpack77_fields(const uint8_t* a77, char* field1, char* field2, char* field3
 
     // Initialize a few things
     field1[0] = field2[0] = field3[0] = 0;  // The fields are all empty strings
+    *msgType = MSG_UNKNOWN;                 // Assume failure for now
 
     // Build ft8_lib's demodulated message structure
     memcpy(demodMsg.payload, a77, sizeof(demodMsg.payload));
     demodMsg.hash = 0;  // We curently aren't using the check-for-duplicates hash of entire message
 
     // Unpack a demodulated message into a char[] string and info about the three ft8 fields
-    const char delimitors[] = " ";
+    const char delimitor[] = " ";
     ftx_message_rc_t rc = ftx_message_decode(&demodMsg, &hashingIfce, resultTxt, &resultFields);
     DTRACE();
 
-    // Extract field1 from resultTxt
-    if (resultFields.types[0] != FTX_FIELD_NONE) {
-        strlcpy(field1, strtok(resultTxt + resultFields.offsets[0], delimitors), 14);
+    // Copy free text message into field1
+    if (resultFields.types[0] == FTX_FIELD_FREETEXT) {
+        DPRINTF("resultTxt='%s'\n", resultTxt);
+        DPRINTF("field1='%s'\n", field1);
+        strlcpy(field1, resultTxt, FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE);
+        DPRINTF("field1='%s'\n", field1);
+
     }
+
+    // Extract field1 from resultTxt
+    else if (resultFields.types[0] != FTX_FIELD_NONE) {
+        strlcpy(field1, strtok(resultTxt + resultFields.offsets[0], delimitor), FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE);
+    }
+    DPRINTF("field1='%s'\n", field1);
 
     // Extract field2 from resultTxt
     if (resultFields.types[1] != FTX_FIELD_NONE) {
-        strlcpy(field2, strtok(resultTxt + resultFields.offsets[1], delimitors), 14);
+        strlcpy(field2, strtok(resultTxt + resultFields.offsets[1], delimitor), FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE);
     }
+    DPRINTF("field1='%s'\n", field1);
 
     // Extract field3 from resultTxt
     if (resultFields.types[2] != FTX_FIELD_NONE) {
-        strlcpy(field3, strtok(resultTxt + resultFields.offsets[2], delimitors), 7);
+        strlcpy(field3, strtok(resultTxt + resultFields.offsets[2], delimitor), FTX_REPORTS_BFRSIZE);
     }
+    DPRINTF("field1='%s'\n", field1);
 
     // Recover the legacy ft8_lib msgType from today's field types and content returned by ftx_message_decode().
     // Note:  Avoid confusion between the legacy MsgType and today's ftx_message_type_t --- they're related but different.
     // LIMITATION:  We don't distinguish between MSG_FREE and MSG_TELE.
     if ((resultFields.types[0] == FTX_FIELD_TOKEN) || (resultFields.types[0] == FTX_FIELD_TOKEN_WITH_ARG)) {
         *msgType = MSG_CQ;  // CQ or CQ xxxx message
-    } else if ((resultFields.types[0] == FTX_FIELD_UNKNOWN) && (strlen(field1) > 0)) {
-        *msgType = MSG_FREE;  // Probably a free text message (message doesn't inform us)
+    } else if ((resultFields.types[0] == FTX_FIELD_FREETEXT) && (strlen(field1) > 0)) {
+        *msgType = MSG_FREE;  // Free text message
+        DPRINTF("field1='%s'\n", field1);
     } else if (resultFields.types[2] == FTX_FIELD_RST) {
         *msgType = MSG_RSL;  // Either RSL or RRSL (Sequencer doesn't care)
     } else if (resultFields.types[2] == FTX_FIELD_GRID) {
@@ -135,8 +149,6 @@ int unpack77_fields(const uint8_t* a77, char* field1, char* field2, char* field3
         if (strncmp(resultTxt + resultFields.offsets[2], "73", 6) == 0) *msgType = MSG_73;
         if (strncmp(resultTxt + resultFields.offsets[2], "RR73", 6) == 0) *msgType = MSG_RR73;
         if (strncmp(resultTxt + resultFields.offsets[2], "RRR", 6) == 0) *msgType = MSG_RRR;
-    } else {
-        *msgType = MSG_UNKNOWN;
     }
 
     DPRINTF("field1='%s' field2='%s' field3='%s' rc=%d\n", field1, field2, field3, rc);

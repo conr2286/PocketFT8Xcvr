@@ -239,7 +239,7 @@ FLASHMEM void setup(void) {
     // Is Teensy recovering from a crash?
     if (CrashReport) {
         Serial.print(CrashReport);  // You'll have fun debugging this on a Teensy :(
-        delay(5000);
+        while (true) continue;      // Hang here
     }
 
     DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());

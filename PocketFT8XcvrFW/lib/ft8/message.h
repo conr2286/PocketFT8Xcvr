@@ -82,13 +82,13 @@ typedef enum {
 } ftx_message_rc_t;
 
 typedef enum {
-    FTX_FIELD_UNKNOWN,
-    FTX_FIELD_NONE,
+    FTX_FIELD_FREETEXT,        // FT8 free text message content
+    FTX_FIELD_NONE,            // Nothing or unrecognized mess
     FTX_FIELD_TOKEN,           // RRR, RR73, 73, DE, QRZ, CQ, ...
     FTX_FIELD_TOKEN_WITH_ARG,  // CQ nnn, CQ abcd
-    FTX_FIELD_CALL,
-    FTX_FIELD_GRID,
-    FTX_FIELD_RST
+    FTX_FIELD_CALL,            // Callsign or CQ
+    FTX_FIELD_GRID,            // Gridsquare
+    FTX_FIELD_RST              // Signal report (RSL)
 } ftx_field_t;
 
 typedef struct

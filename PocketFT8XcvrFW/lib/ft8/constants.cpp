@@ -56,7 +56,7 @@ const uint8_t kCostas_map[7] = {3, 1, 4, 0, 6, 5, 2};
 const uint8_t kGray_map[8] = {0, 1, 3, 2, 5, 6, 4, 7};
 
 // Parity generator matrix for (174,91) LDPC code, stored in bitpacked format (MSB first)
-uint8_t kGenerator[83][12] = {
+const uint8_t kGenerator[83][12] = {
     {0x83, 0x29, 0xce, 0x11, 0xbf, 0x31, 0xea, 0xf5, 0x09, 0xf2, 0x7f, 0xc0},
     {0x76, 0x1c, 0x26, 0x4e, 0x25, 0xc2, 0x59, 0x33, 0x54, 0x93, 0x13, 0x20},
     {0xdc, 0x26, 0x59, 0x02, 0xfb, 0x27, 0x7c, 0x64, 0x10, 0xa1, 0xbd, 0xc0},
@@ -143,7 +143,7 @@ uint8_t kGenerator[83][12] = {
 
 // Column order (permutation) in which the bits in codeword are stored
 // (Not really used in FT8 v2 - instead the Nm, Mn and generator matrices are already permuted)
-uint8_t kColumn_order[174] = {
+const uint8_t kColumn_order[174] = {
     0, 1, 2, 3, 28, 4, 5, 6, 7, 8, 9, 10, 11, 34, 12, 32, 13, 14, 15, 16,
     17, 18, 36, 29, 43, 19, 20, 42, 21, 40, 30, 37, 22, 47, 61, 45, 44, 23, 41, 39,
     49, 24, 46, 50, 48, 26, 31, 33, 51, 38, 52, 59, 55, 66, 57, 27, 60, 35, 54, 58,
@@ -160,7 +160,7 @@ uint8_t kColumn_order[174] = {
 // each number is an index into the codeword (1-origin).
 // the codeword bits mentioned in each row must xor to zero.
 // From WSJT-X's ldpc_174_91_c_reordered_parity.f90.
-uint8_t kNm[83][7] = {
+const uint8_t kNm[83][7] = {
     {4, 31, 59, 91, 92, 96, 153},
     {5, 32, 60, 93, 115, 146, 0},
     {6, 24, 61, 94, 122, 151, 0},
@@ -250,7 +250,7 @@ uint8_t kNm[83][7] = {
 // the numbers indicate which three parity
 // checks (rows in Nm) refer to the codeword bit.
 // 1-origin.
-uint8_t kMn[174][3] = {
+const uint8_t kMn[174][3] = {
     {16, 45, 73},
     {25, 51, 62},
     {33, 58, 78},
@@ -426,7 +426,7 @@ uint8_t kMn[174][3] = {
     {20, 44, 48},
     {42, 49, 57}};
 
-uint8_t kNrw[83] = {
+const uint8_t kNrw[83] = {
     7, 6, 6, 6, 7, 6, 7, 6, 6, 7, 6, 6, 7, 7, 6, 6,
     6, 7, 6, 7, 6, 7, 6, 6, 6, 7, 6, 6, 6, 7, 6, 6,
     6, 6, 7, 6, 6, 6, 7, 7, 6, 6, 6, 6, 7, 7, 6, 6,
