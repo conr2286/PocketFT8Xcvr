@@ -11,7 +11,7 @@
 #include <map>
 #include "ft8LibIfce.h"
 #include "message.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "text.h"
 
 std::map<uint32_t, String> nonStandardCallsignTable;  // Surprise:  Implemented as an ordered map!
