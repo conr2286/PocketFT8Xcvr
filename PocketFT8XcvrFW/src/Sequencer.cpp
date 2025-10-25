@@ -127,7 +127,7 @@
 #include <string.h>
 
 #include "Config.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "LogFactory.h"
 #include "PocketFT8Xcvr.h"
 #include "SequencerStates.h"
@@ -139,6 +139,7 @@
 #include "traffic_manager.h"
 #include "UserInterface.h"
 #include "Process_DSP.h"
+#include "ft8LibIfce.h"
 
 // Many externals in the legacy C code.  TODO:  See if we can simplify these externals.
 extern int Transmit_Armned;  // (Maybe) Transmit message pending in next timeslot
@@ -152,6 +153,8 @@ int target_frequency;
 extern uint16_t cursor_line;
 
 void set_Target_Frequency(int CQ_freq);
+
+// Helper functions
 
 // Our statics
 static bool autoReplyToCQ;  // RoboOp automatically transmits reply to CQ
@@ -400,6 +403,10 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
     // When debugging, print some things from the received message
     DPRINTF("%s %s %s %s msgType=%u, sequenceNumber=%lu state=%u\n", __FUNCTION__, msg->field1, msg->field2, msg->field3, msg->msgType, sequenceNumber, state);
 
+    // Remove angle brackets in-place from field1 and field2 callsigns (if present)
+    trimBracketsFromCallsign(msg->field1);
+    trimBracketsFromCallsign(msg->field2);
+
     // Build a String of the received message fields for us to display
     static const String sp(" ");
     String thisReceivedMsg = String(msg->field1) + sp + String(msg->field2) + sp + String(msg->field3);
@@ -424,13 +431,13 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
         switch (msg->msgType) {
             // Did we receive a station's Tx6 CQ?
             case MSG_CQ:
-                DTRACE();
+                // DTRACE();
                 cqMsgEvent(msg);  // Yes, we heard someone's CQ
                 break;
 
             // Did we receive their Tx1 locator message?
             case MSG_LOC:
-                DTRACE();
+                // DTRACE();
                 startTimer();       // Keep this QSO alive as long as remote station is responding
                 locatorEvent(msg);  // They are responding to us with a locator
                 break;
@@ -438,26 +445,26 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             // Did we receive an [R]RSL containing our signal report?
             case MSG_RSL:
             case MSG_RRSL:
-                DTRACE();
+                // DTRACE();
                 startTimer();      // Keep this QSO alive while remote station continues to respond
                 rslMsgEvent(msg);  // They sent our signal report
                 break;
 
             // Did we receive their EOT that does not expect a reply?  We don't restart the Timer for EOT.  Let 'er die.
             case MSG_73:
-                DTRACE();
+                // DTRACE();
                 eotMsgNoReplyEvent(msg);  // No reply to 73 msg.
                 break;
 
             // Did we receive their EOT that expects a reply?  We don't restart the Timer for EOT.
             case MSG_RR73:
             case MSG_RRR:
-                DTRACE();
+                // DTRACE();
                 eotMsgReplyEvent(msg);  // We reply to RR73/RRR msg
                 break;
 
             // The Sequencer does not currently process certain message types.  We don't restart the Timer for unsupported msgs.
-            case MSG_BLANK:
+            // case MSG_BLANK:
             case MSG_FREE:  // TODO:  we should try to handle this one someday somewhere.
             case MSG_TELE:
             case MSG_UNKNOWN:
@@ -466,6 +473,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
                 break;
         }  // switch
     }
+    // DTRACE();
 
 }  // receivedMsgEvent()
 
@@ -484,7 +492,7 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
  * low end of 20 meters.  ;)
  */
 void Sequencer::cqMsgEvent(Decode* msg) {
-    // Has the operated enabled RoboOp's automatic replies with the Tx button?
+    // Has the operateR enabled RoboOp's automatic replies with the Tx button?
     if (!autoReplyToCQ) return;  // No... nothing to do here
 
     // Avoid responding to previously logged duplicates unless enabled by CONFIG.JSON
@@ -679,7 +687,7 @@ void Sequencer::clickDecodedMessageEvent(Decode* msg) {
         // We can only contact msgTypes known to include a usable callsign for the remote station
         switch (msg->msgType) {
             // We cannot respond to these FT8 message types
-            case MSG_BLANK:    // Hashed (unusable) callsign (sorry)
+            // case MSG_BLANK:    // Hashed (unusable) callsign (sorry)
             case MSG_FREE:     // Free text (no callsign in free text messages)
             case MSG_TELE:     // Telemetry
             case MSG_UNKNOWN:  //
@@ -845,6 +853,7 @@ void Sequencer::abortButtonEvent() {
  *
  **/
 void Sequencer::rslMsgEvent(Decode* msg) {
+    DPRINTF("state=%d\n", state);
     // Action to be taken depends upon the Sequencer's current state
     switch (state) {
         // Remote station sent RRSL.  We'll send them an RRR to wrap things up.
@@ -1047,6 +1056,8 @@ void Sequencer::locatorEvent(Decode* msg) {
  *
  **/
 bool Sequencer::isMsgForUs(Decode* msg) {
+    DPRINTF("isMsgForUs('%s')\n", msg->field1);
+
     // A received msg is "for us" if our callsign or CQ appears as the destination station's callsign
     bool myCall = strncmp(msg->field1, thisStation.getCallsign(), sizeof(msg->field1)) == 0;  // Sent directly to us?
     bool cq = strcmp(msg->field1, "CQ") == 0;

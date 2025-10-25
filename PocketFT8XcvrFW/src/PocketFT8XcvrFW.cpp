@@ -107,6 +107,7 @@
 #include "pins.h"
 #include "si5351.h"
 #include "traffic_manager.h"
+#include "ft8LibIfce.h"
 
 // Forward references (required to build on PlatformIO)
 void loadSSB();
@@ -114,7 +115,7 @@ time_t getTeensy3Time();
 void waitForFT8timeslot();
 void process_data();
 void update_synchronization();
-static void copy_to_fft_buffer(void *, const void *);
+static void copy_to_fft_buffer(void*, const void*);
 
 // Enable comments in the JSON configuration file (Pure JSON doesn't support them... we're not that pure)
 #define ARDUINOJSON_ENABLE_COMMENTS 1
@@ -193,7 +194,7 @@ int log_flag, logging_on;  // TODO:  deprecate old, old logging stuff
 
 // Get a reference to the QSO Sequencer machine implementing a robo-like operator handling
 // FT8 QSO sequencing.
-Sequencer &seq = Sequencer::getSequencer();
+Sequencer& seq = Sequencer::getSequencer();
 
 // Build the GPSHelper encapsulating the details of operating the GPS receiver
 GPShelper gpsHelper(9600);
@@ -239,7 +240,7 @@ FLASHMEM void setup(void) {
     // Is Teensy recovering from a crash?
     if (CrashReport) {
         Serial.print(CrashReport);  // You'll have fun debugging this on a Teensy :(
-        delay(5000);
+        while (true) continue;      // Hang here
     }
 
     DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
@@ -592,9 +593,9 @@ void process_data() {
  * The AUDIO_BLOCK_SIZE appears to be cast-in-brass at 128 in AudioStream6400.h
  *
  **/
-static void copy_to_fft_buffer(void *destination, const void *source) {
-    const uint16_t *src = (const uint16_t *)source;
-    uint16_t *dst = (uint16_t *)destination;
+static void copy_to_fft_buffer(void* destination, const void* source) {
+    const uint16_t* src = (const uint16_t*)source;
+    uint16_t* dst = (uint16_t*)destination;
     for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
         *dst++ = *src++;  // real sample plus a zero for imaginary
     }
@@ -679,7 +680,7 @@ void update_synchronization() {
         ui.displayDate(true);  // Force an update so display will change from yellow to green if GPS is acquired
 
         // Debug timeslot and sequencer problems
-        DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s', autoReplyToCQ=%u -------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message(), getAutoReplyToCQ());
+        DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s', autoReplyToCQ=%u, hashedCallsignTable.size=%u ---\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message(), getAutoReplyToCQ(), getHashedCallsignTableSize());
     }
 }  // update_synchronization()
 

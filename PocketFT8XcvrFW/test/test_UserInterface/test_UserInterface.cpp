@@ -9,7 +9,7 @@
 
 extern UserInterface ui;
 
-Station thisStation(7000, 7300);
+Station thisStation;
 
 //
 void test_StationInfo(void) {
@@ -27,12 +27,19 @@ void test_StationInfo(void) {
 
 void test_DecodedMsgs(void) {
     TEST_MESSAGE("test_DecodedMsgs()\n");
-    ui.decodedMsgs->setMsg(0, "WA0ABC AG0E -13 S3");
-    ui.decodedMsgs->setMsg(1, "WA1ABC AG0E -13 S3");
-    ui.decodedMsgs->setMsg(2, "WA2ABC AG0E -13 S3");
-    ui.decodedMsgs->setMsg(3, "WA3ABC AG0E -13 S3");
-    ui.decodedMsgs->setMsg(4, "WA4ABC AG0E -13 S3");
-    ui.decodedMsgs->setMsg(5, "WA5ABC AG0E -13 S3");
+    ui.decodedMsgs->setMsg(0, "WA0ABC AG0E -1 S3");
+    ui.decodedMsgs->setMsg(1, "WA1ABC AG0E -2 S3");
+    ui.decodedMsgs->setMsg(2, "WA2ABC AG0E -3 S3");
+    ui.decodedMsgs->setMsg(3, "WA3ABC AG0E -4 S3");
+    ui.decodedMsgs->setMsg(4, "WA4ABC AG0E -5 S3");
+    ui.decodedMsgs->setMsg(5, "WA5ABC AG0E -6 S3");
+    ui.decodedMsgs->setMsg(6, "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    ui.decodedMsgs->setMsg(5, "THIS MESSAGE CLIPS THE RIGHTHAND SIDE!");
+    ui.decodedMsgs->setMsg(7, "WA5ABC AG0E -9 S3");
+    ui.decodedMsgs->setMsg(8, "WA5ABC AG0E -10 S3");
+    ui.decodedMsgs->setMsg(9, "WA5ABC AG0E -11 S3");
+    ui.decodedMsgs->setMsg(10, "THIS MESSAGE NOT DISPLAYED");
+
     delay(1000);
     // AWidget::processTouch(20, 124); //Highlight item 0
     delay(1000);

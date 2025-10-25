@@ -30,33 +30,36 @@ extern HX8357_t3n tft;
 #include "msgTypes.h"
 #include "traffic_manager.h"
 #include "PocketFT8Xcvr.h"
+#include "message.h"
 
-char Your_Call[] = "W5XXX";
-char Your_Locator[] = "AA00";
+// char Your_Call[] = "W5XXX";
+// char Your_Locator[] = "AA00";
 
-char test_station[] = "W5BAA";
-char test_target[] = "W5ITU";
-char test_RSL[] = "R-15";
+// char test_station[] = "W5BAA";
+// char test_target[] = "W5ITU";
+// char test_RSL[] = "R-15";
 
-char Target_Call[7];     // six character call sign + /0
-char Target_Locator[5];  // four character locator  + /0
-int Target_RSL;          // their RSL
-char CQ_Target_Call[7];
+char Target_Call[FTX_NONSTANDARD_CALLSIGN_BFRSIZE];     // 11 character call sign + /0
+char Target_Locator[FTX_REPORTS_BFRSIZE];               // four character locator  + /0
+int Target_RSL;                                         // their RSL
+char CQ_Target_Call[FTX_NONSTANDARD_CALLSIGN_BFRSIZE];  // 11 character call sign + /0
 
-char reply_message[18];
-char reply_message_list[18][8];
+char reply_message[FTX_MAX_MESSAGE_LENGTH];
+char reply_message_list[FTX_MAX_MESSAGE_LENGTH][8];
 int reply_message_count;
-char message[18];   // FT8 message text pending transmission.
-int message_state;  // Non-zero => message[] is valid/ready (but nothing checks it???)
+char message[FTX_MAX_MESSAGE_LENGTH];  // FT8 message text pending transmission (w/hashed callsigns)
+int message_state;                     // Non-zero => message[] is valid/ready (but nothing checks it???)
 
-extern int log_flag, logging_on;
+// extern int log_flag, logging_on;
 extern time_t getTeensy3Time();
 
-char ft8_time_string[] = "15:44:15";
+// char ft8_time_string[] = "15:44:15";
 
 extern UserInterface ui;
 
-int max_displayed_messages = 8;
+const int max_displayed_messages = 8;
+
+static bool isStandardCallsign(const char* s);
 
 /**
  * Setup required parameters for constructing messages to remote target station
@@ -82,7 +85,7 @@ char* get_message() {
 }
 
 /**
- *  Builds an outbound FT8 message[] for later transmission
+ *  Builds an outbound FT8 standard message[] for later transmission
  *
  *  Constructs and displays the specified FT8 outbound message and sets the
  *  message_state flag indicating message[] is valid.  Does not actually
@@ -95,6 +98,7 @@ char* get_message() {
  *    TargetRSL --      Worked station's Received Signal Level
  *    message[] --      The outbound message is constructed here
  *    message_state --  Status of message[]: 0==Invalid, 1==Valid
+ *    tones[] --        Outbound message tones for the modulator
  *
  *  @param index Specifies the outbound FT8 message type, e.g.
  *              0 -- CQ KQ7B DN15
@@ -106,29 +110,32 @@ char* get_message() {
  *
  **/
 void set_message(uint16_t index) {
-    // char big_gulp[60];
     uint8_t packed[K_BYTES];
-    // char blank[] = "                   ";
     char seventy_three[] = "RR73";
-    // char Reply_State[20];
 
     // DPRINTF("set_message(%u)\n", index);
 
-    getTeensy3Time();
-    char rtc_string[10];  // print format stuff
-    snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
+    // getTeensy3Time();
+    // char rtc_string[10];  // print format stuff
+    // snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
 
     // strlcpy(message, blank, sizeof(message));
     clearOutboundMessageText();
     clearOutboundMessageDisplay();
 
+    const char* locator = thisStation.getLocator();
+    const char* ourCall = thisStation.getCallsign();
+    const char* nil = "";
+
     switch (index) {
-        case MSG_CQ:  // We are calling CQ from our Locator, e.g. CQ KQ7B DN15
-            snprintf(message, sizeof(message), "%s %s %s", "CQ", thisStation.getCallsign(), thisStation.getLocator());
+        case MSG_CQ:                                          // We are calling CQ from our Locator, e.g. CQ KQ7B DN15
+            if (!isStandardCallsign(ourCall)) locator = nil;  // Nonstandard calls xmit as nonstandard message
+            snprintf(message, sizeof(message), "%s %s %s", "CQ", ourCall, locator);
             break;
 
-        case MSG_LOC:  // We are calling target from our Locator, e.g. AG0E KQ7B DN15
-            snprintf(message, sizeof(message), "%s %s %s", Target_Call, thisStation.getCallsign(), thisStation.getLocator());
+        case MSG_LOC:                                                                             // We are calling target station from our Locator, e.g. W1AW KQ7B DN15
+            if (!isStandardCallsign(ourCall) || !isStandardCallsign(Target_Call)) locator = nil;  // Nonstandard calls xmit as nonstandard message
+            snprintf(message, sizeof(message), "%s %s %s", Target_Call, ourCall, locator);
             break;
 
         case MSG_RSL:  // We are responding to target with their signal report, e.g. AG0E KQ7B -12
@@ -155,17 +162,20 @@ void set_message(uint16_t index) {
             DPRINTF("***** ERROR:  Invalid set_message(%d) index\n", index);
             break;
     }
-    DPRINTF("message='%s'\n", message);
+    DPRINTF("generated text message='%s'\n", message);
     ui.applicationMsgs->setText(message);
 
-    // TODO:  Check for empty message???
-    pack77_1(message, packed);
+    //  TODO:  Nonstandard callsigns
+    //  Messages sent from our nonstandard callsign:
+    //      CQ KQ7B/IDAHO           -- MSG_CQ  packs as type 4, nonstandard message
+    //      W1AW KQ7B/IDAHO DN15    -- MSG_LOC packs as type 4, nonstandard message sans the locator
+    //  Messages sent to a nonstandard callsign:
+    //  CN/W1AW KQ7B DN15       -- MSG_LOC packs as type 1, standard message with hashed dest callsign
+    // pack77_1(message, packed);
+    pack77(message, packed);
     genft8(packed, tones);
 
     message_state = 1;
-
-    //	sprintf(big_gulp,"%s %s", rtc_string, message);
-    //	if (logging_on == 1) write_log_data(big_gulp);
 
     // DPRINTF("message='%s'\n", message);
 
@@ -192,13 +202,11 @@ void set_message(char* freeText) {
     ui.applicationMsgs->setText(message);
 
     // Prepare the outbound message as an array of tones for the FSK modulator
-    packtext77(message, packed);  // Pack text into compressed bits
-    genft8(packed, tones);        // Generate the FT8 tones for modulator
+    // packtext77(message, packed);  // Pack text into compressed bits
+    pack77(message, packed);  // Pack text into compressed bits
+    genft8(packed, tones);    // Generate the FT8 tones for modulator
 
     message_state = 1;
-
-    //	sprintf(big_gulp,"%s %s", rtc_string, message);
-    //	if (logging_on == 1) write_log_data(big_gulp);
 
     // DPRINTF("message='%s'\n", message);
 }
@@ -223,4 +231,14 @@ void clearOutboundMessageDisplay(void) {
 //?????
 void clear_reply_message_box(void) {
     tft.fillRect(0, 100, 400, 140, HX8357_BLACK);
+}
+
+/**
+ * @brief Determine if a callsign is an FT8 standard callsign
+ * @param callsign text string
+ * @return true==standard
+ */
+bool isStandardCallsign(const char* callsign) {
+    if (pack_basecall(callsign, strlen(callsign)) < 0) return false;
+    return true;  // Will report CQ as a callsign
 }

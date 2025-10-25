@@ -2,34 +2,73 @@
 
 #include <string.h>
 
-#include "DEBUG.h"
-
-// extern bool true;
-// extern bool false;
-
-const char *trim_front(const char *str) {
-    // Skip leading whitespace
-    while (*str == ' ') {
+const char* trim_front(const char* str, char to_trim) {
+    // Skip leading to_trim characters
+    while (*str == to_trim) {
         str++;
     }
     return str;
 }
 
-void trim_back(char *str) {
-    // Skip trailing whitespace by replacing it with '\0' characters
+void trim_back(char* str, char to_trim) {
+    // Skip trailing to_trim characters by replacing them with '\0' characters
     int idx = strlen(str) - 1;
-    while (idx >= 0 && str[idx] == ' ') {
+    while (idx >= 0 && str[idx] == to_trim) {
         str[idx--] = '\0';
     }
 }
 
-// 1) trims a string from the back by changing whitespaces to '\0'
-// 2) trims a string from the front by skipping whitespaces
-char *trim(char *str) {
-    str = (char *)trim_front(str);
-    trim_back(str);
+char* trim(char* str) {
+    str = (char*)trim_front(str, ' ');
+    trim_back(str, ' ');
     // return a pointer to the first non-whitespace character
     return str;
+}
+
+// /**
+//  * @brief Trim leading/trailing brackets from char[] string
+//  * @param str The string
+//  * @return Pointer to the first non-bracket char in str
+//  *
+//  * @note Char[] string str is modified (i.e. trim "in place").
+//  *
+//  * @note sizeof(str) should not exceed FTX_MAX_MESSAGE_LENGTH
+//  */
+// char* trimCallsign(char* str) {
+//     char* p1 = str;  // Move from here
+//     char* p2 = str;  // Move to here
+//     int n = 0;       // Number chars placed in destination
+//     // DPRINTF("str='%s'\n", str);
+
+//     // Loop executed once for each char in original string, never to exceed
+//     // FTX_MAX_MESSAGE_LENGTH (defined in message.h, here as 35)
+//     while (*p1 != 0 && n < 35) {
+//         switch (*p1) {
+//             case '<':
+//                 break;  // Skip leading bracket
+//             case '>':
+//                 *p2++ = 0;  // Replace trailing bracket with NUL
+//                 n++;        // Increment count of chars in dest
+//                 break;
+//             default:
+//                 *p2++ = *p1;  // Move this non-bracket char
+//                 n++;          // Increment count of chars in dest
+//                 break;
+//         }
+//         p1++;  // Increment pointer scanning chars from original str
+//     }
+//     // DPRINTF("str='%s'\n", str);
+//     return str;
+// }
+
+void trim_copy(char* trimmed, const char* str) {
+    str = (char*)trim_front(str, ' ');
+    int len = strlen(str) - 1;
+    while (len >= 0 && str[len] == ' ') {
+        len--;
+    }
+    strncpy(trimmed, str, len + 1);
+    trimmed[len + 1] = '\0';
 }
 
 char to_upper(char c) {
@@ -52,27 +91,26 @@ bool in_range(char c, char min, char max) {
     return (c >= min) && (c <= max);
 }
 
-bool starts_with(const char *string, const char *prefix) {
+bool starts_with(const char* string, const char* prefix) {
     return 0 == memcmp(string, prefix, strlen(prefix));
 }
 
-bool equals(const char *string1, const char *string2) {
-    return 0 == strcmp(string1, string2);
+bool ends_with(const char* string, const char* suffix) {
+    int pos = strlen(string) - strlen(suffix);
+    if (pos >= 0) {
+        return 0 == memcmp(string + pos, suffix, strlen(suffix));
+    }
+    return false;
 }
 
-int char_index(const char *string, char c) {
-    for (int i = 0; *string; ++i, ++string) {
-        if (c == *string) {
-            return i;
-        }
-    }
-    return -1;  // Not found
+bool equals(const char* string1, const char* string2) {
+    return 0 == strcmp(string1, string2);
 }
 
 // Text message formatting:
 //   - replaces lowercase letters with uppercase
 //   - merges consecutive spaces into single space
-void fmtmsg(char *msg_out, const char *msg_in) {
+void fmtmsg(char* msg_out, const char* msg_in) {
     char c;
     char last_out = 0;
     while ((c = *msg_in)) {
@@ -86,51 +124,68 @@ void fmtmsg(char *msg_out, const char *msg_in) {
     *msg_out = 0;  // Add zero termination
 }
 
-// Parse a 2 digit integer from string
-int dd_to_int(const char *str, int length) {
-    char bfr[4];
-    strlcpy(bfr, str, sizeof(bfr));
-    return atoi(bfr);
+// Returns pointer to the null terminator within the given string (destination)
+char* append_string(char* string, const char* token) {
+    while (*token != '\0') {
+        *string = *token;
+        string++;
+        token++;
+    }
+    *string = '\0';
+    return string;
 }
 
-//KQ7B:  Never found what was wrong in the below seemingly simple RSL converstion to int
-// int dd_to_int(const char *str, int length) {
-//     int result = 0;
-//     bool negative = false;
-//     int i;
-//     // if (str[0] == '-') {
-//     //     negative = true;
-//     //     i = 1;                          // Consume the - sign
-//     // } else {
-//     //     negative = false;
-//     //     i = (str[0] == '+') ? 1 : 0;    // Consume a + sign if found
-//     // }
-//     // while(i<length && str[i]!=0 && str[i]==' ') {
-//     while (i < length && str[i] != 0) {
-//         DPRINTF("str[i]='%c'\n", str[i]);
-//         if (str[i] == '+')       // Plus sign
-//             negative = false;    // It's a Positive number
-//         else if (str[i] == '-')  // Minus sign
-//             negative = true;     // It's a Negative number
-//         else if (str[i] != ' ')  // Space
-//             break;               // Exit loop for non-space char
-//         i++;                     // Consume '+', '-' and ' ' till non-space
-//     }
-//     DPRINTF("str+i=%s\n", str + i);
-//     while (i < length) {
-//         if (str[i] == 0) break;
-//         if (!is_digit(str[i])) break;
-//         result = result*10;
-//         result = result + (str[i] - '0');
-//         DPRINTF("i=%d, digit='%c', result=%u\n", i, str[i], result);
-//         ++i;
-//     }
-//     DPRINTF("i=%d negative=%u result=%u\n", i, negative, result);
-//     return negative ? -result : result;
-// }
+const char* copy_token(char* token, int length, const char* string) {
+    // Copy characters until a whitespace character or the end of string
+    while (*string != ' ' && *string != '\0') {
+        if (length > 1) {
+            *token = *string;
+            token++;
+            length--;
+        }
+        string++;
+    }
+    // Fill up the rest of token with \0 terminators
+    while (length > 0) {
+        *token = '\0';
+        token++;
+        length--;
+    }
+    // Skip whitespace characters
+    while (*string == ' ') {
+        string++;
+    }
+    return string;
+}
+
+// Parse a 2 digit integer from string
+int dd_to_int(const char* str, int length) {
+    int result = 0;
+    bool negative;
+    int i;
+    if (str[0] == '-') {
+        negative = true;
+        i = 1;  // Consume the - sign
+    } else {
+        negative = false;
+        i = (str[0] == '+') ? 1 : 0;  // Consume a + sign if found
+    }
+
+    while (i < length) {
+        if (str[i] == 0)
+            break;
+        if (!is_digit(str[i]))
+            break;
+        result *= 10;
+        result += (str[i] - '0');
+        ++i;
+    }
+
+    return negative ? -result : result;
+}
 
 // Convert a 2 digit integer to string
-void int_to_dd(char *str, int value, int width, bool full_sign) {
+void int_to_dd(char* str, int value, int width, bool full_sign) {
     if (value < 0) {
         *str = '-';
         ++str;
@@ -157,60 +212,67 @@ void int_to_dd(char *str, int value, int width, bool full_sign) {
     *str = 0;  // Add zero terminator
 }
 
-// convert integer index to ASCII character according to one of 6 tables:
-// table 0: " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+-./?"
-// table 1: " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-// table 2: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-// table 3: "0123456789"
-// table 4: " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-// table 5: " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ/"
-char charn(int c, int table_idx) {
-    if (table_idx != 2 && table_idx != 3) {
-        if (c == 0) return ' ';
+char charn(int c, ft8_char_table_e table) {
+    if ((table != FT8_CHAR_TABLE_ALPHANUM) && (table != FT8_CHAR_TABLE_NUMERIC)) {
+        if (c == 0)
+            return ' ';
         c -= 1;
     }
-    if (table_idx != 4) {
-        if (c < 10) return '0' + c;
+    if (table != FT8_CHAR_TABLE_LETTERS_SPACE) {
+        if (c < 10)
+            return '0' + c;
         c -= 10;
     }
-    if (table_idx != 3) {
-        if (c < 26) return 'A' + c;
+    if (table != FT8_CHAR_TABLE_NUMERIC) {
+        if (c < 26)
+            return 'A' + c;
         c -= 26;
     }
 
-    if (table_idx == 0) {
-        if (c < 5) return "+-./?"[c];
-    } else if (table_idx == 5) {
-        if (c == 0) return '/';
+    if (table == FT8_CHAR_TABLE_FULL) {
+        if (c < 5)
+            return "+-./?"[c];
+    } else if (table == FT8_CHAR_TABLE_ALPHANUM_SPACE_SLASH) {
+        if (c == 0)
+            return '/';
     }
 
     return '_';  // unknown character, should never get here
 }
 
 // Convert character to its index (charn in reverse) according to a table
-int nchar(char c, int table_idx) {
+int nchar(char c, ft8_char_table_e table) {
     int n = 0;
-    if (table_idx != 2 && table_idx != 3) {
-        if (c == ' ') return n + 0;
+    if ((table != FT8_CHAR_TABLE_ALPHANUM) && (table != FT8_CHAR_TABLE_NUMERIC)) {
+        if (c == ' ')
+            return n + 0;
         n += 1;
     }
-    if (table_idx != 4) {
-        if (c >= '0' && c <= '9') return n + (c - '0');
+    if (table != FT8_CHAR_TABLE_LETTERS_SPACE) {
+        if (c >= '0' && c <= '9')
+            return n + (c - '0');
         n += 10;
     }
-    if (table_idx != 3) {
-        if (c >= 'A' && c <= 'Z') return n + (c - 'A');
+    if (table != FT8_CHAR_TABLE_NUMERIC) {
+        if (c >= 'A' && c <= 'Z')
+            return n + (c - 'A');
         n += 26;
     }
 
-    if (table_idx == 0) {
-        if (c == '+') return n + 0;
-        if (c == '-') return n + 1;
-        if (c == '.') return n + 2;
-        if (c == '/') return n + 3;
-        if (c == '?') return n + 4;
-    } else if (table_idx == 5) {
-        if (c == '/') return n + 0;
+    if (table == FT8_CHAR_TABLE_FULL) {
+        if (c == '+')
+            return n + 0;
+        if (c == '-')
+            return n + 1;
+        if (c == '.')
+            return n + 2;
+        if (c == '/')
+            return n + 3;
+        if (c == '?')
+            return n + 4;
+    } else if (table == FT8_CHAR_TABLE_ALPHANUM_SPACE_SLASH) {
+        if (c == '/')
+            return n + 0;
     }
 
     // Character not found

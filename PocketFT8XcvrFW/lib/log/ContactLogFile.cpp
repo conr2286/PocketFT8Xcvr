@@ -46,7 +46,7 @@ void ContactLogFile::buildListOfKnownCallsigns() {
 
     // Loop processing each NL-terminated entry from the previously constructed ADIF file on the SD drive
     char bfr[LOG_ENTRY_SIZE];  // ADIF log entry
-    char callsign[16];         // Remote station's callsign
+    char callsign[16];         // Remote station's callsign (>FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE)
     int count;                 // Number of chars read from ADIF log
     while ((count = logFileAdapter.readLine(bfr, sizeof(bfr))) >= 0) {
         // DPRINTF("count=%d, bfr='%s'\n", count,bfr);

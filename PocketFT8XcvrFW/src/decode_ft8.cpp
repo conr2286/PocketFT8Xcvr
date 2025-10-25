@@ -27,7 +27,8 @@
 #include "encode.h"
 #include "gen_ft8.h"
 #include "ldpc.h"
-#include "unpack.h"
+#include "ft8LibIfce.h"
+#include "message.h"
 
 extern HX8357_t3n tft;
 
@@ -87,21 +88,21 @@ extern float Target_Distance(char target[]);
 
 extern int CQ_State;
 
-extern char Target_Call[7];
-extern int Target_RSL;  // four character RSL  + /0
+extern char Target_Call[FTX_NONSTANDARD_CALLSIGN_BFRSIZE];  // Defined in gen_ft8.cpp
+extern int Target_RSL;                                      // four character RSL  + /0
 
 extern time_t getTeensy3Time();
 extern int log_flag, logging_on;
 
 // Get a reference to the Sequencer singleton
-static Sequencer &seq = Sequencer::getSequencer();
+static Sequencer& seq = Sequencer::getSequencer();
 
 /**
  *  Retrieve address of the new_decoded[] messages
  *
  *
  **/
-Decode *getNewDecoded() {
+Decode* getNewDecoded() {
     return new_decoded;
 }
 
@@ -158,22 +159,23 @@ int ft8_decode(void) {
 
         // We have finally decoded the FT8 message bits and verified a valid CRC.  The message looks good.
         // Now we can unpack the FT8 encoding (see reference) into human-readable fields.
-        char message[kMax_message_length];
-        char field1[14];
-        char field2[14];
-        char field3[7];
+        char message[FTX_MAX_MESSAGE_LENGTH];                     // 13 + space + 13 + space + 6 + NUL terminator
+        char field1[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];  // Free text msg can be 13 chars + NUL terminator
+        char field2[FTX_NONSTANDARD_BRACKETED_CALLSIGN_BFRSIZE];  // bracket + 11 + bracket + NUL terminator
+        char field3[FTX_REPORTS_BFRSIZE];                         // 6 + NUL terminator
         MsgType msgType;
+        // ftx_message_offsets_t offsets[3];
         int rc = unpack77_fields(a91, field1, field2, field3, &msgType);
         if (rc < 0) continue;  // Unpack failure???
 
-        snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);
+        snprintf(message, sizeof(message), "%s %s %s ", field1, field2, field3);  // Duplicate decodes appear possible???
         // DPRINTF("message='%s', msgType=%u\n", message, msgType);
 
-        // Check for duplicate messages (TODO: use hashing)
-        bool found = false;
+        // Have we previously decoded this message?  TODO:  We could use the new ft8_lib's hashed messages.
+        bool duplicateMessage = false;
         for (int i = 0; i < num_decoded; ++i) {
             if (0 == strcmp(decoded[i], message)) {
-                found = true;
+                duplicateMessage = true;
                 break;
             }
         }
@@ -186,7 +188,8 @@ int ft8_decode(void) {
         char rtc_string[10];  // print format stuff
         snprintf(rtc_string, sizeof(rtc_string), "%02i:%02i:%02i", hour(), minute(), second());
 
-        if (!found && num_decoded < kMax_decoded_messages) {
+        // Skip duplicaates
+        if (!duplicateMessage && num_decoded < kMax_decoded_messages) {
             if (strlen(message) < kMax_message_length) {
                 strlcpy(decoded[num_decoded], message, kMax_message_length);
 
@@ -269,7 +272,7 @@ void display_messages(int decoded_messages) {
                 color = A_WHITE;  // CQ messages appear in white
             }
             // For now, don't display messages with hashed callsigns as our FT8 library doesn't support them
-            if (strchr(message, '<') == NULL) ui.decodedMsgs->addItem(ui.decodedMsgs, message, color);  // Display received message
+            /*if (strchr(message, '<') == NULL)*/ ui.decodedMsgs->addItem(ui.decodedMsgs, message, color);  // Display received message
         }
     }
 
@@ -281,7 +284,7 @@ void display_messages(int decoded_messages) {
 
 // Displays specified decoded message's callsign and signal strength
 void display_selected_call(int index) {
-    char selected_station[18];
+    char selected_station[FTX_MAX_MESSAGE_LENGTH];
     char blank[] = "        ";
     strlcpy(Target_Call, new_decoded[index].field2, sizeof(Target_Call));
     Target_RSL = new_decoded[index].snr;
