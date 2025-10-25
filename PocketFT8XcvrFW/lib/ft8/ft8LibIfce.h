@@ -27,3 +27,5 @@ int pack77(const char* msg, uint8_t* a77);  // Pack any supported FT8 message in
 
 // Unlike trimCallsign(), this function trims brackets in-place from a callsign string
 void trimBracketsFromCallsign(char* s);  // Trims angle brackets from callsign in-place
+
+uint32_t getHashedCallsignTableSize(void); // #entries in table

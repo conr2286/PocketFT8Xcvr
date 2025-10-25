@@ -14,10 +14,19 @@
 #include "DEBUG.h"
 #include "text.h"
 
-std::map<uint32_t, String> nonStandardCallsignTable;  // Surprise:  Implemented as an ordered map!
+std::map<uint32_t, String> hashedCallsignTable;  // Surprise:  Implemented as an ordered map!
+
 
 /**
- * @brief Record an entry in the nonStandardCallsignTable map for key
+ * @brief Returns #entries in the hashedCallsignTable
+ * @return Count of entries
+ */
+uint32_t getHashedCallsignTableSize(void) {
+    return hashedCallsignTable.size();
+}
+
+/**
+ * @brief Record an entry in the hashedCallsignTable map for key
  * @param callsign The callsign to be associated with key
  * @param key22 Apparently caller always supplies a 22-bit key
  *
@@ -27,13 +36,13 @@ std::map<uint32_t, String> nonStandardCallsignTable;  // Surprise:  Implemented 
  */
 static void save_hash(const char* callsign, uint32_t key22) {
     uint32_t key10 = (key22 >> 12) & 0x3ff;  // Entries are apparently recorded using a 10-bit key
-    nonStandardCallsignTable[key10] = callsign;
-    DPRINTF("save_hash('%s',key22=%d) used key10=%d, size()=%d\n", callsign, key22, key10, nonStandardCallsignTable.size());
+    hashedCallsignTable[key10] = callsign;
+    //DPRINTF("save_hash('%s',key22=%d) used key10=%d, size()=%d\n", callsign, key22, key10, hashedCallsignTable.size());
 
 }  // add()
 
 /**
- * @brief Lookup an entry in the nonStandardCallsignTable for key
+ * @brief Lookup an entry in the hashedCallsignTable for key
  * @param hash_type #bits in the supplied key
  * @param key The supplied key
  * @param c11 Buffer to receive the callsign
@@ -59,7 +68,7 @@ static bool lookup_hash(ftx_callsign_hash_type_t hash_type, uint32_t key, char* 
     }
     key10 = key10 & 0x3ff;
     // DPRINTF("Calculated key10=%d\n", key10);
-    String s = nonStandardCallsignTable[key10];  // Always lookup callsign using a 10-bit key
+    String s = hashedCallsignTable[key10];  // Always lookup callsign using a 10-bit key
     // DPRINTF("lookup_hash(key10=%d) retrieved '%s'\n", key10, s.c_str());
     if (s.length() > 0) {
         strlcpy(c11, s.c_str(), 12);

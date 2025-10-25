@@ -107,6 +107,7 @@
 #include "pins.h"
 #include "si5351.h"
 #include "traffic_manager.h"
+#include "ft8LibIfce.h"
 
 // Forward references (required to build on PlatformIO)
 void loadSSB();
@@ -679,7 +680,7 @@ void update_synchronization() {
         ui.displayDate(true);  // Force an update so display will change from yellow to green if GPS is acquired
 
         // Debug timeslot and sequencer problems
-        DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s', autoReplyToCQ=%u -------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message(), getAutoReplyToCQ());
+        DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s', autoReplyToCQ=%u, hashedCallsignTable.size=%u -------------------\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message(), getAutoReplyToCQ(), getHashedCallsignTableSize());
     }
 }  // update_synchronization()
 
