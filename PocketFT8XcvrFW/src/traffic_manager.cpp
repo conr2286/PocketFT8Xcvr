@@ -48,7 +48,7 @@ void transmit_sequence(void) {
     digitalWrite(PIN_RCV, LOW);
 
     // Set receiver's volume down low
-    si4735.setVolume(20);
+    si4735.setVolume(0);
 
     // Enable the transmitter clock
     si5351.drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);  // Set for max power if desired
@@ -104,7 +104,7 @@ void tune_On_sequence(void) {
     si5351.set_freq(tuneFreq, SI5351_CLK0);  // Freq is in hundreths of a HZ
 
     // Drop the receiver's volume
-    si4735.setVolume(20);
+    si4735.setVolume(0);
 
     // Turn-on the transmitter clock
     if (thisStation.getEnableTransmit()) si5351.output_enable(SI5351_CLK0, 1);
@@ -166,7 +166,7 @@ void set_Xmit_Freq() {
     si5351.output_enable(SI5351_CLK0, 0);
     si5351.set_freq(F_Long, SI5351_CLK0);
     delay(1);
-    si5351.output_enable(SI5351_CLK0, 0);  //I think there is a sneak path in Si5351 that turns on clock when setting freq
+    si5351.output_enable(SI5351_CLK0, 0);  // I think there is a sneak path in Si5351 that turns on clock when setting freq
 
 }  // set_Xmit_Freq()
 

@@ -498,10 +498,10 @@ void Sequencer::cqMsgEvent(Decode* msg) {
     // Avoid responding to previously logged duplicates unless enabled by CONFIG.JSON
     String dupMsg;
     if (config.enableDuplicates) {
-        dupMsg = String("Robo reply ") + String(msg->field2);
+        dupMsg = String("Robo replying to ") + String(msg->field2);
         ui.applicationMsgs->setText(dupMsg.c_str());
     } else if (ContactLogFile::isKnownCallsign(msg->field2)) {
-        dupMsg = String("Robo ignore ") + String(msg->field2);
+        dupMsg = String("Robo ignoring ") + String(msg->field2);
         ui.applicationMsgs->setText(dupMsg.c_str());
         return;  // RoboOp ignores stations already in the log
     }
@@ -520,7 +520,7 @@ void Sequencer::cqMsgEvent(Decode* msg) {
             state = LOC_PENDING;  // Await appropriate timeslot to transmit to Target_Call
             ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             target_frequency = msg->freq_hz;
-            display_value(270, 258, target_frequency);
+            display_value(270, 258, target_frequency);  // TODO:  Should this be a ui method?
             set_Target_Frequency(target_frequency);
             break;
 
@@ -783,7 +783,7 @@ void Sequencer::onTimerEvent(Timer* thisTimer) {
             theSequencer.highlightAbortedTransmission();  // Let our operator know we aborted
             theSequencer.endQSO();                        // Misc activities to terminate QSO
             clearOutboundMessageText();                   // Clear outbound message text chars from UI
-            theSequencer.state = IDLE;                    // IDLE the state machine.  It's over.
+            theSequencer.state = IDLE;                    // IDLE the state machine.  QSO is over.
             break;
 
         // Interrupt pending transmission awaiting an appropriate timeslot
@@ -824,6 +824,7 @@ void Sequencer::onTimerEvent(Timer* thisTimer) {
     xmit_flag = 0;                  // Stop modulation
     terminate_transmit_armed();     // Dis-arm the transmitter
     clearOutboundMessageDisplay();  // Clear displayed outbound message, if any
+    clearOutboundMessageText();     // Clear outbound message text string
     receive_sequence();             // Only need to do this if in-progress transmission aborted
 
     // Reset highlighted buttons, if any
@@ -1218,6 +1219,7 @@ void Sequencer::endQSO() {
     xmit_flag = 0;                  // Stop modulation
     terminate_transmit_armed();     // Dis-arm the transmitter
     clearOutboundMessageDisplay();  // Clear displayed outbound message, if any
+    clearOutboundMessageText();     // And clear the outbound message text string
     receive_sequence();             // Only need to do this if in-progress transmission aborted
 
     // Reset toggling GUI buttons

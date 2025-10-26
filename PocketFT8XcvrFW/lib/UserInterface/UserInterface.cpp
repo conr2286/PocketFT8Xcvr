@@ -317,15 +317,15 @@ void MenuButton::onTouchButton(int buttonId) {
             seq.tuneButtonEvent();
             break;
 
-        // Control RoboOp to automagically reply to a received CQ message
+        // Enable RoboOp to automagically reply to a received CQ message
         case 3:
             DPRINTF("Tx\n");
             if (getState()) {
                 setAutoReplyToCQ(true);  // If button is on then enable RoboOp
                 if (config.enableDuplicates) {
-                    ui.applicationMsgs->setText("Robo reply dup");
+                    ui.applicationMsgs->setText("Robo replying to dups");
                 } else {
-                    ui.applicationMsgs->setText("Robo ignore logged");
+                    ui.applicationMsgs->setText("Robo ignoring dups");
                     auto_flag = 1;  // Enable RoboOp to continuously respond to received CQ msgs
                 }
             } else {
