@@ -97,7 +97,7 @@ class Waterfall : public APixelBox {
 // Define functions visible to legacy code
 void pollTouchscreen(void);
 
-// The interactive box displaying decoded messages
+// The interactive box displaying all decoded messages
 class DecodedMsgsBox : public AListBox {
    public:
     DecodedMsgsBox(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AListBox(x, y, w, h, c) {}

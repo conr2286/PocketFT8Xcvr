@@ -59,6 +59,7 @@ extern UserInterface ui;
 // extern uint16_t cursor_freq;  // Frequency of FT8 cursor in Hz
 
 void DecodedMsgsBox::setMsg(int index, char* msg) {
+    DPRINTF("setMsg(%d,'%s')\n", index, msg);
     setItem(index, msg, A_WHITE, bgColor);
 }
 
