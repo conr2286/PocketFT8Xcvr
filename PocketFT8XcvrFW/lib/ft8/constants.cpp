@@ -27,30 +27,7 @@ const int K_BYTES = 12;  // Number of bytes required to hold payload of packed b
 const uint16_t CRC_POLYNOMIAL = 0x2757;  // CRC-14 polynomial without the leading (MSB) 1
 const int CRC_WIDTH = 14;
 
-uint8_t tones[79];
-
-/**
- * An FT8 message has a fixed length of 174 bits transmitted as continuous phase
- * frequency shift keying (CPFSK).  The message consists of 58 symbols, each
- * symbol conveying 3 bits modulated with one of 8 tones.
- * Note that 174 == 58 * 3.  That message conveys 77 bits of user data, 14 bits
- * of CRC, and 83 bits of Forward Error Correction (FEC).
- *
- **/
-// void initalize_constants(void) {
-//     ND = 58;  // Data symbols
-//     NS = 21;  // Sync symbols (3 @ Costas 7x7)
-//     NN = 79;  // Total channel symbols (79)
-//     // Define the LDPC sizes
-//     N = 174;       // Number of bits in the encoded message (payload + FEC)
-//     K = 91;        // Number of payload bits (77 bits of user data + 14 bits of CRC)
-//     M = 83;        // Forward error correction (FEC) bits
-//     K_BYTES = 12;  // Possibly #bytes required to hold the payload of packed bits???
-
-//     // Define CRC parameters
-//     CRC_POLYNOMIAL = 0x2757;  // CRC-14 polynomial without the leading (MSB) 1
-//     CRC_WIDTH = 14;
-// }
+uint8_t tones[79];  // Not a constant --- these are the tones for an outbound message of NN symbols
 
 // Costas 7x7 tone pattern
 const uint8_t kCostas_map[7] = {3, 1, 4, 0, 6, 5, 2};
