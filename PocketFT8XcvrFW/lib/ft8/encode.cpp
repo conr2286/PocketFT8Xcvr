@@ -12,20 +12,20 @@
 #include "NODEBUG.h"
 #include "constants.h"
 
-extern int ND;
-extern int NS;
+// extern int ND;
+// extern int NS;
 
-extern int NN;
-// Define the LDPC sizes
-extern int N;
-extern int K;
+// extern int NN;
+// // Define the LDPC sizes
+// extern int N;
+// extern int K;
 
-extern int M;
+// extern int M;
 
-extern int K_BYTES;
+// extern int K_BYTES;
 
-extern uint16_t CRC_POLYNOMIAL;  // CRC-14 polynomial without the leading (MSB) 1
-extern int CRC_WIDTH;
+// extern uint16_t CRC_POLYNOMIAL;  // CRC-14 polynomial without the leading (MSB) 1
+// extern int CRC_WIDTH;
 
 // Returns 1 if an odd number of bits are set in x, zero otherwise
 uint8_t parity8(uint8_t x) {
@@ -42,7 +42,7 @@ uint8_t parity8(uint8_t x) {
 // Arguments:
 // [IN] message   - array of 91 bits stored as 12 bytes (MSB first)
 // [OUT] codeword - array of 174 bits stored as 22 bytes (MSB first)
-void encode174(const uint8_t *message, uint8_t *codeword) {
+void encode174(const uint8_t* message, uint8_t* codeword) {
     // Here we don't generate the generator bit matrix as in WSJT-X implementation
     // Instead we access the generator bits straight from the binary representation in kGenerator
 
@@ -96,7 +96,7 @@ void encode174(const uint8_t *message, uint8_t *codeword) {
 // Compute 14-bit CRC for a sequence of given number of bits
 // [IN] message  - byte sequence (MSB first)
 // [IN] num_bits - number of bits in the sequence
-uint16_t crc(uint8_t *message, int num_bits) {
+uint16_t crc(uint8_t* message, int num_bits) {
     // Adapted from https://barrgroup.com/Embedded-Systems/How-To/CRC-Calculation-C-Code
     // constexpr uint16_t  TOPBIT = (1 << (CRC_WIDTH - 1));
     uint16_t TOPBIT = (1 << (CRC_WIDTH - 1));
@@ -131,7 +131,7 @@ uint16_t crc(uint8_t *message, int num_bits) {
 // Generate FT8 tone sequence from payload data
 // [IN] payload - 10 byte array consisting of 77 bit payload (MSB first)
 // [OUT] itone  - array of NN (79) bytes to store the generated tones (encoded as 0..7)
-void genft8(const uint8_t *payload, uint8_t *itone) {
+void genft8(const uint8_t* payload, uint8_t* itone) {
     uint8_t a91[12];  // Store 77 bits of payload + 14 bits CRC
 
     // Copy 77 bits of payload data

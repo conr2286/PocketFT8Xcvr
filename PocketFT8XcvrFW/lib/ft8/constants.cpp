@@ -7,22 +7,25 @@
 
 #include "constants.h"
 
-// Define FT8 symbol counts
-int ND;
-int NS;
-
-int NN;
-// Define the LDPC sizes
-int N;
-int K;
-
-int M;
-
-int K_BYTES;
+/**
+ * An FT8 message has a fixed length of 174 bits transmitted as continuous phase
+ * frequency shift keying (CPFSK).  The message consists of 58 symbols, each
+ * symbol conveying 3 bits modulated with one of 8 tones.
+ * Note that 174 == 58 * 3.  That message conveys 77 bits of user data, 14 bits
+ * of CRC, and 83 bits of Forward Error Correction (FEC).
+ *
+ **/
+const int ND = 58;       // Number of 3-bit data symbols in an FT8 message
+const int NS = 21;       // Number of sync symbols (3 @ Costas 7x7)
+const int NN = ND + NS;  // Total number of symbols (79)
+const int N = 174;       // Number of bits in encoded payload + FEC
+const int K = 91;        // Number of payload bits (77 bits of user data + 14 bits CRC)
+const int M = 83;        // Forward Error Correction (FEC) bits
+const int K_BYTES = 12;  // Number of bytes required to hold payload of packed bits
 
 // Define CRC parameters
-uint16_t CRC_POLYNOMIAL;  // CRC-14 polynomial without the leading (MSB) 1
-int CRC_WIDTH;
+const uint16_t CRC_POLYNOMIAL = 0x2757;  // CRC-14 polynomial without the leading (MSB) 1
+const int CRC_WIDTH = 14;
 
 uint8_t tones[79];
 
@@ -34,20 +37,20 @@ uint8_t tones[79];
  * of CRC, and 83 bits of Forward Error Correction (FEC).
  *
  **/
-void initalize_constants(void) {
-    ND = 58;  // Data symbols
-    NS = 21;  // Sync symbols (3 @ Costas 7x7)
-    NN = 79;  // Total channel symbols (79)
-    // Define the LDPC sizes
-    N = 174;       // Number of bits in the encoded message (payload + FEC)
-    K = 91;        // Number of payload bits (77 bits of user data + 14 bits of CRC)
-    M = 83;        // Forward error correction (FEC) bits
-    K_BYTES = 12;  // Possibly #bytes required to hold the payload of packed bits???
+// void initalize_constants(void) {
+//     ND = 58;  // Data symbols
+//     NS = 21;  // Sync symbols (3 @ Costas 7x7)
+//     NN = 79;  // Total channel symbols (79)
+//     // Define the LDPC sizes
+//     N = 174;       // Number of bits in the encoded message (payload + FEC)
+//     K = 91;        // Number of payload bits (77 bits of user data + 14 bits of CRC)
+//     M = 83;        // Forward error correction (FEC) bits
+//     K_BYTES = 12;  // Possibly #bytes required to hold the payload of packed bits???
 
-    // Define CRC parameters
-    CRC_POLYNOMIAL = 0x2757;  // CRC-14 polynomial without the leading (MSB) 1
-    CRC_WIDTH = 14;
-}
+//     // Define CRC parameters
+//     CRC_POLYNOMIAL = 0x2757;  // CRC-14 polynomial without the leading (MSB) 1
+//     CRC_WIDTH = 14;
+// }
 
 // Costas 7x7 tone pattern
 const uint8_t kCostas_map[7] = {3, 1, 4, 0, 6, 5, 2};

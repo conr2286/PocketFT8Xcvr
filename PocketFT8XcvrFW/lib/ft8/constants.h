@@ -13,7 +13,22 @@
 #define true 1
 #define false 0
 
-extern int K_BYTES;
+// Define FT8 symbol counts
+extern const int ND;
+extern const int NS;
+
+extern const int NN;
+// Define the LDPC sizes
+extern const int N;
+extern const int K;
+
+extern const int M;
+
+extern const int K_BYTES;
+
+extern const uint16_t CRC_POLYNOMIAL;  // CRC-14 polynomial without the leading (MSB) 1
+extern const int CRC_WIDTH;
+
 extern uint8_t tones[79];
 
 // Costas 7x7 tone pattern

@@ -47,17 +47,17 @@ int strindex(const char s[], const char t[]);
 extern uint32_t ft8_time;
 extern uint8_t export_fft_power[ft8_msg_samples * ft8_buffer * 4];
 
-extern int ND;
-extern int NS;
+// extern int ND;
+// extern int NS;
 
-extern int NN;
-// Define the LDPC sizes
-extern int N;
-extern int K;
+// extern int NN;
+// // Define the LDPC sizes
+// extern int N;
+// extern int K;
 
-extern int M;
+// extern int M;
 
-extern int K_BYTES;
+// extern int K_BYTES;
 
 extern UserInterface ui;
 

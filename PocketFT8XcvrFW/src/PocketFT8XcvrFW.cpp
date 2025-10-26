@@ -334,7 +334,7 @@ FLASHMEM void setup(void) {
 
     // Initialize the receiver's DSP chain
     init_DSP();
-    initalize_constants();
+    // initalize_constants();
 
     // Setup buffers for received audio.  Extensive testing discovered smaller buffer pool sizes
     //(e.g. 20) were sometimes exhausted, especially following certain HX8357 graphics activity.
