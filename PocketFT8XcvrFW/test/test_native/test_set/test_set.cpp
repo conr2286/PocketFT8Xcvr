@@ -102,4 +102,4 @@ int main() {
 
     // Finished
     UNITY_END();
-}
+}  // main()

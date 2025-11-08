@@ -4,6 +4,12 @@
  * This functionality is remotely similar to unordered_set but much
  * reduced to preserve RAM on the Teensy embedded MCU
  *
+ * Notes
+ *  + Only a few methods, insert() and erase() element, are implemented.
+ *  + TinySet implements iterators, the assignment operator, and a copy constructor.
+ *  + A TinySet will automatically resize (expand) as elements are added, but
+ *    never shrink when elements are erased.
+ *
  */
 #pragma once
 
