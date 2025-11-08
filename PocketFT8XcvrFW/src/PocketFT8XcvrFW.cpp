@@ -226,6 +226,7 @@ static void gpsCallback(unsigned seconds) {
 FLASHMEM void setup(void) {
     // Get the USB serial port running before something else goes wrong
     Serial.begin(9600);
+    // Serial.printf("foo");
 
     Wire.setSDA(PIN_SDA);
     Wire.setSCL(PIN_SCL);

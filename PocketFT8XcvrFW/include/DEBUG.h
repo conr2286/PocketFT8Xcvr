@@ -1,6 +1,6 @@
 /*
 NAME
-  DEBUG.h --- A simple Arduino debugging package for MPUs sans JTAG
+  DEBUG.h --- A mock Arduino debugging package for native mode
 
 USAGE EXAMPLES
   #include "DEBUG.h"              //Include this file to enable debugging in a source file
@@ -10,8 +10,6 @@ USAGE EXAMPLES
   DPRINTF("foo=%u\n",foo)         //Print labeled value of foo
 
 NOTES
-  Teensy does not support any normal debugging connection (e.g. JTAG).  So... we are left
-  to write debug message output to a Stream defined by DEBUG_STREAM below.  :(
 
 LIMITATIONS
   DEBUG_STREAM must support printf (available on Teensy)
@@ -35,8 +33,6 @@ ATTRIBUTION
 #define __SOURCEFILE__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 #define DEBUG_STREAM Serial
-
-
 
 #define DPRINTF(...)                                             \
     {                                                            \

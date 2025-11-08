@@ -47,6 +47,7 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "*.old": "cpp",
-        "*.jrc": "cpp"
+        "*.jrc": "cpp",
+        "unordered_set": "cpp"
     }
 }
