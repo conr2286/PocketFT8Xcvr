@@ -7,8 +7,6 @@
 #include "DEBUG.h"
 #include <string>
 
-std::string foobar;
-
 /**
  * @brief This is the unity setup method executed prior to each test
  */
@@ -22,6 +20,7 @@ void setUp(void) {
 void tearDown(void) {
 }
 
+// Verify the DPRINTF macro can print a debug message through the Serial object
 void test_debugio(void) {
     DPRINTF("DPRINTF is working\n");
 }
@@ -40,9 +39,9 @@ int main(int argc, char** argv) {
     UNITY_END();
 }
 
-/**
- * @brief Nothing to do in the Arduino loop() function
- */
-void loop() {
-    // Not used
-}
+// /**
+//  * @brief Nothing to do in the Arduino loop() function
+//  */
+// void loop() {
+//     // Not used
+// }

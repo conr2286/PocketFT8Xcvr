@@ -522,7 +522,7 @@ time_t getTeensy3Time() {
 }
 
 /**
- * @brief Loads the SSB patch into the SI4735
+ * @brief Loads the SSB patch into the SI4735 and sets receiver bandwidth
  */
 FLASHMEM void loadSSB() {
     si4735.queryLibraryId();  // Is it really necessary here? I will check it.

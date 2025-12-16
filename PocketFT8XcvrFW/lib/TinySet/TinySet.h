@@ -5,10 +5,10 @@
  * reduced to preserve RAM on the Teensy embedded MCU
  *
  * Notes
- *  + Only a few methods, insert() and erase() element, are implemented.
+ *  + Only a few methods, insert() and erase() element, getSize() and isMember() are implemented.
  *  + TinySet implements iterators, the assignment operator, and a copy constructor.
- *  + A TinySet will automatically resize (expand) as elements are added, but
- *    never shrink when elements are erased.
+ *  + A TinySet automatically resizes (expands) as elements are added, but
+ *    never shrinks when elements are erased.
  *
  */
 #pragma once
@@ -225,12 +225,12 @@ bool TinySet<T>::resizeData() {
 }  // resizeData()
 
 /**
- * @brief Remove specified element from set
+ * @brief Remove the specified element from set
  * @tparam T
  * @param key Element to remove
  * @return true==success, false==failure (element not found)
  *
- * @note Erasing an element removes it from the set but does not delete the object
+ * @note Erasing an element removes it from the set but does not delete the element object
  */
 template <typename T>
 bool TinySet<T>::erase(T key) {
