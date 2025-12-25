@@ -1,7 +1,22 @@
 /**
- * This test exercises how AGUI restores a widget's displayed image when
+ * This test suite exercises how AGUI restores a widget's displayed image when
  * another widget, whose image covered the first at least in part, is destroyed.
  *
+ * The suite constructs a stack of five widgets as follows:
+ *  w0 Lies beneath (at the bottom of) all other widgets
+ *  w1 Placed above w0 and to the left of w2
+ *  w2 Placed above w0 and to the right of w1
+ *  w3 Partially covers w0, w1 and w2
+ *  w4 This widget is not really part of the test, it's used for displaying messages to the operator
+ * There are also two buttons, PASS and FAIL.
+ *
+ * The test suite begins by displaying the widgets, a message for the operator, and awaiting permission
+ * to PASS with the first test case.
+ *
+ * Each test case modifies the displayed widgets, displays a message naming the executing test,
+ * and requesting the operator's permission to either PASS the test suite or FAIL the
+ * remaining tests.  If the displayed widgets are incorrect (see notes for each test case) then
+ * the operator should FAIL the tests suite.
  */
 
 #include <Arduino.h>       //
@@ -74,16 +89,17 @@ void pollTouchscreen() {
     }
 }  // pollTouchScreen()
 
-// Define the PassButton, overriding AToggleButton::onTouchButton to receive touch notifications
+// Define the PASS button by overriding AToggleButton::onTouchButton to receive touch notifications
 class PassButton : public AToggleButton {
     bool waitForButton = true;
 
    public:
     PassButton() : AToggleButton("PASS", 40, 240, 100, 40, 0, true) {}
     void onTouchButton(int userData) override { waitForButton = false; };  // We override AToggleButton to receive notifications of touch events
+    // Loop, waiting for a touchscreen press
     void wait(void) {
         while (waitForButton) {
-            pollTouchscreen();
+            pollTouchscreen();  // Notifies any widget (including PASS and FAIL) of a click within
             delay(50);
         }
         waitForButton = true;  // Reset
@@ -102,40 +118,74 @@ class FailButton : public AToggleButton {
     }  // onTouchButton()
 } FailButton;
 
-// Get operator permission to proceed with next test case
+/**
+ * @brief Display name of executing test and ask operator if it PASSed or FAILed
+ *
+ * @note We display the test name in w4 and then loop, waiting for the PASS (or FAIL) button press
+ */
 void passOrFail(String msg) {
     w4->setText(String("\n  Testing ") + msg);
     PassButton.wait();
 }
 
-//
+/**
+ * @brief Remove widget w2 from the middle of the stack
+ *
+ * @note When this test pauses, widget w2 should be removed from the display.
+ * All other widgets, present prior to the execution of remove_w2, should remain.
+ */
 void remove_w2(void) {
     delete w2;
     passOrFail(__FUNCTION__);
 }
 
+/**
+ * @brief Remove widget w4 from the top of the stack
+ *
+ * @note When this test pauses, widget w4 should be removed from the display.
+ * All other widgets, present prior to the execution of remove_w4, should remain.
+ */
+void remove_w4(void) {
+    delete w4;
+    passOrFail(__FUNCTION__);
+}
+
+/**
+ * @brief Execute each of the unity tests
+ */
 int runUnityTests(void) {
     UNITY_BEGIN();
-    RUN_TEST(remove_w2);
+    // RUN_TEST(remove_w2);
+    RUN_TEST(remove_w4);
     return UNITY_END();
 }
 
+/**
+ * @brief Initialization
+ */
 void setup() {
     Serial.begin(9600);
 
+    // Label the test widgets.  Note: w3 already has a label; and w4 is the operator's display, not a test widget.
     w0->addItem(w0, "w0");
     w1->addItem(w1, "w1");
     w2->addItem(w2, "w2");
+
+    // Await operator's first click on PASS or FAIL button after we've setup the display
     passOrFail("setup");
+
+    // Execute each of the tests
     runUnityTests();
     delay(1000);
 }
 
+/**
+ * @brief Cleanup after each test
+ */
 void tearDown(void) {
     w4->setText("");
 }
 
-// loop() polls touchscreen for button presses.  The button widget objects react to presses.
+// Nothing to do in loop()
 void loop() {
-    // pollTouchscreen();
 }
