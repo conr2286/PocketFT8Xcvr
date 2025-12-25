@@ -41,27 +41,11 @@ TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);              
 static AGUI gui(&tft, 3, &FT8Font);
 
 // Define the test widgets
-AScrollBox w0(0, 0, 480, 320, A_DARK_GREY);  // The lowest level widget, lying beneath the others
-AListBox w1(20, 20, 120, 120, A_BLUE);       // Widget w1 sits left of w2, partly covering w0
-APixelBox w2(200, 20, 120, 120);             // Widget w2 sits right of w1, partly covering w0
-AScrollBox w3(60, 60, 240, 40, A_WHITE);     // Widget w3 partially covers both w1 and w2
-
-// Define the ContinueButton, overriding AToggleButton::onTouchButton to receive touch notifications
-class ContinueButton : public AToggleButton {
-   public:
-    ContinueButton() : AToggleButton("CONTINUE", 40, 240, 100, 40, 0, true) {}
-    void onTouchButton(int userData) override { return; };  // We override AToggleButton to receive notifications of touch events
-} continueButton;
-
-// Define the AbortButton, overriding AToggleButton::onTouchButton to receive touch notifications.
-// Note:  Clicking the ABORT button terminates the test.
-class AbortButton : public AToggleButton {
-   public:
-    AbortButton() : AToggleButton("ABORT", 200, 240, 100, 40, 0, true) {};
-    void onTouchButton(int userData) override {
-        UNITY_END();
-    }  // onTouchButton()
-} abortButton;
+AScrollBox* w0 = new AScrollBox(0, 0, 480, 160, A_DARK_GREY);  // The lowest level widget, lying beneath all others
+AListBox* w1 = new AListBox(20, 20, 120, 120, A_BLUE);         // Widget w1 sits left of w2, partly covering w0
+AListBox* w2 = new AListBox(200, 20, 120, 120, A_GREEN);       // Widget w2 sits right of w1, partly covering w0
+ATextBox* w3 = new ATextBox("w3", 60, 60, 220, 40, A_WHITE);   // Widget w3 partially covers both w1, w2 and w0
+ATextBox* w4 = new ATextBox("", 0, 170, 300, 60, A_GREY);
 
 /**
  * @brief Poll for and process touch events
@@ -90,28 +74,68 @@ void pollTouchscreen() {
     }
 }  // pollTouchScreen()
 
+// Define the PassButton, overriding AToggleButton::onTouchButton to receive touch notifications
+class PassButton : public AToggleButton {
+    bool waitForButton = true;
+
+   public:
+    PassButton() : AToggleButton("PASS", 40, 240, 100, 40, 0, true) {}
+    void onTouchButton(int userData) override { waitForButton = false; };  // We override AToggleButton to receive notifications of touch events
+    void wait(void) {
+        while (waitForButton) {
+            pollTouchscreen();
+            delay(50);
+        }
+        waitForButton = true;  // Reset
+    }  // wait()
+} PassButton;
+
+// Define the FailButton, overriding AToggleButton::onTouchButton to receive touch notifications.
+// Note:  Clicking the Fail button terminates the test.
+// Note:  We only expect FailButton to be pressed while we are waiting on Pass
+class FailButton : public AToggleButton {
+   public:
+    FailButton() : AToggleButton("FAIL", 200, 240, 100, 40, 0, true) {};
+    void onTouchButton(int userData) override {
+        TEST_FAIL();
+        UNITY_END();
+    }  // onTouchButton()
+} FailButton;
+
+// Get operator permission to proceed with next test case
+void passOrFail(String msg) {
+    w4->setText(String("\n  Testing ") + msg);
+    PassButton.wait();
+}
+
 //
-void test_StationInfo(void) {
-    TEST_MESSAGE("test_StationInfo()\n");
+void remove_w2(void) {
+    delete w2;
+    passOrFail(__FUNCTION__);
 }
 
 int runUnityTests(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_StationInfo);
+    RUN_TEST(remove_w2);
     return UNITY_END();
 }
 
 void setup() {
     Serial.begin(9600);
 
+    w0->addItem(w0, "w0");
+    w1->addItem(w1, "w1");
+    w2->addItem(w2, "w2");
+    passOrFail("setup");
     runUnityTests();
     delay(1000);
 }
 
 void tearDown(void) {
+    w4->setText("");
 }
 
 // loop() polls touchscreen for button presses.  The button widget objects react to presses.
 void loop() {
-    pollTouchscreen();
+    // pollTouchscreen();
 }

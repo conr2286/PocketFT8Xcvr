@@ -21,7 +21,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 /**
  * @brief Build an item (an entry) for AListBox
@@ -104,7 +104,7 @@ void AListBoxItem::setItemColors(AColor fg, AColor bg) {
  * @param fg Color
  */
 void AListBoxItem::setItemText(const String& s, AColor fg) {
-    DTRACE();
+    DPRINTF("%p.setItemText(\"%s\",...)\n", this, s.c_str());
 
     // Sanity checks
     if (listBoxContainer == nullptr) return;
@@ -250,10 +250,10 @@ int AListBox::setItem(int index, const String& str, AColor fg, AColor bg) {
 /**
  * @brief Repaint the entire AListBox
  *
- * Erases our widget's panel then repaints each item individually
+ * Erases this widget's panel then repaints each item individually
  */
 void AListBox::onRepaintWidget() {
-    DTRACE();
+    DPRINTF("%p.onRepaintWidget()\n", this);
 
     // Paint the entire panel background first, erasing whatever gibberish preceded us
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);        // Configure clip window to our boundary
@@ -274,14 +274,14 @@ void AListBox::onRepaintWidget() {
 }  // repaint()
 
 /**
- * @brief Repaint item at the specified index
+ * @brief Repaint item at the specified index in this AListBox
  * @param index The specified item index
  * @return Index of repainted item or -1 if error
  *
  * @note Change the colors, if desired, before calling repaint()
  */
 int AListBox::repaint(int index) {
-    DTRACE();
+    DPRINTF("%p.repaint(%d)\n", this, index);
 
     // Sanity checks
     if ((index < 0) || (index >= maxItems)) return -1;  // Bad index?
@@ -298,6 +298,7 @@ int AListBox::repaint(int index) {
  * @return pointer to item or nullptr if error
  */
 const AListBoxItem* AListBox::repaint(const AListBoxItem* pItem) const {
+    DPRINTF("%p.repaint(%p)\n", this, pItem);
     // Sanity checks
     if (pItem == nullptr) return nullptr;
 
@@ -368,7 +369,8 @@ AListBoxItem* AListBox::setItemColors(AListBoxItem* pItem, AColor fg, AColor bg)
  * @return Item's index into items[] array or -1 if not found
  */
 int AListBox::getItemIndex(const AListBoxItem* pItem) const {
-    DTRACE();
+    DPRINTF("%p.getItemIndex(%p)\n", this, pItem);
+
     // Sanity check
     if (pItem == nullptr) return -1;
 
@@ -401,6 +403,8 @@ int AListBox::getCount() const {
  * All items are removed and an empty box is displayed
  */
 void AListBox::reset() {
+    DPRINTF("%p.reset()\n", this);
+
     // Remove all the items
     for (int i = 0; i < nDisplayedItems; i++) {
         removeItem(i);
@@ -409,7 +413,7 @@ void AListBox::reset() {
     // Update members
     nDisplayedItems = 0;
 
-    // Repaint this box
+    // Repaint this AListBox
     onRepaintWidget();
 }  // reset()
 
@@ -417,7 +421,7 @@ void AListBox::reset() {
  * @brief Destructor purges items and removes this container from the display
  */
 AListBox::~AListBox() {
-    DTRACE();
+    DPRINTF("%p.~AlistBox()\n", this);
 
     // Erase the widget's border
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);        // Configure clip window to our boundary
@@ -439,7 +443,7 @@ AListBox::~AListBox() {
  *
  */
 int AListBox::removeItem(int index) {
-    DTRACE();
+    DPRINTF("%p.removeItem(%d)\n", this, index);
 
     // Sanity checks
     if ((index < 0) || (index >= nDisplayedItems)) return -1;
