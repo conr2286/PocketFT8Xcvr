@@ -18,7 +18,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 /**
  * @brief Build an item for AScrollBox
@@ -169,6 +169,7 @@ int AScrollBox::repaint(int index) {
  * @return Pointer to the item or nullptr if error
  */
 AScrollBoxItem* AScrollBox::repaint(AScrollBoxItem* pItem) {
+    DTRACE();
     // Sanity checks
     if (pItem == nullptr) return nullptr;
 

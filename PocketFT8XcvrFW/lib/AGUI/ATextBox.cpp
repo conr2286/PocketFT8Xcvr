@@ -20,7 +20,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 /**
  * @brief Build and display ATextBox object
@@ -30,7 +30,7 @@
  * @param w Width
  * @param h Height
  */
-ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AColor border) {
+ATextBox::ATextBox(const char* txt, ACoord x, ACoord y, ALength w, ALength h, AColor border) {
     DPRINTF("txt='%s' x=%d y=%d w=%d h=%d\n", txt, x, y, w, h);
 
     // Initialize member variables
@@ -72,7 +72,7 @@ ATextBox::ATextBox(const char *txt, ACoord x, ACoord y, ALength w, ALength h, AC
     int16_t drawX = clipX + 1;  // X-coord
     int16_t drawY = clipY + 1;  // Y-coord
     AGUI::setCursor(drawX, drawY);
-    AGUI::writeText((uint8_t *)txt, strlen(txt));  // Output text to box
+    AGUI::writeText((uint8_t*)txt, strlen(txt));  // Output text to box
     AGUI::setClipRect();
 }  // ATextBox()
 
@@ -129,7 +129,7 @@ void ATextBox::onRepaintWidget(void) {
  *
  * @note Repaints the text box with the new text
  */
-void ATextBox::setText(const char *txt, AColor fg) {
+void ATextBox::setText(const char* txt, AColor fg) {
     fgColor = fg;
     str = String(txt);
     onRepaintWidget();
@@ -139,7 +139,7 @@ void ATextBox::setText(const char *txt, AColor fg) {
  * @brief Change the display text in this ATextBox
  * @param txt String to display
  */
-void ATextBox::setText(String &rstr, AColor fg) {
+void ATextBox::setText(String& rstr, AColor fg) {
     fgColor = fg;
     // DPRINTF("setText %s\n", rstr.c_str());
     str = String(rstr);

@@ -33,6 +33,7 @@
  * @note The text string, s, must not contain a NL character
  */
 AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
+    DTRACE();
     str = s;                  // Copy Item's text String
     str.replace('\n', ' ');   // We really can't tolerate NL chars in the String
     fgColor = fg;             // Item's foreground color
@@ -47,6 +48,7 @@ AListBoxItem::AListBoxItem(String s, AColor fg, AColor bg, AListBox* pBox) {
  * @param existing Reference to existing item
  */
 AListBoxItem::AListBoxItem(const AListBoxItem& existing) {
+    DTRACE();
     // Copy all the simple members
     this->timeStamp = existing.timeStamp;
     this->str = existing.str;
@@ -68,6 +70,7 @@ AListBoxItem::AListBoxItem(const AListBoxItem& existing) {
  * @note Copy that item's members to this (target) item
  */
 AListBoxItem& AListBoxItem::operator=(const AListBoxItem& that) {
+    DTRACE();
     // Copy everything across
     this->timeStamp = that.timeStamp;
     this->str = that.str;
@@ -102,6 +105,9 @@ void AListBoxItem::setItemColors(AColor fg, AColor bg) {
  * @brief Change an item's text string
  * @param s New String
  * @param fg Color
+ *
+ * Replaces an item's text string and repaints the displayed item
+ *
  */
 void AListBoxItem::setItemText(const String& s, AColor fg) {
     DPRINTF("%p.setItemText(\"%s\",...)\n", this, s.c_str());
@@ -124,6 +130,7 @@ void AListBoxItem::setItemText(const String& s, AColor fg) {
  * to 6 minutes.  This might easily be changed or made more flexible.
  */
 bool AListBoxItem::timedOut() const {
+    DTRACE();
     unsigned long now = millis();
     const unsigned long timeoutMillis = 6 * 60 * 1000UL;
     if ((now - timeStamp) > timeoutMillis) return true;
@@ -165,6 +172,7 @@ AListBox::AListBox(ACoord x, ACoord y, ALength w, ALength h, AColor bdColor) {
  * @note We have to make deep copies of all the items
  */
 AListBox::AListBox(const AListBox& existing) : AWidget(existing) {
+    DTRACE();
     // Copy the simple AListBox members
     this->leading = existing.leading;
     this->nDisplayedItems = existing.nDisplayedItems;
@@ -225,6 +233,7 @@ AListBoxItem* AListBox::addItem(AListBox* pListBox, const String str, AColor fg)
  * @note If an item already exists at index, it will be replaced.
  */
 int AListBox::setItem(int index, const String& str, AColor fg, AColor bg) {
+    DTRACE();
     // Sanity checks
     if ((index < 0) || (index >= maxItems)) return -1;  // Bad index?
 
@@ -312,14 +321,17 @@ const AListBoxItem* AListBox::repaint(const AListBoxItem* pItem) const {
     AGUI::setTextWrap(false);                                             // No wrapping, we clip 'em
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);  // Widget's clip rectangle
 
-    // Calculate where to place the item
-    int x1 = boundary.x1 + xOffset;
-    int y1 = boundary.y1 + index * leading + yOffset;
+    // Calculate where to place the item.  Leading refers to the text height (including space between
+    // lines) in pixels.
+    int x1 = boundary.x1 + xOffset;                    // x-coord of upper left corner of text row
+    int y1 = boundary.y1 + index * leading + yOffset;  // y-coord of upper left corner of text row
 
-    // Erase existing text in this item's location
+    DPRINTF("x1=%d y1=%d w=%d h=%d\n", x1, y1, boundary.w - 2 * xOffset, leading);
+
+    // Erase any old pixels from the row of text in this item's location
     AGUI::fillRect(x1, y1, boundary.w - 2 * xOffset, leading, bgColor);
 
-    // Write the item's text to display
+    // Write the item's new text to display
     AGUI::setCursor(x1, y1);      // Text position
     AGUI::writeText(pItem->str);  // Output the text
     AGUI::setClipRect();          // Restore default clip
@@ -335,6 +347,7 @@ const AListBoxItem* AListBox::repaint(const AListBoxItem* pItem) const {
  * @return Index or -1 if error
  */
 int AListBox::setItemColor(int index, AColor fg, AColor bg) {
+    DTRACE();
     // Sanity checks
     if ((index < 0) || (index >= maxItems) || (index >= nDisplayedItems)) return -1;
 
@@ -386,6 +399,7 @@ int AListBox::getItemIndex(const AListBoxItem* pItem) const {
  * @return index or -1 if error
  */
 int AListBoxItem::getIndex() const {
+    DTRACE();
     return listBoxContainer->getItemIndex(this);
 }  // getIndex()
 
@@ -394,42 +408,52 @@ int AListBoxItem::getIndex() const {
  * @return count
  */
 int AListBox::getCount() const {
+    DTRACE();
     return nDisplayedItems;
 }
 
 /**
  * @brief Reset this AListBox
  *
- * All items are removed and an empty box is displayed
+ * @note Frees each AListBoxItem object
+ * @note Erases each item's text from the display
+ * @note Upon exit, leaves an empty AListBox with its border on the display
+ *
+ * Applications can use this method to reset an AListBox object to its initial state.
+ * Unlike ~AListBox(), the widget object is retained along with its displayed border.
  */
 void AListBox::reset() {
     DPRINTF("%p.reset()\n", this);
 
-    // Remove all the items
+    // Remove each of the AListBoxItems
     for (int i = 0; i < nDisplayedItems; i++) {
         removeItem(i);
     }
 
     // Update members
     nDisplayedItems = 0;
+    DTRACE();
 
-    // Repaint this AListBox
-    onRepaintWidget();
 }  // reset()
 
 /**
  * @brief Destructor purges items and removes this container from the display
+ *
+ * @note Erases everything, including the border (if any) within widget's clip rectangle
  */
 AListBox::~AListBox() {
     DPRINTF("%p.~AlistBox()\n", this);
 
-    // Erase the widget's border
+    // Free the AListBoxItem objects (also unnecessarily erases their displayed text)
+    reset();
+    DTRACE();
+
+    // Erase this AListBox widget's border (actually erases everything within as well)
     AGUI::setClipRect(boundary.x1, boundary.y1, boundary.w, boundary.h);        // Configure clip window to our boundary
     AGUI::fillRect(boundary.x1, boundary.y1, boundary.w, boundary.h, bgColor);  // Erase everything within boundary box
-    AGUI::setClipRect();                                                        // Default clip window
+    AGUI::setClipRect();
 
-    // Purge the items from this container
-    reset();
+    DTRACE();
 }
 
 /**
@@ -437,9 +461,9 @@ AListBox::~AListBox() {
  * @param index Specifies which item
  * @return index of removed item or -1 if error
  *
- * @note Does not update the display, just cleans the data structs
+ * Nulls the removed item's dangling reference in displayedItems[].
  *
- * @note WARNING:  nullptr replaces the removed AListBoxItem pointer
+ * The item's text is removed from the display by painting an empty string.
  *
  */
 int AListBox::removeItem(int index) {
@@ -451,11 +475,12 @@ int AListBox::removeItem(int index) {
 
     // Repaint must occur prior to deleting the item
     displayedItems[index]->setItemText("");  // Remove the existing text
-    repaint(index);                          // Then repaint the item to remove it from display
 
-    // Delete the item and its reference in displayedItems[]
+    // Delete the AListBoxItem object and null its dangling reference in displayedItems[]
     delete displayedItems[index];
     displayedItems[index] = nullptr;
+
+    DTRACE();
 
     return index;
 }
@@ -511,6 +536,7 @@ AListBoxItem* AListBox::getSelectedItem(ACoord xClick, ACoord yClick) const {
  * @note The removeItem() method updates the display which may create a hole
  */
 void AListBox::reviewTimeStamps() {
+    DTRACE();
     // Review items' timestamps
     for (int i = 0; i < maxItems; i++) {
         // Check each item, but note:  There may be holes in the displayedItems[]

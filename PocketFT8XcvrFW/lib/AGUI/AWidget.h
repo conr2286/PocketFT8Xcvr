@@ -26,17 +26,19 @@ class AWidget {
     const GFXfont* font;  // Default font
 
    protected:
-    static AWidget* headOfWidgets;  // Head of the unordered list of all widgets
-    AWidget* next;                  // Next widget in the unordered list of all widgets
-    ACoord radius;                  // Rounded corner radius
-    AColor bdColor;                 // Border color
-    AColor bgColor;                 // Background color
-    AColor fgColor;                 // Foreground color
-    AColor spColor;                 // Special color (e.g. selected item color)
+    static AWidget* allWidgets;  // List of all displayed widgets arranged in stacked order
+    AWidget* next;               // Next widget in the list of all widgets
+    ACoord radius;               // Rounded corner radius
+    AColor bdColor;              // Border color
+    AColor bgColor;              // Background color
+    AColor fgColor;              // Foreground color
+    AColor spColor;              // Special color (e.g. selected item color)
 
     virtual void onTouchWidget(ACoord screenX, ACoord screenY) {}  // Derived classes must overide touchWidget() to receive touch events
     virtual void onRepaintWidget(void) {}                          // Derived classes must overide doRepaintWidget() to repaint themselves
 
    private:
     bool overlaps(AWidget* someWidget);  // Does someWidget overlap this widget?
+    void insert(void);                   // Insert this widget into the list of all stacked widgets
+    static void repaintAll(void);        // Repaint all widgets in their stacked order
 };

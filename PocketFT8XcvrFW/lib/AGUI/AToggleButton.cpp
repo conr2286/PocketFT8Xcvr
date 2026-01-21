@@ -30,9 +30,9 @@
  * itself.  Applications must not unintentionally modify or destroy that char[] string as
  * it's used to repaint the button.
  */
-AToggleButton::AToggleButton(const char *txt, ACoord x1, ACoord y1, ALength w, ALength h, int userDat, bool border) {
+AToggleButton::AToggleButton(const char* txt, ACoord x1, ACoord y1, ALength w, ALength h, int userDat, bool border) {
     // if (!Serial) Serial.begin(9600);
-    // DPRINTF("str='%s', x1=%d, y1=%d, w=%d, h=%d\n", str, x1, y1, w, h);
+    DPRINTF("str='%s', x1=%d, y1=%d, w=%d, h=%d\n", str, x1, y1, w, h);
 
     // Remember location and extent of the boundary box
     boundary.setCorners(x1, y1, w, h);
@@ -61,12 +61,12 @@ AToggleButton::AToggleButton(const char *txt, ACoord x1, ACoord y1, ALength w, A
     AGUI::setTextColor(fgColor, bgColor);  // Use the widget's default colors
 
     // Label the button
-    AGUI::setTextWrap(false);                                                      // We don't wrap button text
-    ACoord tx, ty, tw, th;                                                         // Lower-right coordinates, text width and text height
-    AGUI::getTextBounds((uint8_t *)txt, strlen(txt), x1, y1, &tx, &ty, &tw, &th);  // Get the text bounds
+    AGUI::setTextWrap(false);                                                     // We don't wrap button text
+    ACoord tx, ty, tw, th;                                                        // Lower-right coordinates, text width and text height
+    AGUI::getTextBounds((uint8_t*)txt, strlen(txt), x1, y1, &tx, &ty, &tw, &th);  // Get the text bounds
     DPRINTF("x1=%d y1=%d tx=%d ty=%d tw=%d th=%d leading=%d\n", x1, y1, tx, ty, tw, th, AGUI::getLeading());
     AGUI::setCursor(boundary.x1 - 1 + (w - tw) / 2, boundary.y1 - 1 + (h - th) / 2);  // Center the text in the button
-    AGUI::writeText((uint8_t *)txt, strlen(txt));                                     // Output text to button
+    AGUI::writeText((uint8_t*)txt, strlen(txt));                                      // Output text to button
     AGUI::setClipRect();
 }  // AToggleButton
 

@@ -22,7 +22,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 /**
  * @brief Constuctor for APixelBox using AWidget defaults
@@ -37,6 +37,7 @@
  *
  */
 APixelBox::APixelBox(ACoord x1, ACoord y1, APixelPos nRows, APixelPos nCols) {
+    DTRACE();
     // Calculate coordinates for the bitmap
     ACoord xBitMap = x1 + radius / 2 + 1;
     ACoord yBitMap = y1 + radius / 2 + 1;

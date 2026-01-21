@@ -48,7 +48,7 @@
 
 #include "Adafruit_GFX.h"  //HX8357_t3n requires you #include GFX before...
 #include "HX8357_t3n.h"    //you #include the HX8357 variation.
-#include "NODEBUG.h"       //For printf-style debugging on a Teensy sans JTAG :(
+#include "DEBUG.h"         //For printf-style debugging on a Teensy sans JTAG :(
 
 //-----------------------------------------------------------------------------
 HX8357_t3n* AGUI::gfx;
@@ -132,10 +132,11 @@ void AGUI::drawPixel(int16_t x, int16_t y, AColor color) {
  * @param h height of rectangle
  * @param color Specified color
  */
+
 void AGUI::fillRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor color) {
-    DTRACE();
+    DPRINTF("xCoord=%d yCoord=%d, w=%d, h=%d, c=0x%04x\n", xCoord, yCoord, w, h, color);
     gfx->fillRect(xCoord, yCoord, w, h, color);
-    DTRACE();
+    // DTRACE();
 }
 
 /**
@@ -192,7 +193,6 @@ void AGUI::setFont(const GFXfont* f) {
 
 /**
  * @brief Select the specified GFX font
- * @param f Pointer to the GFXfont struct
  */
 void AGUI::setFont(void) {
     gfx->setFont();

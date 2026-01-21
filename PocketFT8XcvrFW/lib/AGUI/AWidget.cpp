@@ -4,24 +4,29 @@
  * Notes:
  *  + AGUI controls have limited support for repainting an underlying control
  *  when an overlying control is deleted.
- *  + AGUI controls repaint by recalculating what appears within them; AGUI does
- *  not store a shadow pixel map of the display as do most modern GUIs.
- *  + When a deleted control uncovers another's displayed screen area, AWidget
- *  invokes the repaint method of the uncovered control.
- *  + The result of nested overlaps is undefined when one is deleted as the
- *  list of all AWidgets is linear without knowledge of nested overlaps and
- *  thus the order of repaints is indeterminate.
+ *  + AGUI widgets repaint by recalculating what appears within them; AGUI does
+ *  not store a shadow pixel map of the display as do some GUIs.  Widgets always
+ *  repaint their entire display, they are not aware when only a portion actually
+ *  needs to be repainted.
+ *  + Widgets are said to be "stacked" such that a "higher" widget can be displayed
+ *  on top of a "lower" widget.  The lowest widget is called the "bottom" of the
+ *  stack while the higest is the "top."  The oldest widget is the bottom and the
+ *  newest widget becomes the top, covering any lower widgets it overlaps.
+ *  + All remaining widgets are repainted in stacking order, lowest (oldest) first,
+ *  top (newest) last, when a widget is deleted.  Thus, higher widget(s) may cover
+ *  the displayed image(s) of lower widget(s).
  */
 
 #include "AWidget.h"
 
 #include "AGUI.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 // #include "ft8_font.h"
 
-// Initialize the head of the unordered list of all AWidget objects.
-// The processTouch() class method uses the list to find the selected widget.
-AWidget* AWidget::headOfWidgets = NULL;
+// Initialize the head of the list of all AWidget objects. The list
+// is arranged in stacking order, with the lowest (oldest) widget
+// at the head and the newest at the tail.
+AWidget* AWidget::allWidgets = NULL;
 
 /**
  * @brief Default constructor for the AWidget base class
@@ -35,10 +40,9 @@ AWidget* AWidget::headOfWidgets = NULL;
  */
 AWidget::AWidget() {
     // if (!Serial) Serial.begin(9600);
-    // DPRINTF("AWidget()=0x%x\n", this);
-    // Link this new widget into the unordered list of all widgets
-    this->next = headOfWidgets;
-    headOfWidgets = this;
+    DPRINTF("%p.AWidget()\n", this);
+
+    insert();  // Insert this new widget at the end of the list of all widgets
 
     // Setup default colors for new widget using the application's defaults
     // Each widget can change any of these colors if they wish, but initializing
@@ -63,9 +67,8 @@ AWidget::AWidget() {
  * @note New object placed at head of list and members, except next, copied from existing object.
  */
 AWidget::AWidget(const AWidget& existing) {
-    // Link this new widget at the head of the unordered list of all widgets
-    this->next = headOfWidgets;  // We link to the old head
-    headOfWidgets = this;        // We become the new head
+    DTRACE();
+    insert();  // Insert this new widget at the end of the list of all widgets
 
     // Copy fonts
     this->bgColor = existing.bgColor;  // Background color
@@ -79,6 +82,52 @@ AWidget::AWidget(const AWidget& existing) {
     // Copy radius
     this->radius = existing.radius;  // Radius of rounded corners in this widget
 }  // Copy Constructor
+
+/**
+ * @brief Insert this widget into the list of all widgets
+ *
+ * @note The list of all widgets is maintained in "stacked" order with the lowest
+ * (oldest) displayed widget at the head, and the highest (newest) widget at the tail.
+ * The repaintAll() method uses the ordered list to repaint the oldest (bottom) widget
+ * first followed by those displayed above in stacked order.
+ */
+void AWidget::insert(void) {
+    DPRINTF("%p.insert()\n", this);
+    this->next = NULL;  // This widget always becomes the end of the list
+
+    // Deal with a now empty list (if this widget will become the first and only in the list)
+    if (allWidgets == NULL) {
+        allWidgets = this;  // This widget becomes the head and the only widget in the list
+    } else {
+        // Insert this widget at the end of an existing list
+        AWidget* thatWidget = allWidgets;                                // First (oldest) widget at the bottom of the displayed stack
+        while (thatWidget->next != NULL) thatWidget = thatWidget->next;  // Find the last (newest) widget in the existing list
+        thatWidget->next = this;                                         // This (even newer) widget becomes the tail of the list
+    }
+}  // insert()
+
+/**
+ * @brief Repaint all widgets in stacked, displayed order
+ *
+ * @note Repaints all widgets starting with the lowest (oldest) in the stack and
+ * finishing with the highest (newest) in the stack.  Thus, overlapping widgets near
+ * the top of the stack will display over those below.
+ *
+ * @note This implementation depends upon the list of all widgets maintained in
+ * stacking order with the lowest (oldest) widget at the head.
+ *
+ * @note Yes, a sophisticated approach would be to repaint only those widgets that
+ * actually need repainted (as when a widget stacked above another is deleted).
+ * But our widget data structures are not that sophisticated.
+ */
+void AWidget::repaintAll(void) {
+    DTRACE();
+
+    // Repaint all widgets whether they need it or not
+    for (AWidget* thatWidget = allWidgets; thatWidget != NULL; thatWidget = thatWidget->next) {
+        thatWidget->repaint();  // Repaint that widget
+    }
+}
 
 /**
  * @brief AWidget assignment operator
@@ -122,16 +171,16 @@ AWidget::~AWidget() {
     AGUI::gfx->fillRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1, bgColor);
 
     // Unlink this widget if it resides at the head of the list of all widgets
-    if (headOfWidgets == this) {
+    if (allWidgets == this) {
         // Unlink this widget from head of list
-        headOfWidgets = this->next;
+        allWidgets = this->next;
 
         // Paranoia for dangling pointers
         this->next = NULL;
 
     } else {
         // Unlink this widget from somewhere in the midst of all widgets in the list
-        for (AWidget* scannedWidget = headOfWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
+        for (AWidget* scannedWidget = allWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
             // Does scannedWidget precede this widget?
             if (scannedWidget->next == this) {
                 // Yes, unlink this widget from list
@@ -145,16 +194,8 @@ AWidget::~AWidget() {
         }
     }
 
-    // Repaint all underlying widgets previously covered by this widget
-    for (AWidget* someWidget = headOfWidgets; someWidget != NULL; someWidget = someWidget->next) {
-        // If someWidget overlaps this widget then repaint someWidget
-        if (overlaps(someWidget)) {
-            DPRINTF("Overlap with %p\n", someWidget);
-            someWidget->repaint();
-        } else {
-            DPRINTF("No overlap with %p\n", someWidget);
-        }
-    }
+    // Note:  This widget object still remains but has been removed from the list of all widgets
+    repaintAll();  // Repaint all widgets remaining in the list of all widgets
 
 }  //~AWidget()
 
@@ -175,7 +216,7 @@ AWidget::~AWidget() {
  */
 void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
     DTRACE();
-    for (AWidget* scannedWidget = headOfWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
+    for (AWidget* scannedWidget = allWidgets; scannedWidget != NULL; scannedWidget = scannedWidget->next) {
         // DTRACE();
         //  If touch coords lie within scanned widget and call its notification method if provided
         if (scannedWidget->boundary.isWithin(xCoord, yCoord)) {

@@ -11,12 +11,24 @@
  * There are also two buttons, PASS and FAIL.
  *
  * The test suite begins by displaying the widgets, a message for the operator, and awaiting permission
- * to PASS with the first test case.
+ * to PASS the setup and begin the first test case.
  *
  * Each test case modifies the displayed widgets, displays a message naming the executing test,
  * and requesting the operator's permission to either PASS the test suite or FAIL the
  * remaining tests.  If the displayed widgets are incorrect (see notes for each test case) then
  * the operator should FAIL the tests suite.
+ *
+ *  +-----------------------------------------------+
+ *  | w0                                            |
+ *  |   +---------------+       +---------------+   |   Test widget subject layout
+ *  |   | w1            |       | w2            |   |
+ *  |   |       +------------------------+      |   |
+ *  |   |       | w3                     |      |   |
+ *  |   |       +------------------------+      |   |
+ *  |   |               |       |               |   |
+ *  |   +---------------+       +---------------+   |
+ *  |                                               |
+ *  +-----------------------------------------------+
  */
 
 #include <Arduino.h>       //
@@ -60,7 +72,7 @@ AScrollBox* w0 = new AScrollBox(0, 0, 480, 160, A_DARK_GREY);  // The lowest lev
 AListBox* w1 = new AListBox(20, 20, 120, 120, A_BLUE);         // Widget w1 sits left of w2, partly covering w0
 AListBox* w2 = new AListBox(200, 20, 120, 120, A_GREEN);       // Widget w2 sits right of w1, partly covering w0
 ATextBox* w3 = new ATextBox("w3", 60, 60, 220, 40, A_WHITE);   // Widget w3 partially covers both w1, w2 and w0
-ATextBox* w4 = new ATextBox("", 0, 170, 300, 60, A_GREY);
+ATextBox* w4 = new ATextBox("", 0, 170, 300, 60, A_GREY);      // Widget w4 is used for operator messages, not a test subject
 
 /**
  * @brief Poll for and process touch events
@@ -135,28 +147,29 @@ void passOrFail(String msg) {
  * All other widgets, present prior to the execution of remove_w2, should remain.
  */
 void remove_w2(void) {
+    DTRACE();
     delete w2;
+    DTRACE();
     passOrFail(__FUNCTION__);
 }
 
-/**
- * @brief Remove widget w4 from the top of the stack
- *
- * @note When this test pauses, widget w4 should be removed from the display.
- * All other widgets, present prior to the execution of remove_w4, should remain.
- */
-void remove_w4(void) {
-    delete w4;
-    passOrFail(__FUNCTION__);
-}
+// /**
+//  * @brief Remove widget w4 from the top of the stack
+//  *
+//  * @note When this test pauses, widget w4 should be removed from the display.
+//  * All other widgets, present prior to the execution of remove_w4, should remain.
+//  */
+// void remove_w4(void) {
+//     delete w4;
+//     passOrFail(__FUNCTION__);
+// }
 
 /**
  * @brief Execute each of the unity tests
  */
 int runUnityTests(void) {
     UNITY_BEGIN();
-    // RUN_TEST(remove_w2);
-    RUN_TEST(remove_w4);
+    RUN_TEST(remove_w2);
     return UNITY_END();
 }
 
