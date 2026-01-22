@@ -180,7 +180,7 @@ bool Contact::isActive() {
 /**
  *  Determine if a contact is valid (completed)
  *
- * @return true if the Contact contains all required fields, false otherwise
+ * @return true if the Contact contains all the required fields, false otherwise
  *
  * Design notes:  Currently does not inspect the active field
  *

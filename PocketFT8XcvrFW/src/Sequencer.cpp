@@ -127,7 +127,7 @@
 #include <string.h>
 
 #include "Config.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "LogFactory.h"
 #include "PocketFT8Xcvr.h"
 #include "SequencerStates.h"
@@ -510,15 +510,16 @@ void Sequencer::cqMsgEvent(Decode* msg) {
     switch (state) {
         case IDLE:
             DTRACE();
-            contact.begin(thisStation.getCallsign(), msg->field2, thisStation.getFrequency(), "FT8", thisStation.getRig(), ODD(msg->sequenceNumber), thisStation.getSOTAref());  // Start gathering contact info
-            contact.setWorkedLocator(msg->field3);                                                                                                                               // Record their locator if we recvd it
-            setXmitParams(msg->field2, msg->snr);                                                                                                                                // Inform gen_ft8 of remote station's info
+            startQSO(msg->field2, ODD(msg->sequenceNumber));
+            // contact.begin(thisStation.getCallsign(), msg->field2, thisStation.getFrequency(), "FT8", thisStation.getRig(), ODD(msg->sequenceNumber), thisStation.getSOTAref());  // Start gathering contact info
+            contact.setWorkedLocator(msg->field3);  // Record their locator if we recvd it
+            setXmitParams(msg->field2, msg->snr);   // Inform gen_ft8 of remote station's info
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, contact.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
             set_message(MSG_LOC);  // We get QSO underway by sending our locator
             // ui.applicationMsgs->setText(get_message(), A_YELLOW);  // Display pending call in yellow
             startTimer();         // Start the Timer to terminate a run-on QSO
             state = LOC_PENDING;  // Await appropriate timeslot to transmit to Target_Call
-            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+            // ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             target_frequency = msg->freq_hz;
             display_value(270, 258, target_frequency);  // TODO:  Should this be a ui method?
             set_Target_Frequency(target_frequency);
@@ -715,16 +716,17 @@ void Sequencer::clickDecodedMessageEvent(Decode* msg) {
                 DTRACE();
 
                 // Start a QSO contact for the remote station
-                contact.begin(thisStation.getCallsign(), msg->field2, thisStation.getFrequency(), "FT8", thisStation.getRig(), ODD(msg->sequenceNumber), thisStation.getSOTAref());  // Start gathering QSO info
-                contact.setWorkedLocator(msg->field3);                                                                                                                               // Record their locator if we have it
-                setXmitParams(msg->field2, msg->snr);                                                                                                                                // Inform gen_ft8 of remote station's info
+                startQSO(msg->field2, ODD(msg->sequenceNumber));
+                // contact.begin(thisStation.getCallsign(), msg->field2, thisStation.getFrequency(), "FT8", thisStation.getRig(), ODD(msg->sequenceNumber), thisStation.getSOTAref());  // Start gathering QSO info
+                contact.setWorkedLocator(msg->field3);  // Record their locator if we have it
+                setXmitParams(msg->field2, msg->snr);   // Inform gen_ft8 of remote station's info
                 DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, contact.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
                 set_message(MSG_LOC);  // Build tones for modulator to transmit our locator
                 // ui.applicationMsgs->setText(get_message(), A_YELLOW);  // Display pending call in yellow
-                startTimer();                                     // Start the Timer to terminate a run-on QSO
-                ui.b0->reset();                                   // Reset highlighted button
-                state = LOC_PENDING;                              // We are awaiting a timeslot to transmit our locator
-                ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Let our operator know we have a pending transmission
+                startTimer();         // Start the Timer to terminate a run-on QSO
+                ui.b0->reset();       // Reset highlighted button
+                state = LOC_PENDING;  // We are awaiting a timeslot to transmit our locator
+                // ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Let our operator know we have a pending transmission
 
                 break;
 
@@ -886,15 +888,16 @@ void Sequencer::rslMsgEvent(Decode* msg) {
         // QSO from what we've heard.
         case LISTEN_LOC:
             DTRACE();
-            contact.begin(thisStation.getCallsign(), msg->field2, thisStation.getFrequency(), "FT8", thisStation.getRig(), ODD(msg->sequenceNumber), thisStation.getSOTAref());  // Begin a QSO with their station
-            contact.setMyRSL(msg->field3);                                                                                                                                       // Record our RSL from remote station
-            contact.setWorkedRSL(msg->snr);                                                                                                                                      // Record their RSL at the same time as ours
-            setXmitParams(msg->field2, msg->snr);                                                                                                                                // Inform gen_ft8 of remote station's info
+            startQSO(msg->field2, ODD(msg->sequenceNumber));
+            // contact.begin(thisStation.getCallsign(), msg->field2, thisStation.getFrequency(), "FT8", thisStation.getRig(), ODD(msg->sequenceNumber), thisStation.getSOTAref());  // Begin a QSO with their station
+            contact.setMyRSL(msg->field3);         // Record our RSL from remote station
+            contact.setWorkedRSL(msg->snr);        // Record their RSL at the same time as ours
+            setXmitParams(msg->field2, msg->snr);  // Inform gen_ft8 of remote station's info
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
             set_message(MSG_RRSL);  // Roger our RSL and send their RSL to remote station
             state = RRSL_PENDING;   // Transmit their RSL in next appropriate timeslot
             // ui.applicationMsgs->setText(get_message(), A_YELLOW);
-            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
+            // ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);
             break;
 
         // Ignore non-sense
@@ -1021,13 +1024,14 @@ void Sequencer::locatorEvent(Decode* msg) {
         case CQ_PENDING:  // We were going to [re]transmit CQ but received this msg first
         case LISTEN_LOC:  // We were listening for a response to our CQ and received this msg
             DTRACE();
-            contact.begin(thisStation.getCallsign(), msg->field2, thisStation.getFrequency(), "FT8", thisStation.getRig(), ODD(sequenceNumber), thisStation.getSOTAref());  // Start gathering QSO info
-            contact.setWorkedLocator(msg->field3);                                                                                                                          // Record responder's locator
-            setXmitParams(msg->field2, msg->snr);                                                                                                                           // Inform gen_ft8 of remote station's info
+            startQSO(msg->field2, ODD(sequenceNumber));
+            // contact.begin(thisStation.getCallsign(), msg->field2, thisStation.getFrequency(), "FT8", thisStation.getRig(), ODD(sequenceNumber), thisStation.getSOTAref());  // Start gathering QSO info
+            contact.setWorkedLocator(msg->field3);  // Record responder's locator
+            setXmitParams(msg->field2, msg->snr);   // Inform gen_ft8 of remote station's info
             DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, qso.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
-            set_message(MSG_RSL);                             // Prepare tones to transmit RSL
-            state = RSL_PENDING;                              // Must await an appropriate timeslot when the remote station is listening
-            ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Let operator know we have a transmission pending
+            set_message(MSG_RSL);  // Prepare tones to transmit RSL
+            state = RSL_PENDING;   // Must await an appropriate timeslot when the remote station is listening
+            // ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Let operator know we have a transmission pending
             break;
 
         // Something is wrong and we don't know why we apparently received their locator.  Maybe we should reset everything???
@@ -1177,34 +1181,77 @@ void Sequencer::stopTimer() {
 }
 
 /**
+ * @brief Helper routine to start a QSO
+ * @param workedCall The remote station's callsign
+ * @param oddEven Remote station expected to transmit in 1==odd, 0==even-numbered timeslots
+ *
+ * Manages details around starting a new QSO:
+ *  + Initialize the contact object with information about this QSO
+ *  + TODO:  Configure the UI for an active QSO
+ *
+ * @note Starting a QSO doesn't imply the contact will be successful as it may fail
+ * for any of many reasons (QRM, QSB, QLF, QRT...).
+ *
+ */
+void Sequencer::startQSO(const char* workedCall, unsigned oddEven) {
+    DTRACE();
+
+    // Activate this contact
+    contact.begin(thisStation.getCallsign(), workedCall, thisStation.getFrequency(), "FT8", thisStation.getRig(), oddEven, thisStation.getSOTAref());
+
+    // Record some info known about this contact
+    contact.setRig(thisStation.getRig());            // Our rig description
+    contact.setPwr(0.250);                           // Our power in watts, about 1/2 of a gerbil wheel                                                                                                 // Watts
+    contact.setMyLocator(thisStation.getLocator());  // Our Maidenhead grid square
+    contact.setMyName(thisStation.getMyName());      // Our operator's name
+
+    // Setup UI to display an active QSO
+    ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Indicate we have a transmission pending
+    // TODO:  Switch the UI from UI_LISTEN to UI_QSO
+
+}  // startQSO
+
+/**
  * @brief Terminate a QSO
  *
- * @note Helper routine manages a myriad of details involved in ending a QSO:
+ * @note Helper routine manages a myriad of details around ending a QSO:
  *
- *  + Log a contact if possible
+ *  + Log a contact if sufficient info was obtained
  *  + Clear an outstanding FT8 message, if any
  *  + Clear the info display message, if any
  *  + Reset highlighted buttons
  *  + Cancel the timeout Timer
  *  + Switch from transmit to receive
  *
- * Note:  Upon entry, we expect the contact structure to have "all" the available
+ * Note:  Upon entry, we expect the log contact structure to have the available
  * info about the ending QSO.  That info may or may not be complete (and thus the
  * QSO may or may not have been completed successfully).
+ *
+ * @note The contact object should have been a singleton as there is only one
+ * and it's always instantiated.  Its begin() method initializes the contact
+ * object state for a new QSO (marking it "active") and its reset() method
+ * resets its state, making it "inactive."
+ *
+ * @note The Sequencer is allowed to invoke endQSO() to clean-up a potential QSO
+ * whose contact object never even became active.  Likewise, a QSO might become
+ * active without acquiring sufficient info about the remote station to be
+ * considered a valid contact (for logging purposes).
+ *
+ * @note The Sequencer
  *
  */
 void Sequencer::endQSO() {
     DTRACE();
 
-    // Add contact info to log
-    contact.setRig(thisStation.getRig());            // Pocket FT8 description
+    // Add some local parameters to the log's contact structure
+    contact.setRig(thisStation.getRig());            // Pocket FT8 rig description
     contact.setPwr(0.250);                           // Watts
     contact.setMyLocator(thisStation.getLocator());  // Maidenhead grid square
     contact.setMyName(thisStation.getMyName());      // Operator's name if available
 
-    // Log the contact if we collected sufficient data about the remote station.  We
-    // are overly strict here (see the isValid() code) compared to LoTW, but
-    // comparable to SOTA/POTA conventions.
+    // Only log the contact if we collected sufficient info about the remote station.
+    // We are overly strict here (see the isValid() code) when compared to LoTW, but
+    // comparable to SOTA/POTA any many other conventions.
     if (contact.isActive() && contact.isValid()) {
         DTRACE();
         contactLog->logContact(&contact);
@@ -1212,7 +1259,7 @@ void Sequencer::endQSO() {
         ui.applicationMsgs->setText(str);
     }
 
-    // Cancel the QSO timeout Timer
+    // Cancel the QSO timeout Timer (if it's running)
     stopTimer();
 
     // Disarm the transmitter, clear the outbound message, and turn the receiver on
@@ -1231,9 +1278,9 @@ void Sequencer::endQSO() {
     // would continue to make QSOs while we enjoy refreshments in the shade.
     // setAutoReplyToCQ(false);
 
-    // We are finished with this contact whether we had enough data to log it or not
+    // We are finished with this contact object's info
     contact.reset();
-    ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // We are receiving again
+    // ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // We are receiving again
 
 }  // endQSO()
 

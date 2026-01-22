@@ -48,7 +48,7 @@
 
 #include "Adafruit_GFX.h"  //HX8357_t3n requires you #include GFX before...
 #include "HX8357_t3n.h"    //you #include the HX8357 variation.
-#include "DEBUG.h"         //For printf-style debugging on a Teensy sans JTAG :(
+#include "NODEBUG.h"       //For printf-style debugging on a Teensy sans JTAG :(
 
 //-----------------------------------------------------------------------------
 HX8357_t3n* AGUI::gfx;
