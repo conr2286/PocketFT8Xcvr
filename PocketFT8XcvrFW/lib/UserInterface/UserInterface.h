@@ -49,7 +49,7 @@ static const ALength InfoW = 119;  // Width
 static const ALength InfoH = 112;  // Height
 
 // Define Application Message boundary and extent
-static const ACoord AppMsgX = 262;     // Upper-left corner
+static const ACoord AppMsgX = 262;   // Upper-left corner
 static const ACoord AppMsgY = 228;   // Upper-left corner
 static const ALength AppMsgW = 218;  // Width
 static const ALength AppMsgH = 60;   // Height
@@ -61,33 +61,42 @@ static const ALength ButtonHeight = 30;   // Height in pixels
 static const ACoord ButtonX = 1;          // Button row left-side inset
 static const ACoord ButtonY = 290;        // All buttons in one row at screen bottom
 
-class StationMessagesItem;
+class QSOMessagesItem;
 
-class StationMessages : public AScrollBox {
+class QSOMessages : public AScrollBox {
    public:
-    StationMessages(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {
+    QSOMessages(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {
         for (int i = 0; i < maxItems; i++) items[i] = nullptr;
     }
     void onTouchItem(AScrollBoxItem* pItem) override;  // Application overrides onTouchItem() to receive notifications of touch events
-    StationMessagesItem* addStationMessageItem(StationMessages* pStationMessages, Decode* msg);
-    StationMessagesItem* addStationMessageItem(StationMessages* pStationMessages, String str);
+    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, Decode* msg);
+    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, String str);
 
    private:
-    StationMessagesItem* items[maxItems];
+    QSOMessagesItem* items[maxItems];  // All message items
+    QSOMessagesItem* pLastMsgItem;     // The previously displayed QSO message
 };
 
 static String emptyString = String("");
 
-class StationMessagesItem : public AScrollBoxItem {
+/**
+ * @brief Our record of a QSO message sent to or received by our station
+ *
+ * @note We record a copy of the entire Decode message object as some may be later referenced
+ */
+class QSOMessagesItem : public AScrollBoxItem {
    public:
-    StationMessagesItem(Decode* pNewMsg, AColor fgColor, AColor bgColor, StationMessages* pBox) : AScrollBoxItem(emptyString, fgColor, bgColor, pBox) {
-        msg = *pNewMsg;                                          // Retain a copy of the received msg struct
-        pStationMessages = static_cast<StationMessages*>(pBox);  // Save pointer to the base class object
-    }  // StationMessagesItem()
-    StationMessages* pStationMessages;
-    Decode msg;  // The decoded message struct for this item
+    QSOMessagesItem(Decode* pNewMsg, AColor fgColor, AColor bgColor, QSOMessages* pBox) : AScrollBoxItem(emptyString, fgColor, bgColor, pBox) {
+        msg = *pNewMsg;                                      // Retain a copy of the received msg struct
+        pStationMessages = static_cast<QSOMessages*>(pBox);  // Save pointer to the base class object
+    }  // QSOMessagesItem()
+    QSOMessages* pStationMessages;
+    Decode msg;  // A copy of the decoded message struct for this item
 };
 
+// Define the Waterfall class to implement theWaterfall "singleton" (well...) displaying
+// the history of received signal levels vs. frequency.  Touching theWaterfall display
+// moves the transmitter's offset (i.e. AFSK tone) frequency.
 class Waterfall : public APixelBox {
    public:
     Waterfall() : APixelBox(WaterfallX, WaterfallY, WaterfallRows, WaterfallCols) {}
@@ -126,12 +135,19 @@ class UserInterface {
     void displayMode(String mode, AColor fg);
     void setXmitRecvIndicator(IndicatorIconType indicator);
 
-    // The widgets for displaying station info, traffic and info about the rig
-    Waterfall* theWaterfall;
-    AListBox* stationInfo;
-    DecodedMsgsBox* decodedMsgs;
-    StationMessages* stationMsgs;
-    ATextBox* applicationMsgs;
+    // Decorator methods for UI widgets
+    void drawWaterfallPixel(APixelPos x, APixelPos y, AColor color);                     // Draws a pixel in the waterfall graph
+    void displayQSOMsg(String s);                                                        // Display a message String in the QSO widget
+    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, Decode* msg);  // Add a decoded message to QSO
+    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, String str);   // Add a string to QSO
+
+    // The widgets for displaying station info, traffic and info about the rig.
+    // These really should have been singletons.
+    Waterfall* theWaterfall;         // This is the Pocket FT8 waterfall graph
+    AListBox* stationInfo;           // Information about our station
+    DecodedMsgsBox* allDecodedMsgs;  // All FT8 messages decoded in the previous timeslot
+    QSOMessages* theQSOMsgs;         // FT8 messages transmitted to/from our station
+    ATextBox* applicationMsgs;       // Status/error messages
 
     // The stationInfo items
     AListBoxItem* itemDate;

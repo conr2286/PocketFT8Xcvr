@@ -209,8 +209,8 @@ void Sequencer::timeslotEvent() {
     DPRINTF("%s sequenceNumber=%lu, state=%u\n", __FUNCTION__, sequenceNumber, state);
 
     // Review and purge ancient messages from UI (this is how we dispose of old messages)
-    ui.stationMsgs->reviewTimeStamps();  // Messages sent to our station
-    ui.decodedMsgs->reviewTimeStamps();  // All decoded messages
+    ui.theQSOMsgs->reviewTimeStamps();      // Messages sent to our station
+    ui.allDecodedMsgs->reviewTimeStamps();  // All decoded messages
 
     // Sequencer state determines what action to take
     switch (state) {
@@ -420,9 +420,9 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             // Display messages addressed to us in our Station Messages box.  Retransmissions appear
             // in yellow rather than wasting another line in our little Station Messages GUI box
             if (thisReceivedMsg == lastReceivedMsg) {
-                ui.stationMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+                // ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
             } else {
-                lastStationMsgsItem = ui.stationMsgs->addStationMessageItem(ui.stationMsgs, thisReceivedMsg);  // New received msg
+                lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisReceivedMsg);  // New received msg
             }
             lastReceivedMsg = thisReceivedMsg;  // Remember this received msg text for when the next msg arrives
         }
@@ -1110,9 +1110,9 @@ void Sequencer::actionPendXmit(unsigned oddEven, SequencerStateType newState) {
         ui.setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);   // Transmission will begin in loop()
         String thisTransmittedMsg = String(get_message());  // The pending outbound message text
         if (thisTransmittedMsg == lastTransmittedMsg) {
-            ui.stationMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+            // ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
         } else {
-            lastStationMsgsItem = ui.stationMsgs->addStationMessageItem(ui.stationMsgs, thisTransmittedMsg);  // New transmitted msg
+            lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisTransmittedMsg);  // New transmitted msg
         }
         lastTransmittedMsg = thisTransmittedMsg;  // Remember for next time we add an item
         // DPRINTF("thisTransmittedMsg='%s'\n", thisTransmittedMsg.c_str());
@@ -1321,7 +1321,7 @@ bool getAutoReplyToCQ() {
 void Sequencer::highlightAbortedTransmission() {
     String thisTransmittedMsg = String(get_message());  // The pending outbound message text
     if (thisTransmittedMsg == lastTransmittedMsg) {
-        ui.stationMsgs->setItemColors(lastStationMsgsItem, A_DARK_GREY, A_BLACK);  // Recolor previous (retransmitted) msg
+        ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_DARK_GREY, A_BLACK);  // Recolor previous (retransmitted) msg
     }
 }  // highlightAbortedTransmission()
 

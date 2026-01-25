@@ -261,7 +261,7 @@ void display_messages(int decoded_messages) {
 
     // Display info about each decoded message.  field1 is receiving station's callsign or CQ, field2 is transmitting station's callsign,
     // field3 is an RSL or locator or ???.
-    if (decoded_messages > 0) ui.decodedMsgs->reset();                  // Clear all the old messages
+    if (decoded_messages > 0) ui.allDecodedMsgs->reset();               // Clear all the old messages
     for (int i = 0; i < decoded_messages && i <= message_limit; i++) {  // Charlie's leading handled 6 rows of text
         snprintf(message, sizeof(message), "%s %s %4s S%c", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3, rsl2s(new_decoded[i].snr));
 
@@ -272,7 +272,7 @@ void display_messages(int decoded_messages) {
                 color = A_WHITE;  // CQ messages appear in white
             }
             // For now, don't display messages with hashed callsigns as our FT8 library doesn't support them
-            /*if (strchr(message, '<') == NULL)*/ ui.decodedMsgs->addItem(ui.decodedMsgs, message, color);  // Display received message
+            /*if (strchr(message, '<') == NULL)*/ ui.allDecodedMsgs->addItem(ui.allDecodedMsgs, message, color);  // Display received message
         }
     }
 
@@ -394,7 +394,7 @@ int Check_Calling_Stations(int num_decoded) {
             // Display details of received message addressed to our station
             getTeensy3Time();
             snprintf(big_gulp, sizeof(message), "%02i/%02i/%4i %s %s", day(), month(), year(), new_decoded[i].decode_time, message);
-            // ui.stationMsgs->addItem(ui.stationMsgs, String(message));
+            // ui.theQSOMsgs->addItem(ui.theQSOMsgs, String(message));
 
             num_Calling_Stations++;
             message_test = i + 100;  // 100+index of this calling station.  Why the 100 bias???

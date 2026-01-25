@@ -1,21 +1,23 @@
 /**
- * @brief Interface between legacy Pocket FT8 code and the current lib_ft8
+ * @brief Interface between legacy ft8_lib and the Oct 2025 lib_ft8 APIs
  *
  * @note The github ft8_lib code underwent substantial changes independent of the
  * Pocket FT8 development.  Here we implement the legacy ft8_lib interface to the
- * October 2025 version of ft8_lib (to allow use of the new lib code without
- * massive changes to the Pocket FT8 code), and minimal changes to ft8_lib.
+ * October 2025 version of ft8_lib (allowing use of the new ft8_lib code without
+ * massive changes to existing Pocket FT8 code) with minimal changes to ft8_lib.
+ *
+ * @note Of particular interest from the Oct 2025 version of ft8_lib are the
+ * bug fixes and the hashed callsign feature.
  */
 
 #include <Arduino.h>
 #include <map>
 #include "ft8LibIfce.h"
 #include "message.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "text.h"
 
 std::map<uint32_t, String> hashedCallsignTable;  // Surprise:  Implemented as an ordered map!
-
 
 /**
  * @brief Returns #entries in the hashedCallsignTable
@@ -30,14 +32,14 @@ uint32_t getHashedCallsignTableSize(void) {
  * @param callsign The callsign to be associated with key
  * @param key22 Apparently caller always supplies a 22-bit key
  *
- * @note We don't actually use a hash table as we've already loaded std::map
+ * @note We don't actually use a hash table as we've already loaded std::map into memory
  *
  * @note Recording an entry with a previously used key overwrites the existing entry
  */
 static void save_hash(const char* callsign, uint32_t key22) {
     uint32_t key10 = (key22 >> 12) & 0x3ff;  // Entries are apparently recorded using a 10-bit key
     hashedCallsignTable[key10] = callsign;
-    //DPRINTF("save_hash('%s',key22=%d) used key10=%d, size()=%d\n", callsign, key22, key10, hashedCallsignTable.size());
+    // DPRINTF("save_hash('%s',key22=%d) used key10=%d, size()=%d\n", callsign, key22, key10, hashedCallsignTable.size());
 
 }  // add()
 
@@ -93,6 +95,9 @@ static ftx_callsign_hash_interface_t hashingIfce = {lookup_hash, save_hash};
  * @param field3 char[7] in which to place FT8 message field3
  * @param msgType Returns legacy ft8_lib MsgType
  * @return 0==success
+ *
+ * @note unpack77_fields() is an adapter implementing a legacy ft8_lib interface to the
+ * Oct 2025 ft8_lib APIs.
  *
  */
 int unpack77_fields(const uint8_t* a77, char* field1, char* field2, char* field3, MsgType* msgType) {
@@ -173,6 +178,8 @@ int unpack77_fields(const uint8_t* a77, char* field1, char* field2, char* field3
  *
  * @note While result includes a hash member, apparently for identifying duplicate messages,
  * it does not appear to be in-use anywhere.
+ *
+ * @note pack77() implements an adapter for a legacy ft8_lib interface to the Oct 2025 APIs
  */
 int pack77(const char* msg, uint8_t* b77) {
     ftx_message_t result;
@@ -190,7 +197,7 @@ int pack77(const char* msg, uint8_t* b77) {
 }  // pack77()
 
 /**
- * @brief Trim angle brackets from a callsign string in-place
+ * @brief Helper function to trim angle brackets from a callsign string in-place
  * @param s Callsign string (may be NULL), too-short, or even empty
  *
  * @note The callsign string may or may not actually include angle brackets

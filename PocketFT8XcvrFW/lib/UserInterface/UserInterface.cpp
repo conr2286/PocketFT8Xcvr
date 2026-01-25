@@ -26,7 +26,7 @@
 #include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"        //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
-#include "NODEBUG.h"          //USB Serial debugging on the Teensy 4.1
+#include "DEBUG.h"            //USB Serial debugging on the Teensy 4.1
 #include "PocketFT8Xcvr.h"    //Globals
 #include "Sequencer.h"        //RoboOp
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
@@ -55,9 +55,6 @@ extern void sync_FT8(void);
 extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
 extern UserInterface ui;
 
-// The legacy externs
-// extern uint16_t cursor_freq;  // Frequency of FT8 cursor in Hz
-
 void DecodedMsgsBox::setMsg(int index, char* msg) {
     DPRINTF("setMsg(%d,'%s')\n", index, msg);
     setItem(index, msg, A_WHITE, bgColor);
@@ -73,7 +70,7 @@ void UserInterface::begin() {
     gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
     // ts = new TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                    // 282 ohms is the measured x-Axis resistance of my Adafruit 2050 touchscreen
 
-    // Build the Waterfall
+    // Build the Waterfall object
     theWaterfall = new Waterfall();
 
     // Build the stationInfo
@@ -87,10 +84,10 @@ void UserInterface::begin() {
     itemMode = stationInfo->addItem(stationInfo, "");
 
     // Build the decoded messages box
-    decodedMsgs = new DecodedMsgsBox(DecodedMsgsX, DecodedMsgsY, DecodedMsgsW, DecodedMsgsH, A_DARK_GREY);
+    allDecodedMsgs = new DecodedMsgsBox(DecodedMsgsX, DecodedMsgsY, DecodedMsgsW, DecodedMsgsH, A_DARK_GREY);
 
     // Build the station messages box
-    stationMsgs = new StationMessages(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
+    theQSOMsgs = new QSOMessages(StationMsgsX, StationMsgsY, StationMsgsW, StationMsgsH, A_DARK_GREY);
 
     // // Application message box
     applicationMsgs = new ATextBox("", AppMsgX, AppMsgY, AppMsgW, AppMsgH, A_DARK_GREY);
@@ -388,7 +385,23 @@ void Waterfall::onTouchPixel(ACoord x, ACoord y) {
     ui.displayFrequency();  // Update station info display too
 #endif
 
-}  // onTouchPixel()
+}  // Waterfall::onTouchPixel()
+
+/**
+ * @brief Draw one pixel in the Pocket FT8 waterfall graph
+ * @param x Drawn pixel's x-Coordinate
+ * @param y Drawn pixel's y-Coordinate
+ * @param c The drawn pixel's color
+ *
+ * @note The UserInterface::drawWaterfallPixel() method decorates APixelBox::drawPixel() allowing
+ * the FT8 receiver's Process_DSP code to update the waterfall graph without concern for whether
+ * the UI is currently displaying the waterfall or not (as, in some small screen implementations,
+ * the UI does not display the waterfall during a QSO).
+ */
+void UserInterface::drawWaterfallPixel(APixelPos x, APixelPos y, AColor color) {
+    if (theWaterfall == NULL) return;      // Sanity check
+    theWaterfall->drawPixel(x, y, color);  // Draw the pixel
+}  // UserInterface::drawWaterfallPixel()
 
 /**
  * @brief Override AListBox to receive touch notifications for list items
@@ -437,10 +450,10 @@ static String getNextStringToken(String& str) {
  * @brief Override notified when StationMessage item touched
  * @param pItem
  */
-void StationMessages::onTouchItem(AScrollBoxItem* pItem) {
+void QSOMessages::onTouchItem(AScrollBoxItem* pItem) {
     DPRINTF("touched text %s\n", pItem->getItemText()->c_str());
 
-    StationMessagesItem* pMsgItem = static_cast<StationMessagesItem*>(pItem);
+    QSOMessagesItem* pMsgItem = static_cast<QSOMessagesItem*>(pItem);
 
     DPRINTF("field1=%s field2=%s field3=%s\n", pMsgItem->msg.field1, pMsgItem->msg.field2, pMsgItem->msg.field3);
 
@@ -462,9 +475,9 @@ void StationMessages::onTouchItem(AScrollBoxItem* pItem) {
     seq.clickDecodedMessageEvent(&(pMsgItem->msg));
 #endif
 
-}  // StationMessages::onTouchItem()
+}  // QSOMessages::onTouchItem()
 
-StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pContainer, String str) {
+QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, String str) {
     Decode newMsg;
 
     // Extract fields from str
@@ -475,7 +488,7 @@ StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pCo
 
     DPRINTF("%s %s %s \n", newMsg.field1, newMsg.field2, newMsg.field3);
 
-    StationMessagesItem* newItem = addStationMessageItem(pContainer, &newMsg);
+    QSOMessagesItem* newItem = addStationMessageItem(pContainer, &newMsg);
     DTRACE();
 
     return newItem;
@@ -487,17 +500,23 @@ StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pCo
  * @param pNewMsg New Decode msg structure
  * @return Pointer to new item or nullptr
  */
-StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pStationMessages, Decode* pNewMsg) {
+QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessages, Decode* pNewMsg) {
     int newItemIndex = nDisplayedItems;
-    StationMessagesItem* pNewItem;
-    String str = pNewMsg->toString();
+    QSOMessagesItem* pNewItem;
+    String newMsg = pNewMsg->toString();
 
     DPRINTF("field1=%s field2=%s field3=%s\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3);
+
+    // If the message is a retransmission of the previous message, just recolor the previous message indicating retransmission(s)
+    if ((pLastMsgItem != NULL) && pNewMsg->toString() == pLastMsgItem->str) {
+        DTRACE();
+        ui.theQSOMsgs->setItemColors(pLastMsgItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+    }
 
     // Too many items for our simple data structs?
     if (nDisplayedItems >= maxItems) return nullptr;
 
-    pNewItem = new StationMessagesItem(pNewMsg, A_WHITE, A_BLACK, pStationMessages);  // Derived of AScrollBoxItem
+    pNewItem = new QSOMessagesItem(pNewMsg, A_WHITE, A_BLACK, pStationMessages);  // Derived of AScrollBoxItem
     if (pNewItem != nullptr) {
         pNewItem->setItemText(pNewMsg->toString());
         items[newItemIndex] = pNewItem;
@@ -513,8 +532,9 @@ StationMessagesItem* StationMessages::addStationMessageItem(StationMessages* pSt
     }
 
     // Record the new item
-    nDisplayedItems++;  // Bump count of displayed items
-    displayedItems[newItemIndex] = pNewItem;
+    nDisplayedItems++;                        // Bump count of displayed items
+    displayedItems[newItemIndex] = pNewItem;  // The message item
+    pLastMsgItem = pNewItem;                  // Remember the new item as the previous item for the next message
 
     // Paint the new item
     repaint(pNewItem);
