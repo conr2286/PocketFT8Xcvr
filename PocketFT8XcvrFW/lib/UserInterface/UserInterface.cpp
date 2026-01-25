@@ -506,12 +506,13 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
     String newMsg = pNewMsg->toString();
 
     DPRINTF("field1=%s field2=%s field3=%s\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3);
+    // if (pLastMsgItem != NULL) DPRINTF("lastMsgItem='%s\n'", pLastMsgItem->str.c_str());
 
     // If the message is a retransmission of the previous message, just recolor the previous message indicating retransmission(s)
-    if ((pLastMsgItem != NULL) && pNewMsg->toString() == pLastMsgItem->str) {
-        DTRACE();
-        ui.theQSOMsgs->setItemColors(pLastMsgItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
-    }
+    // if ((pLastMsgItem != NULL) && pNewMsg->toString() == pLastMsgItem->str) {
+    //     DTRACE();
+    //     ui.theQSOMsgs->setItemColors(pLastMsgItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+    // }
 
     // Too many items for our simple data structs?
     if (nDisplayedItems >= maxItems) return nullptr;
