@@ -486,7 +486,7 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, Str
     strcpy(newMsg.field2, getNextStringToken(str).c_str());
     strcpy(newMsg.field3, getNextStringToken(str).c_str());
 
-    DPRINTF("%s %s %s \n", newMsg.field1, newMsg.field2, newMsg.field3);
+    DPRINTF("%s %s %s\n", newMsg.field1, newMsg.field2, newMsg.field3);
 
     QSOMessagesItem* newItem = addStationMessageItem(pContainer, &newMsg);
     DTRACE();
@@ -502,45 +502,46 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, Str
  */
 QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessages, Decode* pNewMsg) {
     int newItemIndex = nDisplayedItems;
-    QSOMessagesItem* pNewItem;
     String newMsg = pNewMsg->toString();
 
     DPRINTF("field1=%s field2=%s field3=%s\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3);
-    // if (pLastMsgItem != NULL) DPRINTF("lastMsgItem='%s\n'", pLastMsgItem->str.c_str());
+    if (pLastMsgItem != NULL) DPRINTF("lastMsgItem='%s'\n", pLastMsgItem->str.c_str());
 
     // If the message is a retransmission of the previous message, just recolor the previous message indicating retransmission(s)
-    // if ((pLastMsgItem != NULL) && pNewMsg->toString() == pLastMsgItem->str) {
-    //     DTRACE();
-    //     ui.theQSOMsgs->setItemColors(pLastMsgItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
-    // }
+    if ((pLastMsgItem != NULL) && (pNewMsg->toString() == pLastMsgItem->str)) {
+        DTRACE();
+        ui.theQSOMsgs->setItemColors(pLastMsgItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+        return pLastMsgItem;                                            // We didn't create a new item
+    } else {
+        // Add new message item, checking for too many items
+        QSOMessagesItem* pNewItem = NULL;
 
-    // Too many items for our simple data structs?
-    if (nDisplayedItems >= maxItems) return nullptr;
+        if (nDisplayedItems >= maxItems) return nullptr;
 
-    pNewItem = new QSOMessagesItem(pNewMsg, A_WHITE, A_BLACK, pStationMessages);  // Derived of AScrollBoxItem
-    if (pNewItem != nullptr) {
-        pNewItem->setItemText(pNewMsg->toString());
-        items[newItemIndex] = pNewItem;
+        pNewItem = new QSOMessagesItem(pNewMsg, A_WHITE, A_BLACK, pStationMessages);  // Derived of AScrollBoxItem
+        if (pNewItem != nullptr) {
+            pNewItem->setItemText(pNewMsg->toString());
+            items[newItemIndex] = pNewItem;
+        }
+
+        // Record the timestamp
+        pNewItem->timeStamp = millis();  // Record timestamp when item created
+
+        // Scroll the displayed items up if the added item won't fit within widget's boundary box
+        if (!itemWillFit(nDisplayedItems + 1)) {
+            DPRINTF("Scroll with nDisplayedItems=%d\n", nDisplayedItems);
+            scrollUpOneLine();  // Scrolling reduces nDisplayedItems by one, making room for new item
+        }
+
+        // Record the new item
+        nDisplayedItems++;                        // Bump count of displayed items
+        displayedItems[newItemIndex] = pNewItem;  // The message item
+        pLastMsgItem = pNewItem;                  // Remember the new item as the previous item for the next message
+
+        // Paint the new item
+        repaint(pNewItem);
+        return pNewItem;
     }
-
-    // Record the timestamp
-    pNewItem->timeStamp = millis();  // Record timestamp when item created
-
-    // Scroll the displayed items up if the added item won't fit within widget's boundary box
-    if (!itemWillFit(nDisplayedItems + 1)) {
-        DPRINTF("Scroll with nDisplayedItems=%d\n", nDisplayedItems);
-        scrollUpOneLine();  // Scrolling reduces nDisplayedItems by one, making room for new item
-    }
-
-    // Record the new item
-    nDisplayedItems++;                        // Bump count of displayed items
-    displayedItems[newItemIndex] = pNewItem;  // The message item
-    pLastMsgItem = pNewItem;                  // Remember the new item as the previous item for the next message
-
-    // Paint the new item
-    repaint(pNewItem);
-
-    return pNewItem;
 }
 
 void display_value(int x, int y, int value) {

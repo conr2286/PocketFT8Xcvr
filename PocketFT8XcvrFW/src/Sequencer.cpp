@@ -1109,11 +1109,11 @@ void Sequencer::actionPendXmit(unsigned oddEven, SequencerStateType newState) {
         state = newState;                                   // Advance state machine to new state after arming the transmitter
         ui.setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);   // Transmission will begin in loop()
         String thisTransmittedMsg = String(get_message());  // The pending outbound message text
-        if (thisTransmittedMsg == lastTransmittedMsg) {
-            // ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
-        } else {
-            lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisTransmittedMsg);  // New transmitted msg
-        }
+                                                            // if (thisTransmittedMsg == lastTransmittedMsg) {
+        //  ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+        //} else {
+        lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisTransmittedMsg);  // New transmitted msg
+        //}
         lastTransmittedMsg = thisTransmittedMsg;  // Remember for next time we add an item
         // DPRINTF("thisTransmittedMsg='%s'\n", thisTransmittedMsg.c_str());
     } else {

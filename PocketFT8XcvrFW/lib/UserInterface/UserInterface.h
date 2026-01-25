@@ -67,6 +67,7 @@ class QSOMessages : public AScrollBox {
    public:
     QSOMessages(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {
         for (int i = 0; i < maxItems; i++) items[i] = nullptr;
+        pLastMsgItem = NULL;
     }
     void onTouchItem(AScrollBoxItem* pItem) override;  // Application overrides onTouchItem() to receive notifications of touch events
     QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, Decode* msg);
@@ -87,6 +88,7 @@ static String emptyString = String("");
 class QSOMessagesItem : public AScrollBoxItem {
    public:
     QSOMessagesItem(Decode* pNewMsg, AColor fgColor, AColor bgColor, QSOMessages* pBox) : AScrollBoxItem(emptyString, fgColor, bgColor, pBox) {
+        printf("%s:%u\n", __FILE__, __LINE__);
         msg = *pNewMsg;                                      // Retain a copy of the received msg struct
         pStationMessages = static_cast<QSOMessages*>(pBox);  // Save pointer to the base class object
     }  // QSOMessagesItem()
