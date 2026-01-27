@@ -1319,9 +1319,10 @@ bool getAutoReplyToCQ() {
  * received a satisfactory response from the remote station.
  */
 void Sequencer::highlightAbortedTransmission() {
+    DTRACE();
     String thisTransmittedMsg = String(get_message());  // The pending outbound message text
     if (thisTransmittedMsg == lastTransmittedMsg) {
-        ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_DARK_GREY, A_BLACK);  // Recolor previous (retransmitted) msg
+        ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_RED, A_BLACK);  // Recolor previous (retransmitted) msg
     }
 }  // highlightAbortedTransmission()
 
