@@ -420,9 +420,9 @@ void Sequencer::receivedMsgEvent(Decode* msg) {
             // Display messages addressed to us in our Station Messages box.  Retransmissions appear
             // in yellow rather than wasting another line in our little Station Messages GUI box
             if (thisReceivedMsg == lastReceivedMsg) {
-                // ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+                lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisReceivedMsg, QSO_MSG_RECVRPT);  // Repeated (retransmission from remote station) message
             } else {
-                lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisReceivedMsg);  // New received msg
+                lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisReceivedMsg, QSO_MSG_RECVD);  // New received msg
             }
             lastReceivedMsg = thisReceivedMsg;  // Remember this received msg text for when the next msg arrives
         }
@@ -1109,11 +1109,12 @@ void Sequencer::actionPendXmit(unsigned oddEven, SequencerStateType newState) {
         state = newState;                                   // Advance state machine to new state after arming the transmitter
         ui.setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);   // Transmission will begin in loop()
         String thisTransmittedMsg = String(get_message());  // The pending outbound message text
-                                                            // if (thisTransmittedMsg == lastTransmittedMsg) {
-        //  ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
-        //} else {
-        lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisTransmittedMsg);  // New transmitted msg
-        //}
+        if (thisTransmittedMsg == lastTransmittedMsg) {
+            // ui.theQSOMsgs->setItemColors(lastStationMsgsItem, A_YELLOW, A_BLACK);                           // Recolor previous (retransmitted) msg
+            lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisTransmittedMsg, QSO_MSG_XMITRPT);  // Repeat transmission
+        } else {
+            lastStationMsgsItem = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, thisTransmittedMsg, QSO_MSG_XMITING);  // New transmission
+        }
         lastTransmittedMsg = thisTransmittedMsg;  // Remember for next time we add an item
         // DPRINTF("thisTransmittedMsg='%s'\n", thisTransmittedMsg.c_str());
     } else {

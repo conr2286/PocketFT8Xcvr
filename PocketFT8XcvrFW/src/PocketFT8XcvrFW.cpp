@@ -82,6 +82,7 @@
 #include <gfxfont.h>
 
 #include "AListBox.h"
+#include "freemem.h"
 #include "Config.h"
 #include "FT8Font.h"
 #include "GPShelper.h"
@@ -682,6 +683,9 @@ void update_synchronization() {
 
         // Debug timeslot and sequencer problems
         DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s', autoReplyToCQ=%u, hashedCallsignTable.size=%u ---\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message(), getAutoReplyToCQ(), getHashedCallsignTableSize());
+
+        // Debug check memory utilization
+        DPRINTF("getFreeHeap=%lu\n", getFreeHeap());
     }
 }  // update_synchronization()
 
@@ -735,7 +739,7 @@ void waitForFT8timeslot(void) {
     // DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validGPSdata);
 
     // displayInfoMsg("Waiting for timeslot");
-    ui.applicationMsgs->setText("Awaiting FT8 timeslot");
+    ui.applicationMsgs->setText("Awaiting timeslot");
 
     // If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
     if (gpsHelper.validGPSdata) {

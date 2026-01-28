@@ -24,6 +24,17 @@ typedef enum {
     INDICATOR_ICON_TUNING = 3
 } IndicatorIconType;
 
+// Station QSO message
+typedef enum {
+    QSO_MSG_XMITPEND = 0,  // Outbound msg awaiting timeslot for transmission
+    QSO_MSG_XMITING = 1,   // Outbound msg during transmission
+    QSO_MSG_XMITD = 2,     // Outbound sent (transmission complete) message
+    QSO_MSG_XMITRPT = 3,   // Outbound message repeated
+    QSO_MSG_RECVD = 4,     // Received message
+    QSO_MSG_RECVRPT = 5,   // Repeated received
+    QSO_MSG_DEBUG = 6      // Indicator used only for debugging
+} QSOMsgType;
+
 // Define the Waterfall widget's boundary and extent
 static const ACoord WaterfallX = 0;          // Upper-left corner of Waterfall
 static const ACoord WaterfallY = 0;          // Upper-left corner of Waterfall
@@ -70,8 +81,8 @@ class QSOMessages : public AScrollBox {
         pLastMsgItem = NULL;
     }
     void onTouchItem(AScrollBoxItem* pItem) override;  // Application overrides onTouchItem() to receive notifications of touch events
-    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, Decode* msg);
-    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, String str);
+    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, Decode* msg, QSOMsgType msgType);
+    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, String str, QSOMsgType msgType);
 
    private:
     QSOMessagesItem* items[maxItems];  // All message items

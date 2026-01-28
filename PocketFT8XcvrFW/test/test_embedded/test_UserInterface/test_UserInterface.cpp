@@ -64,10 +64,10 @@ void test_StationMsgs(void) {
     strcpy(msg2.field2, "KQ7B");
     strcpy(msg2.field3, "DN15");
     TEST_MESSAGE("test_StationMsgs\n");
-    QSOMessagesItem* pCQ = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, &msg1);
+    QSOMessagesItem* pCQ = ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, &msg1, QSO_MSG_RECVD);
     pCQ->setItemColors(A_YELLOW, A_BLACK);
-    ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, &msg2);
-    ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, "NA1A KQ7B 73");
+    ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, &msg2, QSO_MSG_XMITD);
+    ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, "NA1A KQ7B 73", QSO_MSG_XMITPEND);
     ui.theQSOMsgs->addItem(ui.theQSOMsgs, "1234567890ABCDEFGHIJKLMNOP");  // Invoke base class addItem to display long undecoded string
     delay(2000);
     AWidget::processTouch(270, 120);  // Touch AG0E's CQ message

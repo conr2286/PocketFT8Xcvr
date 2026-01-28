@@ -477,7 +477,7 @@ void QSOMessages::onTouchItem(AScrollBoxItem* pItem) {
 
 }  // QSOMessages::onTouchItem()
 
-QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, String str) {
+QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, String str, QSOMsgType msgType) {
     Decode newMsg;
 
     // Extract fields from str
@@ -488,7 +488,7 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, Str
 
     DPRINTF("%s %s %s\n", newMsg.field1, newMsg.field2, newMsg.field3);
 
-    QSOMessagesItem* newItem = addStationMessageItem(pContainer, &newMsg);
+    QSOMessagesItem* newItem = addStationMessageItem(pContainer, &newMsg, msgType);
     DTRACE();
 
     return newItem;
@@ -498,50 +498,78 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, Str
  * @brief Add an item to this Station Messages Box
  * @param pStationMessages Back pointer to Station Messages Box
  * @param pNewMsg New Decode msg structure
- * @return Pointer to new item or nullptr
+ * @return Pointer to new item or nullptr (if nothing new)
  */
-QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessages, Decode* pNewMsg) {
+QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessages, Decode* pNewMsg, QSOMsgType msgType) {
     int newItemIndex = nDisplayedItems;
     String newMsg = pNewMsg->toString();
+    AColor color = A_GREY;
 
-    DPRINTF("field1=%s field2=%s field3=%s\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3);
+    DPRINTF("field1=%s field2=%s field3=%s, msgType=%d\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3, msgType);
+
     if (pLastMsgItem != NULL) DPRINTF("lastMsgItem='%s'\n", pLastMsgItem->str.c_str());
 
-    // If the message is a retransmission of the previous message, just recolor the previous message indicating retransmission(s)
-    if ((pLastMsgItem != NULL) && (pNewMsg->toString() == pLastMsgItem->str)) {
-        DTRACE();
-        ui.theQSOMsgs->setItemColors(pLastMsgItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
-        return pLastMsgItem;                                            // We didn't create a new item
-    } else {
-        // Add new message item, checking for too many items
-        QSOMessagesItem* pNewItem = NULL;
-
-        if (nDisplayedItems >= maxItems) return nullptr;
-
-        pNewItem = new QSOMessagesItem(pNewMsg, A_WHITE, A_BLACK, pStationMessages);  // Derived of AScrollBoxItem
-        if (pNewItem != nullptr) {
-            pNewItem->setItemText(pNewMsg->toString());
-            items[newItemIndex] = pNewItem;
-        }
-
-        // Record the timestamp
-        pNewItem->timeStamp = millis();  // Record timestamp when item created
-
-        // Scroll the displayed items up if the added item won't fit within widget's boundary box
-        if (!itemWillFit(nDisplayedItems + 1)) {
-            DPRINTF("Scroll with nDisplayedItems=%d\n", nDisplayedItems);
-            scrollUpOneLine();  // Scrolling reduces nDisplayedItems by one, making room for new item
-        }
-
-        // Record the new item
-        nDisplayedItems++;                        // Bump count of displayed items
-        displayedItems[newItemIndex] = pNewItem;  // The message item
-        pLastMsgItem = pNewItem;                  // Remember the new item as the previous item for the next message
-
-        // Paint the new item
-        repaint(pNewItem);
-        return pNewItem;
+    // Choose text color to reflect the message type
+    switch (msgType) {
+        case QSO_MSG_XMITPEND:  // New message pending transmission
+            color = A_GREY;
+            break;
+        case QSO_MSG_RECVD:  // New received message
+            color = A_GREEN;
+            break;
+        case QSO_MSG_XMITING:  // Transmitting (in progress) message
+            if (pLastMsgItem != NULL)
+                ui.theQSOMsgs->setItemColors(pLastMsgItem, A_WHITE, A_BLACK);  // Recolor previous received msg
+            return pLastMsgItem;                                               // We didn't create a new item
+            break;
+        case QSO_MSG_RECVRPT:  // Repeated received message
+            if (pLastMsgItem != NULL)
+                ui.theQSOMsgs->setItemColors(pLastMsgItem, A_YELLOW, A_BLACK);  // Recolor previous received msg
+            return pLastMsgItem;                                                // We didn't create a new item
+            break;
+        case QSO_MSG_XMITD:  // Transmitted message
+            if (pLastMsgItem != NULL)
+                ui.theQSOMsgs->setItemColors(pLastMsgItem, A_WHITE, A_BLACK);  // Recolor the transmitted msg
+            return pLastMsgItem;
+            break;
+        case QSO_MSG_XMITRPT:  // Repeated transmission
+            if (pLastMsgItem != NULL)
+                ui.theQSOMsgs->setItemColors(pLastMsgItem, A_YELLOW, A_BLACK);  // Recolor previous (retransmitted) msg
+            return pLastMsgItem;                                                // We didn't create a new item
+            break;
+        default:          // Sanity check
+            return NULL;  // Do nothing
+            break;
     }
+
+    // We fall through to here when we need to add new message item, checking for too many items
+    QSOMessagesItem* pNewItem;
+
+    if (nDisplayedItems >= maxItems) return nullptr;  // Too many items?
+
+    pNewItem = new QSOMessagesItem(pNewMsg, color, A_BLACK, pStationMessages);  // Build a new message item
+    if (pNewItem != nullptr) {
+        pNewItem->setItemText(pNewMsg->toString(), color);
+        items[newItemIndex] = pNewItem;  //????????????????????????????????????????????
+    }
+
+    // Record the timestamp
+    pNewItem->timeStamp = millis();  // Record timestamp when item created
+
+    // Scroll the displayed items up if the added item won't fit within widget's boundary box
+    if (!itemWillFit(nDisplayedItems + 1)) {
+        DPRINTF("Scroll with nDisplayedItems=%d\n", nDisplayedItems);
+        scrollUpOneLine();  // Scrolling reduces nDisplayedItems by one, making room for new item
+    }
+
+    // Record the new item
+    nDisplayedItems++;                        // Bump count of displayed items
+    displayedItems[newItemIndex] = pNewItem;  // The message item
+    pLastMsgItem = pNewItem;                  // Remember the new item as the previous item for the next message
+
+    // Paint the new item
+    repaint(pNewItem);
+    return pNewItem;
 }
 
 void display_value(int x, int y, int value) {

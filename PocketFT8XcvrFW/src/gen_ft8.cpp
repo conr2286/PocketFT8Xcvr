@@ -163,7 +163,8 @@ void set_message(uint16_t index) {
             break;
     }
     DPRINTF("generated text message='%s'\n", message);
-    ui.applicationMsgs->setText(message);
+    // ui.applicationMsgs->setText(message);
+    ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, String(message), QSO_MSG_XMITPEND);
 
     //  TODO:  Nonstandard callsigns
     //  Messages sent from our nonstandard callsign:
@@ -199,10 +200,11 @@ void set_message(char* freeText) {
 
     snprintf(message, sizeof(message), "%s", freeText);
     DPRINTF("message='%s'\n", message);
-    ui.applicationMsgs->setText(message);
+    // ui.applicationMsgs->setText(message);
+    ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, String("foo"), QSO_MSG_DEBUG);
 
     // Prepare the outbound message as an array of tones for the FSK modulator
-    // packtext77(message, packed);  // Pack text into compressed bits
+    // packtext77(message, packed);  // Pack text into compressed bit
     pack77(message, packed);  // Pack text into compressed bits
     genft8(packed, tones);    // Generate the FT8 tones for modulator
 
