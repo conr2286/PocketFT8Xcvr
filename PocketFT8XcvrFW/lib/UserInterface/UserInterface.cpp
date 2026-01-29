@@ -477,7 +477,7 @@ void QSOMessages::onTouchItem(AScrollBoxItem* pItem) {
 
 }  // QSOMessages::onTouchItem()
 
-QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, String str, QSOMsgType msgType) {
+QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, String str, QSOMsgEvent msgEvent) {
     Decode newMsg;
 
     // Extract fields from str
@@ -488,7 +488,7 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, Str
 
     DPRINTF("%s %s %s\n", newMsg.field1, newMsg.field2, newMsg.field3);
 
-    QSOMessagesItem* newItem = addStationMessageItem(pContainer, &newMsg, msgType);
+    QSOMessagesItem* newItem = addStationMessageItem(pContainer, &newMsg, msgEvent);
     DTRACE();
 
     return newItem;
@@ -500,17 +500,17 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, Str
  * @param pNewMsg New Decode msg structure
  * @return Pointer to new item or nullptr (if nothing new)
  */
-QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessages, Decode* pNewMsg, QSOMsgType msgType) {
+QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessages, Decode* pNewMsg, QSOMsgEvent msgEvent) {
     int newItemIndex = nDisplayedItems;
     String newMsg = pNewMsg->toString();
     AColor color = A_GREY;
 
-    DPRINTF("field1=%s field2=%s field3=%s, msgType=%d\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3, msgType);
+    DPRINTF("field1=%s field2=%s field3=%s, msgEvent=%d\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3, msgEvent);
 
     if (pLastMsgItem != NULL) DPRINTF("lastMsgItem='%s'\n", pLastMsgItem->str.c_str());
 
     // Choose text color to reflect the message type
-    switch (msgType) {
+    switch (msgEvent) {
         case QSO_MSG_XMITPEND:  // New message pending transmission
             color = A_GREY;
             break;

@@ -33,7 +33,7 @@ typedef enum {
     QSO_MSG_RECVD = 4,     // Received message
     QSO_MSG_RECVRPT = 5,   // Repeated received
     QSO_MSG_DEBUG = 6      // Indicator used only for debugging
-} QSOMsgType;
+} QSOMsgEvent;
 
 // Define the Waterfall widget's boundary and extent
 static const ACoord WaterfallX = 0;          // Upper-left corner of Waterfall
@@ -81,8 +81,8 @@ class QSOMessages : public AScrollBox {
         pLastMsgItem = NULL;
     }
     void onTouchItem(AScrollBoxItem* pItem) override;  // Application overrides onTouchItem() to receive notifications of touch events
-    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, Decode* msg, QSOMsgType msgType);
-    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, String str, QSOMsgType msgType);
+    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, Decode* msg, QSOMsgEvent msgType);
+    QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, String str, QSOMsgEvent msgType);
 
    private:
     QSOMessagesItem* items[maxItems];  // All message items

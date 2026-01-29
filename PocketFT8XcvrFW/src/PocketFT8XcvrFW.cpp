@@ -82,7 +82,6 @@
 #include <gfxfont.h>
 
 #include "AListBox.h"
-#include "freemem.h"
 #include "Config.h"
 #include "FT8Font.h"
 #include "GPShelper.h"
@@ -683,9 +682,6 @@ void update_synchronization() {
 
         // Debug timeslot and sequencer problems
         DPRINTF("-----Timeslot %lu:  Sequencer.state=%u, Transmit_Armned=%u, xmit_flag=%u, message='%s', autoReplyToCQ=%u, hashedCallsignTable.size=%u ---\n", seq.getSequenceNumber(), seq.getState(), Transmit_Armned, xmit_flag, get_message(), getAutoReplyToCQ(), getHashedCallsignTableSize());
-
-        // Debug check memory utilization
-        DPRINTF("getFreeHeap=%lu\n", getFreeHeap());
     }
 }  // update_synchronization()
 

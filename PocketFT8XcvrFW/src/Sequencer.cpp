@@ -682,6 +682,7 @@ void Sequencer::clickDecodedMessageEvent(unsigned msgIndex) {
 void Sequencer::clickDecodedMessageEvent(Decode* msg) {
     // Assert Target_Call==msg->field2 as this stuff could become FUBAR
     DFPRINTF("sequenceNumber=%lu, Target_Call='%s', msg->field2='%s', msg->sequenceNumber=%u, state=%u\n", sequenceNumber, Target_Call, msg->field2, msg->sequenceNumber, state);
+    Sequencer& theSequencer = Sequencer::getSequencer();
 
     // Sanity check
     if (msg != NULL) {
@@ -708,33 +709,23 @@ void Sequencer::clickDecodedMessageEvent(Decode* msg) {
                 break;
         }  // msgType
 
-        // We only respond to clicked message if not we aren't busy doing something else
-        switch (state) {
-            // Operator wants to send our grid locator to Target_Call
-            case IDLE:        // We are currently idle
-            case CQ_PENDING:  // Operator decided to contact a displayed station rather than call CQ
-                DTRACE();
+        // Cleanup current activity
+        if (state == TUNING) tune_Off_sequence();
+        receive_sequence();                           // Stop the transmitter
+        theSequencer.highlightAbortedTransmission();  // Let our operator know we aborted activity in progress
+        theSequencer.endQSO();                        // This QSO, if any, is finished
+        clearOutboundMessageText();                   // Clear outbound message text chars
 
-                // Start a QSO contact for the remote station
-                startQSO(msg->field2, ODD(msg->sequenceNumber));
-                // contact.begin(thisStation.getCallsign(), msg->field2, thisStation.getFrequency(), "FT8", thisStation.getRig(), ODD(msg->sequenceNumber), thisStation.getSOTAref());  // Start gathering QSO info
-                contact.setWorkedLocator(msg->field3);  // Record their locator if we have it
-                setXmitParams(msg->field2, msg->snr);   // Inform gen_ft8 of remote station's info
-                DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, contact.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
-                set_message(MSG_LOC);  // Build tones for modulator to transmit our locator
-                // ui.applicationMsgs->setText(get_message(), A_YELLOW);  // Display pending call in yellow
-                startTimer();         // Start the Timer to terminate a run-on QSO
-                ui.b0->reset();       // Reset highlighted button
-                state = LOC_PENDING;  // We are awaiting a timeslot to transmit our locator
-                // ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Let our operator know we have a pending transmission
+        // Start a QSO contact for the remote station
+        startQSO(msg->field2, ODD(msg->sequenceNumber));
+        contact.setWorkedLocator(msg->field3);  // Record their locator if we have it
+        setXmitParams(msg->field2, msg->snr);   // Inform gen_ft8 of remote station's info
+        DPRINTF("Target_Call='%s', msg.field2='%s', msg.rsl=%d, Target_RSL=%d msg.sequenceNumber=%lu, contact.oddEven=%u\n", Target_Call, msg->field2, msg->snr, Target_RSL, msg->sequenceNumber, contact.oddEven);
+        set_message(MSG_LOC);  // Build tones for modulator to transmit our locator
+        startTimer();         // Start the Timer to terminate a run-on QSO
+        ui.b0->reset();       // Reset highlighted button
+        state = LOC_PENDING;  // We are awaiting a timeslot to transmit our locator
 
-                break;
-
-                // Message clicks are ignored during most states
-            default:
-                DTRACE();
-                break;
-        }  // state
     }  // sanity
 
 }  // clickDecodedMessageEvent()
