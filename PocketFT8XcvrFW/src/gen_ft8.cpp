@@ -162,8 +162,9 @@ void set_message(uint16_t index) {
             DPRINTF("***** ERROR:  Invalid set_message(%d) index\n", index);
             break;
     }
+
+    // Display the outbound message text
     DPRINTF("generated text message='%s'\n", message);
-    // ui.applicationMsgs->setText(message);
     ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, String(message), QSO_MSG_XMITPEND);
 
     //  TODO:  Nonstandard callsigns
