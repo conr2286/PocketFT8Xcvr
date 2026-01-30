@@ -20,7 +20,7 @@
 #include "AWidget.h"
 
 #include "AGUI.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 // #include "ft8_font.h"
 
 // Initialize the head of the list of all AWidget objects. The list

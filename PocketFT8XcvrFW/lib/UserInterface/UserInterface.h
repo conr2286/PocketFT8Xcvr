@@ -18,10 +18,11 @@
 
 // Transmit/Receive/Pending indicator icon
 typedef enum {
-    INDICATOR_ICON_RECEIVE = 0,
-    INDICATOR_ICON_PENDING = 1,
-    INDICATOR_ICON_TRANSMIT = 2,
-    INDICATOR_ICON_TUNING = 3
+    INDICATOR_ICON_RECEIVE = 0,   // Receive
+    INDICATOR_ICON_PENDING = 1,   // Xmit awaiting timeslot
+    INDICATOR_ICON_TRANSMIT = 2,  // Transmitting
+    INDICATOR_ICON_TUNING = 3,    // Tuning
+    INDICATOR_ICON_INITZN = 4     // Initializing
 } IndicatorIconType;
 
 // Station QSO message
@@ -83,10 +84,10 @@ class QSOMessages : public AScrollBox {
     void onTouchItem(AScrollBoxItem* pItem) override;  // Application overrides onTouchItem() to receive notifications of touch events
     QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, Decode* msg, QSOMsgEvent msgType);
     QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, String str, QSOMsgEvent msgType);
+    QSOMessagesItem* pLastMsgItem;  // The previously displayed QSO message
 
    private:
     QSOMessagesItem* items[maxItems];  // All message items
-    QSOMessagesItem* pLastMsgItem;     // The previously displayed QSO message
 };
 
 static String emptyString = String("");
@@ -99,7 +100,10 @@ static String emptyString = String("");
 class QSOMessagesItem : public AScrollBoxItem {
    public:
     QSOMessagesItem(Decode* pNewMsg, AColor fgColor, AColor bgColor, QSOMessages* pBox) : AScrollBoxItem(emptyString, fgColor, bgColor, pBox) {
-        printf("%s:%u\n", __FILE__, __LINE__);
+        // Sanity checks
+        if ((pNewMsg == NULL) || (pBox == NULL)) return;
+
+        // printf("%s:%u\n", __FILE__, __LINE__);
         msg = *pNewMsg;                                      // Retain a copy of the received msg struct
         pStationMessages = static_cast<QSOMessages*>(pBox);  // Save pointer to the base class object
     }  // QSOMessagesItem()
@@ -147,6 +151,8 @@ class UserInterface {
     void displayCallsign();
     void displayMode(String mode, AColor fg);
     void setXmitRecvIndicator(IndicatorIconType indicator);
+
+    void endQSO(void);  // Clean-up UI following a QSO
 
     // Decorator methods for UI widgets
     void drawWaterfallPixel(APixelPos x, APixelPos y, AColor color);                     // Draws a pixel in the waterfall graph

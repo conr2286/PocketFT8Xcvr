@@ -56,7 +56,10 @@ extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
 extern UserInterface ui;
 
 void DecodedMsgsBox::setMsg(int index, char* msg) {
+    // Sanity check
+    if (msg == NULL) return;
     DPRINTF("setMsg(%d,'%s')\n", index, msg);
+
     setItem(index, msg, A_WHITE, bgColor);
 }
 
@@ -68,13 +71,11 @@ void UserInterface::begin() {
 
     // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
     gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
-    // ts = new TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                    // 282 ohms is the measured x-Axis resistance of my Adafruit 2050 touchscreen
 
     // Build the Waterfall object
     theWaterfall = new Waterfall();
 
     // Build the stationInfo
-    // stationInfo = new AScrollBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
     stationInfo = new AListBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
     itemDate = stationInfo->addItem(stationInfo, "", A_RED);
     itemTime = stationInfo->addItem(stationInfo, "", A_RED);
@@ -228,6 +229,11 @@ void UserInterface::setXmitRecvIndicator(IndicatorIconType indicator) {
         case INDICATOR_ICON_TUNING:
             color = A_WHITE;
             str = "TUNE";
+            break;
+        // Initialization
+        case INDICATOR_ICON_INITZN:
+            color = A_WHITE;
+            str = "INITZN";
             break;
         // Lost in the ozone again
         default:
@@ -480,6 +486,9 @@ void QSOMessages::onTouchItem(AScrollBoxItem* pItem) {
 QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, String str, QSOMsgEvent msgEvent) {
     Decode newMsg;
 
+    // Sanity check
+    if (pContainer == NULL) return NULL;
+
     // Extract fields from str
     // DPRINTF("%s %s %s\n", getNextStringToken(str).c_str(), getNextStringToken(str).c_str(), getNextStringToken(str).c_str());
     strcpy(newMsg.field1, getNextStringToken(str).c_str());
@@ -505,6 +514,8 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
     String newMsg = pNewMsg->toString();
     AColor color = A_GREY;
 
+    // Sanity check
+    if (pNewMsg == NULL) return NULL;
     DPRINTF("field1=%s field2=%s field3=%s, msgEvent=%d\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3, msgEvent);
 
     if (pLastMsgItem != NULL) DPRINTF("lastMsgItem='%s'\n", pLastMsgItem->str.c_str());
@@ -515,7 +526,7 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
             color = A_GREY;
             break;
         case QSO_MSG_RECVD:  // New received message
-            color = A_GREEN;
+            color = A_WHITE;
             break;
         case QSO_MSG_XMITING:  // Transmitting (in progress) message
             if (pLastMsgItem != NULL)
@@ -579,4 +590,14 @@ void display_value(int x, int y, int value) {
     tft.setTextSize(0);
     tft.setCursor(x, y);
     tft.print(bfr);
+}
+
+/**
+ * @brief Clean-up the UI following a QSO
+ *
+ */
+void UserInterface::endQSO() {
+    ui.b0->reset();  // Reset highlighted CQ button
+    ui.b2->reset();  // Reset highlighted TU button
+    // theQSOMsgs->pLastMsgItem = NULL;  //
 }

@@ -462,7 +462,7 @@ FLASHMEM void loop() {
         // Sync MCU and RTC time with GPS if it has valid data
         if (gpsHelper.obtainGPSData(config.gpsTimeout, gpsCallback)) {
             // Inform operator
-            ui.applicationMsgs->setText("GPS has acquired a fix");
+            ui.applicationMsgs->setText("GPS has a fix");
 
             // Set the battery-backed Teensy RTC to the GPS-derived UTC time
             TimeElements gpsTime;
@@ -735,7 +735,8 @@ void waitForFT8timeslot(void) {
     // DPRINTF("waitForFT8timeslot() gpsHelper.validFix=%u\n", gpsHelper.validGPSdata);
 
     // displayInfoMsg("Waiting for timeslot");
-    ui.applicationMsgs->setText("Awaiting timeslot");
+    // ui.applicationMsgs->setText("Awaiting timeslot");
+    ui.setXmitRecvIndicator(INDICATOR_ICON_INITZN);  // Inform operator we are initializing
 
     // If we have valid GPS data, then use GPS time for milliseconds rather than second resolution
     if (gpsHelper.validGPSdata) {
@@ -767,9 +768,8 @@ void waitForFT8timeslot(void) {
     seq.timeslotEvent();
 
     // Update display
-    // displayInfoMsg("RECV");
-    // displayInfoMsg(" ");
-    ui.applicationMsgs->setText("Ready");
+    // ui.applicationMsgs->setText("Ready");
+    ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 
     DPRINTF("-----Timeslot %lu: second()=%u, millis()=%lu ---------------------\n", seq.getSequenceNumber(), millis());
 

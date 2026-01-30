@@ -1175,7 +1175,14 @@ void Sequencer::stopTimer() {
  *
  */
 void Sequencer::startQSO(const char* workedCall, unsigned oddEven) {
+    static const char* emptyString = "";
     DTRACE();
+
+    // Clear the CQ button
+    ui.b0->reset();
+
+    // Sanity check
+    if (workedCall == NULL) workedCall = emptyString;
 
     // Activate this contact
     contact.begin(thisStation.getCallsign(), workedCall, thisStation.getFrequency(), "FT8", thisStation.getRig(), oddEven, thisStation.getSOTAref());
@@ -1251,9 +1258,10 @@ void Sequencer::endQSO() {
     receive_sequence();             // Only need to do this if in-progress transmission aborted
 
     // Reset toggling GUI buttons
-    ui.b0->reset();  // Reset highlighted CQ button
-    ui.b2->reset();  // Reset highlighted TU button
+    // ui.b0->reset();  // Reset highlighted CQ button
+    // ui.b2->reset();  // Reset highlighted TU button
     // Hmmm... are there others?  Should we just reset them all?  ToDo:  Look into this.
+    ui.endQSO();  // Notify UI that this QSO, if any, is finished
 
     // Reset RoboOp's auto reply to received CQ messages.  If we left this active, RoboOp
     // would continue to make QSOs while we enjoy refreshments in the shade.

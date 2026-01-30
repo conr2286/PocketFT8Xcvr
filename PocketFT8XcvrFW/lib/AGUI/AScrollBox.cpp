@@ -18,7 +18,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  * @brief Build an item for AScrollBox

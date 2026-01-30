@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "HX8357_t3n.h"
 #include "PocketFT8Xcvr.h"
 #include "Process_DSP.h"
@@ -267,12 +267,16 @@ void display_messages(int decoded_messages) {
 
         // Display messages not sent to our station in the Decoded Messages box
         if (strncmp(new_decoded[i].field1, thisStation.getCallsign(), 14) != 0) {
-            AColor color = A_LIGHT_GREY;  // Chatter appears in light grey
-            if (strncmp(new_decoded[i].field1, "CQ", 2) == 0) {
+            AColor color = A_LIGHT_GREY;                         // Chatter appears in light grey
+            if (strncmp(new_decoded[i].field1, "CQ", 2) == 0) {  // Check for received CQ
+                DTRACE();
                 color = A_WHITE;  // CQ messages appear in white
             }
-            // For now, don't display messages with hashed callsigns as our FT8 library doesn't support them
-            /*if (strchr(message, '<') == NULL)*/ ui.allDecodedMsgs->addItem(ui.allDecodedMsgs, message, color);  // Display received message
+            // Display received message except unknown and telemetry whose content remain a mystery
+            if (new_decoded[i].msgType != MSG_UNKNOWN && new_decoded[i].msgType != MSG_TELE) {
+                DTRACE();
+                ui.allDecodedMsgs->addItem(ui.allDecodedMsgs, message, color);  // Display usable received message
+            }
         }
     }
 

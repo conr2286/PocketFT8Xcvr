@@ -113,13 +113,8 @@ void set_message(uint16_t index) {
     uint8_t packed[K_BYTES];
     char seventy_three[] = "RR73";
 
-    // DPRINTF("set_message(%u)\n", index);
+    DPRINTF("set_message(%u)\n", index);
 
-    // getTeensy3Time();
-    // char rtc_string[10];  // print format stuff
-    // snprintf(rtc_string, sizeof(rtc_string), "%2i:%2i:%2i", hour(), minute(), second());
-
-    // strlcpy(message, blank, sizeof(message));
     clearOutboundMessageText();
     clearOutboundMessageDisplay();
 
@@ -127,6 +122,7 @@ void set_message(uint16_t index) {
     const char* ourCall = thisStation.getCallsign();
     const char* nil = "";
 
+    // Build the message text specified by index
     switch (index) {
         case MSG_CQ:                                          // We are calling CQ from our Locator, e.g. CQ KQ7B DN15
             if (!isStandardCallsign(ourCall)) locator = nil;  // Nonstandard calls xmit as nonstandard message
