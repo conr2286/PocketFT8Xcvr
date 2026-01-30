@@ -513,12 +513,17 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
     int newItemIndex = nDisplayedItems;
     String newMsg = pNewMsg->toString();
     AColor color = A_GREY;
+    QSOMessagesItem* pLastMsgItem = NULL;
 
     // Sanity check
     if (pNewMsg == NULL) return NULL;
     DPRINTF("field1=%s field2=%s field3=%s, msgEvent=%d\n", pNewMsg->field1, pNewMsg->field2, pNewMsg->field3, msgEvent);
 
-    if (pLastMsgItem != NULL) DPRINTF("lastMsgItem='%s'\n", pLastMsgItem->str.c_str());
+    // Find the last message item if any
+    if (nDisplayedItems > 0) {
+        pLastMsgItem = static_cast<QSOMessagesItem*>(displayedItems[nDisplayedItems - 1]);
+        DPRINTF("lastMsgItem='%s'\n", pLastMsgItem->str.c_str());
+    }
 
     // Choose text color to reflect the message type
     switch (msgEvent) {
@@ -526,7 +531,11 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
             color = A_GREY;
             break;
         case QSO_MSG_RECVD:  // New received message
-            color = A_WHITE;
+            if (seq.inQSO(pNewMsg->field2)) {
+                color = A_WHITE;  // New message is from the station in our QSO
+            } else {
+                color = A_BLUE;  // New message is from a breaker/tail-ender
+            }
             break;
         case QSO_MSG_XMITING:  // Transmitting (in progress) message
             if (pLastMsgItem != NULL)
@@ -561,7 +570,6 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
     pNewItem = new QSOMessagesItem(pNewMsg, color, A_BLACK, pStationMessages);  // Build a new message item
     if (pNewItem != nullptr) {
         pNewItem->setItemText(pNewMsg->toString(), color);
-        items[newItemIndex] = pNewItem;  //????????????????????????????????????????????
     }
 
     // Record the timestamp

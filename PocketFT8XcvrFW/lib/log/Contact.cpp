@@ -172,10 +172,10 @@ void Contact::reset() {
  *
  *
  **/
-bool Contact::isActive() {
-    // DPRINTF("isActive()=%u\n", this->active);
-    return this->active;
-}
+// bool Contact::isActive() {
+//     // DPRINTF("isActive()=%u\n", this->active);
+//     return this->active;
+// }
 
 /**
  *  Determine if a contact is valid (completed)

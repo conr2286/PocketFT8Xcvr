@@ -69,6 +69,8 @@ class Sequencer {
     void tuneButtonEvent(void);                                    // TUNE button clicked
     void clickDecodedMessageEvent(unsigned msgIndex);              // Received message clicked this index
     void clickDecodedMessageEvent(Decode* msg);                    // Received messages clicked this decoded msg
+    bool inQSO(void);                                              // Determine if our station is in a QSO with any remote station
+    bool inQSO(String callSign);                                   // Determine if our station is in a QSO with the specified station
 
     // void abortEvent(void);                  // Abort transmission request
     static void onTimerEvent(void);  // Timeout (QSO taking too long)

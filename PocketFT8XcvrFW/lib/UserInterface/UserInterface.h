@@ -78,16 +78,15 @@ class QSOMessagesItem;
 class QSOMessages : public AScrollBox {
    public:
     QSOMessages(ACoord x, ACoord y, ALength w, ALength h, AColor c) : AScrollBox(x, y, w, h, c) {
-        for (int i = 0; i < maxItems; i++) items[i] = nullptr;
-        pLastMsgItem = NULL;
+        // for (int i = 0; i < maxItems; i++) items[i] = nullptr;
+        // pLastMsgItem = NULL;
     }
     void onTouchItem(AScrollBoxItem* pItem) override;  // Application overrides onTouchItem() to receive notifications of touch events
     QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, Decode* msg, QSOMsgEvent msgType);
     QSOMessagesItem* addStationMessageItem(QSOMessages* pStationMessages, String str, QSOMsgEvent msgType);
-    QSOMessagesItem* pLastMsgItem;  // The previously displayed QSO message
+    // QSOMessagesItem* pLastMsgItem;  // The previously displayed QSO message
 
    private:
-    QSOMessagesItem* items[maxItems];  // All message items
 };
 
 static String emptyString = String("");

@@ -1225,7 +1225,9 @@ void Sequencer::startQSO(const char* workedCall, unsigned oddEven) {
  * active without acquiring sufficient info about the remote station to be
  * considered a valid contact (for logging purposes).
  *
- * @note The Sequencer
+ * @note endQSO() should be invoked before assigning the next state because
+ * endQSO() uses the current sequencer state to determine whether to log a
+ * QSO or not.
  *
  */
 void Sequencer::endQSO() {
@@ -1240,7 +1242,7 @@ void Sequencer::endQSO() {
     // Only log the contact if we collected sufficient info about the remote station.
     // We are overly strict here (see the isValid() code) when compared to LoTW, but
     // comparable to SOTA/POTA any many other conventions.
-    if (contact.isActive() && contact.isValid()) {
+    if (/*contact.isActive()*/ inQSO() && contact.isValid()) {
         DTRACE();
         contactLog->logContact(&contact);
         String str = String("Logged ") + String(contact.getWorkedCall());
@@ -1272,6 +1274,55 @@ void Sequencer::endQSO() {
     // ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // We are receiving again
 
 }  // endQSO()
+
+/**
+ * @brief Determine if our station is in a QSO with any remote station
+ * @return true if in QSO, false if not
+ */
+bool Sequencer::inQSO() {
+    DTRACE();
+    switch (state) {
+        // Sequencer states when we are not in an active QSO
+        case TUNING:       // TUNEing:  Transmitting unmodulated carrier
+        case MSG_PENDING:  // 13-char (max) free text msg awaits a timeslot
+        case XMIT_MSG:     // Transmit free text msg now
+        case IDLE:         // IDLEing:  Not CQing, CALLing, QSOing nor TUNEing (just monitoring the traffic)
+        case CQ_PENDING:   // CQing:  Awaiting timeslot after CQ button click
+        case XMIT_CQ:      // CQing:  Transmitting our CQ
+        case LISTEN_LOC:   // CQing:  Listening for any response with locator
+        case LOC_PENDING:  // CALLing: Awaiting timeslot after known station's message click
+        case XMIT_LOC:     // CALLing: Transmitting our locator in response to their CQ
+        default:           // "A bottle of wine and a fifth of gin, and I'm lost in the ozone again" -- Commander Cody
+            return false;  // Not in an active QSO
+            break;
+
+        // Sequencer states during an active QSO
+        case RSL_PENDING:   // QSOing: We are awaiting an appropriate timeslot to transmit an RSL
+        case XMIT_RSL:      // QSOing: Transmitting their RSL
+        case LISTEN_RRSL:   // QSOing: Listening for Roger and our RSL
+        case RRR_PENDING:   // QSOing: We are awaiting an appropriate timeslot to transmit our RR73
+        case XMIT_RRR:      // QSOing: Transmitting RR73
+        case LISTEN_73:     // QSOing: Listening for their 73
+        case LISTEN_RSL:    // QSOing: Listening for our RSL
+        case RRSL_PENDING:  // QSOing: Awaiting timeslot to transmit RRSL (e.g. R-12)
+        case XMIT_RRSL:     // QSOing: Transmitting Roger and their RSL
+        case LISTEN_RRR:    // QSOing: Listen for their RRR/RR73/73
+        case M73_PENDING:   // QSOing: Awaiting timeslot to transmit 73
+        case XMIT_73:       // QSOing: Transmitting 73
+            return true;
+            break;
+    }
+}  // inQSO()
+
+/**
+ * @brief Determine if our station is in QSO with the specified remote station
+ * @param callSign Remote station's callsign
+ * @return true if in QSO, false otherwise
+ */
+bool Sequencer::inQSO(String callSign) {
+    if (inQSO() && callSign.equals(thisStation.getCallsign())) return true;
+    return false;
+}
 
 /**
  * @brief Setter for autoReplyToCQ

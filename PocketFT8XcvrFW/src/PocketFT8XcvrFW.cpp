@@ -462,7 +462,7 @@ FLASHMEM void loop() {
         // Sync MCU and RTC time with GPS if it has valid data
         if (gpsHelper.obtainGPSData(config.gpsTimeout, gpsCallback)) {
             // Inform operator
-            ui.applicationMsgs->setText("GPS has a fix");
+            ui.applicationMsgs->setText("GPS acquired a fix");
 
             // Set the battery-backed Teensy RTC to the GPS-derived UTC time
             TimeElements gpsTime;
