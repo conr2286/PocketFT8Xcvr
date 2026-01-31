@@ -28,7 +28,7 @@ uint64_t F_Long, F_FT8, F_Offset;
 
 extern int tune_flag;
 
-extern UserInterface& ui;
+static UserInterface& ui = UserInterface::getInstance();
 
 /**
  * Turn-on the transmitter at the carrier frequency, F_Long

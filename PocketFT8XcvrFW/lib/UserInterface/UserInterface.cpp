@@ -53,7 +53,7 @@ extern void sync_FT8(void);
 
 // GPS Access
 extern GPShelper gpsHelper;  // TODO:  This shouldn't be an extern :()
-extern UserInterface& ui;
+static UserInterface& ui = UserInterface::getInstance();
 
 void DecodedMsgsBox::setMsg(int index, char* msg) {
     // Sanity check

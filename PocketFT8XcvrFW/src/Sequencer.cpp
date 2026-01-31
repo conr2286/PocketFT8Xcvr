@@ -154,6 +154,8 @@ extern uint16_t cursor_line;
 
 void set_Target_Frequency(int CQ_freq);
 
+static UserInterface& ui = UserInterface::getInstance();
+
 // Helper functions
 
 // Our statics

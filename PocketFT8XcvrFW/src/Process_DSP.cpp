@@ -28,7 +28,7 @@ extern int num_decoded_msg;
 // extern int xmit_flag;
 // extern int Transmit_Armned;
 
-extern UserInterface ui;
+static UserInterface& ui = UserInterface::getInstance();
 
 int master_offset, offset_step;
 // extern int CQ_Flag;
