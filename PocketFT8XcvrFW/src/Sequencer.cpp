@@ -797,6 +797,7 @@ void Sequencer::onTimerEvent(Timer* thisTimer) {
         case XMIT_RRSL:
         case XMIT_RSL:
         case XMIT_73:
+        case XMIT_CQ:
             theSequencer.highlightAbortedTransmission();  // Let our operator know we've aborted
             theSequencer.endQSO();                        // This QSO is finished
             clearOutboundMessageText();                   // Clear outbound message text chars from UI
