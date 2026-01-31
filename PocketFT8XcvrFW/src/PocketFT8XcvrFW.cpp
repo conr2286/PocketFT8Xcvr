@@ -197,7 +197,7 @@ int log_flag, logging_on;  // TODO:  deprecate old, old logging stuff
 Sequencer& seq = Sequencer::getSequencer();
 
 // Build the GPSHelper encapsulating the details of operating the GPS receiver
-GPShelper gpsHelper(9600);
+static GPShelper& gpsHelper = GPShelper::getInstance();
 
 /**
  * @brief Callback function invoked by GPShelper while it acquires a GPS fix
