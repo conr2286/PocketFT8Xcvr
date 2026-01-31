@@ -11,6 +11,9 @@
 void setAutoReplyToCQ(bool);
 bool getAutoReplyToCQ(void);
 
+/**
+ * @brief Define the Sequencer as a Meyers singleton
+ */
 class Sequencer {
    private:
     // Information saved about a QSO
@@ -84,4 +87,8 @@ class Sequencer {
         static Sequencer instance;  // Build the one-and-only Sequencer
         return instance;            // And return a reference to it
     }
+
+    // Delete the singleton's copy constructor and assignment operator
+    Sequencer(const Sequencer&) = delete;
+    Sequencer& operator=(const Sequencer&) = delete;
 };

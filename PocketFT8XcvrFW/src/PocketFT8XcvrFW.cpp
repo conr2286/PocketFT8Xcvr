@@ -133,10 +133,10 @@ SI4735 si4735;                // The receiver
 static int BFO_Offset = -80;  // Receiver's BFO offset adjustment
 
 // Define global objects widely referenced throughout PocketFT8Xcvr
-Station thisStation;  // Station model
-ConfigType config;    // RAM-resident copy of CONFIG.JSON parameters
-UserInterface ui;     // User Interface
-Si5351 si5351;        // Transmitter/receiver's clock
+Station thisStation;                               // Station model
+ConfigType config;                                 // RAM-resident copy of CONFIG.JSON parameters
+UserInterface& ui = UserInterface::getInstance();  // User Interface
+Si5351 si5351;                                     // Transmitter/receiver's clock
 
 // Teensy Audio Library setup (don't forget to install AudioStream6400.h in the Arduino teensy4 library folder)
 AudioInputAnalog adc1;    // xy=132,104

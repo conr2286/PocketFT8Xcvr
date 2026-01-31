@@ -59,7 +59,7 @@ extern uint8_t export_fft_power[ft8_msg_samples * ft8_buffer * 4];
 
 // extern int K_BYTES;
 
-extern UserInterface ui;
+extern UserInterface& ui;
 
 // extern void write_log_data(char *data);
 

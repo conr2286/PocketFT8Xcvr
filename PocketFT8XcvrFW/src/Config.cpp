@@ -37,7 +37,7 @@ static BandLimitType amateurBandLimits[] = {
     {21000, 21450}   // 15 meters
 };
 
-extern UserInterface ui;
+extern UserInterface& ui;
 
 /**
  * @brief Read CONFIG.JSON file into the config structure

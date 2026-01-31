@@ -9,4 +9,4 @@
 // Global objects widely accessed
 extern Station thisStation;
 extern ConfigType config;
-extern UserInterface ui;
+extern UserInterface& ui;

@@ -137,8 +137,21 @@ class MenuButton : public AToggleButton {
     void onTouchButton(int userData) override;  // We override AToggleButton to receive notifications of touch events
 };
 
+/**
+ * @brief The UserInterface is more-or-less implemented as a Meyers singleton
+ *
+ * @note The single instance of the UserInterface object is constructed by the
+ * static declaration of theInstance variable.  A reference to that instance
+ * is available through getInstance().
+ *
+ */
 class UserInterface {
    public:
+    // Public static method provides access to the UserInterface singleton
+    static UserInterface& getInstance() {
+        static UserInterface theInstance;  // This is the one-and-only instance of the UserInterface
+        return theInstance;                // Return a reference to the UserInterface instance
+    }
     // Initialization methods
     void begin(void);
 
@@ -184,4 +197,9 @@ class UserInterface {
     MenuButton* b5;
     MenuButton* b6;
     MenuButton* b7;
+
+   private:
+    UserInterface() {}                                        // Singleton's inaccessible constructor
+    UserInterface(const UserInterface&) = delete;             // Delete singleton's copy constructor
+    UserInterface& operator=(const UserInterface&) = delete;  // Delete assignment operator
 };
