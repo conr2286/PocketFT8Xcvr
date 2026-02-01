@@ -104,7 +104,7 @@
 #include "locator.h"
 #include "maidenhead.h"
 #include "patch_full.h"  // SSB patch for whole SSBRX full download
-#include "pins.h"
+#include "hwdefs.h"
 #include "si5351.h"
 #include "traffic_manager.h"
 #include "ft8LibIfce.h"
@@ -227,7 +227,7 @@ FLASHMEM void setup(void) {
     // Get the USB serial port running before something else goes wrong
     Serial.begin(9600);
     // Serial.printf("foo");
-    //Serial.println("Starting...");
+    // Serial.println("Starting...");
 
     Wire.setSDA(PIN_SDA);
     Wire.setSCL(PIN_SCL);

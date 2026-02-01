@@ -1,6 +1,6 @@
 // #include "WireIMXRT.h"
 #include <Wire.h>
-#include "pins.h"
+#include "hwdefs.h"
 #include "Arduino.h"
 #include "MCP342x.h"
 
@@ -17,7 +17,7 @@ const MCP342x::Channel MCP342x::channel4 = Channel(0x60);
 
 const MCP342x::Mode MCP342x::oneShot = Mode(0x00);
 const MCP342x::Mode MCP342x::continuous = Mode(0x10);
-const MCP342x::Mode &MCP342x::continous(continuous);  // deprecated
+const MCP342x::Mode& MCP342x::continous(continuous);  // deprecated
 
 const MCP342x::Resolution MCP342x::resolution12 = Resolution(0x00);
 const MCP342x::Resolution MCP342x::resolution14 = Resolution(0x04);
@@ -47,7 +47,7 @@ uint8_t MCP342x::generalCallConversion(void) {
     return WIRE.endTransmission();
 }
 
-void MCP342x::normalise(long &result, Config config) {
+void MCP342x::normalise(long& result, Config config) {
     /* Resolution is 12, 14, 16,or 18; gain is 1, 2, 4, or 8. Shift
      * least places necessary such that all possibilities can be
      * accounted for:
@@ -73,7 +73,7 @@ MCP342x::MCP342x(uint8_t add)
     ;
 }
 
-bool MCP342x::autoprobe(const uint8_t *addressList, uint8_t len) {
+bool MCP342x::autoprobe(const uint8_t* addressList, uint8_t len) {
     for (uint8_t i = 0; i < len; ++i) {
         WIRE.requestFrom(addressList[i], (uint8_t)1);
         if (WIRE.available()) {
@@ -90,7 +90,7 @@ MCP342x::error_t MCP342x::convert(Channel channel, Mode mode, Resolution resolut
     return convert(Config(channel, mode, resolution, gain));
 }
 
-MCP342x::error_t MCP342x::configure(const Config &config) const {
+MCP342x::error_t MCP342x::configure(const Config& config) const {
     WIRE.beginTransmission(address);
     WIRE.write(config.val);
     if (WIRE.endTransmission())
@@ -99,7 +99,7 @@ MCP342x::error_t MCP342x::configure(const Config &config) const {
         return errorNone;
 }
 
-MCP342x::error_t MCP342x::convert(const Config &config) const {
+MCP342x::error_t MCP342x::convert(const Config& config) const {
     WIRE.beginTransmission(address);
     WIRE.write(config.val | newConversionMask);
     if (WIRE.endTransmission())
@@ -108,7 +108,7 @@ MCP342x::error_t MCP342x::convert(const Config &config) const {
         return errorNone;
 }
 
-MCP342x::error_t MCP342x::read(long &result, Config &status) const {
+MCP342x::error_t MCP342x::read(long& result, Config& status) const {
     // Read 4 bytes, the 4th byte will configuration. From that deduce
     // if 18 bit conversion. If not use the 3rd byte, as that is the
     // most appropriate configuration value (ready may have changed).
@@ -167,7 +167,7 @@ MCP342x::error_t MCP342x::read(long &result, Config &status) const {
     return errorNone;
 }
 
-MCP342x::error_t MCP342x::convertAndRead(Channel channel, Mode mode, Resolution resolution, Gain gain, unsigned long timeout, long &result, Config &status) {
+MCP342x::error_t MCP342x::convertAndRead(Channel channel, Mode mode, Resolution resolution, Gain gain, unsigned long timeout, long& result, Config& status) {
     error_t err = convert(channel, mode, resolution, gain);
     if (err != errorNone)
         return err;

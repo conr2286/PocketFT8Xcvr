@@ -14,7 +14,7 @@
 #include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "decode_ft8.h"       //Decoded message types
-#include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
+#include "hwdefs.h"           //Pocket FT8 pin assignments for Teensy 4.1 MCU
 
 // Transmit/Receive/Pending indicator icon
 typedef enum {

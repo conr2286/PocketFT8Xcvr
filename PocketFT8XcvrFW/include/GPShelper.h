@@ -2,7 +2,7 @@
 
 #include <Adafruit_GPS.h>
 
-#include "pins.h"
+#include "hwdefs.h"
 
 // what's the name of the hardware serial port?
 #define GPSSerial Serial1

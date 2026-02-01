@@ -1,8 +1,8 @@
 /**
  * @brief The Pocket FT8 Revisited (PFR) User Interface
  *
- * @note UserInterface.cpp attempts to consolodate all user interface decisions and objects
- * in this single location facilitating future tweeks to the hardware and design.
+ * @note UserInterface.cpp attempts to consolidate all user interface decisions and objects
+ * in this single location facilitating future tweaks to the hardware and design.
  *
  * #ifndef PIO_UNIT_TESTING is widely used to disable application code to allow the
  * user interface to be unit tested by itself.
@@ -32,7 +32,7 @@
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "decode_ft8.h"       //Decoded message types
 #include "lexical.h"          //String helpers
-#include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
+#include "hwdefs.h"           //Pocket FT8 pin assignments for Teensy 4.1 MCU
 #include "traffic_manager.h"
 #include "Station.h"
 
@@ -352,7 +352,7 @@ void MenuButton::onTouchButton(int buttonId) {
 
         // Memory M2 button
         case 6:
-            DPRINTF("M0\n");
+            DPRINTF("M2\n");
             seq.msgButtonEvent(config.m2);
             break;
 

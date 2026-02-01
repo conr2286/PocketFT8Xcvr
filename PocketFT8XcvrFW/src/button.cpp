@@ -18,7 +18,7 @@
 #include "Sequencer.h"
 #include "TouchScreen_I2C.h"
 #include "msgTypes.h"
-#include "pins.h"
+#include "hwdefs.h"
 
 // Define which I2C bus we are using
 #define WIRE WIRE_ETC

@@ -11,7 +11,7 @@
 #include "PocketFT8Xcvr.h"
 #include "UserInterface.h"
 #include "gen_ft8.h"
-#include "pins.h"
+#include "hwdefs.h"
 #include "si5351.h"
 
 #define FT8_TONE_SPACING 625

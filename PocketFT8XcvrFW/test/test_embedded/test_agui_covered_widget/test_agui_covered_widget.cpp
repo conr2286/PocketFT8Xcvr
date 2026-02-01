@@ -35,7 +35,7 @@
 #include <Adafruit_GFX.h>  //Must include this header prior to HX8357_t3n.h
 
 // Underlying access to HW touchscreen, display and fonts
-#include "pins.h"             //Pocket FT8 pin assignments for Teensy 4.1 MCU
+#include "hwdefs.h"           //Pocket FT8 pin assignments for Teensy 4.1 MCU
 #include "HX8357_t3n.h"       //HX8357 specific defn's
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
