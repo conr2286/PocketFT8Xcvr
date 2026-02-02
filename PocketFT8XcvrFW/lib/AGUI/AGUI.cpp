@@ -58,6 +58,11 @@ const GFXfont* AGUI::appFont;  // Default font for this application
 //  Initialization
 //-----------------------------------------------------------------------------
 
+AGUI& AGUI::getInstance(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font) {
+    static AGUI theInstance(tft, rotation, font);  // The one-and-only instance of AGUI
+    return theInstance;
+}
+
 /**
  * @brief Construct the AGUI object
  * @param tft Pointer to an Adafruit display driver (e.g. HX8357_t3n) object
@@ -68,20 +73,20 @@ const GFXfont* AGUI::appFont;  // Default font for this application
  * implementation didn't go out of its way to limit you to a single display.
  *
  */
-AGUI::AGUI(HX8357_t3n* tft, uint8_t rotation, const GFXfont* font) {
+AGUI::AGUI(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font) {
     // if (!Serial) Serial.begin(9600);
     // Serial.print("AGUI()=");
 
     // Record configuration params
-    gfx = tft;                  // Adafruit display object
-    appFont = font;             // Application's default font
+    gfx = &tft;                 // Adafruit display object
+    appFont = &font;            // Application's default font
     screenRotation = rotation;  // See Adafruit HX8357 doc for values
 
     // Setup the Adafruit display and graphics library for use by our application
-    gfx->begin(30000000UL, 2000000UL);  // Configure SPI clock speeds
-    gfx->setRotation(rotation);         // Configure screen rotation
-    gfx->setFont(appFont);              // Configure the font
-    gfx->fillScreen(HX8357_BLACK);      // Erase the display
+    tft.begin(30000000UL, 2000000UL);  // Configure SPI clock speeds
+    tft.setRotation(rotation);         // Configure screen rotation
+    tft.setFont(appFont);              // Configure the font
+    tft.fillScreen(HX8357_BLACK);      // Erase the display
 
     // Serial.println("Exit AGUI\n");
 }

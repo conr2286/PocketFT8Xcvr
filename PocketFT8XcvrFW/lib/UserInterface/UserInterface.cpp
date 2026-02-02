@@ -38,7 +38,8 @@
 
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
-static AGUI* gui;
+static AGUI& gui = AGUI::getInstance(tft, 3, FT8Font);                               // Get reference to a configured instance of AGUI
+// gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
 
 // Define externals required to build the application (as opposed to unit test)
 #ifndef PIO_UNIT_TESTING
@@ -70,7 +71,7 @@ void UserInterface::begin() {
     // DTRACE();
 
     // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
-    gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
+    // gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
 
     // Build the Waterfall object
     theWaterfall = new Waterfall();
