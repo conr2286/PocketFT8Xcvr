@@ -25,13 +25,13 @@
 
 // This is calibration data for the raw touch data to the screen coordinates
 // using 510 Ohm resistors to reduce the driven voltage to Y+ and X-
-#define TS_MINX 123
-#define TS_MINY 104
-#define TS_MAXX 1715
-#define TS_MAXY 1130
+// #define TS_MINX 123
+// #define TS_MINY 104
+// #define TS_MAXX 1715
+// #define TS_MAXY 1130
 
-#define MINPRESSURE 120
-#define PENRADIUS 3
+// #define MINPRESSURE 120
+// #define PENRADIUS 3
 
 extern HX8357_t3n tft;
 extern TouchScreen ts;

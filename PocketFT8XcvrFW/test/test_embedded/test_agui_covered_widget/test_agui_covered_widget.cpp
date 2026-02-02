@@ -56,11 +56,11 @@
 
 // This is calibration data for the raw touch data to the screen coordinates
 // using 510 Ohm resistors to reduce the driven voltage to Y+ and X-
-#define TS_MINX 123
-#define TS_MINY 104
-#define TS_MAXX 1715
-#define TS_MAXY 1130
-#define MINPRESSURE 120  // I don't think the pressure stuff is working as expected
+// #define TS_MINX 123
+// #define TS_MINY 104
+// #define TS_MAXX 1715
+// #define TS_MAXY 1130
+// #define MINPRESSURE 120  // I don't think the pressure stuff is working as expected
 
 // Build the underlying TFT display, touchscreen and AGUI objects
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins

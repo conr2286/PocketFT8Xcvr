@@ -63,3 +63,12 @@
 #define PIN_D31 31   // D31
 
 // Note:  The audio input pin is apparently hardwired by the Audio Library in input_adc.h to A2
+
+// This is calibration data for the raw touch data to the screen coordinates
+// using 510 Ohm resistors to reduce the sensors' driven voltage to Y+ and X-
+#define TS_MINX 123
+#define TS_MINY 104
+#define TS_MAXX 1715
+#define TS_MAXY 1130
+#define MINPRESSURE 120  // I don't think the pressure stuff is working as expected
+#define PENRADIUS 3
