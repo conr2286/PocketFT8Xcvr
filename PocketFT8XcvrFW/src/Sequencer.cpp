@@ -150,9 +150,9 @@ extern int Target_RSL;       // Remote station's RSL
 extern int auto_flag;
 extern void display_value(int x, int y, int value);
 int target_frequency;
-extern uint16_t cursor_line;
+// extern uint16_t cursor_line;
 
-void set_Target_Frequency(int CQ_freq);
+void set_Target_Frequency(int cursorFreq);
 
 static UserInterface& ui = UserInterface::getInstance();
 
@@ -1369,13 +1369,20 @@ void Sequencer::highlightAbortedTransmission() {
     }
 }  // highlightAbortedTransmission()
 
-void set_Target_Frequency(int CQ_freq) {
-    thisStation.setCursorFreq((float)CQ_freq);
+/**
+ * @brief Setup the transmitter to respond to a CQ at their offset frequency
+ * @param cursorFreq The Waterfall cursor offset in Hz from the carrier frequency
+ */
+void set_Target_Frequency(int cursorFreq) {
+    thisStation.setCursorFreq(/*(float)*/ cursorFreq);
     set_Xmit_Freq();
-    String str = String("Cursor freq = ") + String(thisStation.getCursorFreq()) + String(" Hz");
-    // DPRINTF("%s\n", str.c_str());
-    // ui.applicationMsgs->setText(str);
+    // String str = String("Cursor freq = ") + String(thisStation.getCursorFreq()) + String(" Hz");
+    //  DPRINTF("%s\n", str.c_str());
+    //  ui.applicationMsgs->setText(str);
+    ui.setCursorLine(cursorFreq);
     ui.displayFrequency();  // Update station info display too
-    cursor_line = (uint16_t)((float)CQ_freq / FFT_Resolution);
-    cursor_line = cursor_line - ft8_min_bin;
+
+    // TODO:  Move cursor_line pixel calculations into UI
+    // cursor_line = (uint16_t)((float)cursorFreq / FFT_Resolution);
+    // cursor_line = cursor_line - ft8_min_bin;
 }

@@ -158,8 +158,11 @@ void tune_Off_sequence(void) {
 /**
  * @brief Recalculate carrier frequency, F_Long, and program Si5351 with unmodulated carrier frequency
  *
- * @note The Si5351 is programmed in terms of 0.01 Hz, not Hz nor kHz nor mHz.  Also recall that
- * the station frequency is stored as kHz.
+ * @note The DFSK carrier frequency is the colloquial FT8 calling frequency (e.g. 7074kHz) expressed
+ * in Hz plus the Waterfall cursor (red line) offset frequency in Hz.
+ *
+ * @note The Si5351 is programmed in terms of 0.01 Hz, not Hz nor kHz nor mHz.  Thus, to program the
+ * Si5351, we multiple the carrier frequency in Hz by 100.
  */
 void set_Xmit_Freq() {
     F_Long = (uint64_t)((thisStation.getFrequency() * 1000 + thisStation.getCursorFreq() /* + offset_freq*/) * 100);
@@ -171,7 +174,7 @@ void set_Xmit_Freq() {
 }  // set_Xmit_Freq()
 
 /**
- * Transmitter's FSK modulator
+ * Transmitter's DFSK modulator
  *
  * Programs the SI5351 for F_Long + the specified FT8 tone.  This  function is repeatedly
  * invoked to shift the carrier during transmission.  Note that we are using direct FSK,

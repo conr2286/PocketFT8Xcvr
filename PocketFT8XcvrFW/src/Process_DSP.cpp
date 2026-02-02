@@ -19,7 +19,7 @@ q15_t window_dsp_buffer[FFT_SIZE] __attribute__((aligned(4)));
 uint8_t WF_index[900];
 float window[FFT_SIZE];
 
-extern uint16_t cursor_line;
+//extern uint16_t cursor_line;
 
 extern int ft8_flag, FT_8_counter, ft8_marker, decode_flag, WF_counter;
 extern int num_decoded_msg;

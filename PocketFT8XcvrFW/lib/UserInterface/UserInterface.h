@@ -167,7 +167,9 @@ class UserInterface {
     void displayMode(String mode, AColor fg);
     void setXmitRecvIndicator(IndicatorIconType indicator);
 
-    void initCursorFrequency(void);  // Initialize the Waterfall's cursor frequency
+    // Methods to manage the Waterfall's cursor frequency
+    void initCursorFrequency(void);                 // Initialize the Waterfall's cursor frequency
+    void setCursorLine(uint16_t cursor_frequency);  // Move the cursor line (in pixels) for specified cursor frequency
 
     void endQSO(void);  // Clean-up UI following a QSO
 
@@ -184,6 +186,9 @@ class UserInterface {
     DecodedMsgsBox* allDecodedMsgs;  // All FT8 messages decoded in the previous timeslot
     QSOMessages* theQSOMsgs;         // FT8 messages transmitted to/from our station
     ATextBox* applicationMsgs;       // Status/error messages
+
+    // Waterfall attributes
+    uint16_t cursor_line;  // X-Offset in pixels of the cursor within the Waterfall widget
 
     // The stationInfo items
     AListBoxItem* itemDate;

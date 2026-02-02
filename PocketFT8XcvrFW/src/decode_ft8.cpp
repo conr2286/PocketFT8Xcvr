@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "HX8357_t3n.h"
 #include "PocketFT8Xcvr.h"
 #include "Process_DSP.h"

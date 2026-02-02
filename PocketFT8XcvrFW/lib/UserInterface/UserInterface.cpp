@@ -112,7 +112,7 @@ void UserInterface::begin() {
 /**
  * @brief Initialize Waterfall cursor frequencies
  */
-uint16_t cursor_line;  // Pixel location of cursor in Waterfall widget
+// uint16_t cursor_line;  // Pixel location of cursor in Waterfall widget
 void UserInterface::initCursorFrequency(void) {
     DTRACE();
     cursor_line = 112;
@@ -397,10 +397,10 @@ const float ft8_shift = 6.25;  // FT8 Hz/bin???  TODO:  move this elsewhere
 
 void Waterfall::onTouchPixel(ACoord x, ACoord y) {
 #ifndef PIO_UNIT_TESTING
-    cursor_line = x;
-    thisStation.setCursorFreq(((float)cursor_line + (float)ft8_min_bin) * ft8_shift);
+    ui.cursor_line = x;  // X-Offset (pixels) of the cursor in Waterfall widget
+    thisStation.setCursorFreq(((float)ui.cursor_line + (float)ft8_min_bin) * ft8_shift);
     set_Xmit_Freq();
-    DPRINTF("cursor_line=%u cursorFreq=%u \n", cursor_line, thisStation.getCursorFreq());
+    DPRINTF("cursor_line=%u cursorFreq=%u \n", ui.cursor_line, thisStation.getCursorFreq());
     ui.displayFrequency();  // Update station info display too
 #endif
 
@@ -428,6 +428,23 @@ void UserInterface::drawWaterfallPixel(APixelPos x, APixelPos y, AColor color) {
     }
     theWaterfall->drawPixel(x, y, color);  // Draw the waterfall pixel
 }  // UserInterface::drawWaterfallPixel()
+
+/**
+ * @brief Move the cursor line to indicate the requested frequency
+ * @param cursorFreq Cursor offset (from carrier) frequency in Hz
+ *
+ * @note The carrier frequency is the FT8 calling frequency (e.g. 7074kHz)
+ * @note The cursor frequency is the offset in Hz for our transmission
+ * @note The cursor_line is the X-offset in pixels of where Waterfall widget draws the cursor
+ *
+ * The curious terminology arises from the legacy of AFSK with FT8 and the Waterfall's
+ * approach for displaying the cursor (transmit frequency) as a vertical red line.
+ * The Pocket FT8 modulator uses DFSK (Direct Frequency Shift Keying) sans audio tones.
+ */
+void UserInterface::setCursorLine(uint16_t cursorFreq) {
+    cursor_line = (uint16_t)((float)cursorFreq / FFT_Resolution) - ft8_min_bin;
+    // cursor_line = cursor_line - ft8_min_bin;
+}
 
 /**
  * @brief Override AListBox to receive touch notifications for list items
