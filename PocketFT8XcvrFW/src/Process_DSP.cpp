@@ -151,10 +151,6 @@ void update_offset_waterfall(int offset) {
     // Draw waterfall pixels
     for (int k = ft8_min_bin; k < ft8_buffer; k++) {
         ui.drawWaterfallPixel(k - ft8_min_bin, WF_counter, (AColor)WFPalette[WF_index[k]]);
-        // if (k - ft8_min_bin == cursor_line) {
-        //     DTRACE();
-        //     ui.drawWaterfallPixel(k - ft8_min_bin, WF_counter, A_RED);
-        // }
     }
 
     // At the beginning(!!!) of a timeslot, display recvd messages, and prepare to send CQ or respond to calls

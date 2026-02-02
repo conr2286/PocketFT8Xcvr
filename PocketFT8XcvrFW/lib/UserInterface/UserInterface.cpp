@@ -422,9 +422,9 @@ void UserInterface::drawWaterfallPixel(APixelPos x, APixelPos y, AColor color) {
 
     if (x == cursor_line) {
         color = A_RED;
-        if (y == 0) {
-            DPRINTF("cursor_line=%d and will drawPixel(%u,%u,%u)\n", cursor_line, x, y, color);
-        }
+        // if (y == 0) {
+        //     DPRINTF("cursor_line=%d and will drawPixel(%u,%u,%u)\n", cursor_line, x, y, color);
+        // }
     }
     theWaterfall->drawPixel(x, y, color);  // Draw the waterfall pixel
 }  // UserInterface::drawWaterfallPixel()
