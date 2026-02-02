@@ -1,3 +1,5 @@
 #pragma once
 
-void set_startup_freq(void);
+#include <stdint.h>
+
+// void set_startup_freq(void);

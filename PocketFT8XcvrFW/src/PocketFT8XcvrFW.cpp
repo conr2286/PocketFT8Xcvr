@@ -352,7 +352,7 @@ FLASHMEM void setup(void) {
     // the unmodulated audio tone's offset from the carrier (e.g. +1000 Hz).  When an FT8 AFSK
     // transmitter modulates, it transmits tones around (and very close to) that offset.  Pocket
     // FT8 uses a direct FSK modulator which leaves this old AFSK terminology a bit confusing.
-    set_startup_freq();  // Initial cursor frequency.
+    ui.initCursorFrequency();  // Initialize the Waterfall's cursor frequency.
     delay(10);
     ui.displayFrequency();  // Displays carrier and cursor frequency in Station Messages box
 

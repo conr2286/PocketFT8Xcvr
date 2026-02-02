@@ -115,8 +115,11 @@ class QSOMessagesItem : public AScrollBoxItem {
 // moves the transmitter's offset (i.e. AFSK tone) frequency.
 class Waterfall : public APixelBox {
    public:
+    // uint16_t cursor_line;  // Pixel location of cursor_line within Waterfall widget
+
     Waterfall() : APixelBox(WaterfallX, WaterfallY, WaterfallRows, WaterfallCols) {}
     void onTouchPixel(APixelPos x, APixelPos y) override;  // Application overrides onTouchPixel() to receive notifications of touch events
+    void initCursorFrequency(void);                        // Initializes the cursor frequency
 };
 
 // Define functions visible to legacy code
@@ -163,6 +166,8 @@ class UserInterface {
     void displayCallsign();
     void displayMode(String mode, AColor fg);
     void setXmitRecvIndicator(IndicatorIconType indicator);
+
+    void initCursorFrequency(void);  // Initialize the Waterfall's cursor frequency
 
     void endQSO(void);  // Clean-up UI following a QSO
 

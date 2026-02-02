@@ -35,6 +35,7 @@
 #include "hwdefs.h"           //Pocket FT8 pin assignments for Teensy 4.1 MCU
 #include "traffic_manager.h"
 #include "Station.h"
+#include "Process_DSP.h"
 
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
@@ -107,6 +108,16 @@ void UserInterface::begin() {
     b6 = new MenuButton("M2", ButtonX + 6 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 6);
     b7 = new MenuButton("SY", ButtonX + 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 7);
 }
+
+/**
+ * @brief Initialize Waterfall cursor frequencies
+ */
+uint16_t cursor_line;  // Pixel location of cursor in Waterfall widget
+void UserInterface::initCursorFrequency(void) {
+    DTRACE();
+    cursor_line = 112;
+    thisStation.setCursorFreq((uint16_t)((float)(cursor_line + ft8_min_bin) * FFT_Resolution));
+}  // initCursorFrequency()
 
 /**
  * @brief Display nominal operating operatingFrequency
@@ -379,7 +390,7 @@ void MenuButton::onTouchButton(int buttonId) {
  * @note The coordinates received from APixelBox are inside the bitmap, not
  * screen coordinates.
  */
-extern uint16_t cursor_line;  // TODO:  Pixel location of cursor line
+// extern uint16_t cursor_line;  // TODO:  Pixel location of cursor line
 #define ft8_min_bin 48
 #define FFT_Resolution 6.25
 const float ft8_shift = 6.25;  // FT8 Hz/bin???  TODO:  move this elsewhere
@@ -389,9 +400,7 @@ void Waterfall::onTouchPixel(ACoord x, ACoord y) {
     cursor_line = x;
     thisStation.setCursorFreq(((float)cursor_line + (float)ft8_min_bin) * ft8_shift);
     set_Xmit_Freq();
-    String str = String("Cursor freq = ") + String(thisStation.getCursorFreq()) + String(" Hz");
-    // DPRINTF("%s\n", str.c_str());
-    // ui.applicationMsgs->setText(str);
+    DPRINTF("cursor_line=%u cursorFreq=%u \n", cursor_line, thisStation.getCursorFreq());
     ui.displayFrequency();  // Update station info display too
 #endif
 
@@ -409,8 +418,15 @@ void Waterfall::onTouchPixel(ACoord x, ACoord y) {
  * the UI does not display the waterfall during a QSO).
  */
 void UserInterface::drawWaterfallPixel(APixelPos x, APixelPos y, AColor color) {
-    if (theWaterfall == NULL) return;      // Sanity check
-    theWaterfall->drawPixel(x, y, color);  // Draw the pixel
+    if (theWaterfall == NULL) return;  // Sanity check
+
+    if (x == cursor_line) {
+        color = A_RED;
+        if (y == 0) {
+            DPRINTF("cursor_line=%d and will drawPixel(%u,%u,%u)\n", cursor_line, x, y, color);
+        }
+    }
+    theWaterfall->drawPixel(x, y, color);  // Draw the waterfall pixel
 }  // UserInterface::drawWaterfallPixel()
 
 /**

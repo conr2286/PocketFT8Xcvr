@@ -28,7 +28,7 @@ void resetButton(uint16_t index);
 void check_FT8_Touch(void);
 void pollTouchscreen(void);
 void check_WF_Touch(void);
-void set_startup_freq(void);
+// void set_startup_freq(void);
 void terminate_transmit_armed(void);
 void process_serial(void);
 void EEPROMWriteInt(int address, int value);
