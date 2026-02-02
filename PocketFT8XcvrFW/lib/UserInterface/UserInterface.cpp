@@ -52,6 +52,9 @@ int auto_flag;
 extern Config config;
 extern void sync_FT8(void);
 
+// Initialize the static class member that tracks the last known (if any) date
+int UserInterface::lastDay = -1;  // Unknown
+
 // GPS Access
 static GPShelper& gpsHelper = GPShelper::getInstance();
 static UserInterface& ui = UserInterface::getInstance();
@@ -136,7 +139,7 @@ void UserInterface::displayLocator(String grid, AColor fg) {
  *
  * We only update the display when day() changes
  */
-static int lastDay = -1;
+// static int lastDay = -1;
 void UserInterface::displayDate(bool forceUpdate) {
     Teensy3Clock.get();  // Sync MCU clock with RTC
     char str[13];        // print format stuff
@@ -156,7 +159,7 @@ void UserInterface::displayDate(bool forceUpdate) {
             fg = A_YELLOW;
         }
         itemDate->setItemText(String(str), fg);  // Green if GPS Disciplined
-        lastDay = thisDay;                       // Remember new date
+        lastDay = thisDay;                       // Remember the new date
     }
 }  // displayDate()
 

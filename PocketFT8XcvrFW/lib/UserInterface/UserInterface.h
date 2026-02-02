@@ -198,6 +198,9 @@ class UserInterface {
     MenuButton* b6;
     MenuButton* b7;
 
+    // The UserInterface's statics
+    static int lastDay;  // Helps determine when date has changed
+
    private:
     UserInterface() {}                                        // Singleton's inaccessible constructor
     UserInterface(const UserInterface&) = delete;             // Delete singleton's copy constructor
