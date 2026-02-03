@@ -7,6 +7,6 @@
 #include "UserInterface.h"
 
 // Global objects widely accessed
-extern Station thisStation;
+// extern Station thisStation;
 extern ConfigType config;
 // extern UserInterface& ui;

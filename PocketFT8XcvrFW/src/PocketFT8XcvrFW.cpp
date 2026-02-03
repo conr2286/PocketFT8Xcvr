@@ -133,7 +133,7 @@ SI4735 si4735;                // The receiver
 static int BFO_Offset = -80;  // Receiver's BFO offset adjustment
 
 // Define global objects widely referenced throughout PocketFT8Xcvr
-Station thisStation;                                      // Station model
+Station& thisStation = Station::getInstance();            // Station model
 ConfigType config;                                        // RAM-resident copy of CONFIG.JSON parameters
 static UserInterface& ui = UserInterface::getInstance();  // User Interface
 Si5351 si5351;                                            // Transmitter/receiver's clock

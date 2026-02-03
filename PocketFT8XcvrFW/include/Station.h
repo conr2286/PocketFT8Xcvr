@@ -1,9 +1,12 @@
 /**
- * @brief Station model
+ * @brief Station models many attributes of our amateur radio station.
  *
- * Defines many operating parameters for the current station.  Unlike the content
- * of the config structure (which is simply a RAM-resident copy of CONFIG.JSON),
- * the content of Station potentially can vary during execution.
+ * @note Unlike the content of the config structure (which is simply a
+ * RAM-resident copy of CONFIG.JSON), the content of Station potentially
+ * can vary during execution.
+ *
+ * @note Station is implemented as a Meyers Singleton.  You can obtain a
+ * reference to the one-and-only instance using Station:getInstance().
  *
  */
 #pragma once
@@ -11,8 +14,11 @@
 
 class Station {
    public:
-    Station() : operatingFrequency(0), cursorFreq(0), qsoTimeout(0), enableDuplicates(false), enableTransmit(false) {
-    }  // Station()
+    // Implementation of the singleton's getter
+    static Station& getInstance() {
+        static Station theInstance;  // This is the one-and-only instance of the Station class
+        return theInstance;          // Return a reference to the one-and-only Station object
+    }  // getInstance()
 
     // Determine if this Station has everything required to transmit
     bool canTransmit(void) {
@@ -49,6 +55,13 @@ class Station {
     void setQSOtimeout(unsigned seconds) { qsoTimeout = seconds; }
 
    private:
+    // Methods etc associated with the Meyers singleton implementation
+    Station() : operatingFrequency(0), cursorFreq(0), qsoTimeout(0), enableDuplicates(false), enableTransmit(false) {
+    }  // Station()
+    Station(const Station&) = delete;             // Delete singleton's copy constructor
+    Station& operator=(const Station&) = delete;  // Delete assignment operator
+
+    // Station attributes
     String callsign;   // My callsign
     String locator;    // My Maidenhead Gridsquare
     String rig;        // My rig
@@ -61,5 +74,4 @@ class Station {
     unsigned qsoTimeout;          // QSO timeout seconds
     bool enableDuplicates;        // true==>enable RoboOp to respond to duplicate (previously logged) callsigns
     bool enableTransmit;          // true==>enable transmitter
-    // TODO:  move cursor_line here
 };

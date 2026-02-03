@@ -56,6 +56,7 @@ extern time_t getTeensy3Time();
 // char ft8_time_string[] = "15:44:15";
 
 static UserInterface& ui = UserInterface::getInstance();
+static Station& thisStation = Station::getInstance();
 
 const int max_displayed_messages = 8;
 

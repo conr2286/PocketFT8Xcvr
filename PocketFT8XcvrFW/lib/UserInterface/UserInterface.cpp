@@ -398,9 +398,9 @@ const float ft8_shift = 6.25;  // FT8 Hz/bin???  TODO:  move this elsewhere
 void Waterfall::onTouchPixel(ACoord x, ACoord y) {
 #ifndef PIO_UNIT_TESTING
     ui.cursor_line = x;  // X-Offset (pixels) of the cursor in Waterfall widget
-    thisStation.setCursorFreq(((float)ui.cursor_line + (float)ft8_min_bin) * ft8_shift);
+    ui.thisStation.setCursorFreq(((float)ui.cursor_line + (float)ft8_min_bin) * ft8_shift);
     set_Xmit_Freq();
-    DPRINTF("cursor_line=%u cursorFreq=%u \n", ui.cursor_line, thisStation.getCursorFreq());
+    DPRINTF("cursor_line=%u cursorFreq=%u \n", ui.cursor_line, ui.thisStation.getCursorFreq());
     ui.displayFrequency();  // Update station info display too
 #endif
 
@@ -502,7 +502,7 @@ void QSOMessages::onTouchItem(AScrollBoxItem* pItem) {
 
     // Ignore touch on our own transmitted message
 #ifndef PIO_UNIT_TESTING
-    if ((strcmp(pMsgItem->msg.field2, thisStation.getCallsign()) == 0)) return;
+    if ((strcmp(pMsgItem->msg.field2, ui.thisStation.getCallsign()) == 0)) return;
 #endif
 
     // Ignore touch on unknown hashed/trashed callsigns

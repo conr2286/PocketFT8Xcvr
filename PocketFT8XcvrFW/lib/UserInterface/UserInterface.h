@@ -15,6 +15,7 @@
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
 #include "decode_ft8.h"       //Decoded message types
 #include "hwdefs.h"           //Pocket FT8 pin assignments for Teensy 4.1 MCU
+#include "Station.h"          //The Station singleton
 
 // Transmit/Receive/Pending indicator icon
 typedef enum {
@@ -189,6 +190,9 @@ class UserInterface {
 
     // Waterfall attributes
     uint16_t cursor_line;  // X-Offset in pixels of the cursor within the Waterfall widget
+
+    // Reference the Station singleton
+    Station& thisStation = Station::getInstance();
 
     // The stationInfo items
     AListBoxItem* itemDate;

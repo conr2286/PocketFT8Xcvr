@@ -155,6 +155,7 @@ int target_frequency;
 void set_Target_Frequency(int cursorFreq);
 
 static UserInterface& ui = UserInterface::getInstance();
+static Station& thisStation = Station::getInstance();
 
 // Helper functions
 

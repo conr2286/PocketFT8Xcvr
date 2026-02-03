@@ -60,6 +60,7 @@ extern uint8_t export_fft_power[ft8_msg_samples * ft8_buffer * 4];
 // extern int K_BYTES;
 
 static UserInterface& ui = UserInterface::getInstance();
+static Station& thisStation = Station::getInstance();
 
 // extern void write_log_data(char *data);
 
