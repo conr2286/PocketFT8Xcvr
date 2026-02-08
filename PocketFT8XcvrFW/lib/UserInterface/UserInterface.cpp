@@ -187,12 +187,13 @@ void UserInterface::displayTime() {
     char str[13];        // print format stuff
     AColor fg;
     int thisSecond = second();
+    // Clock tick?
     if (abs(thisSecond - lastSecond) >= 1) {
         snprintf(str, sizeof(str), "%02i:%02i:%02i", hour(), minute(), second());
         if (gpsHelper.validGPSdata) {
-            fg = A_GREEN;
+            fg = A_GREEN;  // Valid UTC time
         } else {
-            fg = A_YELLOW;
+            fg = A_YELLOW;  //"Does anyone really know what time it is?" -- Chicago
         }
         itemTime->setItemText(String(str), fg);  // Green if GPS Disciplined
         lastSecond = thisSecond;
@@ -545,6 +546,9 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, Str
  * @param pStationMessages Back pointer to Station Messages Box
  * @param pNewMsg New Decode msg structure
  * @return Pointer to new item or nullptr (if nothing new)
+ *
+ * @note Repeated messages are displayed by changing the color of an existing message text to A_YELLOW
+ * rather than filling the limited screen area with repeated message text.
  */
 QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessages, Decode* pNewMsg, QSOMsgEvent msgEvent) {
     int newItemIndex = nDisplayedItems;
@@ -559,7 +563,7 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
     // Find the last message item if any
     if (nDisplayedItems > 0) {
         pLastMsgItem = static_cast<QSOMessagesItem*>(displayedItems[nDisplayedItems - 1]);
-        DPRINTF("lastMsgItem='%s'\n", pLastMsgItem->str.c_str());
+        DPRINTF("nDisplayedItems=%d lastMsgItem='%s'\n", nDisplayedItems, pLastMsgItem->str.c_str());
     }
 
     // Choose text color to reflect the message type

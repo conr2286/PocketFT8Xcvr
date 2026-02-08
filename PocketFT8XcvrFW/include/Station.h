@@ -1,9 +1,10 @@
 /**
  * @brief Station models many attributes of our amateur radio station.
  *
- * @note Unlike the content of the config structure (which is simply a
- * RAM-resident copy of CONFIG.JSON), the content of Station potentially
- * can vary during execution.
+ * @note Unlike the content of the Config structure (which is simply a
+ * read-only RAM-resident copy of CONFIG.JSON), the content of Station
+ * potentially can vary during execution, and may include methods for
+ * analyzing the Station data.
  *
  * @note Station is implemented as a Meyers Singleton.  You can obtain a
  * reference to the one-and-only instance using Station:getInstance().
