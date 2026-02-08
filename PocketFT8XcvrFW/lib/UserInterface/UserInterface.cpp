@@ -563,7 +563,7 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
     // Find the last message item if any
     if (nDisplayedItems > 0) {
         pLastMsgItem = static_cast<QSOMessagesItem*>(displayedItems[nDisplayedItems - 1]);
-        DPRINTF("nDisplayedItems=%d lastMsgItem='%s'\n", nDisplayedItems, pLastMsgItem->str.c_str());
+        if (pLastMsgItem != NULL) DPRINTF("nDisplayedItems=%d lastMsgItem='%s'\n", nDisplayedItems, pLastMsgItem->str.c_str());
     }
 
     // Choose text color to reflect the message type
@@ -572,7 +572,7 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
             color = A_GREY;
             break;
         case QSO_MSG_RECVD:  // New received message
-            if (seq.inQSO(pNewMsg->field2)) {
+            if (seq.inQSO(pNewMsg->field1)) {
                 color = A_WHITE;  // New message is from the station in our QSO
             } else {
                 color = A_BLUE;  // New message is from a breaker/tail-ender

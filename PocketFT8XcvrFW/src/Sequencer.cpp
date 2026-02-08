@@ -1297,6 +1297,7 @@ bool Sequencer::inQSO() {
         case LOC_PENDING:  // CALLing: Awaiting timeslot after known station's message click
         case XMIT_LOC:     // CALLing: Transmitting our locator in response to their CQ
         default:           // "A bottle of wine and a fifth of gin, and I'm lost in the ozone again" -- Commander Cody
+            DPRINTF("Inactive QSO\n");
             return false;  // Not in an active QSO
             break;
 
@@ -1313,6 +1314,7 @@ bool Sequencer::inQSO() {
         case LISTEN_RRR:    // QSOing: Listen for their RRR/RR73/73
         case M73_PENDING:   // QSOing: Awaiting timeslot to transmit 73
         case XMIT_73:       // QSOing: Transmitting 73
+            DPRINTF("Active QSO");
             return true;
             break;
     }
@@ -1324,7 +1326,12 @@ bool Sequencer::inQSO() {
  * @return true if in QSO, false otherwise
  */
 bool Sequencer::inQSO(String callSign) {
-    if (inQSO() && callSign.equals(thisStation.getCallsign())) return true;
+    DTRACE();
+    if (inQSO() && callSign.equals(thisStation.getCallsign())) {
+        DPRINTF("In QSO with %s\n", thisStation.getCallsign());
+        return true;
+    }
+    DPRINTF("Not in QSO with %s\n", thisStation.getCallsign());
     return false;
 }
 
