@@ -202,7 +202,12 @@ void Contact::setWorkedRSL(int rsl) {
 }
 
 void Contact::setMyRSL(const char* rsl) {
-    strlcpy(this->myRSL, rsl, sizeof(this->myRSL));
+    // Remove "Roger" from beginning of RSL string
+    if (*rsl == 'R') {
+        strlcpy(this->myRSL, rsl + 1, sizeof(this->myRSL));
+    } else {
+        strlcpy(this->myRSL, rsl, sizeof(this->myRSL));
+    }
 }
 
 void Contact::setMyLocator(const char* locator) {

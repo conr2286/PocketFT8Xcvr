@@ -1199,7 +1199,6 @@ void Sequencer::startQSO(const char* workedCall, unsigned oddEven) {
 
     // Setup UI to display an active QSO
     ui.setXmitRecvIndicator(INDICATOR_ICON_PENDING);  // Indicate we have a transmission pending
-    // TODO:  Switch the UI from UI_LISTEN to UI_QSO
 
 }  // startQSO
 
@@ -1246,7 +1245,7 @@ void Sequencer::endQSO() {
     // Only log the contact if we collected sufficient info about the remote station.
     // We are overly strict here (see the isValid() code) when compared to LoTW, but
     // comparable to SOTA/POTA any many other conventions.
-    if (/*contact.isActive()*/ inQSO() && contact.isValid()) {
+    if (inQSO() && contact.isValid()) {
         DTRACE();
         contactLog->logContact(&contact);
         String str = String("Logged ") + String(contact.getWorkedCall());
