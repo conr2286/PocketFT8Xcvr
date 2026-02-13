@@ -14777,7 +14777,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "BU2032SM-JJ-GTR_MPD"
+		(property "Footprint" "BU2032SM:BU2032SM-JJ-GTR_MPD"
 			(at 104.14 134.62 0)
 			(effects
 				(font
@@ -25332,7 +25332,7 @@
 				)
 			)
 		)
-		(property "Footprint" "QFN20_4X4_SKY"
+		(property "Footprint" "SI5351C-B-GM:QFN20_4X4_SKY"
 			(at 97.79 172.72 0)
 			(effects
 				(font
