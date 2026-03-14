@@ -9961,7 +9961,7 @@
 		)
 		(uuid "843bd358-614a-43c1-a441-60a55639e0fd")
 	)
-	(text_box "Firmware rotates the touchscreen into landscape position, reversing the schematic's X and Y axis."
+	(text_box "Firmware rotates the touchscreen into landscape, reversing the schematic's X and Y axis."
 		(exclude_from_sim no)
 		(at 45.72 90.17 0)
 		(size 36.83 7.62)
