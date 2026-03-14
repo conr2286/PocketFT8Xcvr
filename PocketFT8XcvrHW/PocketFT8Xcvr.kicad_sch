@@ -9961,10 +9961,10 @@
 		)
 		(uuid "843bd358-614a-43c1-a441-60a55639e0fd")
 	)
-	(text_box "Firmware rotates the touchscreen into landscape position, reversing the schematic's X and Y axis.  SCL2 and SDA2 are no longer used in V4.X HW."
+	(text_box "Firmware rotates the touchscreen into landscape position, reversing the schematic's X and Y axis."
 		(exclude_from_sim no)
 		(at 45.72 90.17 0)
-		(size 36.83 11.43)
+		(size 36.83 7.62)
 		(margins 0.9525 0.9525 0.9525 0.9525)
 		(stroke
 			(width 0)
@@ -12105,7 +12105,7 @@
 		)
 		(uuid "fdc6acc5-8937-45fa-a70d-7f2effa151f3")
 	)
-	(label "YD-"
+	(label "YDM"
 		(at 34.29 57.15 0)
 		(effects
 			(font
@@ -12155,7 +12155,7 @@
 		)
 		(uuid "07b7330b-2ef7-4b4a-bbea-1a6d46d637c7")
 	)
-	(label "Y+"
+	(label "YP"
 		(at 160.02 90.17 0)
 		(effects
 			(font
@@ -12185,7 +12185,7 @@
 		)
 		(uuid "0caa08e5-ecdc-475d-a544-58b87b05d21e")
 	)
-	(label "YD+"
+	(label "YDP"
 		(at 57.15 62.23 0)
 		(effects
 			(font
@@ -12195,7 +12195,7 @@
 		)
 		(uuid "1fee5f4e-bb5f-4c03-9938-955b631c04af")
 	)
-	(label "XD+"
+	(label "XDP"
 		(at 34.29 59.69 0)
 		(effects
 			(font
@@ -12225,7 +12225,7 @@
 		)
 		(uuid "2bcedb12-0b62-4d05-9dd3-c4b045c001c1")
 	)
-	(label "XD-"
+	(label "XDM"
 		(at 160.02 85.09 0)
 		(effects
 			(font
@@ -12455,7 +12455,7 @@
 		)
 		(uuid "7430137b-587a-4496-972b-8d8f84f8f760")
 	)
-	(label "YD-"
+	(label "YDM"
 		(at 160.02 95.25 0)
 		(effects
 			(font
@@ -12475,7 +12475,7 @@
 		)
 		(uuid "7a48160a-a5b5-44fa-a096-2898a91f4fab")
 	)
-	(label "XD+"
+	(label "XDP"
 		(at 160.02 87.63 0)
 		(effects
 			(font
@@ -12545,7 +12545,7 @@
 		)
 		(uuid "93cee415-9677-4adc-a10f-c9cd47a37632")
 	)
-	(label "X-"
+	(label "XM"
 		(at 68.58 54.61 0)
 		(effects
 			(font
@@ -12555,7 +12555,7 @@
 		)
 		(uuid "94a75b2c-75fb-4c56-bfad-99d11aa9f949")
 	)
-	(label "XD-"
+	(label "XDM"
 		(at 54.61 54.61 0)
 		(effects
 			(font
@@ -12655,7 +12655,7 @@
 		)
 		(uuid "b60f32b2-c94f-4f2e-ad2f-45a7ea7c34d1")
 	)
-	(label "Y+"
+	(label "YP"
 		(at 68.58 62.23 0)
 		(effects
 			(font
@@ -12665,7 +12665,7 @@
 		)
 		(uuid "b703eb38-c5b8-4b1c-9866-9caf5a5e3ccb")
 	)
-	(label "YD+"
+	(label "YDP"
 		(at 160.02 82.55 0)
 		(effects
 			(font
@@ -12905,7 +12905,7 @@
 		)
 		(uuid "f57c5822-2d1f-44a1-8884-e8b965210140")
 	)
-	(label "X-"
+	(label "XM"
 		(at 160.02 92.71 0)
 		(effects
 			(font
@@ -25279,7 +25279,7 @@
 				)
 			)
 		)
-		(property "Value" "ASTX-H11-25.000MHZ-T"
+		(property "Value" "ASTXMH11-25.000MHZ-T"
 			(at 53.34 175.26 0)
 			(effects
 				(font

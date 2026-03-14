@@ -5,6 +5,11 @@
  * (c) ladyada / adafruit
  * Code under MIT License
  *
+ * Notes:  This file has been modified to compile for either the Pocket FT8 V2.X,
+ * V3.X or V4.X hardware.  The earlier versions employed an external MCP342X ADC
+ * for the touchscreen, the V4.X hardware uses the Teensy 4.1 A16 and A17 pins
+ * with ADC1 (The audio pipeline is using ADC2).
+ *
  */
 
 #include "Arduino.h"
