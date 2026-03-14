@@ -128,9 +128,7 @@ TSPoint TouchScreen::getPoint(void) {
         err = adc.convertAndRead(MCP342x::channel1, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value1, status);  // Read schematic signal YD+
 #else
         // value1 = analogRead2(PIN_YDP);  // Version 4+ HW has YDP on A17
-        value1 = analogRead(A17);  // Version 4+ HW has YDP on A17
-                                   // value1 = 0;
-
+        value1 = analogRead(PIN_YDP);  // Version 4+ HW has YDP on A17
 #endif
         samples[i] = value1;
     }
@@ -162,9 +160,7 @@ TSPoint TouchScreen::getPoint(void) {
         err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value2, status);  // Schematic signal XD-
 #else
         // value2 = analogRead2(PIN_XDM);  // Version 4+ has XDP on Pin A16
-        value2 = analogRead(A16);  // Version 4+ has XDP on Pin A16
-                                   // value2 = 0;
-
+        value2 = analogRead(PIN_XDM);  // Version 4+ has XDM on Pin A16
 #endif
         samples[i] = value2;
     }
