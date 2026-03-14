@@ -1,19 +1,18 @@
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-// Touch screen library with X Y and Z (pressure) readings as well
-// as oversampling to avoid 'bouncing'
-// (c) ladyada / adafruit
-// Code under MIT License
+/**
+ * Touch screen library with X Y and Z (pressure) readings as well
+ * as oversampling to avoid 'bouncing'
+ * (c) ladyada / adafruit
+ * Code under MIT License
+ *
+ */
 
 #include "Arduino.h"
 // #include "pins_arduino.h"
 #include "hwdefs.h"
 #include <Wire.h>
-#include "MCP342x.h"
 
-// Define which I2C bus hosts the MCP342x
-#define WIRE WIRE_ETC
-
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 #ifdef __AVR
 #include <avr/pgmspace.h>
@@ -29,8 +28,17 @@
 // found 2 is precise yet not too slow so we suggest sticking with it!
 #define NUMSAMPLES 2
 
+// HW prior to V4 used an external MCP342X ADC with a 2.048 volt reference.  Recent
+//(and patched V3;) HW uses the Teensy's second ADC to read the touchscreen.
+#if HW_VERSION < 4
+// Define which I2C bus hosts the MCP342x
+#define WIRE WIRE_ETC
+#include "MCP342x.h"
 uint8_t address = 0x69;  // Original I2C address was 0x68 but V1.01 chip reports 0x68
 MCP342x adc = MCP342x(address);
+#else
+
+#endif
 
 TSPoint::TSPoint(void) {
     x = y = z = 0;
@@ -89,30 +97,41 @@ static void insert_sort(int array[], uint8_t size) {
  * @return TSPoint The measured X, Y, and Z/pressure values
  */
 TSPoint TouchScreen::getPoint(void) {
-    // return(TSPoint(0,0,0));     //Uncomment to debug I2C/SI4735 noise issues
     int x, y, z;
     int samples[NUMSAMPLES];
     uint8_t i, valid;
 
     long value1 = 0;
     long value2 = 0;
+
+#if HW_VERSION < 4
     uint8_t err;
     MCP342x::Config status;
+#else
+
+#endif
 
     valid = 1;
 
-    pinMode(_yp, INPUT);
-    pinMode(_ym, INPUT);
-    pinMode(_xp, OUTPUT);
-    pinMode(_xm, OUTPUT);
+    // Setup to read yCoord from rotated (landscape) screen
+    pinMode(_yp, INPUT);   // Float Y-Axis pins
+    pinMode(_ym, INPUT);   // Float Y-Axis pins
+    pinMode(_xp, OUTPUT);  // Bias the X-Axis pins
+    pinMode(_xm, OUTPUT);  // Bias the X-Axis pins
 
-    digitalWrite(_xm, HIGH);
-    digitalWrite(_xp, LOW);
-    delayMicroseconds(20);  // Fast ARM chips need to allow voltages to settle
+    digitalWrite(_xm, HIGH);  // Bias X-Axis with Vcc
+    digitalWrite(_xp, LOW);   // Bias X-Axis with Vcc
+    delayMicroseconds(20);    // Fast ARM chips need to allow voltages to settle
 
     for (i = 0; i < NUMSAMPLES; i++) {
-        // samples[i] = analogRead(_yp);
-        err = adc.convertAndRead(MCP342x::channel1, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value1, status);
+#if HW_VERSION < 4
+        err = adc.convertAndRead(MCP342x::channel1, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value1, status);  // Read schematic signal YD+
+#else
+        // value1 = analogRead2(PIN_YDP);  // Version 4+ HW has YDP on A17
+        value1 = analogRead(A17);  // Version 4+ HW has YDP on A17
+                                   // value1 = 0;
+
+#endif
         samples[i] = value1;
     }
 
@@ -126,20 +145,27 @@ TSPoint TouchScreen::getPoint(void) {
     }
 #endif
 
-    y = samples[1];
+    y = samples[1];  // JRC:  I think this is the Y-Coord of a rotated screen because we biased the display hardware's X-Axis
 
-    pinMode(_xp, INPUT);
-    pinMode(_xm, INPUT);
-    pinMode(_yp, OUTPUT);
-    pinMode(_ym, OUTPUT);
+    // Setup to read xCoord from rotated (landscape) screen
+    pinMode(_xp, INPUT);   // Float X-Axis pins
+    pinMode(_xm, INPUT);   // Float X-Axis pins
+    pinMode(_yp, OUTPUT);  // Bias Y-Axis
+    pinMode(_ym, OUTPUT);  // Bias Y-Axis
 
-    digitalWrite(_ym, LOW);
-    digitalWrite(_yp, HIGH);
-    delayMicroseconds(20);  // Fast ARM chips need to allow voltages to settle
+    digitalWrite(_ym, LOW);   // Bias Y-Axis with Vcc
+    digitalWrite(_yp, HIGH);  // Bias Y-Axis with Vcc
+    delayMicroseconds(20);    // Fast ARM chips need to allow voltages to settle
 
     for (i = 0; i < NUMSAMPLES; i++) {
-        // samples[i] = analogRead(_xm);
-        err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value2, status);
+#if HW_VERSION < 4
+        err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value2, status);  // Schematic signal XD-
+#else
+        // value2 = analogRead2(PIN_XDM);  // Version 4+ has XDP on Pin A16
+        value2 = analogRead(A16);  // Version 4+ has XDP on Pin A16
+                                   // value2 = 0;
+
+#endif
         samples[i] = value2;
     }
 
@@ -153,7 +179,7 @@ TSPoint TouchScreen::getPoint(void) {
     }
 #endif
 
-    x = samples[1];
+    x = samples[1];  // JRC:  I think this is the X-Coord of a rotated screen because we biased the display hardware's Y-Axis
 
     if (!valid) {
         z = 0;
@@ -165,8 +191,8 @@ TSPoint TouchScreen::getPoint(void) {
 
 TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
                          uint16_t rxplate = 0) {
-    // Serial.begin(9600);
-    // DTRACE();
+    Serial.begin(9600);
+    DTRACE();
 
     _yp = yp;
     _xm = xm;
@@ -174,9 +200,15 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
     _xp = xp;
     _rxplate = rxplate;
 
+#if HW_VERSION < 4
     WIRE.begin();
     MCP342x::generalCallReset();
     delay(1);  // MC342x needs 300us to settle, wait 1ms
+#else
+
+#endif
+
+    DTRACE();
 
 #if defined(USE_FAST_PINIO)
     xp_port = portOutputRegister(digitalPinToPort(_xp));
@@ -192,6 +224,9 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
 
     pressureThreshhold = 10;
 }
+
+// JRC:  I think these read methods are stale code
+
 /**
  * @brief Read the touch event's X value
  *
