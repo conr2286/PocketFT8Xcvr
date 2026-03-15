@@ -6880,6 +6880,161 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "SparkFun-Resistor:2.2k_0603"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "2.2k"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+				(at 0 -4.318 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
+				(at 0 -8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "2.2k 5% 1/10 Watt 0603"
+				(at 0 -11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Type" "SMD"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Notes" "Substitutions OK"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "SparkFun R res resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "2.2k_0603_0_1"
+				(polyline
+					(pts
+						(xy -1.524 0) (xy -1.143 1.016) (xy -0.762 0) (xy -0.381 -1.016) (xy 0 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0.381 1.016) (xy 0.762 0) (xy 1.143 -1.016) (xy 1.524 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "2.2k_0603_1_1"
+				(pin passive line
+					(at -2.54 0 0)
+					(length 1.016)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 0 180)
+					(length 1.016)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "SparkFun-Resistor:47k_0603"
 			(pin_numbers
 				(hide yes)
@@ -6915,7 +7070,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "RES 47K OHM 1/10W 5% 0603"
+			(property "Datasheet" ""
 				(at 0 -8.89 0)
 				(effects
 					(font
@@ -6924,7 +7079,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "RES 47K OHM 1/10W 5% 0603"
+			(property "Description" "Resistor"
 				(at 0 -11.43 0)
 				(effects
 					(font
@@ -6952,6 +7107,15 @@
 				)
 			)
 			(property "Mfg Part #" "RC0603JR-0747KL"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part #" "C127447"
 				(at 0 0 0)
 				(effects
 					(font
@@ -6999,7 +7163,7 @@
 			(symbol "47k_0603_0_1"
 				(polyline
 					(pts
-						(xy -2.286 0) (xy -2.54 0)
+						(xy -1.524 0) (xy -1.143 1.016) (xy -0.762 0) (xy -0.381 -1.016) (xy 0 0)
 					)
 					(stroke
 						(width 0)
@@ -7011,43 +7175,7 @@
 				)
 				(polyline
 					(pts
-						(xy -0.762 0) (xy -1.143 -1.016) (xy -1.524 0) (xy -1.905 1.016) (xy -2.286 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 0) (xy 0.381 -1.016) (xy 0 0) (xy -0.381 1.016) (xy -0.762 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.286 0) (xy 2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.286 0) (xy 1.905 -1.016) (xy 1.524 0) (xy 1.143 1.016) (xy 0.762 0)
+						(xy 0 0) (xy 0.381 1.016) (xy 0.762 0) (xy 1.143 -1.016) (xy 1.524 0)
 					)
 					(stroke
 						(width 0)
@@ -7060,26 +7188,8 @@
 			)
 			(symbol "47k_0603_1_1"
 				(pin passive line
-					(at -3.81 0 0)
-					(length 1.27)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 3.81 0 180)
-					(length 1.27)
+					(at -2.54 0 0)
+					(length 1.016)
 					(name "~"
 						(effects
 							(font
@@ -7088,6 +7198,24 @@
 						)
 					)
 					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 0 180)
+					(length 1.016)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -10487,6 +10615,16 @@
 	)
 	(wire
 		(pts
+			(xy 219.71 30.48) (xy 219.71 33.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "004573dc-b2cf-44b4-8775-a258b6473007")
+	)
+	(wire
+		(pts
 			(xy 185.42 72.39) (xy 223.52 72.39)
 		)
 		(stroke
@@ -10524,26 +10662,6 @@
 			(type default)
 		)
 		(uuid "0400cfcf-e3a8-4068-afe9-c222dc322e7d")
-	)
-	(wire
-		(pts
-			(xy 200.66 83.82) (xy 200.66 85.09)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "07df11c2-0ed0-4f3f-b2ce-e757c9ff5955")
-	)
-	(wire
-		(pts
-			(xy 251.46 31.75) (xy 251.46 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "07fa9418-6689-4068-8cd9-321ccc5591f5")
 	)
 	(wire
 		(pts
@@ -10597,6 +10715,16 @@
 	)
 	(wire
 		(pts
+			(xy 74.93 147.32) (xy 74.93 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1176fdd6-2c6e-4902-ab35-36b6c6cf0416")
+	)
+	(wire
+		(pts
 			(xy 19.05 170.18) (xy 19.05 177.8)
 		)
 		(stroke
@@ -10614,6 +10742,16 @@
 			(type default)
 		)
 		(uuid "13b586ea-4e85-4d2a-b4c2-061875b04a36")
+	)
+	(wire
+		(pts
+			(xy 214.63 33.02) (xy 214.63 35.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "15d5e0dc-ec40-4031-89a6-8acd8dbcdfe0")
 	)
 	(wire
 		(pts
@@ -10647,6 +10785,16 @@
 	)
 	(wire
 		(pts
+			(xy 200.66 83.82) (xy 200.66 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "189bef0b-13a5-4616-832e-d6b2012061c5")
+	)
+	(wire
+		(pts
 			(xy 233.68 39.37) (xy 233.68 43.18)
 		)
 		(stroke
@@ -10654,16 +10802,6 @@
 			(type default)
 		)
 		(uuid "1c251482-77c6-4214-84c2-066bcba96a7f")
-	)
-	(wire
-		(pts
-			(xy 214.63 33.02) (xy 214.63 34.29)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1d56d94c-7cd0-435b-a5e1-3a2b6ddc9561")
 	)
 	(wire
 		(pts
@@ -11037,23 +11175,13 @@
 	)
 	(wire
 		(pts
-			(xy 200.66 92.71) (xy 200.66 93.98)
+			(xy 200.66 91.44) (xy 200.66 93.98)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "53042822-6a8e-499b-8dbf-e236780be3a3")
-	)
-	(wire
-		(pts
-			(xy 63.5 139.7) (xy 63.5 140.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "54d3d293-b875-44bf-9735-0f3327d9e4f0")
 	)
 	(wire
 		(pts
@@ -11277,6 +11405,16 @@
 	)
 	(wire
 		(pts
+			(xy 219.71 20.32) (xy 219.71 25.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7e6d9663-07c1-49fc-aad5-b22c55a9aeb4")
+	)
+	(wire
+		(pts
 			(xy 257.81 147.32) (xy 257.81 144.78)
 		)
 		(stroke
@@ -11314,16 +11452,6 @@
 			(type default)
 		)
 		(uuid "885e7972-50c8-4611-bece-43d39dda9b13")
-	)
-	(wire
-		(pts
-			(xy 214.63 41.91) (xy 214.63 43.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "89b271c0-8e4b-4f76-94dd-4ce115c503e5")
 	)
 	(wire
 		(pts
@@ -11397,16 +11525,6 @@
 	)
 	(wire
 		(pts
-			(xy 74.93 139.7) (xy 74.93 140.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "940ed740-a0cb-4dc7-b33c-9ac3d060b6af")
-	)
-	(wire
-		(pts
 			(xy 223.52 67.31) (xy 212.09 67.31)
 		)
 		(stroke
@@ -11444,6 +11562,16 @@
 			(type default)
 		)
 		(uuid "989b2d6c-0993-4452-86dd-46b054be3ef7")
+	)
+	(wire
+		(pts
+			(xy 63.5 147.32) (xy 63.5 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9960dbf5-9650-4372-9f30-37d9e70c5d93")
 	)
 	(wire
 		(pts
@@ -11507,6 +11635,16 @@
 	)
 	(wire
 		(pts
+			(xy 74.93 139.7) (xy 74.93 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1e369c3-1386-4e64-98fd-aa2a654573bb")
+	)
+	(wire
+		(pts
 			(xy 214.63 22.86) (xy 214.63 24.13)
 		)
 		(stroke
@@ -11524,16 +11662,6 @@
 			(type default)
 		)
 		(uuid "a409bbb7-f8de-4485-b6e6-e2d13b5fb4bd")
-	)
-	(wire
-		(pts
-			(xy 74.93 148.59) (xy 74.93 149.86)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "acb7f323-ee8e-4ef9-8803-674e8b77ebb9")
 	)
 	(wire
 		(pts
@@ -11564,16 +11692,6 @@
 			(type default)
 		)
 		(uuid "ad4ac632-ec6a-4db8-979f-aadb50146950")
-	)
-	(wire
-		(pts
-			(xy 219.71 24.13) (xy 219.71 20.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ae06a702-484a-4f25-b135-dbca092d5f4d")
 	)
 	(wire
 		(pts
@@ -11667,13 +11785,13 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 149.86) (xy 63.5 148.59)
+			(xy 214.63 40.64) (xy 214.63 43.18)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "ca96bfaa-ac6e-4679-aaaa-6fc17b441ba6")
+		(uuid "c5f9eaf4-d987-4270-b549-f3cc6342b226")
 	)
 	(wire
 		(pts
@@ -11807,7 +11925,7 @@
 	)
 	(wire
 		(pts
-			(xy 189.23 93.98) (xy 189.23 92.71)
+			(xy 189.23 91.44) (xy 189.23 93.98)
 		)
 		(stroke
 			(width 0)
@@ -11837,7 +11955,7 @@
 	)
 	(wire
 		(pts
-			(xy 189.23 83.82) (xy 189.23 85.09)
+			(xy 189.23 83.82) (xy 189.23 86.36)
 		)
 		(stroke
 			(width 0)
@@ -12027,16 +12145,6 @@
 	)
 	(wire
 		(pts
-			(xy 219.71 31.75) (xy 219.71 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f2b90a11-6888-44ca-a50f-0f851d0de419")
-	)
-	(wire
-		(pts
 			(xy 265.43 43.18) (xy 265.43 62.23)
 		)
 		(stroke
@@ -12047,7 +12155,7 @@
 	)
 	(wire
 		(pts
-			(xy 251.46 20.32) (xy 251.46 24.13)
+			(xy 251.46 20.32) (xy 251.46 25.4)
 		)
 		(stroke
 			(width 0)
@@ -12084,6 +12192,26 @@
 			(type default)
 		)
 		(uuid "fc2ca406-10aa-4f38-8034-938a86130ce9")
+	)
+	(wire
+		(pts
+			(xy 63.5 139.7) (xy 63.5 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fc6e9198-e193-4d24-8011-f4984a027332")
+	)
+	(wire
+		(pts
+			(xy 251.46 30.48) (xy 251.46 35.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fc757b11-04ba-4a73-8afc-1092a59d2235")
 	)
 	(wire
 		(pts
@@ -12556,7 +12684,7 @@
 		(uuid "94a75b2c-75fb-4c56-bfad-99d11aa9f949")
 	)
 	(label "XDM"
-		(at 54.61 54.61 0)
+		(at 57.15 54.61 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -13866,7 +13994,7 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Resistor:2.0k_0603")
+		(lib_id "SparkFun-Resistor:2.2k_0603")
 		(at 214.63 38.1 90)
 		(mirror x)
 		(unit 1)
@@ -13884,13 +14012,12 @@
 				(justify left)
 			)
 		)
-		(property "Value" "2.2K"
-			(at 212.09 38.1 90)
+		(property "Value" "2.2k"
+			(at 212.09 38.1 0)
 			(effects
 				(font
-					(size 1.143 1.143)
+					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
@@ -13902,7 +14029,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
 			(at 223.52 38.1 0)
 			(effects
 				(font
@@ -13911,17 +14038,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 2.2K 5% 1/10W 0603"
+		(property "Description" "2.2k 5% 1/10 Watt 0603"
 			(at 226.06 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Yageo"
-			(at 214.63 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13939,24 +14057,6 @@
 			)
 		)
 		(property "Type" "SMD"
-			(at 214.63 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "RES 2.2K OHM 5% 1/10W 0603"
-			(at 214.63 38.1 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes:" ""
 			(at 214.63 38.1 0)
 			(effects
 				(font
@@ -17581,7 +17681,7 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Resistor:2.0k_0603")
+		(lib_id "SparkFun-Resistor:2.2k_0603")
 		(at 200.66 88.9 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -17599,7 +17699,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "2.0K"
+		(property "Value" "2.2k"
 			(at 203.2 90.1699 90)
 			(effects
 				(font
@@ -17626,35 +17726,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 2K OHM 5% 1/10W 0603"
+		(property "Description" "2.2k 5% 1/10 Watt 0603"
 			(at 212.09 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "PROD_ID" "RES-08296"
-			(at 207.518 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Yageo"
-			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "RC0603JR-072KL"
-			(at 200.66 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17672,78 +17745,6 @@
 			)
 		)
 		(property "Type" "SMD"
-			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Name" ""
-			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MANUFACTURER" ""
-			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Height" ""
-			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Part_Number" ""
-			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Part Number" ""
-			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Price/Stock" ""
-			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field8" ""
-			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes:" ""
 			(at 200.66 88.9 0)
 			(effects
 				(font
@@ -17974,7 +17975,7 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Resistor:2.0k_0603")
+		(lib_id "SparkFun-Resistor:2.2k_0603")
 		(at 74.93 144.78 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -17992,7 +17993,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "2.0K"
+		(property "Value" "2.2k"
 			(at 77.47 146.0499 90)
 			(effects
 				(font
@@ -18019,35 +18020,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 2K OHM 5% 1/10W 0603"
+		(property "Description" "2.2k 5% 1/10 Watt 0603"
 			(at 86.36 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "PROD_ID" "RES-08296"
-			(at 81.788 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Yageo"
-			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "RC0603JR-072KL"
-			(at 74.93 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18065,78 +18039,6 @@
 			)
 		)
 		(property "Type" "SMD"
-			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Name" ""
-			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MANUFACTURER" ""
-			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Height" ""
-			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Part_Number" ""
-			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Part Number" ""
-			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Price/Stock" ""
-			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field8" ""
-			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes:" ""
 			(at 74.93 144.78 0)
 			(effects
 				(font
@@ -18179,7 +18081,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "47K"
+		(property "Value" "47k"
 			(at 222.25 27.9399 90)
 			(effects
 				(font
@@ -18197,7 +18099,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "RES 47K OHM 1/10W 5% 0603"
+		(property "Datasheet" ""
 			(at 210.82 27.94 0)
 			(effects
 				(font
@@ -18206,7 +18108,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 47K OHM 1/10W 5% 0603"
+		(property "Description" "Resistor"
 			(at 208.28 27.94 0)
 			(effects
 				(font
@@ -18261,70 +18163,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_Name" ""
-			(at 219.71 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MANUFACTURER" ""
-			(at 219.71 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Height" ""
-			(at 219.71 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Part_Number" ""
-			(at 219.71 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Part Number" ""
-			(at 219.71 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Price/Stock" ""
-			(at 219.71 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field8" ""
-			(at 219.71 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes:" ""
+		(property "LCSC Part #" "C127447"
 			(at 219.71 27.94 0)
 			(effects
 				(font
@@ -18632,7 +18471,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "47K"
+		(property "Value" "47k"
 			(at 254 27.94 90)
 			(effects
 				(font
@@ -18650,7 +18489,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "RES 47K OHM 1/10W 5% 0603"
+		(property "Datasheet" ""
 			(at 242.57 27.94 0)
 			(effects
 				(font
@@ -18659,7 +18498,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 47K OHM 1/10W 5% 0603"
+		(property "Description" "Resistor"
 			(at 240.03 27.94 0)
 			(effects
 				(font
@@ -18714,70 +18553,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_Name" ""
-			(at 251.46 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MANUFACTURER" ""
-			(at 251.46 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Height" ""
-			(at 251.46 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Part_Number" ""
-			(at 251.46 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Part Number" ""
-			(at 251.46 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Price/Stock" ""
-			(at 251.46 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field8" ""
-			(at 251.46 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes:" ""
+		(property "LCSC Part #" "C127447"
 			(at 251.46 27.94 0)
 			(effects
 				(font
@@ -19876,7 +19652,7 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Resistor:2.0k_0603")
+		(lib_id "SparkFun-Resistor:2.2k_0603")
 		(at 63.5 144.78 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -19894,7 +19670,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "2.0K"
+		(property "Value" "2.2k"
 			(at 66.04 146.0499 90)
 			(effects
 				(font
@@ -19921,26 +19697,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 2K OHM 5% 1/10W 0603"
+		(property "Description" "2.2k 5% 1/10 Watt 0603"
 			(at 74.93 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Yageo"
-			(at 63.5 144.78 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "RC0603JR-072KL"
-			(at 63.5 144.78 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19959,78 +19717,6 @@
 		)
 		(property "Type" "SMD"
 			(at 63.5 144.78 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Name" ""
-			(at 63.5 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MANUFACTURER" ""
-			(at 63.5 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Height" ""
-			(at 63.5 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Part_Number" ""
-			(at 63.5 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Part Number" ""
-			(at 63.5 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Price/Stock" ""
-			(at 63.5 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field8" ""
-			(at 63.5 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes:" ""
-			(at 63.5 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20758,7 +20444,7 @@
 		)
 	)
 	(symbol
-		(lib_id "SparkFun-Resistor:2.0k_0603")
+		(lib_id "SparkFun-Resistor:2.2k_0603")
 		(at 189.23 88.9 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -20776,7 +20462,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "2.0K"
+		(property "Value" "2.2k"
 			(at 191.77 90.1699 90)
 			(effects
 				(font
@@ -20803,26 +20489,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RES 2K OHM 5% 1/10W 0603"
+		(property "Description" "2.2k 5% 1/10 Watt 0603"
 			(at 200.66 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Yageo"
-			(at 189.23 88.9 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mfg Part #" "RC0603JR-072KL"
-			(at 189.23 88.9 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20841,78 +20509,6 @@
 		)
 		(property "Type" "SMD"
 			(at 189.23 88.9 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Name" ""
-			(at 189.23 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MANUFACTURER" ""
-			(at 189.23 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Height" ""
-			(at 189.23 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Part_Number" ""
-			(at 189.23 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Part Number" ""
-			(at 189.23 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser Price/Stock" ""
-			(at 189.23 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Field8" ""
-			(at 189.23 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Notes:" ""
-			(at 189.23 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
