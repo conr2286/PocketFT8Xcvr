@@ -56,8 +56,8 @@ void transmit_sequence(void) {
     if (thisStation.getEnableTransmit()) si5351.output_enable(SI5351_CLK0, 1);
 
     // Connect transmitter to antenna and short the receiver RF input to ground
-    pinMode(PIN_PTT, OUTPUT);
-    digitalWrite(PIN_PTT, HIGH);
+    pinMode(PIN_XMT, OUTPUT);
+    digitalWrite(PIN_XMT, HIGH);
 
     ui.setXmitRecvIndicator(INDICATOR_ICON_TRANSMIT);
 }
@@ -76,8 +76,8 @@ void receive_sequence(void) {
     delay(1);  // Allow the clock to respond
 
     // Disconnect the SN74ACT244 PA from antenna and float the receiver's RF input
-    pinMode(PIN_PTT, OUTPUT);
-    digitalWrite(PIN_PTT, LOW);
+    pinMode(PIN_XMT, OUTPUT);
+    digitalWrite(PIN_XMT, LOW);
 
     // Connect receiver to antenna and disable the SN74ACT244 PA
     pinMode(PIN_RCV, OUTPUT);
@@ -115,8 +115,8 @@ void tune_On_sequence(void) {
     digitalWrite(PIN_RCV, LOW);
 
     // Short receiver's RF input to ground
-    pinMode(PIN_PTT, OUTPUT);
-    digitalWrite(PIN_PTT, HIGH);
+    pinMode(PIN_XMT, OUTPUT);
+    digitalWrite(PIN_XMT, HIGH);
 
     // Let loop() know we are tuning
     tune_flag = 1;
@@ -138,8 +138,8 @@ void tune_Off_sequence(void) {
     si5351.output_enable(SI5351_CLK0, 0);
 
     // Float the receiver's RF input
-    pinMode(PIN_PTT, OUTPUT);
-    digitalWrite(PIN_PTT, LOW);
+    pinMode(PIN_XMT, OUTPUT);
+    digitalWrite(PIN_XMT, LOW);
 
     // Connect receiver to antenna and disable SN74ACT244 PA
     pinMode(PIN_RCV, OUTPUT);

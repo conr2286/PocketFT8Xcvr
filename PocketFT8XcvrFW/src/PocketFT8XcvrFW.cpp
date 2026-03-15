@@ -262,10 +262,10 @@ FLASHMEM void setup(void) {
 
     // Turn the transmitter off and the receiver on
     thisStation.setEnableTransmit(false);  // Disable transmitter until we get config info
-    pinMode(PIN_PTT, OUTPUT);
+    pinMode(PIN_XMT, OUTPUT);
     pinMode(PIN_RCV, OUTPUT);
     digitalWrite(PIN_RCV, HIGH);  // Disable the PA and disconnect receiver's RF input from antenna
-    digitalWrite(PIN_PTT, LOW);   // Unground the receiver's RF input
+    digitalWrite(PIN_XMT, LOW);   // Unground the receiver's RF input
 
     // Initialize the SD library if the card is available.  Without an SD card, we have no CONFIG info.  :(
     // If it were ever important, we could save CONFIG info in EEPROM and only use the SD card to install
@@ -303,7 +303,7 @@ FLASHMEM void setup(void) {
     delay(10);
 
     // Gets and sets the Si47XX I2C bus address
-    int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RESET);
+    int16_t si4735Addr = si4735.getDeviceI2CAddress(PIN_RRST);
     if (si4735Addr == 0) {
         ui.applicationMsgs->setText("FATAL:  Si473x not found");  // Oops... we don't have a receiver
         while (1) continue;                                       // Fatal

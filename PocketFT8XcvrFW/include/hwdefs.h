@@ -7,7 +7,9 @@
 ** NOTES
 **  If you change processors, displays, etc, you may need to reevaluate the GPIO pin assignments
 **
-**  The V2.0 boards control the RCV and XMT signals using firmware thru PIN_RCV and PIN_PTT.
+**  Many of the PIN_* names reflect their labels in the schematic
+**
+**  The V2.0 boards control the RCV and XMT signals using firmware thru PIN_RCV and PIN_XMT.
 **  This firmware implementation is compatible with both V1.X and V2.0 boards.
 **
 **  V2.X and V3.X boards use an MCP342X external 12-bit ADC to read the touchscreen signals.
@@ -23,13 +25,13 @@
 
 // Define the hardware version number (whole integral values only)
 // #define HW_VERSION 2        //Version 2.X boards (working lab prototype)
-// #define HW_VERSION 3  // Version 3.X boards (never mfg'd due to tariffs)
-#define HW_VERSION 4  // Version 4.X boards (internal touchscreen ADC)
+// #define HW_VERSION 3        // Version 3.X boards (never mfg'd due to tariffs)
+#define HW_VERSION 4  // Version 4.X boards (uses internal touchscreen ADC)
 
 // The Adafruit 480x320 display pins
 #define PIN_CS 10
 #define PIN_DC 9
-#define PIN_RST 8
+#define PIN_DRST 8
 #define PIN_MOSI 11
 #define PIN_DCLK 13  // Teensy 4.1
 #define PIN_MISO 12
@@ -48,11 +50,11 @@
 #define SerialGPS Serial1
 
 // SI4735 pins
-#define PIN_RESET 20  // Resets the Si4735
-#define PIN_AF A2     // Si4735 received audio connected to A2 via Pin 16
+#define PIN_RRST 20  // Resets the Si4735
+#define PIN_AF A2    // Si4735 received audio connected to A2 via Pin 16
 
 // Transmit/Receive pins
-#define PIN_PTT 14  // Teensy 4.1
+#define PIN_XMT 14  // Teensy 4.1
 #define PIN_RCV 15  // FW implementation of ~PTT (i.e. RECV) in V2.0 boards
 
 // Adafruit resistive touchscreen pins (External ADC HW option)
@@ -64,7 +66,7 @@
 #if HW_VERSION >= 4
 // Version 4.X hardware internal Teensy 4.1 ADC pins (Note:  Versions 2.X and 3.x
 // use an external ADC read via I2C rather than an internal ADC) for reading the
-// floating touchscreen pins (Schematic signals XD- and YD+).  Note:  You can
+// touchscreen pins (Schematic signals XDM and YDP).  Note:  You can
 // patch a V3.X PCB to make these signal connections for the internal ADC
 #define PIN_XDM A16  // Y-Coord analog input signal sampled from display's floating XM pin (A16)
 #define PIN_YDP A17  // X-Coord analog input signal sampled from display's floating YP pin (A17)
@@ -75,7 +77,7 @@
 #define PIN_GPSRX 1  // RX data from GPS
 #define PIN_PPS 2    // PPS pulse
 
-// Auxilliary pins for future expansion (Require V3.00 PCB)
+// Auxilliary pins for future expansion (Require V3+ PCB)
 #define PIN_AN13 27  // A13
 #define PIN_D27 27   // D27
 #define PIN_D28 28   // D28
@@ -84,7 +86,7 @@
 #define PIN_D31 31   // D31
 
 // The ADC calibration data for V4.X hardware is using a 3.3V reference to Vcc
-// And analog.c is using a 10-bit resolution rather than 12
+// And analog.c is using a 10-bit resolution rather than the MCP342X 12-bits.
 #if HW_VERSION >= 4
 #define TS_MINX (137 >> 2)
 #define TS_MINY (126 >> 2)
@@ -95,7 +97,7 @@
 #else
 // This is calibration data for the MC342x ADC to the screen coordinates
 // using 510 Ohm resistors to reduce the sensors' driven voltage to Y+ and X-
-// where the ADC reference voltage is 2.048 volts
+// where the ADC reference voltage is 2.048 volts, and sampling at 12-bits.
 #define TS_MINX 123
 #define TS_MINY 104
 #define TS_MAXX 1715
