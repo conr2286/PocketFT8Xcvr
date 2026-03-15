@@ -63,7 +63,7 @@
 #include <string.h>
 
 #include "ContactLogFile.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  *  Begin recording a contact

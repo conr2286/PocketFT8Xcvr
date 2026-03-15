@@ -24,7 +24,7 @@
 
 #include <SD.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  * @brief Opens the specified file for reading or writing
@@ -73,18 +73,18 @@ int LogFile::readLine(char* bfr, int size) {
 
     // Deal with weird corner cases
     if (size == 0) return -1;  // Error, no usable buffer
-    bfr[0] = 0;               // Initialize bfr with a NUL terminator
+    bfr[0] = 0;                // Initialize bfr with a NUL terminator
     if (size == 1) return -1;  // Error, no usable buffer
 
-    //DTRACE();
-    // Loop reading chars into bfr until NL, full, EOF or error
+    // DTRACE();
+    //  Loop reading chars into bfr until NL, full, EOF or error
     while (count < size) {
         int c = theFile.read();  // Read one char from log file
-        if (c == -1) {            // Error or EOF?
-            if (count > 0) {      // Did loop actually read anything?
-                return count;     // Yes, return count of chars read
-            } else {              // No, nothing read.  Probably EOF.
-                return -1;        // Return error indication
+        if (c == -1) {           // Error or EOF?
+            if (count > 0) {     // Did loop actually read anything?
+                return count;    // Yes, return count of chars read
+            } else {             // No, nothing read.  Probably EOF.
+                return -1;       // Return error indication
             }
         }
         if (c == '\n') return count;  // Finish on NL

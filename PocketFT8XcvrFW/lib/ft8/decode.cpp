@@ -5,7 +5,7 @@
  *      Author: user
  */
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "decode.h"
 
 #include <math.h>

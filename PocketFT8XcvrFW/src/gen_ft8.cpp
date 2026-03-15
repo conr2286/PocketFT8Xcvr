@@ -14,7 +14,7 @@
 #include <string.h>
 
 #include "HX8357_t3n.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "constants.h"
 #include "encode.h"
 #include "pack.h"

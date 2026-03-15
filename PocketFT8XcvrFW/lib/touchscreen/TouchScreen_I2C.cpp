@@ -17,7 +17,7 @@
 #include "hwdefs.h"
 #include <Wire.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 #ifdef __AVR
 #include <avr/pgmspace.h>

@@ -5,13 +5,13 @@
 #include <map>
 #include <string>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "lexical.h"
 
-//This is the hash table for known (previously logged) callsigns.  We new-up the table so
-//the required memory will be allocated from Teensy RAM2 rather than RAM1.  Note:  unlike
-//the FT8 callsign hash table (concerned with what callsigns have been *heard*), this table
-//records whether our station has actually attempted to *work* the remote station.
+// This is the hash table for known (previously logged) callsigns.  We new-up the table so
+// the required memory will be allocated from Teensy RAM2 rather than RAM1.  Note:  unlike
+// the FT8 callsign hash table (concerned with what callsigns have been *heard*), this table
+// records whether our station has actually attempted to *work* the remote station.
 static bool* knownCallsigns;  // The callsign hash table
 
 /**
@@ -74,10 +74,10 @@ void ContactLogFile::buildListOfKnownCallsigns() {
  * Method:  Modulo division by a prime number
  */
 unsigned ContactLogFile::hashString(char* str) {
-    //unsigned result = 0;
+    // unsigned result = 0;
     unsigned long long result = 0;
     for (char* p = str; *p != 0; p++) {
-        //DPRINTF("result=%llu *p=%c\n", result, *p);
+        // DPRINTF("result=%llu *p=%c\n", result, *p);
         result = (result << 8) + (*p);  // Assemble entire callsign as bytes in 64-bit unsigned
     }
     return (result % callsignTableSize);  // This is the hash function
@@ -96,7 +96,7 @@ unsigned ContactLogFile::hashString(char* str) {
 bool ContactLogFile::isKnownCallsign(char* callsign) {
     unsigned hashkey = hashString(callsign);
     bool result = knownCallsigns[hashkey];
-    DPRINTF("hashkey=%u, isKnownCallsign('%s')=%u\n", hashkey,callsign, result);
+    DPRINTF("hashkey=%u, isKnownCallsign('%s')=%u\n", hashkey, callsign, result);
     return result;
 }
 

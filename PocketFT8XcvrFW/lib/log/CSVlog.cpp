@@ -30,7 +30,7 @@
 
 #include "Contact.h"
 #include "ContactLogFile.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 // Define the size of the longest log entry (including the NUL)
 #define LOG_ENTRY_SIZE 256

@@ -4,7 +4,7 @@
 #include <string.h>
 
 #define LOG_LEVEL LOG_WARN
-// #include "debug.h"
+// #include "DEBUG.h"
 #include "NODEBUG.h"
 
 #define MAX22 ((uint32_t)4194304ul)

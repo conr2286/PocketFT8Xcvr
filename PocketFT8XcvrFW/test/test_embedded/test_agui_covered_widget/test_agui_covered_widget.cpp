@@ -52,7 +52,7 @@
 
 // Testing and debugging
 #include "unity.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 // This is calibration data for the raw touch data to the screen coordinates
 // using 510 Ohm resistors to reduce the driven voltage to Y+ and X-
