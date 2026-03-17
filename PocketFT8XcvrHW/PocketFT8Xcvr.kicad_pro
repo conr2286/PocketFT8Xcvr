@@ -920,6 +920,24 @@
           "label": "Known Supplier",
           "name": "Known Supplier",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MFG PART #",
+          "name": "MFG PART #",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "LSCS Part #",
+          "name": "LSCS Part #",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "LCSC Part #",
+          "name": "LCSC Part #",
+          "show": false
         }
       ],
       "filter_string": "",
