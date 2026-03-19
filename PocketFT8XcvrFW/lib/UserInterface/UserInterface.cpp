@@ -572,11 +572,13 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
             color = A_GREY;
             break;
         case QSO_MSG_RECVD:  // New received message
+#ifndef PIO_UNIT_TESTING
             if (seq.inQSO(pNewMsg->field1)) {
                 color = A_WHITE;  // New message is from the station in our QSO
             } else {
                 color = A_BLUE;  // New message is from a breaker/tail-ender
             }
+#endif
             break;
         case QSO_MSG_XMITING:  // Transmitting (in progress) message
             if (pLastMsgItem != NULL)

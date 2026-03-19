@@ -103,11 +103,11 @@ char* get_message() {
  *
  *  @param index Specifies the outbound FT8 message type, e.g.
  *              0 -- CQ KQ7B DN15
- *              1 -- AG0E KQ7B DN15
- *              2 -- AG0E KQ7B -12
- *              3 -- AG0E KQ7B RR73
- *              4 -- AG0E KQ7B R-8
- *              5 -- AG0E KQ7B RRR
+ *              1 -- W1AW KQ7B DN15
+ *              2 -- W1AW KQ7B -12
+ *              3 -- W1AW KQ7B RR73
+ *              4 -- W1AW KQ7B R-8
+ *              5 -- W1AW KQ7B RRR
  *
  **/
 void set_message(uint16_t index) {
@@ -135,23 +135,23 @@ void set_message(uint16_t index) {
             snprintf(message, sizeof(message), "%s %s %s", Target_Call, ourCall, locator);
             break;
 
-        case MSG_RSL:  // We are responding to target with their signal report, e.g. AG0E KQ7B -12
+        case MSG_RSL:  // We are responding to target with their signal report, e.g. W1AW KQ7B -12
             snprintf(message, sizeof(message), "%s %s %i", Target_Call, thisStation.getCallsign(), Target_RSL);
             break;
 
-        case MSG_RR73:  // We are responding to target with RR73, e.g. AG0E KQ7B RR73
+        case MSG_RR73:  // We are responding to target with RR73, e.g. W1AW KQ7B RR73
             snprintf(message, sizeof(message), "%s %s %3s", Target_Call, thisStation.getCallsign(), seventy_three);
             break;
 
-        case MSG_73:  // We are responding to target with 73, e.g. AG0E KQ7B 73
+        case MSG_73:  // We are responding to target with 73, e.g. W1AW KQ7B 73
             snprintf(message, sizeof(message), "%s %s %s", Target_Call, thisStation.getCallsign(), "73");
             break;
 
-        case MSG_RRSL:  // We are responding with Roger and their RRSL signal report, e.g. AG0E KQ7B R-3
+        case MSG_RRSL:  // We are responding with Roger and their RRSL signal report, e.g. W1AW KQ7B R-3
             snprintf(message, sizeof(message), "%s %s R%i", Target_Call, thisStation.getCallsign(), Target_RSL);
             break;
 
-        case MSG_RRR:  // We are responding with RRR, e.g. AG0E KQ7B RRR
+        case MSG_RRR:  // We are responding with RRR, e.g. W1AW KQ7B RRR
             snprintf(message, sizeof(message), "%s %s RRR", Target_Call, thisStation.getCallsign());
             break;
 

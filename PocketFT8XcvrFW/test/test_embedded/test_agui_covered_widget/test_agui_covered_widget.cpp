@@ -63,9 +63,9 @@
 // #define MINPRESSURE 120  // I don't think the pressure stuff is working as expected
 
 // Build the underlying TFT display, touchscreen and AGUI objects
-HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
-TouchScreen ts = TouchScreen(PIN_XP, PIN_YP, PIN_XM, PIN_YM, 282);                   // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
-static AGUI gui(&tft, 3, &FT8Font);
+HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_RRST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
+TouchScreen ts(PIN_XDP, PIN_YP, PIN_XM, PIN_YDM, 282);                                // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
+static AGUI& gui = AGUI::getInstance(tft, 3, FT8Font);                                // Get reference to a configured instance of AGUI
 
 // Define the test widgets
 AScrollBox* w0 = new AScrollBox(0, 0, 480, 160, A_DARK_GREY);  // The lowest level widget, lying beneath all others

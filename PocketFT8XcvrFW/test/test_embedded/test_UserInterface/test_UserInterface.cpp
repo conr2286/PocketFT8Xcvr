@@ -7,9 +7,12 @@
 #include "unity.h"
 #include "Station.h"
 
-extern UserInterface ui;
+// extern UserInterface ui;
+// UserInterface ui;
+static UserInterface& ui = UserInterface::getInstance();  // User Interface
 
-Station thisStation;
+// Station thisStation;
+Station& thisStation = Station::getInstance();  // Station model
 
 //
 void test_StationInfo(void) {
@@ -27,17 +30,17 @@ void test_StationInfo(void) {
 
 void test_DecodedMsgs(void) {
     TEST_MESSAGE("test_DecodedMsgs()\n");
-    ui.allDecodedMsgs->setMsg(0, "WA0ABC AG0E -1 S3");
-    ui.allDecodedMsgs->setMsg(1, "WA1ABC AG0E -2 S3");
-    ui.allDecodedMsgs->setMsg(2, "WA2ABC AG0E -3 S3");
-    ui.allDecodedMsgs->setMsg(3, "WA3ABC AG0E -4 S3");
-    ui.allDecodedMsgs->setMsg(4, "WA4ABC AG0E -5 S3");
-    ui.allDecodedMsgs->setMsg(5, "WA5ABC AG0E -6 S3");
+    ui.allDecodedMsgs->setMsg(0, "WA0ABC W1AW -1 S3");
+    ui.allDecodedMsgs->setMsg(1, "WA1ABC W1AW -2 S3");
+    ui.allDecodedMsgs->setMsg(2, "WA2ABC W1AW -3 S3");
+    ui.allDecodedMsgs->setMsg(3, "WA3ABC W1AW -4 S3");
+    ui.allDecodedMsgs->setMsg(4, "WA4ABC W1AW -5 S3");
+    ui.allDecodedMsgs->setMsg(5, "WA5ABC W1AW -6 S3");
     ui.allDecodedMsgs->setMsg(6, "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     ui.allDecodedMsgs->setMsg(5, "THIS MESSAGE CLIPS THE RIGHTHAND SIDE!");
-    ui.allDecodedMsgs->setMsg(7, "WA5ABC AG0E -9 S3");
-    ui.allDecodedMsgs->setMsg(8, "WA5ABC AG0E -10 S3");
-    ui.allDecodedMsgs->setMsg(9, "WA5ABC AG0E -11 S3");
+    ui.allDecodedMsgs->setMsg(7, "WA5ABC W1AW -9 S3");
+    ui.allDecodedMsgs->setMsg(8, "WA5ABC W1AW -10 S3");
+    ui.allDecodedMsgs->setMsg(9, "WA5ABC W1AW -11 S3");
     ui.allDecodedMsgs->setMsg(10, "THIS MESSAGE NOT DISPLAYED");
 
     delay(1000);
@@ -58,9 +61,9 @@ void test_popup(void) {
 void test_StationMsgs(void) {
     Decode msg1, msg2;
     strcpy(msg1.field1, "CQ");
-    strcpy(msg1.field2, "AG0E");
+    strcpy(msg1.field2, "W1AW");
     strcpy(msg1.field3, "CM13");
-    strcpy(msg2.field1, "AG0E");
+    strcpy(msg2.field1, "W1AW");
     strcpy(msg2.field2, "KQ7B");
     strcpy(msg2.field3, "DN15");
     TEST_MESSAGE("test_StationMsgs\n");
@@ -70,7 +73,7 @@ void test_StationMsgs(void) {
     ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, "NA1A KQ7B 73", QSO_MSG_XMITPEND);
     ui.theQSOMsgs->addItem(ui.theQSOMsgs, "1234567890ABCDEFGHIJKLMNOP");  // Invoke base class addItem to display long undecoded string
     delay(2000);
-    AWidget::processTouch(270, 120);  // Touch AG0E's CQ message
+    AWidget::processTouch(270, 120);  // Touch W1AW's CQ message
     delay(1000);
 }  // test_StationMsgs()
 
@@ -140,8 +143,6 @@ int runUnityTests(void) {
 }
 
 String foobar;
-
-UserInterface ui;
 
 void setup() {
     Serial.begin(9600);
