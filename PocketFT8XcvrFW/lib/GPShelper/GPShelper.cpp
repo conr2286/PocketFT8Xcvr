@@ -17,8 +17,6 @@
 #include "NODEBUG.h"
 #include "hwdefs.h"
 
-static Adafruit_GPS gpsDevice(&Serial1);
-
 /**
  * @brief Interrupt Service Routine for GPS Pulse-per-Second signal
  *
@@ -56,18 +54,46 @@ volatile bool GPShelper::hasFix() {
  **
  **/
 GPShelper::GPShelper(unsigned gpsBaudRate) : validGPSdata(false), year(0), month(0), day(0), hour(0), minute(0), second(0), milliseconds(0), elapsedMillis(0), flat(0.0), flng(0.0) {
+    if (!Serial) Serial.begin(9600);
+    DTRACE();
+
+    //     // Configure GPS communication parameters
+    //     gpsDevice->begin(9600);                                // Set Serial1 baud rate to GPS device
+    //     gpsDevice->sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);  // We are only interested in RMC messages from GPS
+    //     gpsDevice->sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);     // 10 Hz updates improve time resolution
+    //     delay(1000);
+
+    // // Compile the following if we've defined a pin to monitor the GPS device PPS signal
+    // #ifdef PIN_PPS
+    //     attachInterrupt(digitalPinToInterrupt(PIN_PPS), isrPPS, CHANGE);
+    // #endif
+
+}  // GPShelper
+
+/**
+ * @brief Start-up the GPS decorators and drivers
+ */
+void GPShelper::begin() {
+    DTRACE();
+
+    // Get Adafruit's GPS decorator running (yes, there are layers of decorations;)
+    gpsDevice = new Adafruit_GPS(&Serial1);
+    DTRACE();
+
     // Configure GPS communication parameters
-    gpsDevice.begin(9600);                                // Set Serial1 baud rate to GPS device
-    gpsDevice.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);  // We are only interested in RMC messages from GPS
-    gpsDevice.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);     // 10 Hz updates improve time resolution
+    gpsDevice->begin(9600);  // Set Serial1 baud rate to GPS device
+    DTRACE();
+    gpsDevice->sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);  // We are only interested in RMC messages from GPS
+    DTRACE();
+    gpsDevice->sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);  // 10 Hz updates improve time resolution
+    DTRACE();
     delay(1000);
 
 // Compile the following if we've defined a pin to monitor the GPS device PPS signal
 #ifdef PIN_PPS
     attachInterrupt(digitalPinToInterrupt(PIN_PPS), isrPPS, CHANGE);
 #endif
-
-}  // GPShelper
+}
 
 /**
  *  @brief Loops to obtain date, time and location from GPS
@@ -122,33 +148,33 @@ bool GPShelper::obtainGPSData(unsigned timeoutSeconds, void (*gpsAcquiringFix)(u
         }
 
         // Process message byte(s), if any, from GPS
-        if (gpsDevice.read()) {
+        if (gpsDevice->read()) {
             // We have message bytes, do we have a complete NMEA message?
-            if (gpsDevice.newNMEAreceived()) {
+            if (gpsDevice->newNMEAreceived()) {
                 // DTRACE();
 
                 // Yes, parse the complete NMEA message, checking for errors
-                if (gpsDevice.parse(gpsDevice.lastNMEA())) {
+                if (gpsDevice->parse(gpsDevice->lastNMEA())) {
                     // Message is good, retrieve GPS supplied location if it appears valid
-                    if (gpsDevice.fix && gpsDevice.fixquality == 0) {
-                        flat = gpsDevice.latitudeDegrees;
-                        flng = gpsDevice.longitudeDegrees;
+                    if (gpsDevice->fix && gpsDevice->fixquality == 0) {
+                        flat = gpsDevice->latitudeDegrees;
+                        flng = gpsDevice->longitudeDegrees;
                         // DPRINTF("GPS reports lat/lon = %f %f\n", flat, flng);
                         gotLoc = true;
                     }
 
                     // Retrieve date/time if it seems accurate and recent.  Warning:  milliseconds may exceed 999
                     // if the GPS reported time is stale and nearly wrapping 1 second.
-                    if (gpsDevice.fix && gpsDevice.secondsSinceTime() < 0.500) {
+                    if (gpsDevice->fix && gpsDevice->secondsSinceTime() < 0.500) {
                         elapsedMillis = millis();  // Record elapsed runtime when we acquired GPS date/time
-                        hour = gpsDevice.hour;
-                        minute = gpsDevice.minute;
-                        second = gpsDevice.seconds;
-                        milliseconds = gpsDevice.milliseconds + gpsDevice.secondsSinceTime() * 1000.0;
-                        year = gpsDevice.year;
-                        month = gpsDevice.month;
-                        day = gpsDevice.day;
-                        // DPRINTF("GPS time = %02d:%02d:%02d.%d UTC, age=%f secs\n", hour, minute, second, milliseconds, gpsDevice.secondsSinceTime());
+                        hour = gpsDevice->hour;
+                        minute = gpsDevice->minute;
+                        second = gpsDevice->seconds;
+                        milliseconds = gpsDevice->milliseconds + gpsDevice->secondsSinceTime() * 1000.0;
+                        year = gpsDevice->year;
+                        month = gpsDevice->month;
+                        day = gpsDevice->day;
+                        // DPRINTF("GPS time = %02d:%02d:%02d.%d UTC, age=%f secs\n", hour, minute, second, milliseconds, gpsDevice->secondsSinceTime());
                         gotTime = gotDate = true;
                     }
 

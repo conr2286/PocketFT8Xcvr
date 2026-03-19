@@ -10,6 +10,8 @@
 /**
  * @brief GPShelper implemented as a Meyers singleton
  *
+ * @note GPShelper decorates Adafruit_GPS
+ *
  * @note A reference to the one-and-only instance of the GPShelper object is available
  * through the static GPShelper::getInstance()
  */
@@ -33,6 +35,7 @@ class GPShelper {
     // Publicly accessible methods
     bool obtainGPSData(unsigned timeoutSeconds, void (*gpsAcquiringFix)(unsigned));  // Returns true and assigns member var values if it obtains a GPS fix
     volatile bool hasFix(void);
+    void begin(void);
 
     // Delete the singleton's copy constructor and assignment operator
     GPShelper(const GPShelper&) = delete;
@@ -45,4 +48,5 @@ class GPShelper {
     // Our private implementation variables
    private:
     GPShelper(unsigned gpsBaudRate);  // Singleton's Constructor
+    Adafruit_GPS* gpsDevice;          // We decorate Adafruit_GPS
 };

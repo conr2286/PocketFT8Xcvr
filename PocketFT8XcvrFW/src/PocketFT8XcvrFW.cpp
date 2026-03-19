@@ -246,6 +246,9 @@ FLASHMEM void setup(void) {
 
     DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
 
+    //Start-up the GPS system
+    gpsHelper.begin();
+
     // Get the UI running
     ui.begin();
     ui.applicationMsgs->setText("Starting");
