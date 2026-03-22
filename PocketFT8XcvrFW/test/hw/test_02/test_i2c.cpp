@@ -1,5 +1,25 @@
 /**
- * This test is intended for turning-on a new HW board.
+ * TEST
+ *  + This test investigates and reports the addresses of the devices on I2C1 and I2C2
+ *
+ * PREREQUISITES
+ *  + The Teensy MCU needs to be able to successfully load and execute a test (e.g. test_blinky)
+ *
+ * EXERCISED
+ *  + This test scans every possible bus address on I2C1
+ *  + This test scans every possible bus address on I2C2
+ *
+ * USAGE
+ *  pio test -vvv -f "hw/test_02"       // Execute just this test
+ *  pio test -vvv -f "hw/*"             // Execute all hw tests
+ *
+ * NOTES
+ *  + This test reports the address of each device found on the two I2C busses.
+ *  + Version 4 hardware eliminated the MCP342X ADC from Wire2 (ie. I2C2) and this test
+ *    will report an error if compiled for Version 4 but executed on older hardware as
+ *    it expects to find but a single device on Wire2.
+ *  + This test is unable to confirm the expected devices are responding at their expected
+ *    addresses as can their respective i2c device tests.
  *
  */
 
@@ -13,23 +33,6 @@ void setUp(void) {
 
 void tearDown(void) {
 }
-
-/**
- *  Exercise the XMIT LED
- */
-void test_xmit(void) {
-    // Configure GPIO pin
-    pinMode(PIN_XMT, OUTPUT);
-
-    // Blink XMIT LED for 10 seconds
-    for (int secsRemaining = 10; secsRemaining > 0; secsRemaining--) {
-        Serial.printf("%s seconds remaining=%d\n", __FUNCTION__, secsRemaining);
-        digitalWrite(PIN_XMT, HIGH);
-        delay(500);
-        digitalWrite(PIN_XMT, LOW);
-        delay(500);
-    }
-}  // test_xmit
 
 /**
  * @brief Explore I2C devices on Wire1
@@ -96,13 +99,12 @@ void test_Wire2(void) {
 #if HW_VERSION < 4
     TEST_ASSERT_EQUAL(2, nDevices);  // V3 boards find Si5351 and MCP342X
 #else
-    TEST_ASSERT_EQUAL(1, nDevices);  // V4 boards find Si5351
+    TEST_ASSERT_EQUAL(1, nDevices);  // V4 boards find only Si5351
 #endif
 }  // test_Wire2()
 
 int runUnityTests(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_xmit);
     RUN_TEST(test_Wire);
     RUN_TEST(test_Wire2);
     return UNITY_END();
