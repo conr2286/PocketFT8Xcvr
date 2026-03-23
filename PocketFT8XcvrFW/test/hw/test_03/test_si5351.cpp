@@ -1,6 +1,6 @@
 /**
  * TEST
- *  + This test confirms the Si5351 clock's basic functionality
+ *  + This test exercises the Si5351
  *
  * PREREQUISITES
  *  + The Teensy MCU needs to be able to successfully load and execute a test (e.g. test_blinky)
