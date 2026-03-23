@@ -7,14 +7,14 @@
  *  + The clock's I2C bus supports communication with the Si5351
  *
  * EXERCISED
- *  + Confirms the Si5351 responds to configuration commands
+ *  + Verifies the Si5351 device appears on the expected I2C bus at the expected address
+ *  + Confirms the Si5351 device can initialize itself
  *
  * USAGE
  *  pio test -vvv -f "hw/test_03"       // Execute just this test
  *  pio test -vvv -f "hw/*"             // Execute all hw tests
  *
  * NOTES
- *  + This test verifies the Si5351 device appears on I2C? at the expected address
  *
  */
 
@@ -66,7 +66,7 @@ void test_si5351_address(void) {
 }  // test_si5351_address()
 
 /**
- * @brief Read and verify the Si5351 can initializate itself
+ * @brief Verify the Si5351 can initializate itself
  */
 void test_si5351_init(void) {
     int msWaiting = 0;   // Milliseconds we've waited for initialization to complete
