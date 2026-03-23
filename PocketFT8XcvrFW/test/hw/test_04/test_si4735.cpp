@@ -4,13 +4,15 @@
  *
  * PREREQUISITES
  *  + The Teensy MCU needs to be able to successfully load and execute a test (e.g. test_blinky)
- *  + The Si5351 needs to supply RCLK to the Si4735
+ *  + The Si5351 needs to supply RCLK to the Si4735 when in receive mode
  *
  * EXERCISED
  *  + Verifies the Si4735 device appears on the expected I2C bus and reports its address
  *  + PIN_RRST
  *  + PIN_XMT
  *  + PIN_RCV
+ *  + Loads SSB patch into Si4735
+ *  + Confirms configured frequency
  *
  * USAGE
  *  pio test -vvv -f "hw/test_04"       // Execute just this test
