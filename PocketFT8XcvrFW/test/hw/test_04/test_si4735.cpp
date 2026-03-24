@@ -25,9 +25,11 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <unity.h>
-#include "hwdefs.h"
+#include <si5351.h>
 #include <SI4735.h>
+
 #include "patch_full.h"
+#include "hwdefs.h"
 
 // Define the I2C parameters for the Si4735
 #define I2CBUS WIRE_RCV  // Which Teensy I2C bus hosts the Si4735
@@ -35,6 +37,9 @@
 // Define a few Si4735 params
 #define AM_FUNCTION 1
 #define USB 2
+
+// The Si4735 PLL locks to the Si5351 RCLK signal
+Si5351 si5351;  // We need the Si5351 clock running
 
 // Use the Si4735 library for communication with the chip
 SI4735 si4735;
@@ -82,25 +87,34 @@ void test_config(void) {
     // DSP_AFCDIS - DSP AFC Disable or enable; 0=SYNC MODE, AFC enable; 1=SSB MODE, AFC disable.
     // si4735.setSSBConfig(bandwidthIdx, 1, 0, 1, 0, 1);
     si4735.setSSBConfig(2, 1, 0, 1, 0, 1);  // 2 = 3 kc bandwidth
+}  // test_config()
 
-    delay(10);
+void test_params(void) {
+    delay(100);
     si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
     delay(10);
-    si4735.setSSB(18000, 18400, 18100, 1, USB);
+    si4735.setSSB(7000, 7300, 7074, 1, USB);
 
-    delay(10);
-    currentFrequency = si4735.getFrequency();
+    delay(1000);
+
     si4735.setVolume(50);
-    TEST_ASSERT_EQUAL(18100, currentFrequency);
+    TEST_ASSERT_EQUAL(50, si4735.getVolume());
+
+    si4735.setFrequency(7074);
+    TEST_ASSERT_EQUAL(7074, si4735.getFrequency());
+
 }  // test_config()
 
 /**
+ *
  * @brief Run all tests in their prescribed order
  * @return Failure/Success indication
  */
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_si4735_address);
+    RUN_TEST(test_config);
+    RUN_TEST(test_params);
     return UNITY_END();
 }
 
@@ -114,6 +128,23 @@ void setup() {
     pinMode(PIN_XMT, OUTPUT);
     digitalWrite(PIN_XMT, LOW);   // XMT off
     digitalWrite(PIN_RCV, HIGH);  // RCV on
+
+    // Initialize the SI5351 clock generator (the Si4735's PLL requires the Si5351 RCLK signal).
+    // NOTE:  PocketFT8Xcvr boards use CLKIN input (supposedly less jitter than the XTAL pins).
+    si5351.init(SI5351_CRYSTAL_LOAD_8PF, 25000000L, 0L);  // KQ7B's counter isn't accurate enough to calculate a correction
+    delay(10);
+    si5351.set_pll_input(SI5351_PLLA, SI5351_PLL_INPUT_CLKIN);  // We are using cmos CLKIN, not a XTAL input!!!
+    delay(10);
+    // si5351.set_pll_input(SI5351_PLLB, SI5351_PLL_INPUT_CLKIN);  // All PLLs using CLKIN
+    // delay(10);
+    // si5351.set_pll(SI5351_PLL_FIXED, SI5351_PLLA);              // Fixed point division offers less jitter
+    // delay(10);
+    si5351.set_freq(3276800, SI5351_CLK2);  // Receiver's fixed frequency clock for Si4735 PLL
+    delay(10);
+    si5351.output_enable(SI5351_CLK2, 1);  // Receiver's clock is always on
+    delay(10);
+    si5351.output_enable(SI5351_CLK0, 0);  // Disable transmitter clock for this test
+    delay(10);
 
     // Run the tests
     runUnityTests();
