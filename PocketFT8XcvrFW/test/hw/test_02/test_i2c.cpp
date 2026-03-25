@@ -11,7 +11,7 @@
  *
  * USAGE
  *  pio test -vvv -f "hw/test_02"       // Execute just this test
- *  pio test -vvv -f "hw/*"             // Execute all hw tests
+ *  pio test -vvv -f "hw/\*"             // Execute all hw tests
  *
  * NOTES
  *  + This test reports the address of each device found on the two I2C busses.
