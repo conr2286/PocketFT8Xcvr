@@ -6,8 +6,10 @@
  *  + The Teensy MCU needs to be able to successfully load and execute a test (e.g. test_blinky)
  *
  * EXERCISED
- *  + Exercises connectivity with the Adafruit 3.5" Product #2050 display via
- *  + Exercises connectivity with the Adafruit 3.5" Product #2050 touchscreen
+ *  + Connectivity with the Adafruit 3.5" Product 2050 display
+ *  + Display orientation
+ *  + Display coordinate system
+ *  + Connectivity with the Adafruit 3.5" Product 2050 touchscreen
  *
  * USAGE
  *  pio test -vvv -f "hw/test_05"       // Execute just this test

@@ -19,6 +19,8 @@
  *  pio test -vvv -f "hw/*"             // Execute all hw tests
  *
  * NOTES
+ *  + The Si4735 PLL in Pocket FT8 locks to the RCLK signal from the Si5351.  This means
+ *    test_si5351 must pass before you can expect test_si4735 to pass.
  *
  */
 
@@ -89,21 +91,28 @@ void test_config(void) {
     si4735.setSSBConfig(2, 1, 0, 1, 0, 1);  // 2 = 3 kc bandwidth
 }  // test_config()
 
-void test_params(void) {
-    delay(100);
-    si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
+// Test set/get receiver's volume
+void test_volume(void) {
     delay(10);
-    si4735.setSSB(7000, 7300, 7074, 1, USB);
-
-    delay(1000);
-
     si4735.setVolume(50);
     TEST_ASSERT_EQUAL(50, si4735.getVolume());
 
+}  // test_volume()
+
+/**
+ * @brief Check set/get frequency
+ *
+ * @note This test will fail if the Si5351 RCLK signal is faulty
+ */
+void test_freq(void) {
+    delay(10);
+    si4735.setTuneFrequencyAntennaCapacitor(1);  // Set antenna tuning capacitor for SW.
+    delay(10);
+    si4735.setSSB(7000, 7300, 7074, 1, USB);
+    delay(10);
     si4735.setFrequency(7074);
     TEST_ASSERT_EQUAL(7074, si4735.getFrequency());
-
-}  // test_config()
+}  // test_freq()
 
 /**
  *
@@ -114,7 +123,8 @@ int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_si4735_address);
     RUN_TEST(test_config);
-    RUN_TEST(test_params);
+    RUN_TEST(test_volume);
+    RUN_TEST(test_freq);
     return UNITY_END();
 }
 
