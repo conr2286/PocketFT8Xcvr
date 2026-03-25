@@ -28,6 +28,12 @@
 #include <Wire.h>
 #include <unity.h>
 #include "hwdefs.h"
+#include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
+#include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
+
+// Build the drivers for the Adafruit display and touchscreen
+HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_DRST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
+TouchScreen ts = TouchScreen(PIN_XDP, PIN_YP, PIN_XM, PIN_YDM, 282);                  // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 
 void setUp(void) {
 }
@@ -36,9 +42,9 @@ void tearDown(void) {
 }
 
 /**
- * @brief Exercise Si4735 configuration
+ * @brief Exercise
  */
-void test_config(void) {
+void test_display_communication(void) {
 }  // test_config()
 
 /**
@@ -47,13 +53,18 @@ void test_config(void) {
  */
 int runUnityTests(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_config);
+    RUN_TEST(test_display_communication);
     return UNITY_END();
 }
 
 void setup() {
     // Initialization
     Serial.begin(9600);  // Test message output device
+
+    // Initialize the display
+    tft.begin(30000000UL, 2000000UL);  // Configure SPI clock speeds
+    tft.setRotation(3);                // Configure landscape screen rotation
+    tft.fillScreen(HX8357_BLACK);      // Erase the display
 
     // Run the tests
     runUnityTests();
