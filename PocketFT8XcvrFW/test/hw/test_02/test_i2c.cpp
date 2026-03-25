@@ -113,6 +113,7 @@ int runUnityTests(void) {
 }
 
 void setup() {
+    delay(10);
     Serial.begin(9600);
     Wire.begin();
     Wire1.begin();

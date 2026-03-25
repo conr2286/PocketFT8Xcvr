@@ -47,7 +47,9 @@ int runUnityTests(void) {
 }
 
 void setup() {
+    delay(10);
     Serial.begin(9600);
+    delay(10);
     Serial.println("Watch the blinking XMIT LED");
 
     // Run the tests

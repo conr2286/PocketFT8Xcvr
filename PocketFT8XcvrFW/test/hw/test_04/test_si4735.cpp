@@ -129,6 +129,7 @@ int runUnityTests(void) {
 }
 
 void setup() {
+    delay(10);
     // Initialization
     Serial.begin(9600);  // Test message output device
     I2CBUS.begin();      // I2C bus hosting the Si5351

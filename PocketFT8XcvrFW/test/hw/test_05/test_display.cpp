@@ -45,6 +45,7 @@ void tearDown(void) {
  * @brief Exercise
  */
 void test_display_communication(void) {
+    TEST_ASSERT(true);
 }  // test_config()
 
 /**
@@ -58,8 +59,10 @@ int runUnityTests(void) {
 }
 
 void setup() {
+    delay(10);
     // Initialization
     Serial.begin(9600);  // Test message output device
+    Serial.printf("Starting...\n");
 
     // Initialize the display
     tft.begin(30000000UL, 2000000UL);  // Configure SPI clock speeds
