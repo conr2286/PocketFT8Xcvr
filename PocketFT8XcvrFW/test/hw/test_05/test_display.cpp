@@ -35,16 +35,44 @@
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_DRST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
 TouchScreen ts = TouchScreen(PIN_XDP, PIN_YP, PIN_XM, PIN_YDM, 282);                  // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 
+/**
+ * @brief Helper function to poll the touchscreen using ADC2
+ *
+ * @return TSPoint with x,y and z ("pressure")
+ *
+ * @note Returns z==0 if no touch reading is available
+ *
+ */
+TSPoint pollTouchscreen() {
+    TSPoint rawPoint, mappedPoint;
+
+    rawPoint = ts.getPoint();  // Read the screen
+
+    if (rawPoint.z > MINPRESSURE) {                                 // Has screen been touched?
+        mappedPoint.x = map(rawPoint.x, TS_MINX, TS_MAXX, 0, 480);  // Map to resistance to screen coordinate
+        mappedPoint.y = map(rawPoint.y, TS_MINY, TS_MAXY, 0, 320);
+        mappedPoint.z = rawPoint.z;
+    } else {
+        mappedPoint.z = 0;  // Invalid point (no touchpoint available)
+    }
+    return mappedPoint;
+}
+
+// Unity function invoked prior to each test
 void setUp(void) {
 }
 
+// Unity function invoked following each test
 void tearDown(void) {
 }
 
 /**
  * @brief Exercise
  */
-void test_display_communication(void) {
+void test_rect(void) {
+    tft.drawRoundRect(0, 0, 480, 320, 5, HX8357_YELLOW);
+    tft.drawString("(0,0)", 10, 10);
+    tft.drawString("(480,320)", 400, 305);
     TEST_ASSERT(true);
 }  // test_config()
 
@@ -54,13 +82,12 @@ void test_display_communication(void) {
  */
 int runUnityTests(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_display_communication);
+    RUN_TEST(test_rect);
     return UNITY_END();
 }
 
 void setup() {
-    delay(10);
-    // Initialization
+    delay(10);           // Wait for reliable comm with host computer when debugging
     Serial.begin(9600);  // Test message output device
     Serial.printf("Starting...\n");
 
