@@ -138,8 +138,8 @@ TSPoint TouchScreen::getPoint(void) {
 #if HW_VERSION < 4
         err = adc.convertAndRead(MCP342x::channel1, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value1, status);  // Read schematic signal YD+
 #else
-        // value1 = analogRead2(PIN_YDP);  // Version 4+ HW has YDP on A17
-        value1 = analogRead(PIN_YDP);  // Version 4+ HW has YDP on A17
+        // value1 = analogRead2(PIN_YP);  // Version 4+ HW has YDP on A17
+        value1 = analogRead(PIN_YP);  // Version 4+ HW has YDP on A17
 #endif
         DPRINTF("ADC returned value1=%d\n", value1);
         samples[i] = value1;
@@ -177,8 +177,8 @@ TSPoint TouchScreen::getPoint(void) {
 #if HW_VERSION < 4
         err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value2, status);  // Schematic signal XD-
 #else
-        // value2 = analogRead2(PIN_XDM);  // Version 4+ has XDP on Pin A16
-        value2 = analogRead(PIN_XDM);  // Version 4+ has XDM on Pin A16
+        // value2 = analogRead2(PIN_XM);  // Version 4+ has XDP on Pin A16
+        value2 = analogRead(PIN_XM);  // Version 4+ has XDM on Pin A16
 #endif
         DPRINTF("ADC returned value2=%d\n", value2);
 
