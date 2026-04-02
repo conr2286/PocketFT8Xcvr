@@ -175,25 +175,32 @@ TSPoint getPoint(void) {
     touching = isNear(adcZ, 1023, NOISE_LEVEL);  // They're touching if Y-Axis is near VCC
     // DPRINTF("adcZ=%u touching=%u\n", adcZ, touching);
 
-    // If we have a valid touchpoint then proceed to read the X and Y-Axis coordinates
+    // If we have a valid touchpoint then proceed to read the X and Y-Axis coordinates.  Because
+    // the X and Y-Axis connect thru touchpoint, we have low-Z signals relatively free of noise.
     if (touching) {
         // Setup touchpad to read the hardware X-Axis signal from the Y-Axis
-        floatPin(PIN_YM);   // Float touchpad Y-
-        groundPin(PIN_YR);  // Ground Y-Axis resistor (for noise immunity)
-        floatPin(PIN_XR);   // Float X-Axis resistor
+        floatPin(PIN_YM);  // Float touchpad Y-
+        floatPin(PIN_YR);
+        // groundPin(PIN_YR);  // Ground Y-Axis resistor (for noise immunity)
+        // floatPin(PIN_XR);   // Float X-Axis resistor
         groundPin(PIN_XP);  // Ground touchpad X+
-        vccPin(PIN_XM);     // Drive the XM to Vcc
+        floatPin(PIN_XM);
+        // vccPin(PIN_XM);     // Drive the XM to Vcc
+        vccPin(PIN_XR);
 
         // Read the touchpoint hardware X-Coordinate signal from the Y-Axis
         adcX = analogRead(PIN_YP);  //
         floatPin(PIN_XM);           // Remove Vcc to conserve battery
 
         // Setup touchpad to read the hardware Y-Axis signal from the floating X-Axis
-        floatPin(PIN_XP);   // Float touchpad X+
-        groundPin(PIN_XR);  // Ground X-Axis resistor (for noise immunity)
-        floatPin(PIN_YR);   // Float Y-Axis resistor
+        floatPin(PIN_XP);  // Float touchpad X+
+        // groundPin(PIN_XR);  // Ground X-Axis resistor (for noise immunity)
+        floatPin(PIN_XR);
+        // floatPin(PIN_YR);   // Float Y-Axis resistor
+        floatPin(PIN_XM);
         groundPin(PIN_YM);  // Ground Y-
-        vccPin(PIN_YP);     // Drive the Y+ to Vcc
+        // vccPin(PIN_YP);     // Drive the Y+ to Vcc
+        vccPin(PIN_YR);
 
         // Read the touchpoint's Y-Axis coordinate signal from the floating X-Axis
         adcY = analogRead(PIN_XM);  // Raw ADC value ranges 0..1023
@@ -208,8 +215,8 @@ TSPoint getPoint(void) {
 
         // Return valid result in the rotated screen coordinate system
         if (touching) {
-            result.y = map(adcX, X_ADC_MIN, X_ADC_MAX, 0, Y_SCREEN_MAX);  // adcX is floating x-Axis signal for Y-Axis coordinate
-            result.x = map(adcY, Y_ADC_MIN, Y_ADC_MAX, 0, X_SCREEN_MAX);  // adcY is floating y-Axis signal for X-Axis coordinate
+            result.y = map(adcX, 28, 382, 0, Y_SCREEN_MAX);  // adcX is floating x-Axis signal for Y-Axis coordinate
+            result.x = map(adcY, 30, 540, 0, X_SCREEN_MAX);  // adcY is floating y-Axis signal for X-Axis coordinate
             result.z = adcZ;
             if (result.x > xMx) xMx = result.x;
             if (result.y > yMx) yMx = result.y;
@@ -262,7 +269,7 @@ void test_etchSketch(void) {
     int finish = 60000;  // Milliseconds
     int minX = 9999, maxX = 0;
     int minY = 9999, maxY = 0;
-    for (unsigned t = 0; t < finish; t += dt) {
+    for (int t = 0; t < finish; t += dt) {
         TSPoint p = getPoint();
         if (p.z) {
             if (p.x < minX) minX = p.x;
