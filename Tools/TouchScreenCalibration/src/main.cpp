@@ -201,12 +201,33 @@ TouchPoint getCorrectedTouchPoint(TouchPoint rawP) {
     TouchPoint result;
     result.z = rawP.z;  // Return z unmodified
     if (rawP.z) {
+        // DTRACE();
         int corTabRow = rawP.x / TS_CORTAB_WIDTH;          // Select a row in the correction table
         int corTabCol = rawP.y / TS_CORTAB_HEIGHT;         // Select a column in the correction table
         result.x = rawP.x + tsCorX[corTabRow][corTabCol];  // Correct the x coordinate
         result.y = rawP.y + tsCorY[corTabRow][corTabCol];  // Correct the y coordinate
+        DPRINTF("tsCorX=%d tsCorY=%d\n\n", tsCorX[corTabRow][corTabCol], tsCorY[corTabRow][corTabCol]);
+        DPRINTF("rawP.x=%d rawP.y=%d corTabRow=%d corTabCol=%d result.x=%d result.y=%d\n", rawP.x, rawP.y, corTabRow, corTabCol, result.x, result.y);
     }
     return result;
+}  // getCorrectedTouchPoint()
+
+int updateCorTab(TouchPoint expectedP, TouchPoint actualP) {
+    // Calculate the errors on both axis
+    int errX = actualP.x - expectedP.x;  // Error on x-Axis
+    int errY = actualP.y - expectedP.y;  // Error on y-Axis
+
+    // Update the correction tables
+    int corTabRow = expectedP.x / TS_CORTAB_WIDTH;   // Select a row in the correction table
+    int corTabCol = expectedP.y / TS_CORTAB_HEIGHT;  // Select a column in the correction table
+    tsCorX[corTabRow][corTabCol] += errX;            // Update the x-Axis correction
+    tsCorY[corTabRow][corTabCol] += errY;            // Update the y-Axis correction
+
+    // Return the root mean square of the errors
+    int err = sqrt(errX * errX + errY * errY);  // Root mean square of errors
+    DPRINTF("expectedP.x=%d actualP.x=%d errX=%d   expectedP.y=%d actualP.y=%d errY=%d   err=%d\n", expectedP.x, actualP.x, errX, expectedP.y, actualP.y, errY, err);
+    DPRINTF("updated tsCorX=%d tsCorY=%d\n\n", tsCorX[corTabRow][corTabCol], tsCorY[corTabRow][corTabCol]);
+    return err;
 }
 
 /**
@@ -229,14 +250,17 @@ unsigned exerciseTouchTarget(int x, int y) {
         rawP = getTouchPoint();
         if (rawP.z == 0) delay(10);
     }
-    DPRINTF("rawP.x=%d rawP.y=%d\n", rawP.x, rawP.y);
+    // DPRINTF("rawP.x=%d rawP.y=%d\n", rawP.x, rawP.y);
 
     // Apply correction and calculate error
-    corP = getCorrectedTouchPoint(rawP);        // Apply the correction factor
-    int errX = corP.x - x;                      // Error on x-Axis
-    int errY = corP.y - y;                      // Error on y-Axis
-    int err = sqrt(errX * errX + errY * errY);  // Root mean square of errors
-    DPRINTF("rawP.x=%d corP.x=%d errX=%d  rawP.y=%d corP.y=%d errY=%d.  err=%d\n", rawP.x, corP.x, errX, rawP.y, corP.y, errY, err);
+    corP = getCorrectedTouchPoint(rawP);  // Apply the correction factor
+
+    // Update the correction tables
+    TouchPoint expectedP;
+    expectedP.x = x;
+    expectedP.y = y;
+    expectedP.z = 1;
+    int err = updateCorTab(expectedP, corP);
 
     // Return the RMS error
     return err;
@@ -262,14 +286,18 @@ void setup() {
     tft.begin(30000000UL, 2000000UL);
     // tft.setRotation(3);
     tft.setFont(&FreeMono12pt7b);
-    tft.setClipRect(0, 0, 480, 320);
+    // tft.setClipRect(0, 0, 480, 320);
     tft.fillScreen(HX8357_BLACK);  // Erase screen
 
     // Display startup message
     tft.setCursor(50, 50);
     tft.println("Starting...");
 
-    exerciseTouchTarget(200, 200);
+    DTRACE();
+    exerciseTouchTarget(111, 222);
+    delay(500);
+    DTRACE();
+    exerciseTouchTarget(111, 222);
 }
 
 /**
