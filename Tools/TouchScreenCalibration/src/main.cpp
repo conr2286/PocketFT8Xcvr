@@ -43,11 +43,11 @@ static const int TS_X_SCALE = TS_ADC_COUNT / DISPLAY_WIDTH;   // HW x-Axis scale
 static const int TS_Y_SCALE = TS_ADC_COUNT / DISPLAY_HEIGHT;  // HW y-Axis scale factor
 
 // Define the x and y touchscreen correction values
-typedef int8_t TS_CORRECTION_TYPE;                                    // The domain of possible values is -128..+127
-static const int TS_CORTAB_WIDTH = DISPLAY_WIDTH / TS_ACCURACY;       // Number of x-Axis cells
-static const int TS_CORTAB_HEIGHT = DISPLAY_HEIGHT / TS_ACCURACY;     // Number of y-Axis cells
-static TS_CORRECTION_TYPE tsCorX[TS_CORTAB_WIDTH][TS_CORTAB_HEIGHT];  // The X correction values
-static TS_CORRECTION_TYPE tsCorY[TS_CORTAB_WIDTH][TS_CORTAB_HEIGHT];  // The Y correction values
+typedef int8_t TS_CORRECTION_TYPE;                                 // The domain of possible values is -128..+127
+static const int TS_CORTAB_COLS = DISPLAY_WIDTH / TS_ACCURACY;     // Number of cells along x-Axis
+static const int TS_CORTAB_ROWS = DISPLAY_HEIGHT / TS_ACCURACY;    // Number of cells along y-Axis
+static TS_CORRECTION_TYPE tsCorX[TS_CORTAB_COLS][TS_CORTAB_ROWS];  // The X correction values
+static TS_CORRECTION_TYPE tsCorY[TS_CORTAB_COLS][TS_CORTAB_ROWS];  // The Y correction values
 
 // Touchpoint coordinates
 class TouchPoint {
@@ -202,12 +202,13 @@ TouchPoint getCorrectedTouchPoint(TouchPoint rawP) {
     result.z = rawP.z;  // Return z unmodified
     if (rawP.z) {
         // DTRACE();
-        int corTabRow = rawP.x / TS_CORTAB_WIDTH;          // Select a row in the correction table
-        int corTabCol = rawP.y / TS_CORTAB_HEIGHT;         // Select a column in the correction table
-        result.x = rawP.x + tsCorX[corTabRow][corTabCol];  // Correct the x coordinate
-        result.y = rawP.y + tsCorY[corTabRow][corTabCol];  // Correct the y coordinate
-        DPRINTF("tsCorX=%d tsCorY=%d\n\n", tsCorX[corTabRow][corTabCol], tsCorY[corTabRow][corTabCol]);
-        DPRINTF("rawP.x=%d rawP.y=%d corTabRow=%d corTabCol=%d result.x=%d result.y=%d\n", rawP.x, rawP.y, corTabRow, corTabCol, result.x, result.y);
+        int nRow = rawP.y / TS_CORTAB_ROWS;  // Select a row in the correction table
+        int nCol = rawP.x / TS_CORTAB_COLS;  // Select a column in the correction table
+        DPRINTF("confirm nRow=%d nCol=%d\n", nRow, nCol);
+        DPRINTF("using tsCorX = %d tsCorY = %d\n", tsCorX[nCol][nRow], tsCorY[nCol][nRow]);
+        result.x = rawP.x + tsCorX[nCol][nRow];  // Correct the x coordinate
+        result.y = rawP.y + tsCorY[nCol][nRow];  // Correct the y coordinate
+        DPRINTF("rawP.x=%d rawP.y=%d nRow=%d nCol=%d result.x=%d result.y=%d\n", rawP.x, rawP.y, nRow, nCol, result.x, result.y);
     }
     return result;
 }  // getCorrectedTouchPoint()
@@ -217,17 +218,20 @@ int updateCorTab(TouchPoint expectedP, TouchPoint actualP) {
     int errX = actualP.x - expectedP.x;  // Error on x-Axis
     int errY = actualP.y - expectedP.y;  // Error on y-Axis
 
-    // Update the correction tables
-    int corTabRow = expectedP.x / TS_CORTAB_WIDTH;   // Select a row in the correction table
-    int corTabCol = expectedP.y / TS_CORTAB_HEIGHT;  // Select a column in the correction table
-    tsCorX[corTabRow][corTabCol] += errX;            // Update the x-Axis correction
-    tsCorY[corTabRow][corTabCol] += errY;            // Update the y-Axis correction
+    // Update correction table from errors
+    int nRow = actualP.y / TS_CORTAB_ROWS;  // Select a row in the correction table
+    int nCol = actualP.x / TS_CORTAB_COLS;  // Select a column in the correction table
 
-    // Return the root mean square of the errors
-    int err = sqrt(errX * errX + errY * errY);  // Root mean square of errors
-    DPRINTF("expectedP.x=%d actualP.x=%d errX=%d   expectedP.y=%d actualP.y=%d errY=%d   err=%d\n", expectedP.x, actualP.x, errX, expectedP.y, actualP.y, errY, err);
-    DPRINTF("updated tsCorX=%d tsCorY=%d\n\n", tsCorX[corTabRow][corTabCol], tsCorY[corTabRow][corTabCol]);
-    return err;
+    DPRINTF("confirm nRow=%d nCol=%d\n", nRow, nCol);
+    tsCorX[nCol][nRow] -= errX;  // Update the x-Axis correction
+    tsCorY[nCol][nRow] -= errY;  // Update the y-Axis correction
+    DPRINTF("updated tsCorX = %d tsCorY = %d\n", tsCorX[nCol][nRow], tsCorY[nCol][nRow]);
+
+    // Return the root mean square of the x/y error
+    int errRMS = sqrt(errX * errX + errY * errY);  // Root mean square of errors
+    DPRINTF("expectedP.x=%d actualP.x=%d errX=%d   expectedP.y=%d actualP.y=%d errY=%d   errRMS=%d\n", expectedP.x, actualP.x, errX, expectedP.y, actualP.y, errY, errRMS);
+    DPRINTF("confirm nRow=%d nCol=%d\n", nRow, nCol);
+    return errRMS;
 }
 
 /**
@@ -250,20 +254,20 @@ unsigned exerciseTouchTarget(int x, int y) {
         rawP = getTouchPoint();
         if (rawP.z == 0) delay(10);
     }
-    // DPRINTF("rawP.x=%d rawP.y=%d\n", rawP.x, rawP.y);
+    DPRINTF("rawP.x=%d rawP.y=%d\n", rawP.x, rawP.y);
 
-    // Apply correction and calculate error
+    // Apply existing correction and calculate error
     corP = getCorrectedTouchPoint(rawP);  // Apply the correction factor
 
-    // Update the correction tables
+    // Update correction tables from current error
     TouchPoint expectedP;
     expectedP.x = x;
     expectedP.y = y;
     expectedP.z = 1;
-    int err = updateCorTab(expectedP, corP);
+    int errRMS = updateCorTab(expectedP, corP);
 
     // Return the RMS error
-    return err;
+    return errRMS;
 }
 
 /**
@@ -275,8 +279,8 @@ void setup() {
     DPRINTF("Starting...\n");
 
     // Initialize the touchscreen correction table
-    for (int x = 0; x < TS_CORTAB_WIDTH; x++) {
-        for (int y = 0; y < TS_CORTAB_HEIGHT; y++) {
+    for (int x = 0; x < TS_CORTAB_COLS; x++) {
+        for (int y = 0; y < TS_CORTAB_ROWS; y++) {
             tsCorX[x][y] = 0;  // No x correction required
             tsCorY[x][y] = 0;  // No y correction required
         }
@@ -293,11 +297,13 @@ void setup() {
     tft.setCursor(50, 50);
     tft.println("Starting...");
 
-    DTRACE();
-    exerciseTouchTarget(111, 222);
+    Serial.println("\n");
+    int err;
+    err = exerciseTouchTarget(111, 222);
+    DPRINTF("err=%d\n\n", err);
     delay(500);
-    DTRACE();
-    exerciseTouchTarget(111, 222);
+    err = exerciseTouchTarget(111, 222);
+    DPRINTF("err=%d\n\n", err);
 }
 
 /**
