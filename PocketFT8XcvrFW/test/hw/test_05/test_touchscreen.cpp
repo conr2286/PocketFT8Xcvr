@@ -105,11 +105,10 @@ bool isNear(unsigned a, unsigned b, unsigned delta) {
  * @brief Helper function to configure GPIO pin to float
  * @param pin GPIO pin number
  *
- * @note A floating pin is allowed to float with analog noise at high impedance
+ * @note Floating a pin removes the digital I/O circuitry from that pin
  */
 void floatPin(unsigned pin) {
     pinMode(pin, INPUT_DISABLE);  // Floats a Teensy 4.1 GPIO pin
-    delayMicroseconds(20);        // Allow pin to settle
 }  // floatPin()
 
 /**
@@ -122,7 +121,6 @@ void floatPin(unsigned pin) {
 void groundPin(unsigned pin) {
     pinMode(pin, OUTPUT);    // Configure the pin for digital output
     digitalWrite(pin, LOW);  // And a logic zero
-    delayMicroseconds(20);   // Allow pin to settle
 }  // groundPin()
 
 /**
@@ -135,7 +133,6 @@ void groundPin(unsigned pin) {
 void vccPin(unsigned pin) {
     pinMode(pin, OUTPUT);     // Configure pin for digital output
     digitalWrite(pin, HIGH);  // Supply logic one to pin
-    delayMicroseconds(20);    // Allow pin to settle
 }  // vccPin()
 
 /**
@@ -152,7 +149,7 @@ static int yMin = 9999, yMax = 0;
 static int xMx = 0, yMx = 0;
 TSPoint getPoint(void) {
     TSPoint result;
-    int adcX, adcY, adcZ;  // The raw (unmapped, unrotated) ADC readings
+    int adcX, adcY, adcZ;  // The unscaled ADC readings
     bool touching;         // true ==> valid touch event
 
     // Begin setup to determine if we have a valid touch event (i.e. operator
@@ -164,68 +161,66 @@ TSPoint getPoint(void) {
     vccPin(PIN_XR);    // Drive the X-Axis to Vcc through its 510 Ohm resistor
 
     // Clear the noise from High-Z Y-Axis prior to analog reading below
-    floatPin(PIN_YM);   // Float Y-
-    floatPin(PIN_YR);   // Float YR
-    groundPin(PIN_YP);  // Briefly ground Y+ to discharge noise from Y-Axis
-    floatPin(PIN_YP);   // Prepare to read the Y+ signal by floating that pin
+    floatPin(PIN_YM);  // Float Y-
+    // floatPin(PIN_YR);       // Float YR
+    // groundPin(PIN_YP);      // Briefly ground Y+ to discharge noise from Y-Axis
+    groundPin(PIN_YR);      // Discharge Y-Axis thru 510 Ohm resistor
+    delayMicroseconds(20);  // Wait for analog Y-Axis signal to settle to ground
+    floatPin(PIN_YR);       // Remove discharge path to ground
+    floatPin(PIN_YP);       // Now disconnect the digital circuitry from the analog signal
 
     // Vcc will flow through driven X-Axis connection to floating Y-Axis iff we have a touch event
+    delayMicroseconds(20);                       // Wait for analog Y-Axis signal to settle
     adcZ = analogRead(PIN_YP);                   // Read signal from floating Y-Axis
     floatPin(PIN_XR);                            // Remove Vcc to conserve battery
-    touching = isNear(adcZ, 1023, NOISE_LEVEL);  // They're touching if Y-Axis is near VCC
+    touching = isNear(adcZ, 1023, NOISE_LEVEL);  // They're touching if Y-Axis ~= VCC
     // DPRINTF("adcZ=%u touching=%u\n", adcZ, touching);
 
     // If we have a valid touchpoint then proceed to read the X and Y-Axis coordinates.  Because
     // the X and Y-Axis connect thru touchpoint, we have low-Z signals relatively free of noise.
     if (touching) {
         // Setup touchpad to read the hardware X-Axis signal from the Y-Axis
-        floatPin(PIN_YM);  // Float touchpad Y-
-        floatPin(PIN_YR);
-        // groundPin(PIN_YR);  // Ground Y-Axis resistor (for noise immunity)
-        // floatPin(PIN_XR);   // Float X-Axis resistor
+        floatPin(PIN_YM);   // Disconnect digital I/O circuitry from...
+        floatPin(PIN_YR);   // all the Y-Axis pins.
+        floatPin(PIN_YP);   //
         groundPin(PIN_XP);  // Ground touchpad X+
-        floatPin(PIN_XM);
-        // vccPin(PIN_XM);     // Drive the XM to Vcc
-        vccPin(PIN_XR);
+        floatPin(PIN_XR);   // We are not using the 510 Ohm resistor
+        vccPin(PIN_XM);     // Drive XM to Vcc, leaving PIN_YP sampling the voltage divider
 
         // Read the touchpoint hardware X-Coordinate signal from the Y-Axis
-        adcX = analogRead(PIN_YP);  //
+        delayMicroseconds(20);      // Allow analog signal to settle
+        adcX = analogRead(PIN_YP);  // Read X-Coord from the floating Y-Axis
         floatPin(PIN_XM);           // Remove Vcc to conserve battery
 
         // Setup touchpad to read the hardware Y-Axis signal from the floating X-Axis
-        floatPin(PIN_XP);  // Float touchpad X+
-        // groundPin(PIN_XR);  // Ground X-Axis resistor (for noise immunity)
-        floatPin(PIN_XR);
-        // floatPin(PIN_YR);   // Float Y-Axis resistor
-        floatPin(PIN_XM);
+        floatPin(PIN_XP);   // Disconnect digital I/O circuitry...
+        floatPin(PIN_XR);   // from all the X-Axis pins.
+        floatPin(PIN_XM);   //
+        floatPin(PIN_YR);   // Float Y-Axis 510 Ohm resistor
         groundPin(PIN_YM);  // Ground Y-
-        // vccPin(PIN_YP);     // Drive the Y+ to Vcc
-        vccPin(PIN_YR);
+        vccPin(PIN_YP);     // Drive Y+ to Vcc
 
         // Read the touchpoint's Y-Axis coordinate signal from the floating X-Axis
+        delayMicroseconds(20);      // Allow analog signals to settle
         adcY = analogRead(PIN_XM);  // Raw ADC value ranges 0..1023
         floatPin(PIN_YP);           // Remove Vcc to save battery
 
         // Record max and min
-        DPRINTF("xMin=%d xMax=%d yMin=%d yMax=%d\n", xMin, xMax, yMin, yMax);
         if (adcX < xMin) xMin = adcX;
         if (adcX > xMax) xMax = adcX;
         if (adcY < yMin) yMin = adcY;
         if (adcY > yMax) yMax = adcY;
 
         // Return valid result in the rotated screen coordinate system
-        if (touching) {
-            result.y = map(adcX, 28, 382, 0, Y_SCREEN_MAX);  // adcX is floating x-Axis signal for Y-Axis coordinate
-            result.x = map(adcY, 30, 540, 0, X_SCREEN_MAX);  // adcY is floating y-Axis signal for X-Axis coordinate
-            result.z = adcZ;
-            if (result.x > xMx) xMx = result.x;
-            if (result.y > yMx) yMx = result.y;
-        }
+        result.y = map(adcX, 109, 920, 0, Y_SCREEN_MAX);  // adcX is floating x-Axis signal for Y-Axis coordinate
+        result.x = map(adcY, 62, 968, 0, X_SCREEN_MAX);   // adcY is floating y-Axis signal for X-Axis coordinate
+        result.z = adcZ;                                  // We don't "really" calc true touch pressure
+        if (result.x > xMx) xMx = result.x;
+        if (result.y > yMx) yMx = result.y;
+        DPRINTF("adcX=%u result.y=%u xMin=%d xMax=%d  adcY=%u result.x=%u yMin=%d yMax=%d\n", adcX, result.y, xMin, xMax, adcY, result.x, yMin, yMax);
     } else {
         result.x = result.y = result.z = 0;  // Operator is not touching the pad
     }
-    // DPRINTF("adcY= %u result.x=%u adcX=%u result.y=%u result.z=%u xMx=%u yMx=%u\n", adcY, result.x, adcX, result.y, result.z, xMx, yMx);
-    //  DPRINTF("xMx=%u yMx=%u\n", xMx, yMx);
 
     return result;
 }
@@ -269,6 +264,7 @@ void test_etchSketch(void) {
     int finish = 60000;  // Milliseconds
     int minX = 9999, maxX = 0;
     int minY = 9999, maxY = 0;
+    DTRACE();
     for (int t = 0; t < finish; t += dt) {
         TSPoint p = getPoint();
         if (p.z) {
