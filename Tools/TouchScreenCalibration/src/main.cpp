@@ -167,12 +167,14 @@ TouchPoint getTouchPoint(void) {
         floatPin(PIN_XM);           // Remove Vcc to conserve battery
 
         // Setup touchpad to read the hardware Y-Axis signal from the floating X-Axis
+        // Note:  For the touchpad coords to match default GFX coords, we have to
+        // reverse the drive on the Y-Axis as they don't agree on location of origin.
         floatPin(PIN_XP);   // Disconnect digital I/O circuitry...
         floatPin(PIN_XR);   // from all the X-Axis pins.
         floatPin(PIN_XM);   //
         floatPin(PIN_YR);   // Float Y-Axis 510 Ohm resistor
-        groundPin(PIN_YM);  // Ground Y-
-        vccPin(PIN_YP);     // Drive Y+ to Vcc
+        groundPin(PIN_YP);  // Ground YP (for the reverse drive)
+        vccPin(PIN_YM);     // Drive YM to Vcc (for the reverse drive)
 
         // Read the touchpoint's Y-Axis coordinate signal from the floating X-Axis
         delayMicroseconds(20);      // Allow analog signals to settle
@@ -244,10 +246,12 @@ unsigned exerciseTouchTarget(int x, int y) {
     TouchPoint rawP;  // Raw display system coordinates of touchpoint
     TouchPoint corP;  // Corrected display system coordinates of touchpoint
 
+    DPRINTF("\n");
+
     // Erase screen and display operator prompt and touch target
-    tft.fillScreen(HX8357_BLACK);  // Erase screen to black
-    tft.setCursor(x, y);           // Display the target
-    tft.drawGFXFontChar('+');
+    tft.fillScreen(HX8357_BLACK);                          // Erase screen to black
+    tft.setCursor(x, y);                                   // Display the target
+    tft.fillCircle(x, y, TS_ACCURACY / 2, HX8357_YELLOW);  // Draw the target
 
     // Wait for the operator to touch the target
     while (rawP.z == 0) {
@@ -288,22 +292,15 @@ void setup() {
 
     // Initialize the display
     tft.begin(30000000UL, 2000000UL);
-    // tft.setRotation(3);
     tft.setFont(&FreeMono12pt7b);
-    // tft.setClipRect(0, 0, 480, 320);
     tft.fillScreen(HX8357_BLACK);  // Erase screen
 
-    // Display startup message
-    tft.setCursor(50, 50);
-    tft.println("Starting...");
-
-    Serial.println("\n");
     int err;
-    err = exerciseTouchTarget(111, 222);
-    DPRINTF("err=%d\n\n", err);
+    err = exerciseTouchTarget(310, 10);
+    DPRINTF("err=%d\n", err);
     delay(500);
-    err = exerciseTouchTarget(111, 222);
-    DPRINTF("err=%d\n\n", err);
+    err = exerciseTouchTarget(310, 10);
+    DPRINTF("err=%d\n", err);
 }
 
 /**
