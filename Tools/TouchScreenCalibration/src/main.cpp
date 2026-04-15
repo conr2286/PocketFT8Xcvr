@@ -249,7 +249,6 @@ unsigned exerciseTouchTarget(int x, int y) {
     DPRINTF("\n");
 
     // Erase screen and display operator prompt and touch target
-    tft.fillScreen(HX8357_BLACK);                          // Erase screen to black
     tft.setCursor(x, y);                                   // Display the target
     tft.fillCircle(x, y, TS_ACCURACY / 2, HX8357_YELLOW);  // Draw the target
 
@@ -270,8 +269,136 @@ unsigned exerciseTouchTarget(int x, int y) {
     expectedP.z = 1;
     int errRMS = updateCorTab(expectedP, corP);
 
+    // Remove target from display
+    tft.fillCircle(x, y, TS_ACCURACY / 2, HX8357_BLACK);
+    delay(200);
+
     // Return the RMS error
     return errRMS;
+}  // exerciseTouchTarget()
+
+/**
+ * @brief Debugging function to print the correction tables
+ * @param x1 Upper-left corner of bounding rectangle
+ * @param y1 Upper-left corner of bounding rectangle
+ * @param x2 Lower-right corner of bounding rectangle
+ * @param y2 Lower-right corner of bounding rectangle
+ */
+void dumpCorTabs(int x1, int y1, int x2, int y2) {
+    int x, y;
+    for (y = y1; y <= y2; y++) {
+        for (x = x1; x <= x2; x++) {
+            Serial.printf("(%d,%d) ", tsCorX[x][y]);
+        }
+        Serial.printf("\n");
+    }
+    Serial.printf("\n");
+}
+
+/**
+ * @brief Fills the interior of a bounding rectangle within tsCorX[][] with interpolated values
+ * @param x1 Rectangle's upper left side x-Coord
+ * @param y1 Rectangle's upper left y-Coord
+ * @param x2 Rectangle's lower right x-Coord
+ * @param y2 Rectangle's lower right y-Coord
+ */
+void interpolateCorTab(int x1, int y1, int x2, int y2) {
+    int x;     // Iterates over columns
+    int y;     // Iterates over rows
+    float dy;  // Delta correction value over rows
+    float ay;  // Accumulated correction value over rows
+
+    // Sanity checks
+    DPRINTF("x1=%d y1=%d  x2=%d y2=%d\n", x1, y1, x2, y2);
+    if ((x1 >= x2) || (y1 >= y2)) return;
+    DTRACE();
+    if ((x2 > TS_CORTAB_COLS) || (y2 > TS_CORTAB_ROWS)) return;
+    DTRACE();
+    if ((x1 < 0) || (y1 < 0)) return;
+    DTRACE();
+    if ((x2 - x1) < 3 || (y2 - y1) < 3) return;
+    DTRACE();
+
+    These are screen coords, not corTab cells;
+
+    /*********************************
+     * Interpolate cells in tsCorX[][]
+     ********************************/
+
+    // Calculate tsCorX variance along y-Axis on left edge of rectangle
+    dy = (tsCorX[x1][y2] - tsCorX[x1][y1]) / (TS_CORTAB_ROWS - 1);  // Variance between rows on left edge
+
+    // Interpolate tsCorX cells along the left edge of bounding rectangle
+    ay = tsCorX[x1][y1];             // Correction anchored by top left corner
+    for (y = y1 + 1; y < y2; y++) {  // Visit cells between but excluding top and bottom
+        ay += dy;                    // Calc correction for this row
+        tsCorX[x1][y] = ay;          // Record interpolated value
+    }
+
+    // Calculate tsCorX variance along y-Axis on right edge of bounding rectangle
+    dy = (tsCorX[x2][y2] - tsCorX[x2][y1]) / (TS_CORTAB_ROWS - 1);  // Variance between rows on right edge
+
+    // Interpolate tsCorX cells along the right edge of rectangle
+    ay = tsCorX[x2][y1];             // Correction anchored by top right corner
+    for (y = y1 + 1; y < y2; y++) {  // Visit cells between but excluding top and bottom
+        ay += dy;                    // Calc correction for this row
+        tsCorX[x2][y] = ay;          // Record interpolated value
+    }
+
+    // Interpolate tsCorX cells between the left and right edge of each row
+    for (y = y1; y <= y2; y++) {  // Iterate over each row *including* the top and bottom
+
+        // Calculate variance along the x-Axis of row y
+        dy = (tsCorX[x2][y] - tsCorX[x1][y]) / (TS_CORTAB_COLS - 1);  // Variance between cells along this row
+
+        // Interpolate cells between the left and right edges of this row y
+        ay = tsCorX[x1][y];              // Correction anchored by left corner of this row y
+        for (x = x1 + 1; x < x2; x++) {  // Visit each cell between but excluding left and right edges of this row
+            ay += dy;                    // Calc correction for this col in this row
+            tsCorX[x][y] = ay;           // Record interpolated value in cell
+        }
+    }
+
+    /*********************************
+     * Interpolate cells in tsCorY[][]
+     ********************************/
+
+    // Calculate tsCorY variance along y-Axis on left edge of rectangle
+    dy = (tsCorY[x1][y2] - tsCorY[x1][y1]) / (TS_CORTAB_ROWS - 1);  // Variance between rows on left edge
+
+    // Interpolate tsCorY cells along the left edge of bounding rectangle
+    ay = tsCorY[x1][y1];             // Correction anchored by top left corner
+    for (y = y1 + 1; y < y2; y++) {  // Visit cells between but excluding top and bottom
+        ay += dy;                    // Calc correction for this row
+        tsCorY[x1][y] = ay;          // Record interpolated value
+    }
+
+    // Calculate tsCorY variance along y-Axis on right edge of bounding rectangle
+    dy = (tsCorY[x2][y2] - tsCorY[x2][y1]) / (TS_CORTAB_ROWS - 1);  // Variance between rows on right edge
+
+    // Interpolate tsCorY cells along the right edge of rectangle
+    ay = tsCorY[x2][y1];             // Correction anchored by top right corner
+    for (y = y1 + 1; y < y2; y++) {  // Visit cells between but excluding top and bottom
+        ay += dy;                    // Calc correction for this row
+        tsCorY[x2][y] = ay;          // Record interpolated value
+    }
+
+    // Interpolate tsCorY cells between the left and right edge of each row
+    for (y = y1; y <= y2; y++) {  // Iterate over each row *including* the top and bottom
+
+        // Calculate variance along the x-Axis of row y
+        dy = (tsCorY[x2][y] - tsCorY[x1][y]) / (TS_CORTAB_COLS - 1);  // Variance between cells along this row
+
+        // Interpolate cells between the left and right edges of this row y
+        ay = tsCorY[x1][y];              // Correction anchored by left corner of this row y
+        for (x = x1 + 1; x < x2; x++) {  // Visit each cell between but excluding left and right edges of this row
+            ay += dy;                    // Calc correction for this col in this row
+            tsCorY[x][y] = ay;           // Record interpolated value in cell
+        }
+    }
+
+    // Debugging
+    dumpCorTabs(x1, y1, x2, y2);
 }
 
 /**
@@ -296,11 +423,12 @@ void setup() {
     tft.fillScreen(HX8357_BLACK);  // Erase screen
 
     int err;
-    err = exerciseTouchTarget(310, 10);
-    DPRINTF("err=%d\n", err);
-    delay(500);
-    err = exerciseTouchTarget(310, 10);
-    DPRINTF("err=%d\n", err);
+    err = exerciseTouchTarget(0, 0);
+    err = exerciseTouchTarget(319, 0);
+    err = exerciseTouchTarget(319, 479);
+    err = exerciseTouchTarget(0, 479);
+
+    interpolateCorTab(0, 0, 319, 479);
 }
 
 /**
