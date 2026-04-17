@@ -62,243 +62,48 @@ class TargetPoint {
     TouchPoint actual;  // Coordinates from touch event (from the HID)
 };
 
-// /**
-//  * @brief Get the corrected TouchPoint value
-//  * @param rawP The uncorrected TouchPoint in the unrotated screen coordinate system
-//  * @return The corrected TouchPoint
-//  *
-//  * @note This function corrects for the margins and non-linearity across an axis.
-//  */
-// TouchPoint getCorrectedTouchPoint(TouchPoint rawP) {
-//     TouchPoint result;
-//     result.z = rawP.z;  // Return z unmodified
-//     if (rawP.z) {
-//         // DTRACE();
-//         int nRow = rawP.y / TS_CORTAB_ROWS;  // Select a row in the correction table
-//         int nCol = rawP.x / TS_CORTAB_COLS;  // Select a column in the correction table
-//         DPRINTF("confirm nRow=%d nCol=%d\n", nRow, nCol);
-//         DPRINTF("using tsCorX = %d tsCorY = %d\n", tsCorX[nCol][nRow], tsCorY[nCol][nRow]);
-//         result.x = rawP.x + tsCorX[nCol][nRow];  // Correct the x coordinate
-//         result.y = rawP.y + tsCorY[nCol][nRow];  // Correct the y coordinate
-//         DPRINTF("rawP.x=%d rawP.y=%d nRow=%d nCol=%d result.x=%d result.y=%d\n", rawP.x, rawP.y, nRow, nCol, result.x, result.y);
-//     }
-//     return result;
-// }  // getCorrectedTouchPoint()
-
-// int updateCorTab(TouchPoint expectedP, TouchPoint actualP) {
-//     // Calculate the errors on both axis
-//     int errX = actualP.x - expectedP.x;  // Error on x-Axis
-//     int errY = actualP.y - expectedP.y;  // Error on y-Axis
-
-//     // Update correction table from errors
-//     int nRow = actualP.y / TS_CORTAB_ROWS;  // Select a row in the correction table
-//     int nCol = actualP.x / TS_CORTAB_COLS;  // Select a column in the correction table
-
-//     DPRINTF("confirm nRow=%d nCol=%d\n", nRow, nCol);
-//     tsCorX[nCol][nRow] -= errX;  // Update the x-Axis correction
-//     tsCorY[nCol][nRow] -= errY;  // Update the y-Axis correction
-//     DPRINTF("updated tsCorX = %d tsCorY = %d\n", tsCorX[nCol][nRow], tsCorY[nCol][nRow]);
-
-//     // Return the root mean square of the x/y error
-//     int errRMS = sqrt(errX * errX + errY * errY);  // Root mean square of errors
-//     DPRINTF("expectedP.x=%d actualP.x=%d errX=%d   expectedP.y=%d actualP.y=%d errY=%d   errRMS=%d\n", expectedP.x, actualP.x, errX, expectedP.y, actualP.y, errY, errRMS);
-//     DPRINTF("confirm nRow=%d nCol=%d\n", nRow, nCol);
-//     return errRMS;
-// }
-
-// /**
-//  * @brief Exercises a single target on the touchscreen
-//  * @param x Target's x-Coord
-//  * @param y Target's y-Coord
-//  * @return Touchpoint deviation (in pixels) from target coordinates
-//  */
-// unsigned exerciseTouchTarget(int x, int y) {
-//     TouchPoint rawP;  // Raw display system coordinates of touchpoint
-//     TouchPoint corP;  // Corrected display system coordinates of touchpoint
-
-//     DPRINTF("\n");
-
-//     // Erase screen and display operator prompt and touch target
-//     tft.setCursor(x, y);                                   // Display the target
-//     tft.fillCircle(x, y, TS_ACCURACY / 2, HX8357_YELLOW);  // Draw the target
-
-//     // Wait for the operator to touch the target
-//     while (rawP.z == 0) {
-//         rawP = touchPad.getTouchPoint();
-//         if (rawP.z == 0) delay(10);
-//     }
-//     DPRINTF("rawP.x=%d rawP.y=%d\n", rawP.x, rawP.y);
-
-//     // Apply existing correction and calculate error
-//     corP = getCorrectedTouchPoint(rawP);  // Apply the correction factor
-
-//     // Update correction tables from current error
-//     TouchPoint expectedP;
-//     expectedP.x = x;
-//     expectedP.y = y;
-//     expectedP.z = 1;
-//     int errRMS = updateCorTab(expectedP, corP);
-
-//     // Remove target from display
-//     tft.fillCircle(x, y, TS_ACCURACY / 2, HX8357_BLACK);
-//     delay(200);
-
-//     // Return the RMS error
-//     return errRMS;
-// }  // exerciseTouchTarget()
-
-// /**
-//  * @brief Debugging function to print the correction tables
-//  * @param x1 Upper-left corner of bounding rectangle
-//  * @param y1 Upper-left corner of bounding rectangle
-//  * @param x2 Lower-right corner of bounding rectangle
-//  * @param y2 Lower-right corner of bounding rectangle
-//  */
-// void dumpCorTabs(int x1, int y1, int x2, int y2) {
-//     int x, y;
-//     for (y = y1; y <= y2; y++) {
-//         for (x = x1; x <= x2; x++) {
-//             Serial.printf("(%d,%d) ", tsCorX[x][y]);
-//         }
-//         Serial.printf("\n");
-//     }
-//     Serial.printf("\n");
-// }
-
-// /**
-//  * @brief Fills the interior of a bounding rectangle within tsCorX[][] with interpolated values
-//  * @param x1 Rectangle's upper left side x-Coord
-//  * @param y1 Rectangle's upper left y-Coord
-//  * @param x2 Rectangle's lower right x-Coord
-//  * @param y2 Rectangle's lower right y-Coord
-//  */
-// void interpolateCorTab(int xs1, int ys1, int xs2, int ys2) {
-//     int x;     // Iterates over columns
-//     int y;     // Iterates over rows
-//     float dy;  // Delta correction value over rows
-//     float ay;  // Accumulated correction value over rows
-
-//     DPRINTF("xs1=%d ys1=%d  xs2=%d ys2=%d\n", xs1, ys1, xs2, ys2);
-
-//     // Convert screen coordinates to correction table indices
-//     int x1 = xs1 / TS_ACCURACY;
-//     int y1 = ys1 / TS_ACCURACY;
-//     int x2 = xs2 / TS_ACCURACY;
-//     int y2 = ys2 / TS_ACCURACY;
-
-//     // Sanity checks
-//     DPRINTF("x1=%d y1=%d  x2=%d y2=%d\n", x1, y1, x2, y2);
-//     if ((x1 >= x2) || (y1 >= y2)) return;
-//     // DTRACE();
-//     if ((x2 > TS_CORTAB_COLS) || (y2 > TS_CORTAB_ROWS)) return;
-//     // DTRACE();
-//     if ((x1 < 0) || (y1 < 0)) return;
-//     // DTRACE();
-//     if ((x2 - x1) < 3 || (y2 - y1) < 3) return;
-//     DTRACE();
-
-//     /*********************************
-//      * Interpolate cells in tsCorX[][]
-//      ********************************/
-
-//     // Calculate tsCorX variance along y-Axis on left edge of rectangle
-//     dy = (tsCorX[x1][y2] - tsCorX[x1][y1]) / (TS_CORTAB_ROWS - 1);  // Variance between rows on left edge
-
-//     // Interpolate tsCorX cells along the left edge of bounding rectangle
-//     ay = tsCorX[x1][y1];             // Correction anchored by top left corner
-//     for (y = y1 + 1; y < y2; y++) {  // Visit cells between but excluding top and bottom
-//         ay += dy;                    // Calc correction for this row
-//         tsCorX[x1][y] = ay;          // Record interpolated value
-//     }
-
-//     // Calculate tsCorX variance along y-Axis on right edge of bounding rectangle
-//     dy = (tsCorX[x2][y2] - tsCorX[x2][y1]) / (TS_CORTAB_ROWS - 1);  // Variance between rows on right edge
-
-//     // Interpolate tsCorX cells along the right edge of rectangle
-//     ay = tsCorX[x2][y1];             // Correction anchored by top right corner
-//     for (y = y1 + 1; y < y2; y++) {  // Visit cells between but excluding top and bottom
-//         ay += dy;                    // Calc correction for this row
-//         tsCorX[x2][y] = ay;          // Record interpolated value
-//     }
-
-//     // Interpolate tsCorX cells between the left and right edge of each row
-//     for (y = y1; y <= y2; y++) {  // Iterate over each row *including* the top and bottom
-
-//         // Calculate variance along the x-Axis of row y
-//         dy = (tsCorX[x2][y] - tsCorX[x1][y]) / (TS_CORTAB_COLS - 1);  // Variance between cells along this row
-
-//         // Interpolate cells between the left and right edges of this row y
-//         ay = tsCorX[x1][y];              // Correction anchored by left corner of this row y
-//         for (x = x1 + 1; x < x2; x++) {  // Visit each cell between but excluding left and right edges of this row
-//             ay += dy;                    // Calc correction for this col in this row
-//             tsCorX[x][y] = ay;           // Record interpolated value in cell
-//         }
-//     }
-
-//     /*********************************
-//      * Interpolate cells in tsCorY[][]
-//      ********************************/
-
-//     // Calculate tsCorY variance along y-Axis on left edge of rectangle
-//     dy = (tsCorY[x1][y2] - tsCorY[x1][y1]) / (TS_CORTAB_ROWS - 1);  // Variance between rows on left edge
-
-//     // Interpolate tsCorY cells along the left edge of bounding rectangle
-//     ay = tsCorY[x1][y1];             // Correction anchored by top left corner
-//     for (y = y1 + 1; y < y2; y++) {  // Visit cells between but excluding top and bottom
-//         ay += dy;                    // Calc correction for this row
-//         tsCorY[x1][y] = ay;          // Record interpolated value
-//     }
-
-//     // Calculate tsCorY variance along y-Axis on right edge of bounding rectangle
-//     dy = (tsCorY[x2][y2] - tsCorY[x2][y1]) / (TS_CORTAB_ROWS - 1);  // Variance between rows on right edge
-
-//     // Interpolate tsCorY cells along the right edge of rectangle
-//     ay = tsCorY[x2][y1];             // Correction anchored by top right corner
-//     for (y = y1 + 1; y < y2; y++) {  // Visit cells between but excluding top and bottom
-//         ay += dy;                    // Calc correction for this row
-//         tsCorY[x2][y] = ay;          // Record interpolated value
-//     }
-
-//     // Interpolate tsCorY cells between the left and right edge of each row
-//     for (y = y1; y <= y2; y++) {  // Iterate over each row *including* the top and bottom
-
-//         // Calculate variance along the x-Axis of row y
-//         dy = (tsCorY[x2][y] - tsCorY[x1][y]) / (TS_CORTAB_COLS - 1);  // Variance between cells along this row
-
-//         // Interpolate cells between the left and right edges of this row y
-//         ay = tsCorY[x1][y];              // Correction anchored by left corner of this row y
-//         for (x = x1 + 1; x < x2; x++) {  // Visit each cell between but excluding left and right edges of this row
-//             ay += dy;                    // Calc correction for this col in this row
-//             tsCorY[x][y] = ay;           // Record interpolated value in cell
-//         }
-//     }
-
-//     // Debugging
-//     dumpCorTabs(x1, y1, x2, y2);
-// }
-
 /**
  * @brief Read coordinates of the next touch event
- * @return TouchPoint coordinates
+ * @return TouchPoint coordinates in the screen coordinate system
  *
  * @note This is a blocking read of the next touch event
+ *
+ * @note Touchpads are notoriously noisy.  We mitigate this problem by taking
+ * multiple ADC readings.
  *
  * TODO:  If we had an isTouching state variable, we could optimize by only
  * waiting for operator to pick-up the stylus prior to the next read
  */
 TouchPoint getNextTouchPoint(void) {
-    TouchPoint result;
+    TouchPoint raw1, raw2, result;
+    bool unstable = true;
 
-    // Wait for operator to touch stylus to the pad
-    do {
-        delay(10);                          // Wait a moment
-        result = touchPad.getTouchPoint();  // Try to read the touchpad
-    } while (result.z == 0);  // Wait for valid touch event
+    DTRACE();
+
+    while (unstable) {
+        // Acquire two readings from the touchpad
+        raw1 = touchPad.getTouchPoint();
+        raw2 = touchPad.getTouchPoint();
+
+        // Are the readings valid and stable?
+        if ((raw1.z && raw2.z) && touchPad.isNear(raw1.x, raw2.x, TS_ACCURACY) && touchPad.isNear(raw1.y, raw2.y, TS_ACCURACY)) break;  // Yes, we have valid data
+
+        // Wait before trying again
+        delay(50);
+        // DTRACE();
+    }
+
+    // Map averaged ADC coordinates into the screen coordinate system
+    result.x = map((raw1.x + raw2.x) / 2, 0, 1023, 0, DISPLAY_WIDTH_EXTENT);
+    result.y = map((raw1.y + raw2.y) / 2, 0, 1023, 0, DISPLAY_HEIGHT_EXTENT);
+    result.z = 1;
+    DPRINTF("result.x=%d result.y=%d\n", result.x, result.y);
 
     // Wait for operator to remove the stylus from pad
-    while (touchPad.getTouchPoint().z) {
-        delay(10);  // Wait a moment
-    }
+    // while (touchPad.getTouchPoint().z) {
+    //     delay(10);  // Wait a moment
+    // }
+    // delay(50);
 
     return result;
 
@@ -310,6 +115,7 @@ TouchPoint getNextTouchPoint(void) {
  * @param y Screen coordinate where target will appear
  */
 void promptOperator(unsigned x, unsigned y) {
+    DTRACE();
     tft.fillScreen(HX8357_BLACK);  // Erase screen
     tft.setCursor(20, 20);
     tft.setTextColor(HX8357_WHITE);
@@ -322,6 +128,7 @@ void promptOperator(unsigned x, unsigned y) {
  * @param y Screen coordinate for target
  */
 void displayTarget(unsigned x, unsigned y) {
+    DTRACE();
     tft.fillCircle(x, y, 5, HX8357_YELLOW);
 }  // displayTarget()
 
@@ -333,6 +140,7 @@ void displayTarget(unsigned x, unsigned y) {
  */
 TargetPoint getTargetPoint(unsigned x, unsigned y) {
     TargetPoint p;
+    DTRACE();
     p.target.x = x;
     p.target.y = y;
     p.target.z = 1;
@@ -379,20 +187,33 @@ void buildInterpolationMatrix(TargetPoint ul, TargetPoint ur, TargetPoint lr, Ta
 TouchPoint getCorrectedPoint(TouchPoint p) {
     TouchPoint c;
 
+    DTRACE();
+
+#if 1
     // Select a row and column in the correction matrices
     unsigned corRow = p.y / TS_CORTAB_ROWS;
     unsigned corCol = p.x / TS_CORTAB_COLS;
+    DPRINTF("corCol=%d corRow=%d p.x=%d p.y=%d p.z=%d\n", corCol, corRow, p.x, p.y, p.z);
 
     // Sanity checks
     if ((corRow >= TS_CORTAB_ROWS) || (corCol >= TS_CORTAB_COLS) || (p.z == 0)) {
         DTRACE();
         c.x = c.y = c.z = 0;  // Return error indication
+        return c;
     }
 
     // Apply correction matrices to uncorrected coordinate
-    c.x = p.x + tsCorX[p.x][p.y];  // x-Axis correction from tsCorX column x, row y
-    c.y = p.y + tsCorY[p.x][p.y];  // y-Axis correction from tsCorY column x, row y
+    // c.x = p.x + tsCorX[p.x][p.y];  // x-Axis correction from tsCorX column x, row y
+    // c.y = p.y + tsCorY[p.x][p.y];  // y-Axis correction from tsCorY column x, row y
+    c.x = p.x + tsCorX[corCol][corRow];  // x-Axis correction from tsCorX column x, row y
+    c.y = p.y + tsCorY[corCol][corRow];  // y-Axis correction from tsCorY column x, row y
+#else
+    c.x = p.x;
+    c.y = p.y;
+#endif
+
     c.z = p.z;
+    DPRINTF("c.x=%d c.y=%d c.z=%d\n", c.x, c.y, c.z);
     return c;
 }  // getCorrectedPoint()
 
@@ -431,10 +252,10 @@ void setup() {
  * @brief The great Arduino polling loop tracks the stylus on touchscreen
  */
 void loop() {
-    TouchPoint p1 = getNextTouchPoint();               // Read the touchpad
-    if (p1.z) {                                        // Check for valid touch event
-        TouchPoint p2 = getCorrectedPoint(p1);         // Map p1 to p2 using interpolation matrices
-        tft.fillCircle(p2.x, p2.y, 3, HX8357_YELLOW);  // Show operator where we think the stylus touched the pad
+    TouchPoint p1 = getNextTouchPoint();                         // Read the touchpad
+    if (p1.z) {                                                  // Check for valid touch event
+        TouchPoint p2 = getCorrectedPoint(p1);                   // Map p1 to p2 using interpolation matrices
+        if (p2.z) tft.fillCircle(p1.x, p1.y, 3, HX8357_YELLOW);  // Show operator where we think the stylus touched the pad
     }
-    delay(10);  // Wait a moment
+    delay(50);  // Wait a moment
 }

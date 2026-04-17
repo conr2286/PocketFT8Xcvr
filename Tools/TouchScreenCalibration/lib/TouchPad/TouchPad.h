@@ -28,13 +28,13 @@ class TouchPoint {
 class TouchPad {
    public:
     TouchPad(uint8_t xp, uint8_t xm, uint8_t yp, uint8_t ym, uint8_t xr, uint8_t yr);
-    TouchPoint getTouchPoint(void);  // Interrogates the touchpad device
+    TouchPoint getTouchPoint(void);                       // Interrogates the touchpad device
+    bool isNear(unsigned a, unsigned b, unsigned delta);  // Are two unsigned integers close in value?
 
    private:
     uint8_t xp, xm, yp, ym, xr, yr;  // The MCU pin numbers connected to touchpad's X+, X-, Y+ and Y- pins and their resistors
 
-    bool isNear(unsigned a, unsigned b, unsigned delta);  // Are two unsigned integers close in value?
-    void floatPin(unsigned pin);                          // Disconnect pin from MCU digital circuitry
-    void groundPin(unsigned pin);                         // Ground (Logic 0) MCU pin
-    void vccPin(unsigned pin);                            // Drive MCU pin to Vcc (Logic 1)
+    void floatPin(unsigned pin);   // Disconnect pin from MCU digital circuitry
+    void groundPin(unsigned pin);  // Ground (Logic 0) MCU pin
+    void vccPin(unsigned pin);     // Drive MCU pin to Vcc (Logic 1)
 };
