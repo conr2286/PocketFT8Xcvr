@@ -58,8 +58,8 @@
 #define PIN_RCV 15  // FW implementation of ~PTT (i.e. RECV) in V2.0 boards
 
 // Adafruit resistive touchscreen pins (External ADC HW option)
-#define PIN_YR 38  // must be an analog output pin
-#define PIN_XR 37  // must be an analog output pin
+#define PIN_YR 38  //
+#define PIN_XR 37  //
 #define PIN_YM 36  // Any digital pin
 #define PIN_XP 39  // Any digital pin
 
