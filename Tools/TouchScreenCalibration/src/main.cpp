@@ -63,53 +63,6 @@ class TargetPoint {
 };
 
 /**
- * @brief Read coordinates of the next touch event
- * @return TouchPoint coordinates in the screen coordinate system
- *
- * @note This is a blocking read of the next touch event
- *
- * @note Touchpads are notoriously noisy.  We mitigate this problem by taking
- * multiple ADC readings.
- *
- * TODO:  If we had an isTouching state variable, we could optimize by only
- * waiting for operator to pick-up the stylus prior to the next read
- */
-TouchPoint getNextTouchPoint(void) {
-    TouchPoint raw1, raw2, result;
-    bool unstable = true;
-
-    DTRACE();
-
-    while (unstable) {
-        // Acquire two readings from the touchpad
-        raw1 = touchPad.getTouchPoint();
-        raw2 = touchPad.getTouchPoint();
-
-        // Are the readings valid and stable?
-        if ((raw1.z && raw2.z) && touchPad.isNear(raw1.x, raw2.x, TS_ACCURACY) && touchPad.isNear(raw1.y, raw2.y, TS_ACCURACY)) break;  // Yes, we have valid data
-
-        // Wait before trying again
-        delay(50);
-        // DTRACE();
-    }
-
-    // Map averaged ADC coordinates into the screen coordinate system
-    result.x = map((raw1.x + raw2.x) / 2, 0, 1023, 0, DISPLAY_WIDTH_EXTENT);
-    result.y = map((raw1.y + raw2.y) / 2, 0, 1023, 0, DISPLAY_HEIGHT_EXTENT);
-    result.z = 1;
-    DPRINTF("result.x=%d result.y=%d\n", result.x, result.y);
-
-    // Wait for operator to remove the stylus from pad
-    // while (touchPad.getTouchPoint().z) {
-    //     delay(10);  // Wait a moment
-    // }
-    // delay(50);
-
-    return result;
-
-}  // getNextTouchPoint()
-
-/**
  * @brief Displays a prompt message for operator on the TFT
  * @param x Screen coordinate where target will appear
  * @param y Screen coordinate where target will appear
@@ -133,6 +86,21 @@ void displayTarget(unsigned x, unsigned y) {
 }  // displayTarget()
 
 /**
+ * @brief Blocking read of next initial touch
+ * @return Next touch event's point in screen coordinate system
+ *
+ * @note Ignores drags
+ */
+TouchPoint getNextTouchEvent(void) {
+    TouchPoint p;
+    for (TouchPointState state = TS_NO_TOUCH; state != TS_TOUCH;) {
+        p = touchPad.getTouchEvent();  // Interrogate the touchpad
+        state = p.z;
+    }
+    return p;
+}
+
+/**
  * @brief Prompt operator, display target, and read touchpad result
  * @param x Target's screen coordinate
  * @param y Target's screen coordinate
@@ -143,10 +111,10 @@ TargetPoint getTargetPoint(unsigned x, unsigned y) {
     DTRACE();
     p.target.x = x;
     p.target.y = y;
-    p.target.z = 1;
+    p.target.z = TS_TOUCH;
     promptOperator(x, y);            // Inform operator what's happening
     displayTarget(x, y);             // Show operator where to touch
-    p.actual = getNextTouchPoint();  // Read next touchpad coordinates
+    p.actual = getNextTouchEvent();  // Read coordinates
     return p;
 }  // getTargetPoint()
 
@@ -189,7 +157,6 @@ TouchPoint getCorrectedPoint(TouchPoint p) {
 
     DTRACE();
 
-#if 1
     // Select a row and column in the correction matrices
     unsigned corRow = p.y / TS_CORTAB_ROWS;
     unsigned corCol = p.x / TS_CORTAB_COLS;
@@ -198,7 +165,8 @@ TouchPoint getCorrectedPoint(TouchPoint p) {
     // Sanity checks
     if ((corRow >= TS_CORTAB_ROWS) || (corCol >= TS_CORTAB_COLS) || (p.z == 0)) {
         DTRACE();
-        c.x = c.y = c.z = 0;  // Return error indication
+        c.x = c.y = 0;
+        c.z = TS_NO_TOUCH;  // Return error indication
         return c;
     }
 
@@ -207,11 +175,6 @@ TouchPoint getCorrectedPoint(TouchPoint p) {
     // c.y = p.y + tsCorY[p.x][p.y];  // y-Axis correction from tsCorY column x, row y
     c.x = p.x + tsCorX[corCol][corRow];  // x-Axis correction from tsCorX column x, row y
     c.y = p.y + tsCorY[corCol][corRow];  // y-Axis correction from tsCorY column x, row y
-#else
-    c.x = p.x;
-    c.y = p.y;
-#endif
-
     c.z = p.z;
     DPRINTF("c.x=%d c.y=%d c.z=%d\n", c.x, c.y, c.z);
     return c;
@@ -252,10 +215,11 @@ void setup() {
  * @brief The great Arduino polling loop tracks the stylus on touchscreen
  */
 void loop() {
-    TouchPoint p1 = getNextTouchPoint();                         // Read the touchpad
-    if (p1.z) {                                                  // Check for valid touch event
-        TouchPoint p2 = getCorrectedPoint(p1);                   // Map p1 to p2 using interpolation matrices
-        if (p2.z) tft.fillCircle(p1.x, p1.y, 3, HX8357_YELLOW);  // Show operator where we think the stylus touched the pad
+    // Operator may drag stylus around touchpad in loop()
+    TouchPoint p1 = touchPad.getTouchEvent();          // Read the touchpad
+    if (p1.z != TS_NO_TOUCH) {                         // Check for valid touch event
+        TouchPoint p2 = getCorrectedPoint(p1);         // Map p1 to p2 using interpolation matrices
+        tft.fillCircle(p2.x, p2.y, 3, HX8357_YELLOW);  // Show operator where we think the stylus touched the pad
     }
     delay(50);  // Wait a moment
 }

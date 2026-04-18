@@ -45,6 +45,12 @@ TouchPad::TouchPad(uint8_t xp, uint8_t xm, uint8_t yp, uint8_t ym, uint8_t xr, u
     this->ym = ym;
     this->xr = xr;
     this->yr = yr;
+    this->state = TS_NO_TOUCH;  // Assume nothing is touching the pad
+
+    // TODO:  Initialize these in a more portable fashion as these are bound to Adafruit T3.5" TFT and Teensy ADC
+    this->adcMax = 1023;  // Maximum value returned by ADC
+    this->nCols = 320;    // Number of touchscreen columns
+    this->nRows = 480;    // Number of touchscreen rows
 }
 
 /**
@@ -95,13 +101,13 @@ void TouchPad::vccPin(unsigned pin) {
 
 /**
  * @brief Non-blocking read of touchscreen coordinates
- * @return TouchPoint coordinates as raw (unscaled, nonlinear) 10-bit ADC readings
+ * @return TouchPoint coordinates as raw 10-bit ADC readings
  *
  * NOTES:
- *  + The returned TouchPoint.z=0 if the x/y result is invalid
- *  + The returned TouchPoint.z=ADC(Vcc) if the x/y result appears valid
- *  + The returned TouchPoint.z>0 if the x/y values are valid coordinates
- *  + The x and y values are unrotated... x/y correspond to the HW x and y axis
+ *  + Returned TouchPoint.z=TS_NO_TOUCH if the x/y result is invalid
+ *  + Returned TouchPoint x/y are in raw, unfiltered, unscaled ADC values
+ *  + The x value corresponds to the HW x-Axis as does the y value to the HW y-Axis
+ *  + Does not discern dragging
  *
  * DESIGN:
  *  + The conventional approach, calculating z (estimated touch pressure) is not
@@ -113,6 +119,7 @@ void TouchPad::vccPin(unsigned pin) {
  *  + The touchpad signals are driven through the MCU digital outputs, and are read
  *  using the MCU ADC and Arduino analogRead() which, on the Teensy 4.1 MCU, will be
  *  using ADC2 by default as ADC1 is assigned to the Teensy audio pipeline.
+ *  + Use getTouchEvent to distinguish between TS_TOUCH and TS_DRAG
  */
 TouchPoint TouchPad::getTouchPoint(void) {
     TouchPoint result;
@@ -172,12 +179,62 @@ TouchPoint TouchPad::getTouchPoint(void) {
         floatPin(yp);           // Remove Vcc to save battery
 
         // Return a valid result in the unrotated, uncorrected screen coordinate system
-        result.y = adcY;  // Calc y-Axis screen coordinate
-        result.x = adcX;  // Calc x-Axis screen coordinate
-        result.z = adcZ;  // This is actually Vcc (logic 1)
+        result.y = adcY;      // Calc y-Axis screen coordinate
+        result.x = adcX;      // Calc x-Axis screen coordinate
+        result.z = TS_TOUCH;  //
     } else {
-        result.x = result.y = result.z = 0;  // Operator is not touching the pad
+        result.x = result.y = 0;
+        result.z = TS_NO_TOUCH;  // Operator is not touching the pad
     }
 
     return result;
 }  // getTouchPoint()
+
+/**
+ * @brief Analyze touch events
+ * @return Touch event screen coordinates and state
+ *
+ * DESIGN:
+ *  + We currently average two readings.  This may change if problematic.
+ *  + We maintain a state variable to discern when a touch event begins, when
+ *  the stylus drags across the pad, and when the stylus has been removed.
+ */
+TouchPoint TouchPad::getTouchEvent(void) {
+    TouchPoint raw1, raw2, result;  // We depend upon constructor initializing their attributes ;)
+
+    // DTRACE();
+
+    // Acquire two raw readings from the touchpad
+    raw1 = getTouchPoint();
+    raw2 = getTouchPoint();
+
+    // Handle invalid (not touching, erroneous, whatever) readings
+    if ((raw1.z == TS_NO_TOUCH || raw2.z == TS_NO_TOUCH)) {
+        state = result.z = TS_NO_TOUCH;  // Record touch event state as not touching and inform caller
+        return result;                   // TS_NO_TOUCH
+    }
+
+    // Map averaged ADC coordinates onto the screen coordinate system
+    result.x = map((raw1.x + raw2.x) / 2, 0, adcMax, 0, nCols - 1);  // Map ADC into screen coordinate
+    result.y = map((raw1.y + raw2.y) / 2, 0, adcMax, 0, nRows - 1);  // Map ADC into screen coordinate
+    DPRINTF("result.x=%d result.y=%d\n", result.x, result.y);
+
+    // Analyze state
+    switch (state) {
+        // We have begun a new touch event
+        case TS_NO_TOUCH:
+            state = result.z = TS_TOUCH;  // Newly touched
+            break;
+
+        // We are dragging
+        case TS_TOUCH:
+        case TS_DRAG:
+            state = result.z = TS_DRAG;  // Begun dragging
+            break;
+
+        default:
+            break;
+    }
+
+    return result;
+}
