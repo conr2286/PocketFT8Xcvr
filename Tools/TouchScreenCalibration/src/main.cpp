@@ -135,14 +135,24 @@ void initInterpolator(void) {
 }  // initInterpolator()
 
 /**
- * @brief Builds the interpolation matrix within the specified rectangle
+ * @brief Builds the interpolation matrix within the specified quadrilateral
  * @param ul Upper-left tuple containing target and actual touch event coordinates in screen system
  * @param ur Upper-right tuple containing target and actual touch event coordinates in screen system
- * @param lr Lower-left tuple containing target and actual touch event coordinates in screen system
  * @param ll Lower-right tuple containing target and actual touch event coordinates in screen system
+ * @param lr Lower-left tuple containing target and actual touch event coordinates in screen system
+ *
+ * NOTES:
+ *  + Each TargetPoint struct includes the expected screen coordinates (of the target) and
+ *  the uncorrected screen coordinates acquired from the touchpad.
+ *
  */
-void buildInterpolationMatrix(TargetPoint ul, TargetPoint ur, TargetPoint lr, TargetPoint ll) {
-    // TODO
+void buildInterpolationMatrix(TargetPoint ul, TargetPoint ur, TargetPoint ll, TargetPoint lr) {
+    // Interpolate between the upper-left and upper-right corners
+    // interpolateBetween(ul, ur);
+
+    // Interpolate between the lower-left and lower-right corners
+    // interpolateBetween(ll, lr);
+
 }  // buildInterpolationMatrix()
 
 /**
@@ -196,13 +206,13 @@ void setup() {
     initInterpolator();
 
     // Display targets in corners and get their uncorrected coordinates
-    TargetPoint p1 = getTargetPoint(0, 0);                                         // Find the upper-left corner
-    TargetPoint p2 = getTargetPoint(DISPLAY_WIDTH_EXTENT, 000);                    // Find the upper-right corner
-    TargetPoint p3 = getTargetPoint(DISPLAY_WIDTH_EXTENT, DISPLAY_HEIGHT_EXTENT);  // Find the lower-right corner
-    TargetPoint p4 = getTargetPoint(0, DISPLAY_HEIGHT_EXTENT);                     // Find lower-left corner
+    TargetPoint ul = getTargetPoint(0, 0);                                         // Find the upper-left corner
+    TargetPoint ur = getTargetPoint(DISPLAY_WIDTH_EXTENT, 000);                    // Find the upper-right corner
+    TargetPoint ll = getTargetPoint(0, DISPLAY_HEIGHT_EXTENT);                     // Find lower-left corner
+    TargetPoint lr = getTargetPoint(DISPLAY_WIDTH_EXTENT, DISPLAY_HEIGHT_EXTENT);  // Find the lower-right corner
 
-    // Interpolate the quadrilateral bounded by (p1,p2) and (p3,p4)
-    buildInterpolationMatrix(p1, p2, p3, p4);
+    // Interpolate the quadrilateral bounded by (ul,ur) and (ll,lr)
+    buildInterpolationMatrix(ul, ur, ll, lr);
 
     // Erase the display and prompt operator to drag stylus around the screen
     tft.fillScreen(HX8357_BLACK);
@@ -216,10 +226,10 @@ void setup() {
  */
 void loop() {
     // Operator may drag stylus around touchpad in loop()
-    TouchPoint p1 = touchPad.getTouchEvent();          // Read the touchpad
-    if (p1.z != TS_NO_TOUCH) {                         // Check for valid touch event
-        TouchPoint p2 = getCorrectedPoint(p1);         // Map p1 to p2 using interpolation matrices
-        tft.fillCircle(p2.x, p2.y, 3, HX8357_YELLOW);  // Show operator where we think the stylus touched the pad
+    TouchPoint ul = touchPad.getTouchEvent();          // Read the touchpad
+    if (ul.z != TS_NO_TOUCH) {                         // Check for valid touch event
+        TouchPoint ur = getCorrectedPoint(ul);         // Map ul to ur using interpolation matrices
+        tft.fillCircle(ur.x, ur.y, 3, HX8357_YELLOW);  // Show operator where we think the stylus touched the pad
     }
     delay(50);  // Wait a moment
 }

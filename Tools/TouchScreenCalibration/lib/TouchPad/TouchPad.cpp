@@ -15,6 +15,9 @@
 // #include "hwdefs.h"
 #include "TouchPad.h"
 
+// Define the number of microseconds to allow analog signals to settle prior to ADC sampling
+static const unsigned ADC_SETTLE_US = 10;
+
 /**
  * @brief Construct a TouchPad object
  * @param xp MCU pin for touchpad's X+ signal
@@ -129,20 +132,21 @@ TouchPoint TouchPad::getTouchPoint(void) {
     // Setup to determine if we have a valid touch event (i.e. operator
     // is actually touching the pad) by driving the X-Axis to Vcc and
     // measuring the y-Axis signal.  During a valid touch event, the X
-    // and Y axis are connected through operator's pressure on the pad.
+    // and Y axis connect through operator's pressure on the pad,
+    // placing Vcc on the normally floating y-Axis.
     floatPin(xp);  // Float X+
     floatPin(xm);  // Also X-
     vccPin(xr);    // Drive the X-Axis to Vcc through its 510 Ohm resistor
 
-    // Now clear the noise from High-Z Y-Axis prior to the analog reading below
-    floatPin(ym);           // Float Y-
-    groundPin(yr);          // Discharge Y-Axis thru its 510 Ohm resistor to ground
-    delayMicroseconds(20);  // Wait for analog Y-Axis signal to settle to ground
-    floatPin(yr);           // Remove discharge path
-    floatPin(yp);           // And disconnect all digital circuitry from the analog signal
+    // Clear the noise from High-Z Y-Axis prior to the analog reading below
+    floatPin(ym);                      // Float Y-
+    groundPin(yr);                     // Discharge Y-Axis thru its 510 Ohm resistor to ground
+    delayMicroseconds(ADC_SETTLE_US);  // Wait for analog Y-Axis signal to settle to ground
+    floatPin(yr);                      // Remove discharge path
+    floatPin(yp);                      // And disconnect all digital circuitry from the analog signal
 
     // Vcc flows through the driven X-Axis connection to floating Y-Axis iff we have a touch event
-    delayMicroseconds(20);              // Wait for analog Y-Axis signal to settle
+    delayMicroseconds(ADC_SETTLE_US);   // Wait for analog Y-Axis signal to settle
     adcZ = analogRead(yp);              // Read signal from floating Y-Axis
     floatPin(xr);                       // Remove Vcc to conserve battery
     touching = isNear(adcZ, 1023, 20);  // They're touching if Y-Axis ~= VCC
@@ -159,9 +163,9 @@ TouchPoint TouchPad::getTouchPoint(void) {
         vccPin(xm);     // Drive XM to Vcc, leaving yp sampling the voltage divider
 
         // Read the touchpoint hardware X-Coordinate signal from the Y-Axis
-        delayMicroseconds(20);  // Allow analog signal to settle
-        adcX = analogRead(yp);  // Read X-Coord from the floating Y-Axis
-        floatPin(xm);           // Remove Vcc to conserve battery
+        delayMicroseconds(ADC_SETTLE_US);  // Allow analog signal to settle
+        adcX = analogRead(yp);             // Read X-Coord from the floating Y-Axis
+        floatPin(xm);                      // Remove Vcc to conserve battery
 
         // Setup touchpad to read the hardware Y-Axis signal from the floating X-Axis
         // Note:  For the touchpad coords to match default GFX coords, we have to
@@ -174,9 +178,9 @@ TouchPoint TouchPad::getTouchPoint(void) {
         vccPin(ym);     // Drive YM to Vcc (for the reverse drive)
 
         // Read the touchpoint's Y-Axis coordinate signal from the floating X-Axis
-        delayMicroseconds(20);  // Allow analog signals to settle
-        adcY = analogRead(xm);  // Raw ADC value ranges 0..1023
-        floatPin(yp);           // Remove Vcc to save battery
+        delayMicroseconds(ADC_SETTLE_US);  // Allow analog signals to settle
+        adcY = analogRead(xm);             // Raw ADC value ranges 0..1023
+        floatPin(yp);                      // Remove Vcc to save battery
 
         // Return a valid result in the unrotated, uncorrected screen coordinate system
         result.y = adcY;      // Calc y-Axis screen coordinate
