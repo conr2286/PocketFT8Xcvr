@@ -41,8 +41,8 @@ class TouchPoint {
 class TouchPad {
    public:
     TouchPad(uint8_t xp, uint8_t xm, uint8_t yp, uint8_t ym, uint8_t xr, uint8_t yr);
-    TouchPoint getTouchPoint(void);                       // Low-level interrogation of touchpad
-    TouchPoint getTouchEvent(void);                       // Higher-level analysis of touchpad event
+    TouchPoint getTouchPoint(void);                       // Non-blocking, low-level interrogation of touchpad ADC coordinates
+    TouchPoint getTouchEvent(void);                       // Blocking, low-level interrogation of touchpad ADC coordinates
     bool isNear(unsigned a, unsigned b, unsigned delta);  // Are two unsigned integers close in value?
 
    private:

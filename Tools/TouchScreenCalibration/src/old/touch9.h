@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include "hwdefs.h"
+#include "TouchPad.h"
 
 // ---------- Basic types ----------
 
@@ -39,10 +40,10 @@ constexpr int T9_SCREEN_HEIGHT = 480;
 void t9_init();
 
 // Returns true if a touch is detected and fills raw (0..1023)
-bool t9_read_raw(T9Point& raw, uint16_t& z);
+TouchPointState t9_read_raw(T9Point& raw, uint16_t& z);
 
 // Filtered raw (median/oversampled). Returns true if touch present.
-bool t9_read_filtered(T9Point& raw, uint16_t& z);
+TouchPointState t9_read_filtered(T9Point& raw, uint16_t& z);
 
 // ---------- Calibration API ----------
 

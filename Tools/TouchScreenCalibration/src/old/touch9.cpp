@@ -1,7 +1,7 @@
 #include "touch9.h"
 #include <EEPROM.h>
 #include <DEBUG.h>
-#include "touchpad.h"
+#include "TouchPad.h"
 
 // ---------- Internal globals ----------
 
@@ -19,6 +19,8 @@ static constexpr uint32_t EEPROM_MAGIC = 0x39544339;  // "9TC9"
 
 // ---------- Low-level touch reading (Teensy 4.1) ----------
 // 4-wire resistive panel: XP, XM, YP, YM
+
+TouchPad touchPad = TouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
 
 static void t9_pins_init() {
     pinMode(T9Pins::XP, INPUT);
@@ -70,19 +72,20 @@ void t9_init() {
     analogReadResolution(10);  // 10-bit ADC
 }
 
-bool t9_read_raw(T9Point& raw, uint16_t& z) {
+TouchPointState t9_read_raw(T9Point& raw, uint16_t& z) {
     // uint16_t x = t9_read_x();
     // uint16_t y = t9_read_y();
     // uint16_t zz = t9_read_z();
 
-    TouchPoint p = getTouchPoint();
+    TouchPoint p = touchPad.getTouchEvent();
     uint16_t x = p.x;
     uint16_t y = p.y;
     uint16_t zz = p.z;
 
     // Simple threshold for "touch present"
-    if (zz < 50) {
-        return false;
+    // if (zz < 50) {
+    if (!zz) {
+        return TS_NO_TOUCH;
     }
 
     raw.x = x;
@@ -90,7 +93,7 @@ bool t9_read_raw(T9Point& raw, uint16_t& z) {
     z = zz;
     DPRINTF("t9_read_raw() returns raw.x=%f raw.y=%f z=%d\n", raw.x, raw.y, z);
 
-    return true;
+    return TS_TOUCH;
 }
 
 // ---------- Small median helper ----------
@@ -110,7 +113,7 @@ static void sort_small(uint16_t (&a)[N]) {
 
 // ---------- Filtered read ----------
 
-bool t9_read_filtered(T9Point& raw, uint16_t& z) {
+TouchPointState t9_read_filtered(T9Point& raw, uint16_t& z) {
     // const int N = 7;
     static const int N = 3;
     uint16_t xs[N], ys[N], zs[N];
@@ -118,8 +121,8 @@ bool t9_read_filtered(T9Point& raw, uint16_t& z) {
     for (int i = 0; i < N; i++) {
         T9Point r;
         uint16_t zz;
-        if (!t9_read_raw(r, zz)) {
-            return false;  // touch lifted
+        if (t9_read_raw(r, zz)!=TS_TOUCH) {
+            return TS_NO_TOUCH;  // touch lifted
         }
         xs[i] = (uint16_t)r.x;
         ys[i] = (uint16_t)r.y;
@@ -135,7 +138,7 @@ bool t9_read_filtered(T9Point& raw, uint16_t& z) {
     raw.y = ys[N / 2];
     z = zs[N / 2];
     DPRINTF("t9_read_filtered returns raw.x=%f raw.y=%f z=%d\n", raw.x, raw.y, z);
-    return true;
+    return TS_TOUCH;
 }
 
 // ---------- Calibration state machine ----------
@@ -148,7 +151,7 @@ static T9DrawTargetFn g_draw_target = nullptr;
 
 static bool t9_is_touching() {
     // uint16_t z = t9_read_z();
-    TouchPoint p = getTouchPoint();
+    TouchPoint p = touchPad.getTouchEvent();
     return p.z;
     // return z > 50;
 }
@@ -243,17 +246,65 @@ struct T9Cell {
     float v;
 };
 
+/**
+ * @brief Return a reference to the calibration node within the flattened matrix
+ * @param c The 9-element, flattened calibration matrix organized as a linear vector rather than 3X3
+ * @param r row index
+ * @param cidx column index
+ * @return The calibration node for the specified row and column
+ */
 static const T9CalibNode& nodeAt(const T9Calib9& c, int r, int cidx) {
     return c.nodes[r * 3 + cidx];
 }
 
+/**
+ * @brief Locate the "cell" containing the raw touch point
+ * @param cal Reference to the array of 9 calibration nodes
+ * @param raw The raw touchpoint
+ * @param cell The cell data for this raw touchpoint
+ * @return
+ *
+ * DISCUSSION:
+ *  We are using an interpolator calibrated with 9 target "nodes" that logically divide
+ *  the touchpad surface into 4 rectangular cells.  The calibration nodes are organized:
+ *      cal[0] Calibration node [0][0] located at the upper-left corner
+ *      cal[1] Calibration node [0][1] located at the mid-left
+ *      cal[2] Calibration node [0][2] located at the lower-left corner
+ *          .
+ *          .
+ *      cal[8] Calibration node [2][2] located at the lower-right corner
+ *  Each calibration node binds an XY raw ADC reading tuple with an XY screen coordinate
+ *  tuple thereby associating ADC readings with their corresponding screen coordinates.
+ *
+ *  The corners of the each rectangular cell are defined by four calibration nodes.  The
+ *  cell data includes its row/column indices and values u/v describing where a touchpoint
+ *  lies within that cell.  The four cells are indexed by their row and column numbers, 0..1:
+ *
+ *       x0,y0          x1,y0          x2,y0
+ *         ●--------------●--------------●
+ *         |    Cell      |    Cell      |
+ *         |    (0,0)     |    (0,1)     |
+ *         |              |              |
+ *       x0,y1          x1,y1          x2,y1
+ *         ●--------------●--------------●
+ *         |    Cell      |    Cell      |
+ *         |    (1,0)     |    (1,1)     |
+ *         |              |              |
+ *       x0,y2          x1,y2          x2,y2
+ *         ●--------------●--------------●
+ *
+ *  Given the calibration data and a raw touchpoint, locateCell returns the cell
+ *  data for that touchpoint.  The cell data includes u/v values in the range 0.0 ... 1.0
+ *  indicating where within that cell the touchpoint lies.
+ *
+ */
 static bool locateCell(const T9Calib9& cal, const T9Point& raw, T9Cell& cell) {
     int row = -1;
     int col = -1;
 
     DPRINTF("raw.x=%f raw.y=%f\n", raw.x, raw.y);
 
-    // Find row band
+    // Find this raw point's row band within the 2X2 set of cells
     for (int r = 0; r < 2; r++) {
         float y0 = nodeAt(cal, r, 0).raw.y;
         float y1 = nodeAt(cal, r + 1, 0).raw.y;
@@ -263,7 +314,7 @@ static bool locateCell(const T9Calib9& cal, const T9Point& raw, T9Cell& cell) {
         }
     }
 
-    // Find column band
+    // Find this raw point's column band within the 2X2 set of cells
     for (int c = 0; c < 2; c++) {
         float x0 = nodeAt(cal, 0, c).raw.x;
         float x1 = nodeAt(cal, 0, c + 1).raw.x;
@@ -273,7 +324,7 @@ static bool locateCell(const T9Calib9& cal, const T9Point& raw, T9Cell& cell) {
         }
     }
 
-    // Fudge row/col to accomodate less than perfect calibration result
+    // Fudge row/col to accommodate less than perfect calibration data (it happens)
     DPRINTF("found row=%d col=%d\n", row, col);
     if (row < 0) row = 0;
     if (col < 0) col = 0;
@@ -332,6 +383,18 @@ static T9Point bilinear(const T9Calib9& cal, const T9Cell& cell) {
     return out;
 }
 
+/**
+ * @brief Use calibration data to interpolate raw ADC coordinates to screen coordinates
+ * @param cal The 9-element array of calibration data
+ * @param raw Raw coordinates from resistive touchpad ADC
+ * @param screen Screen coordinates corresponding to the raw coordinates
+ * @return true==>success
+ *
+ * DISCUSSION:
+ *  The touchpad surface is divided into four rectangular regions known as cells,
+ *  each interpolated independently of the others, reducing the impact of (common)
+ *  distortion in one touchpad corner from affecting another.
+ */
 bool t9_map_raw_to_screen(const T9Calib9& cal, const T9Point& raw, T9Point& screen) {
     T9Cell cell;
     if (!locateCell(cal, raw, cell)) {

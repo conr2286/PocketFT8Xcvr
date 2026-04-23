@@ -16,7 +16,7 @@
 #include "TouchPad.h"
 
 // Define the number of microseconds to allow analog signals to settle prior to ADC sampling
-static const unsigned ADC_SETTLE_US = 10;
+static const unsigned ADC_SETTLE_US = 20;
 
 /**
  * @brief Construct a TouchPad object
@@ -154,7 +154,8 @@ TouchPoint TouchPad::getTouchPoint(void) {
     // If we have a valid touchpoint then proceed to read the X and Y-Axis coordinates.  Because
     // the X and Y-Axis connect thru touch pressure, we have a relatively noise free low-Z signal.
     if (touching) {
-        // Setup touchpad to read the hardware X-Axis signal from the Y-Axis
+        // DTRACE();
+        //  Setup touchpad to read the hardware X-Axis signal from the Y-Axis
         floatPin(ym);   // Disconnect digital I/O circuitry from...
         floatPin(yr);   // all the Y-Axis pins.
         floatPin(yp);   //
@@ -186,6 +187,7 @@ TouchPoint TouchPad::getTouchPoint(void) {
         result.y = adcY;      // Calc y-Axis screen coordinate
         result.x = adcX;      // Calc x-Axis screen coordinate
         result.z = TS_TOUCH;  //
+        DPRINTF("result.x=%d result.y=%d result.z=%d\n", result.x, result.y, result.z);
     } else {
         result.x = result.y = 0;
         result.z = TS_NO_TOUCH;  // Operator is not touching the pad
@@ -195,13 +197,15 @@ TouchPoint TouchPad::getTouchPoint(void) {
 }  // getTouchPoint()
 
 /**
- * @brief Analyze touch events
- * @return Touch event screen coordinates and state
+ * @brief Filtered, stateful interrogation of touchpad
+ * @return TouchPoint
  *
- * DESIGN:
+ * DISCUSSION:
  *  + We currently average two readings.  This may change if problematic.
  *  + We maintain a state variable to discern when a touch event begins, when
  *  the stylus drags across the pad, and when the stylus has been removed.
+ *  + Coordinates are returned as raw ADC values, not screen coordinates.
+ *
  */
 TouchPoint TouchPad::getTouchEvent(void) {
     TouchPoint raw1, raw2, result;  // We depend upon constructor initializing their attributes ;)
@@ -218,9 +222,11 @@ TouchPoint TouchPad::getTouchEvent(void) {
         return result;                   // TS_NO_TOUCH
     }
 
-    // Map averaged ADC coordinates onto the screen coordinate system
-    result.x = map((raw1.x + raw2.x) / 2, 0, adcMax, 0, nCols - 1);  // Map ADC into screen coordinate
-    result.y = map((raw1.y + raw2.y) / 2, 0, adcMax, 0, nRows - 1);  // Map ADC into screen coordinate
+    // Filter ADC readings (we currently use averaging per Adafruit guidance)
+    result.x = (raw1.x + raw2.x) / 2;
+    result.y = (raw1.y + raw2.y) / 2;
+    // result.x = map((raw1.x + raw2.x) / 2, 0, adcMax, 0, nCols - 1);  // Map ADC into screen coordinate
+    // result.y = map((raw1.y + raw2.y) / 2, 0, adcMax, 0, nRows - 1);  // Map ADC into screen coordinate
     DPRINTF("result.x=%d result.y=%d\n", result.x, result.y);
 
     // Analyze state

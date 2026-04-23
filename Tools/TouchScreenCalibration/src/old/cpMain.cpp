@@ -6,6 +6,7 @@
 #include "Adafruit_GFX.h"
 #include "HX8357_t3n.h"
 #include "hwdefs.h"
+#include "TouchPad.h"
 
 // ------------------------------------------------------------
 // Replace this with your actual TFT driver
@@ -106,17 +107,19 @@ void loop() {
     T9Point raw;
     uint16_t z;
 
-    if (t9_read_filtered(raw, z)) {
+    if (t9_read_filtered(raw, z)==TS_TOUCH) {
         T9Point screen;
         DTRACE();
         if (t9_map_raw_to_screen(g_cal, raw, screen)) {
             DTRACE();
 
-            // Print mapped coordinates
-            Serial.print("Touch @ ");
-            Serial.print(screen.x);
-            Serial.print(", ");
-            Serial.println(screen.y);
+            // // Print mapped coordinates
+            // Serial.print("Touch @ ");
+            // Serial.print(screen.x);
+            // Serial.print(", ");
+            // Serial.println(screen.y);
+
+            DPRINTF("Corrected touch:  %f,%f\n", screen.x, screen.y);
 
             // Example: draw a dot on the screen
             tft.fillCircle(screen.x, screen.y, 3, HX8357_CYAN);
