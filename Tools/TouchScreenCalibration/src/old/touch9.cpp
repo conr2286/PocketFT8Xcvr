@@ -72,29 +72,29 @@ void t9_init() {
     analogReadResolution(10);  // 10-bit ADC
 }
 
-TouchPointState t9_read_raw(T9Point& raw, uint16_t& z) {
-    // uint16_t x = t9_read_x();
-    // uint16_t y = t9_read_y();
-    // uint16_t zz = t9_read_z();
+// TouchPointState t9_read_raw(T9Point& raw, uint16_t& z) {
+//     // uint16_t x = t9_read_x();
+//     // uint16_t y = t9_read_y();
+//     // uint16_t zz = t9_read_z();
 
-    TouchPoint p = touchPad.getTouchEvent();
-    uint16_t x = p.x;
-    uint16_t y = p.y;
-    uint16_t zz = p.z;
+//     TouchPoint p = touchPad.getTouchEvent();
+//     uint16_t x = p.x;
+//     uint16_t y = p.y;
+//     uint16_t zz = p.z;
 
-    // Simple threshold for "touch present"
-    // if (zz < 50) {
-    if (!zz) {
-        return TS_NO_TOUCH;
-    }
+//     // Simple threshold for "touch present"
+//     // if (zz < 50) {
+//     if (zz == 0) {
+//         return TS_NO_TOUCH;
+//     }
 
-    raw.x = x;
-    raw.y = y;
-    z = zz;
-    DPRINTF("t9_read_raw() returns raw.x=%f raw.y=%f z=%d\n", raw.x, raw.y, z);
+//     raw.x = x;
+//     raw.y = y;
+//     z = zz;
+//     // DPRINTF("t9_read_raw() returns raw.x=%f raw.y=%f z=%d\n", raw.x, raw.y, z);
 
-    return TS_TOUCH;
-}
+//     return TS_TOUCH;
+// }
 
 // ---------- Small median helper ----------
 
@@ -113,33 +113,37 @@ static void sort_small(uint16_t (&a)[N]) {
 
 // ---------- Filtered read ----------
 
-TouchPointState t9_read_filtered(T9Point& raw, uint16_t& z) {
-    // const int N = 7;
-    static const int N = 3;
-    uint16_t xs[N], ys[N], zs[N];
+// TouchPointState t9_read_filtered(T9Point& raw, uint16_t& z) {
+//     // const int N = 7;
+//     // static const int N = 3;
+//     // uint16_t xs[N], ys[N], zs[N];
 
-    for (int i = 0; i < N; i++) {
-        T9Point r;
-        uint16_t zz;
-        if (t9_read_raw(r, zz)!=TS_TOUCH) {
-            return TS_NO_TOUCH;  // touch lifted
-        }
-        xs[i] = (uint16_t)r.x;
-        ys[i] = (uint16_t)r.y;
-        zs[i] = zz;
-        delayMicroseconds(300);
-    }
+//     // for (int i = 0; i < N; i++) {
+//     T9Point r;
+//     uint16_t zz;
+//     //     if (t9_read_raw(r, zz) == TS_NO_TOUCH) {
+//     //         return TS_NO_TOUCH;  // touch lifted
+//     //     }
+//     //     xs[i] = (uint16_t)r.x;
+//     //     ys[i] = (uint16_t)r.y;
+//     //     zs[i] = zz;
+//     //     delayMicroseconds(300);
+//     // }
 
-    sort_small(xs);
-    sort_small(ys);
-    sort_small(zs);
+//     // sort_small(xs);
+//     // sort_small(ys);
+//     // sort_small(zs);
 
-    raw.x = xs[N / 2];
-    raw.y = ys[N / 2];
-    z = zs[N / 2];
-    DPRINTF("t9_read_filtered returns raw.x=%f raw.y=%f z=%d\n", raw.x, raw.y, z);
-    return TS_TOUCH;
-}
+//     // raw.x = xs[N / 2];
+//     // raw.y = ys[N / 2];
+//     // z = zs[N / 2];
+//     z = t9_read_raw(r, zz);
+//     raw.x = r.x;
+//     raw.y = r.y;
+//     DPRINTF("t9_read_filtered returns raw.x=%f raw.y=%f z=%d\n", raw.x, raw.y, z);
+//     // return TS_TOUCH;
+//     return z;
+// }
 
 // ---------- Calibration state machine ----------
 
@@ -150,13 +154,12 @@ static const int g_required_stable = 6;
 static T9DrawTargetFn g_draw_target = nullptr;
 
 static bool t9_is_touching() {
-    // uint16_t z = t9_read_z();
-    TouchPoint p = touchPad.getTouchEvent();
-    return p.z;
-    // return z > 50;
+    TouchPoint p = touchPad.getTouchPoint();
+    return p.z == TS_TOUCH || p.z == TS_DRAG;
 }
 
 void t9_calib_start(T9DrawTargetFn drawFn) {
+    DTRACE();
     g_cal_state = T9CalState::Running;
     g_cal_index = 0;
     g_stable_count = 0;
@@ -179,17 +182,26 @@ void t9_calib_update() {
     }
 
     T9Point raw;
-    uint16_t z;
-    if (!t9_read_filtered(raw, z)) {
+    // uint16_t z;
+    //  if (!t9_read_filtered(raw, z)) {
+    TouchPoint p = touchPad.getTouchEvent();
+
+    if (p.z == TS_NO_TOUCH) {
         g_stable_count = 0;
+        DTRACE();
         return;
     }
+    raw.x = p.x;
+    raw.y = p.y;
 
     g_stable_count++;
+    DPRINTF("g_stable_count=%d g_cal_index=%d p.x=%d p.y=%d p.z=%d\n", g_stable_count, g_cal_index, p.x, p.y, p.z);
+
     if (g_stable_count < g_required_stable)
         return;
 
     // Accept this point
+    DTRACE();
     g_calib.nodes[g_cal_index].raw = raw;
     g_calib.nodes[g_cal_index].screen = T9_TARGETS[g_cal_index];
 
@@ -205,7 +217,7 @@ void t9_calib_update() {
         }
     }
 
-    delay(50);
+    delay(100);
 }
 
 T9CalState t9_calib_state() {

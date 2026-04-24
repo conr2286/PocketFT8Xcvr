@@ -187,7 +187,7 @@ TouchPoint TouchPad::getTouchPoint(void) {
         result.y = adcY;      // Calc y-Axis screen coordinate
         result.x = adcX;      // Calc x-Axis screen coordinate
         result.z = TS_TOUCH;  //
-        DPRINTF("result.x=%d result.y=%d result.z=%d\n", result.x, result.y, result.z);
+        // DPRINTF("result.x=%d result.y=%d result.z=%d\n", result.x, result.y, result.z);
     } else {
         result.x = result.y = 0;
         result.z = TS_NO_TOUCH;  // Operator is not touching the pad
@@ -195,6 +195,19 @@ TouchPoint TouchPad::getTouchPoint(void) {
 
     return result;
 }  // getTouchPoint()
+
+template <int N>
+static void sort_small(uint16_t (&a)[N]) {
+    for (int i = 1; i < N; i++) {
+        uint16_t v = a[i];
+        int j = i - 1;
+        while (j >= 0 && a[j] > v) {
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = v;
+    }
+}
 
 /**
  * @brief Filtered, stateful interrogation of touchpad
@@ -208,26 +221,31 @@ TouchPoint TouchPad::getTouchPoint(void) {
  *
  */
 TouchPoint TouchPad::getTouchEvent(void) {
-    TouchPoint raw1, raw2, result;  // We depend upon constructor initializing their attributes ;)
+    TouchPoint result;  // We depend upon constructor initializing their attributes
 
-    // DTRACE();
+    const int N = 7;
+    uint16_t xs[N], ys[N];
 
-    // Acquire two raw readings from the touchpad
-    raw1 = getTouchPoint();
-    raw2 = getTouchPoint();
+    for (int i = 0; i < N; i++) {
+        TouchPoint raw = getTouchPoint();
 
-    // Handle invalid (not touching, erroneous, whatever) readings
-    if ((raw1.z == TS_NO_TOUCH || raw2.z == TS_NO_TOUCH)) {
-        state = result.z = TS_NO_TOUCH;  // Record touch event state as not touching and inform caller
-        return result;                   // TS_NO_TOUCH
-    }
+        // Handle invalid (not touching, erroneous, whatever) readings
+        if (raw.z == TS_NO_TOUCH) {
+            state = result.z = TS_NO_TOUCH;  // Record touch event state as not touching and inform caller
+            return result;                   // TS_NO_TOUCH
+        }
 
-    // Filter ADC readings (we currently use averaging per Adafruit guidance)
-    result.x = (raw1.x + raw2.x) / 2;
-    result.y = (raw1.y + raw2.y) / 2;
-    // result.x = map((raw1.x + raw2.x) / 2, 0, adcMax, 0, nCols - 1);  // Map ADC into screen coordinate
-    // result.y = map((raw1.y + raw2.y) / 2, 0, adcMax, 0, nRows - 1);  // Map ADC into screen coordinate
-    DPRINTF("result.x=%d result.y=%d\n", result.x, result.y);
+        // Save readings
+        xs[i] = raw.x;
+        ys[i] = raw.y;
+        // DPRINTF("%d: raw.x=%d raw.y=%d raw.z=%d\n", i, raw.x, raw.y, raw.z);
+    }  // for
+
+    // Filter
+    sort_small(xs);
+    sort_small(ys);
+    result.x = xs[N / 2];  // Median x value
+    result.y = ys[N / 2];  // Median y value
 
     // Analyze state
     switch (state) {
@@ -245,6 +263,8 @@ TouchPoint TouchPad::getTouchEvent(void) {
         default:
             break;
     }
+
+    // DPRINTF("state=%d result.x=%d result.y=%d result.z=%d\n", state, result.x, result.y, result.z);
 
     return result;
 }

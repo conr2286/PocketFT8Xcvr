@@ -8,6 +8,8 @@
 #include "hwdefs.h"
 #include "TouchPad.h"
 
+static TouchPad touchPad = TouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
+
 // ------------------------------------------------------------
 // Replace this with your actual TFT driver
 // Example: ILI9341_t3 tft = ILI9341_t3(TFT_CS, TFT_DC, TFT_RST);
@@ -105,20 +107,17 @@ void loop() {
     // Normal operation mode
     // --------------------------------------------------------
     T9Point raw;
-    uint16_t z;
+    // uint16_t z;
 
-    if (t9_read_filtered(raw, z)==TS_TOUCH) {
+    // if (t9_read_filtered(raw, z)==TS_TOUCH) {
+    TouchPoint p = touchPad.getTouchEvent();
+    if (p.z == TS_TOUCH) {
+        raw.x = p.x;
+        raw.y = p.y;
+        DPRINTF("p.x=%d p.y=%d p.z=%d\n", p.x, p.y, p.z);
         T9Point screen;
         DTRACE();
         if (t9_map_raw_to_screen(g_cal, raw, screen)) {
-            DTRACE();
-
-            // // Print mapped coordinates
-            // Serial.print("Touch @ ");
-            // Serial.print(screen.x);
-            // Serial.print(", ");
-            // Serial.println(screen.y);
-
             DPRINTF("Corrected touch:  %f,%f\n", screen.x, screen.y);
 
             // Example: draw a dot on the screen
