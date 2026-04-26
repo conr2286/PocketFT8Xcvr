@@ -141,7 +141,7 @@ TSPoint TouchScreen::getPoint(void) {
         // value1 = analogRead2(PIN_YP);  // Version 4+ HW has YDP on A17
         value1 = analogRead(PIN_YP);  // Version 4+ HW has YDP on A17
 #endif
-        DPRINTF("ADC returned value1=%d\n", value1);
+        // DPRINTF("ADC returned value1=%d\n", value1);
         samples[i] = value1;
     }
 
@@ -180,7 +180,7 @@ TSPoint TouchScreen::getPoint(void) {
         // value2 = analogRead2(PIN_XM);  // Version 4+ has XDP on Pin A16
         value2 = analogRead(PIN_XM);  // Version 4+ has XDM on Pin A16
 #endif
-        DPRINTF("ADC returned value2=%d\n", value2);
+        // DPRINTF("ADC returned value2=%d\n", value2);
 
         samples[i] = value2;
     }
@@ -201,8 +201,9 @@ TSPoint TouchScreen::getPoint(void) {
         z = 0;
     } else {
         z = x + y;
+        // DPRINTF("Result:  x=%d, y=%d, z=%d\n", x, y, z);
     }
-    DPRINTF("Result:  x=%d, y=%d, z=%d\n", x, y, z);
+    // DPRINTF("Result:  x=%d, y=%d, z=%d\n", x, y, z);
     return TSPoint(x, y, z);
 }
 

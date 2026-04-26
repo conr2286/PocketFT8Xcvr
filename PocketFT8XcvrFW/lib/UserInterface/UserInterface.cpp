@@ -26,7 +26,7 @@
 #include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"        //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
-#include "NODEBUG.h"          //USB Serial debugging on the Teensy 4.1
+#include "DEBUG.h"            //USB Serial debugging on the Teensy 4.1
 #include "PocketFT8Xcvr.h"    //Globals
 #include "Sequencer.h"        //RoboOp
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
@@ -292,6 +292,8 @@ void pollTouchscreen() {
         if (pi.z > MINPRESSURE) {                        // Has screen been touched?
             pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);  // Map to resistance to screen coordinate
             pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
+            DPRINTF("pollTouchscreen:  pi.x=%d pi.y=%d pi.z=%d\n", pi.x, pi.y, pi.z);
+            DPRINTF("pollTouchscreen:  pw.x=%d pw.y=%d\n", pw.x, pw.y);
 
             // AWidget can determine which widget was touched and notify it
             AWidget::processTouch(pw.x, pw.y);  // Notify widgets that something was touched

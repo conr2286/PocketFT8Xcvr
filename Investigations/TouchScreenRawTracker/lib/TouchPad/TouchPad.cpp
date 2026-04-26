@@ -223,7 +223,7 @@ static void sort_small(uint16_t (&a)[N]) {
 TouchPoint TouchPad::getTouchEvent(void) {
     TouchPoint result;  // We depend upon constructor initializing their attributes
 
-    const int N = 7;
+    const int N = 3;  // #samples (needs to be an odd number)
     uint16_t xs[N], ys[N];
 
     for (int i = 0; i < N; i++) {

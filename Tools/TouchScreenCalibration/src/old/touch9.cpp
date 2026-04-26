@@ -217,7 +217,7 @@ void t9_calib_update() {
         }
     }
 
-    delay(100);
+    delay(250);
 }
 
 T9CalState t9_calib_state() {
@@ -414,13 +414,13 @@ bool t9_map_raw_to_screen(const T9Calib9& cal, const T9Point& raw, T9Point& scre
         return false;
     }
     screen = bilinear(cal, cell);
-    DPRINTF("t9_map_raw_to_screen() calc'd screen.x=%f screen.y=%f\n", screen.x, screen.y);
+    //DPRINTF("t9_map_raw_to_screen() calc'd screen.x=%f screen.y=%f\n", screen.x, screen.y);
 
     // Workaround imperfect calibration near edges
     if (screen.x < 0) screen.x = 0;
     if (screen.x >= T9_SCREEN_WIDTH) screen.x = T9_SCREEN_WIDTH - 1;
     if (screen.y < 0) screen.y = 0;
     if (screen.y >= T9_SCREEN_HEIGHT) screen.y = T9_SCREEN_HEIGHT - 1;
-    DPRINTF("t9_map_raw_to_screen() adjusted screen.x=%f screen.y=%f\n", screen.x, screen.y);
+    //DPRINTF("t9_map_raw_to_screen() adjusted screen.x=%f screen.y=%f\n", screen.x, screen.y);
     return true;
 }

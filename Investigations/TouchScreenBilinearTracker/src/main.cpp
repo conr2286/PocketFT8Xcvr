@@ -1,0 +1,114 @@
+#include <Arduino.h>
+
+#include "Adafruit_GFX.h"
+#include "HX8357_t3n.h"
+#include "TouchPad.h"
+#include "hwdefs.h"
+#include "TouchCalibrator.h"
+
+// The Adafruit 480x320 display pins
+#define PIN_CS 10
+#define PIN_DC 9
+#define PIN_DRST 8
+#define PIN_MOSI 11
+#define PIN_DCLK 13  // Teensy 4.1
+#define PIN_MISO 12
+
+// Build the Pocket FT8 Transceivers TFT display object
+HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_DRST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 TFT driver and pin definitions
+
+// Build the touchscreen driver
+TouchPad theTouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
+
+/**
+ * @brief Display specified target
+ * @param nodeIndex Target index
+ */
+void displayTarget(unsigned nodeIndex) {
+    // Sanity check
+    if (nodeIndex >= getNTargets()) return;
+
+    // Display target
+    TCPoint p = getTargetCoordinate(nodeIndex);                      // Screen coordinates for center of target
+    tft.fillCircle((unsigned)p.x, (unsigned)p.y, 2, HX8357_YELLOW);  // Display target
+}  // displayTarget()
+
+/**
+ * @brief Helper to Convert a TouchPoint into a TCPoint
+ * @param p TouchPoint
+ * @return TCPoint
+ *
+ * @note The touchpad hardware works with integer types while calibrator works with floats
+ */
+TCPoint toTCPoint(TouchPoint p) {
+    TCPoint result;
+    result.x = p.x;
+    result.y = p.y;
+    return result;
+}
+
+/**
+ * @brief Blocking read of touchpad ADC coordinates
+ * @return ADC coordinates as a TCPoint type
+ */
+TCPoint readTouchPad(void) {
+    TouchPoint p;
+    do {
+        p = theTouchPad.getTouchEvent();  // Read touchpad...
+    } while (p.z == TS_NO_TOUCH);  //...until we get valid coordinates
+    return toTCPoint(p);  // Convert integer to floating type for use in calibration
+}
+
+/**
+ * @brief Wait for touch/drag event to complete
+ *
+ * @note A touch event ends when the operator lifts the stylus from the pad
+ */
+void waitForTouchEnd(void) {
+    while (theTouchPad.getTouchPoint().z != TS_NO_TOUCH) {
+        delay(50);
+    }
+}
+
+/**
+ * @brief Arduino initialization
+ */
+void setup() {
+    Serial.begin(115200);
+    Serial.printf("Starting...\n");
+
+    // Get the display running
+    tft.begin();
+    tft.fillScreen(HX8357_BLACK);  // Erase screen
+
+    // Touchscreen calibration
+    unsigned nTargets = getNTargets();
+    for (unsigned nodeIndex = 0; nodeIndex < nTargets; nodeIndex++) {
+        char s[256];
+
+        // Prompt the operator
+        tft.setCursor(100, 100);
+        tft.printf(s, "Touch target %d of %d\n", nodeIndex, nTargets);  // Prompt msg
+        displayTarget(nodeIndex);                                       // Display the target for operator to touch
+
+        // Read and record the calibration data
+        TCPoint adc = readTouchPad();           // Read touchpad coordinates as ADC values
+        recordCalibrationNode(nodeIndex, adc);  // Record info for this node
+        waitForTouchEnd();                      // Wait for operator to quit dragging stylus on the touchpad
+        delay(100);                             // Don't rush the operator
+    }
+}
+
+/**
+ * @brief Displayed dots track touch events across the screen
+ */
+void loop() {
+    TouchPoint p = theTouchPad.getTouchEvent();
+    if (p.z != TS_NO_TOUCH) {
+        TCPoint raw = toTCPoint(p);
+        TCPoint screen;
+        mapRawToScreen(raw, screen);
+        tft.fillCircle((int)screen.x, (int)screen.y, 2, HX8357_WHITE);
+    }
+    delay(10);
+}

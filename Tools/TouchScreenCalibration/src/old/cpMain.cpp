@@ -123,6 +123,6 @@ void loop() {
             // Example: draw a dot on the screen
             tft.fillCircle(screen.x, screen.y, 3, HX8357_CYAN);
         }
-        delay(50);
+        delay(100);
     }
 }
