@@ -1,5 +1,4 @@
 #include "TouchCalibrator.h"
-// #include <EEPROM.h>
 #include "hwdefs.h"
 #include "TouchPad.h"
 #include "DEBUG.h"
@@ -16,12 +15,7 @@ static const TCPoint theTargetCoordinates[N_TARGETS] = {
 
 // Build the calibration table
 static TouchCalibrationTable theCalibrationTable;
-static bool validCalibration = false;
-
-// EEPROM layout
-static constexpr int EEPROM_MAGIC_ADDR = 0;
-static constexpr int EEPROM_DATA_ADDR = 4;
-static constexpr uint32_t EEPROM_MAGIC = 0x39544339;  // "9TC9"
+// static bool validCalibration = false;
 
 // Getters
 unsigned getNTargets(void) { return N_TARGETS; }
@@ -37,89 +31,6 @@ void recordCalibrationNode(unsigned idx, TCPoint adc) {
             theCalibrationTable.nodes[idx].screen.x, theCalibrationTable.nodes[idx].screen.y);
 }
 
-// ---------- Low-level touch reading (Teensy 4.1) ----------
-// Simple 4-wire resistive panel: PIN_XP, XM, PIN_YP, PIN_YM
-
-// static void t9_pins_init() {
-//     pinMode(PIN_XP, INPUT);
-//     pinMode(PIN_XM, INPUT);
-//     pinMode(PIN_YP, INPUT);
-//     pinMode(PIN_YM, INPUT);
-// }
-
-// // Read X coordinate (0..1023)
-// static uint16_t t9_read_x() {
-//     // Drive Y+ high, Y- low, read X+
-//     pinMode(PIN_YP, OUTPUT);
-//     pinMode(PIN_YM, OUTPUT);
-//     digitalWrite(PIN_YP, HIGH);
-//     digitalWrite(PIN_YM, LOW);
-
-//     pinMode(PIN_XP, INPUT);
-//     pinMode(PIN_XM, INPUT);
-
-//     delayMicroseconds(20);
-//     return analogRead(PIN_XP);  // 10-bit default
-// }
-
-// // Read Y coordinate (0..1023)
-// static uint16_t t9_read_y() {
-//     // Drive X+ high, X- low, read Y+
-//     pinMode(PIN_XP, OUTPUT);
-//     pinMode(PIN_XM, OUTPUT);
-//     digitalWrite(PIN_XP, HIGH);
-//     digitalWrite(PIN_XM, LOW);
-
-//     pinMode(PIN_YP, INPUT);
-//     pinMode(PIN_YM, INPUT);
-
-//     delayMicroseconds(20);
-//     return analogRead(PIN_YP);
-// }
-
-// // Crude pressure estimate (Z)
-// static uint16_t t9_read_z() {
-//     // One simple approach: measure resistance between X and Y
-//     // Here we just reuse X reading as a proxy; you can refine this.
-//     return t9_read_x();
-// }
-
-// // ---------- Public driver API ----------
-
-// void t9_init() {
-//     t9_pins_init();
-//     analogReadResolution(10);  // 10-bit
-// }
-//
-// bool t9_read_raw(TCPoint& raw, uint16_t& z) {
-//     uint16_t x = t9_read_x();
-//     uint16_t y = t9_read_y();
-//     uint16_t zz = t9_read_z();
-
-//     // Simple threshold for "touch present"
-//     if (zz < 50) {
-//         return false;
-//     }
-
-//     raw.x = x;
-//     raw.y = y;
-//     z = zz;
-//     return true;
-// }
-
-// // Small median helper
-// template <int N>
-// static void sort_small(uint16_t (&a)[N]) {
-//     for (int i = 1; i < N; i++) {
-//         uint16_t v = a[i];
-//         int j = i - 1;
-//         while (j >= 0 && a[j] > v) {
-//             a[j + 1] = a[j];
-//             j--;
-//         }
-//         a[j + 1] = v;
-//     }
-// }
 static TouchPad touchPad = TouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
 bool t9_read_filtered(TCPoint& result, uint16_t& z) {
     TouchPoint raw = touchPad.getTouchEvent();
@@ -127,128 +38,6 @@ bool t9_read_filtered(TCPoint& result, uint16_t& z) {
     result.x = raw.x;
     result.y = raw.y;
     z = (raw.x + raw.y) / 2;
-    return true;
-}
-
-// bool t9_read_filtered(TCPoint& raw, uint16_t& z) {
-//     const int N = 7;
-//     uint16_t xs[N], ys[N], zs[N];
-
-//     int count = 0;
-//     for (int i = 0; i < N; i++) {
-//         TCPoint r;
-//         uint16_t zz;
-//         if (!t9_read_raw(r, zz)) {
-//             // no touch
-//             return false;
-//         }
-//         xs[count] = (uint16_t)r.x;
-//         ys[count] = (uint16_t)r.y;
-//         zs[count] = zz;
-//         count++;
-//         delayMicroseconds(300);
-//     }
-
-//     sort_small(xs);
-//     sort_small(ys);
-//     sort_small(zs);
-
-//     raw.x = xs[N / 2];
-//     raw.y = ys[N / 2];
-//     z = zs[N / 2];
-//     return true;
-// }
-
-// ---------- Calibration state machine ----------
-
-static T9CalState g_cal_state = T9CalState::Idle;
-static int g_cal_index = 0;
-static int g_stable_count = 0;
-static const int g_required_stable = 6;
-static T9DrawTargetFn g_draw_target = nullptr;
-
-static bool t9_is_touching() {
-    // uint16_t z = t9_read_z();
-    // return z > 50;
-    TouchPoint p = touchPad.getTouchPoint();
-    return p.z == TS_TOUCH;
-}
-
-void t9_calib_start(T9DrawTargetFn drawFn) {
-    g_cal_state = T9CalState::Running;
-    g_cal_index = 0;
-    g_stable_count = 0;
-    g_draw_target = drawFn;
-    validCalibration = false;
-
-    if (g_draw_target) {
-        g_draw_target(g_cal_index, theTargetCoordinates[g_cal_index]);
-    }
-}
-
-void t9_calib_update() {
-    if (g_cal_state != T9CalState::Running)
-        return;
-
-    if (!t9_is_touching()) {
-        g_stable_count = 0;
-        return;
-    }
-
-    TCPoint raw;
-    uint16_t z;
-    if (!t9_read_filtered(raw, z)) {
-        g_stable_count = 0;
-        return;
-    }
-
-    g_stable_count++;
-    if (g_stable_count < g_required_stable)
-        return;
-
-    // Accept this point
-    theCalibrationTable.nodes[g_cal_index].raw = raw;
-    theCalibrationTable.nodes[g_cal_index].screen = theTargetCoordinates[g_cal_index];
-
-    g_cal_index++;
-    g_stable_count = 0;
-
-    if (g_cal_index >= 9) {
-        g_cal_state = T9CalState::Done;
-        validCalibration = true;
-    } else {
-        if (g_draw_target) {
-            g_draw_target(g_cal_index, theTargetCoordinates[g_cal_index]);
-        }
-    }
-}
-
-T9CalState t9_calib_state() {
-    return g_cal_state;
-}
-
-const TouchCalibrationTable& t9_calib_get() {
-    return theCalibrationTable;
-}
-
-// ---------- EEPROM save/load ----------
-
-bool t9_calib_save() {
-    // EEPROM.put(EEPROM_DATA_ADDR, theCalibrationTable);
-    // EEPROM.put(EEPROM_MAGIC_ADDR, EEPROM_MAGIC);
-    // EEPROM.commit();
-    return true;
-}
-
-bool t9_calib_load(TouchCalibrationTable& out) {
-    // uint32_t magic = 0;
-    // EEPROM.get(EEPROM_MAGIC_ADDR, magic);
-    // if (magic != EEPROM_MAGIC)
-    //     return false;
-
-    // EEPROM.get(EEPROM_DATA_ADDR, out);
-    // theCalibrationTable = out;
-    // validCalibration = true;
     return true;
 }
 
