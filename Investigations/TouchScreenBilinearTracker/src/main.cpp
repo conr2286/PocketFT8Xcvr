@@ -5,6 +5,7 @@
 #include "TouchPad.h"
 #include "hwdefs.h"
 #include "TouchCalibrator.h"
+#include "DEBUG.h"
 
 // The Adafruit 480x320 display pins
 #define PIN_CS 10
@@ -34,6 +35,19 @@ void displayTarget(unsigned nodeIndex) {
 }  // displayTarget()
 
 /**
+ * @brief Erase displayed target
+ * @param nodeIndex Target index
+ */
+void eraseTarget(unsigned nodeIndex) {
+    // Sanity check
+    if (nodeIndex >= getNTargets()) return;
+
+    // Erase target
+    TCPoint p = getTargetCoordinate(nodeIndex);                     // Screen coordinates for center of target
+    tft.fillCircle((unsigned)p.x, (unsigned)p.y, 2, HX8357_BLACK);  // Display target
+}  // displayTarget()
+
+/**
  * @brief Helper to Convert a TouchPoint into a TCPoint
  * @param p TouchPoint
  * @return TCPoint
@@ -56,7 +70,7 @@ TCPoint readTouchPad(void) {
     do {
         p = theTouchPad.getTouchEvent();  // Read touchpad...
     } while (p.z == TS_NO_TOUCH);  //...until we get valid coordinates
-    return toTCPoint(p);  // Convert integer to floating type for use in calibration
+    return toTCPoint(p);  // Return valid coordinates as floats
 }
 
 /**
@@ -87,28 +101,35 @@ void setup() {
         char s[256];
 
         // Prompt the operator
-        tft.setCursor(100, 100);
-        tft.printf(s, "Touch target %d of %d\n", nodeIndex, nTargets);  // Prompt msg
-        displayTarget(nodeIndex);                                       // Display the target for operator to touch
+        tft.setCursor(50, 100);
+        sprintf(s, "Touch target %d of %d\n", nodeIndex + 1, nTargets);  // Prompt msg
+        tft.print(s);
+        displayTarget(nodeIndex);  // Display the target for operator to touch
 
         // Read and record the calibration data
         TCPoint adc = readTouchPad();           // Read touchpad coordinates as ADC values
         recordCalibrationNode(nodeIndex, adc);  // Record info for this node
         waitForTouchEnd();                      // Wait for operator to quit dragging stylus on the touchpad
-        delay(100);                             // Don't rush the operator
+        eraseTarget(nodeIndex);                 // Erase target from display
+        delay(200);                             // Don't rush the operator
     }
+
+    // Erase screen before proceeding
+    tft.fillScreen(HX8357_BLACK);
 }
 
 /**
- * @brief Displayed dots track touch events across the screen
+ * @brief Track touch events with displayed dots across the screen
  */
 void loop() {
-    TouchPoint p = theTouchPad.getTouchEvent();
-    if (p.z != TS_NO_TOUCH) {
-        TCPoint raw = toTCPoint(p);
-        TCPoint screen;
-        mapRawToScreen(raw, screen);
-        tft.fillCircle((int)screen.x, (int)screen.y, 2, HX8357_WHITE);
+    TouchPoint p = theTouchPad.getTouchEvent();  // Read the touchpad
+    if (p.z != TS_NO_TOUCH) {                    // Did we actually get anything?
+        TCPoint raw = toTCPoint(p);              // Change coordinates to float
+        TCPoint screen;                          // Corrected screen coordinates
+        mapRawToScreen(raw, screen);             // Apply calibration
+        DPRINTF("raw (%f,%f) mapped to screen (%f,%f)\n", raw.x, raw.y, screen.x, screen.y);
+        tft.fillCircle((int)screen.x, (int)screen.y, 2, HX8357_YELLOW);  // Display corrected coordinates
+        waitForTouchEnd();                                               // Wait for drag to end
     }
-    delay(10);
+    delay(50);
 }

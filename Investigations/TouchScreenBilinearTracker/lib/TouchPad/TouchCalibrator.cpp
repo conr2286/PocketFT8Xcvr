@@ -2,13 +2,17 @@
 // #include <EEPROM.h>
 #include "hwdefs.h"
 #include "TouchPad.h"
+#include "DEBUG.h"
 
 // ---------- Internal helpers ----------
 
 // 9 target positions for 320x480
 static const int N_TARGETS = 9;
+static const int TARGET_OFFSET = 32;  // Target offset in pixels from display edges
 static const TCPoint theTargetCoordinates[N_TARGETS] = {
     {0, 0}, {160, 0}, {319, 0}, {0, 240}, {160, 240}, {319, 240}, {0, 479}, {160, 479}, {319, 479}};
+// static const TCPoint theTargetCoordinates[N_TARGETS] = {
+//     {TARGET_OFFSET, TARGET_OFFSET}, {160, TARGET_OFFSET}, {319 - TARGET_OFFSET, TARGET_OFFSET}, {TARGET_OFFSET, 240}, {160, 240}, {319 - TARGET_OFFSET, 240}, {TARGET_OFFSET, 479 - TARGET_OFFSET}, {160, 479 - TARGET_OFFSET}, {319 - TARGET_OFFSET, 479 - TARGET_OFFSET}};
 
 // Build the calibration table
 static TouchCalibrationTable theCalibrationTable;
@@ -28,6 +32,9 @@ void recordCalibrationNode(unsigned idx, TCPoint adc) {
     if (idx >= getNTargets()) return;                                  // Sanity check
     theCalibrationTable.nodes[idx].screen = getTargetCoordinate(idx);  // The target's screen coordinates
     theCalibrationTable.nodes[idx].raw = adc;                          // The touchpad's ADC coordinate values
+    DPRINTF("Node[%d] maps touchpoint (%f,%f) to screen (%f,%f)\n", idx,
+            theCalibrationTable.nodes[idx].raw.x, theCalibrationTable.nodes[idx].raw.y,
+            theCalibrationTable.nodes[idx].screen.x, theCalibrationTable.nodes[idx].screen.y);
 }
 
 // ---------- Low-level touch reading (Teensy 4.1) ----------
@@ -254,35 +261,100 @@ struct TCZone {
     float v;
 };
 
+/**
+ * @brief Find the calibration table node for row/col
+ * @param c Calibration table
+ * @param r Row index 0..2
+ * @param cidx Column index 0..2
+ * @return Calibration node for row/col
+ */
 static const TouchCalibrationNode& nodeAt(const TouchCalibrationTable& c, int r, int cidx) {
+    // Sanity checks
+    if ((r < 0) || (r >= 3) || (cidx < 0) || (cidx >= 3)) {
+        DTRACE();
+    }
     return c.nodes[r * 3 + cidx];
 }
 
+/**
+ * @brief Return the maximum of three values
+ * @param a value1
+ * @param b value2
+ * @param c value3
+ * @return maximum value
+ */
+static float max(float a, float b, float c) {
+    if (a > b && a > c) return a;
+    if (b > a && b > c) return b;
+    return c;
+}
+
+/**
+ * @brief Locate which of the four rectangular cells the touchpoint resides
+ * @param cal Calibration table
+ * @param raw Touchpoint x/y coordinates
+ * @param cell Returned cell
+ * @return Error indication
+ *
+ * @note The interpolator divides the touchscreen into four rectangular zones known as cells
+ * and performs a bilinear interpolation within the cell containing the touchpoint.
+ *
+ * @note The calibration procedure's touchpoints likely did not exactly lie on the screen (and
+ * cell) edges.  When asked to interpolate a raw touchpoint lying outside the known cellular
+ * region, we snap to the nearby cell's row/col.
+ */
 static bool locateCell(const TouchCalibrationTable& cal, const TCPoint& raw, TCZone& cell) {
     int row = -1, col = -1;
 
-    // Find row band
-    for (int r = 0; r < 2; r++) {
-        float y0 = nodeAt(cal, r, 0).raw.y;
-        float y1 = nodeAt(cal, r + 1, 0).raw.y;
-        if ((raw.y >= y0 && raw.y <= y1) || (raw.y <= y0 && raw.y >= y1)) {
-            row = r;
-            break;
+    // Perhaps the raw touchpoint lies above the top row
+    float top = max(cal.nodes[0].raw.y, cal.nodes[1].raw.y, cal.nodes[2].raw.y);
+    if (raw.y < top) {
+        row = 0;  // Snap to the top row
+        DTRACE();
+    } else {
+        // Find the row band containing the touchpoint
+        for (int r = 0; r < 2; r++) {
+            float y0 = nodeAt(cal, r, 0).raw.y;
+            float y1 = nodeAt(cal, r + 1, 0).raw.y;
+            if ((raw.y >= y0 && raw.y <= y1) || (raw.y <= y0 && raw.y >= y1)) {
+                DPRINTF("raw.y=%f y0=%f y1=%f\n", raw.y, y0, y1);
+                row = r;
+                break;
+            }
         }
     }
 
-    // Find column band
-    for (int c = 0; c < 2; c++) {
-        float x0 = nodeAt(cal, 0, c).raw.x;
-        float x1 = nodeAt(cal, 0, c + 1).raw.x;
-        if ((raw.x >= x0 && raw.x <= x1) || (raw.x <= x0 && raw.x >= x1)) {
-            col = c;
-            break;
+    // If we haven't yet found the row, then it must lie below the bottom boundary
+    if (row == -1) {
+        row = 1;  // Snap to the bottom row
+        DTRACE();
+    }
+
+    // Perhaps the raw touchpoint lies to the left of the leftmost column
+    float leftmost = max(cal.nodes[0].raw.x, cal.nodes[3].raw.x, cal.nodes[6].raw.x);
+    if (raw.x < leftmost) {
+        col = 0;  // Snap to leftmost column
+        DTRACE();
+    } else {
+        // Find column band
+        for (int c = 0; c < 2; c++) {
+            float x0 = nodeAt(cal, 0, c).raw.x;
+            float x1 = nodeAt(cal, 0, c + 1).raw.x;
+            if ((raw.x >= x0 && raw.x <= x1) || (raw.x <= x0 && raw.x >= x1)) {
+                col = c;
+                break;
+            }
         }
     }
 
-    if (row < 0 || col < 0)
-        return false;
+    // If we haven't found the column, it must lie beyond the rightmost boundary
+    if (col == -1) {
+        col = 1;
+        DTRACE();
+    }
+
+    DPRINTF("row=%d, col=%d\n", row, col);
+    // if ((row < 0) || (col < 0)) return false;
 
     const TouchCalibrationNode& n00 = nodeAt(cal, row, col);
     const TouchCalibrationNode& n10 = nodeAt(cal, row, col + 1);
@@ -303,22 +375,51 @@ static bool locateCell(const TouchCalibrationTable& cal, const TCPoint& raw, TCZ
     return true;
 }
 
+/**
+ * @brief Bilinear interpolator
+ * @param cal Calibration table
+ * @param cell Bilinear cell containing the touchpoint
+ * @return Screen coordinates of interpolated point
+ *
+ * locateCell() selected a cell bounded by nodes (n00,n10,n01,n11) and calculated
+ * the normalized 0..1 offset (u,v) of the touchpoint within our cell parameter.
+ *
+ *
+ *    v
+ *    |
+ *    |   (u=0,v=0) n00 ----------- n10 (u=1,v=0)
+ *    |              |               |
+ *    |              |               |
+ *    |              |               |
+ *    |   (u=0,v=1) n01 ----------- n11 (u=1,v=1)
+ *    |
+ *    +----------------------------------------→ u
+ *
+ *
+ */
 static TCPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
+    // Identify the cell's four corners
     const TouchCalibrationNode& n00 = nodeAt(cal, cell.row, cell.col);
     const TouchCalibrationNode& n10 = nodeAt(cal, cell.row, cell.col + 1);
     const TouchCalibrationNode& n01 = nodeAt(cal, cell.row + 1, cell.col);
     const TouchCalibrationNode& n11 = nodeAt(cal, cell.row + 1, cell.col + 1);
 
-    float u = cell.u;
-    float v = cell.v;
+    float u = cell.u;  // Normalized x placement 0..1 of raw touch within cell
+    float v = cell.v;  // Normalized y placement 0..1 of raw touch within cell
+
+    DPRINTF("u=%f v=%f\n", u, v);
 
     TCPoint out;
-    out.x =
-        (1 - u) * (1 - v) * n00.screen.x +
-        (u) * (1 - v) * n10.screen.x +
-        (1 - u) * (v)*n01.screen.x +
-        (u) * (v)*n11.screen.x;
 
+    // For x-Axis, blend weights within that cell.  If the touch was in this cell's exact
+    // center, the weights would be u==v==0.5 as each corner gets weight 0.25
+    out.x =
+        (1 - u) * (1 - v) * n00.screen.x +  // Weight of top-left
+        (u) * (1 - v) * n10.screen.x +      // Weight of top-right
+        (1 - u) * (v)*n01.screen.x +        // Weight of bottom-left
+        (u) * (v)*n11.screen.x;             // Weight of bottom-right
+
+    // Repeat for y-Axis
     out.y =
         (1 - u) * (1 - v) * n00.screen.y +
         (u) * (1 - v) * n10.screen.y +
@@ -330,9 +431,18 @@ static TCPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
 
 bool mapRawToScreen(const TCPoint& raw, TCPoint& screen) {
     TCZone cell;
-    if (!locateCell(theCalibrationTable, raw, cell))
+    if (!locateCell(theCalibrationTable, raw, cell)) {
+        DPRINTF("locateCell raw.x=%f raw.y=%f\n failed\n", raw.x, raw.y);
         return false;
+    }
 
     screen = bilinear(theCalibrationTable, cell);
+
+    // Deal with inaccuracies near edges
+    if (screen.x < 0) screen.x = 0;
+    if (screen.x > 319) screen.x = 319;
+    if (screen.y < 0) screen.y = 0;
+    if (screen.y >= 479) screen.y = 479;
+
     return true;
 }
