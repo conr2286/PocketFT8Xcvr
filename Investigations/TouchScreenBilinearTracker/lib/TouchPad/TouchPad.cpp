@@ -104,11 +104,11 @@ void TouchPad::vccPin(unsigned pin) {
 
 /**
  * @brief Non-blocking read of touchscreen coordinates
- * @return TouchPoint coordinates as raw 10-bit ADC readings
+ * @return TouchPadPoint coordinates as raw 10-bit ADC readings
  *
  * NOTES:
- *  + Returned TouchPoint.z=TS_NO_TOUCH if the x/y result is invalid
- *  + Returned TouchPoint x/y are in raw, unfiltered, unscaled ADC values
+ *  + Returned TouchPadPoint.z=TS_NO_TOUCH if the x/y result is invalid
+ *  + Returned TouchPadPoint x/y are in raw, unfiltered, unscaled ADC values
  *  + The x value corresponds to the HW x-Axis as does the y value to the HW y-Axis
  *  + Does not discern dragging
  *
@@ -124,8 +124,8 @@ void TouchPad::vccPin(unsigned pin) {
  *  using ADC2 by default as ADC1 is assigned to the Teensy audio pipeline.
  *  + Use getTouchEvent to distinguish between TS_TOUCH and TS_DRAG
  */
-TouchPoint TouchPad::getTouchPoint(void) {
-    TouchPoint result;
+TouchPadPoint TouchPad::getTouchPoint(void) {
+    TouchPadPoint result;
     int adcX, adcY, adcZ;  // The unscaled ADC readings
     bool touching;         // true ==> valid touch event
 
@@ -184,13 +184,13 @@ TouchPoint TouchPad::getTouchPoint(void) {
         floatPin(yp);                      // Remove Vcc to save battery
 
         // Return a valid result in the unrotated, uncorrected screen coordinate system
-        result.y = adcY;      // Calc y-Axis screen coordinate
-        result.x = adcX;      // Calc x-Axis screen coordinate
-        result.z = TS_TOUCH;  //
+        result.y = adcY;          // Calc y-Axis screen coordinate
+        result.x = adcX;          // Calc x-Axis screen coordinate
+        result.state = TS_TOUCH;  //
         // DPRINTF("result.x=%d result.y=%d result.z=%d\n", result.x, result.y, result.z);
     } else {
         result.x = result.y = 0;
-        result.z = TS_NO_TOUCH;  // Operator is not touching the pad
+        result.state = TS_NO_TOUCH;  // Operator is not touching the pad
     }
 
     return result;
@@ -210,29 +210,32 @@ static void sort_small(uint16_t (&a)[N]) {
 }
 
 /**
- * @brief Filtered, stateful interrogation of touchpad
- * @return TouchPoint
+ * @brief Non-blocking, filtered, stateful interrogation of the TouchPad
+ * @return TouchPadPoint
  *
  * DISCUSSION:
- *  + We currently average two readings.  This may change if problematic.
+ *  + This is a non-blocking service reporting TS_NO_TOUCH if the stylus
+ *  is not touching, or is removed, during the measurement.
+ *  + We filter by averaging two readings.  This may change if problematic.
  *  + We maintain a state variable to discern when a touch event begins, when
- *  the stylus drags across the pad, and when the stylus has been removed.
- *  + Coordinates are returned as raw ADC values, not screen coordinates.
+ *  the stylus is dragging across the pad, and when the stylus is removed.
+ *  + Coordinates are returned as raw ADC values, not screen coordinates,
+ *  and uncorrected for margins, non-linearities, etc.
  *
  */
-TouchPoint TouchPad::getTouchEvent(void) {
-    TouchPoint result;  // We depend upon constructor initializing their attributes
+TouchPadPoint TouchPad::getTouchEvent(void) {
+    TouchPadPoint result;  // We depend upon constructor initializing their attributes
 
     const int N = 3;  // #samples (needs to be an odd number)
     uint16_t xs[N], ys[N];
 
     for (int i = 0; i < N; i++) {
-        TouchPoint raw = getTouchPoint();
+        TouchPadPoint raw = getTouchPoint();
 
         // Handle invalid (not touching, erroneous, whatever) readings
-        if (raw.z == TS_NO_TOUCH) {
-            state = result.z = TS_NO_TOUCH;  // Record touch event state as not touching and inform caller
-            return result;                   // TS_NO_TOUCH
+        if (raw.state == TS_NO_TOUCH) {
+            state = result.state = TS_NO_TOUCH;  // Record touch event state as not touching and inform caller
+            return result;                       // TS_NO_TOUCH
         }
 
         // Save readings
@@ -251,13 +254,13 @@ TouchPoint TouchPad::getTouchEvent(void) {
     switch (state) {
         // We have begun a new touch event
         case TS_NO_TOUCH:
-            state = result.z = TS_TOUCH;  // Newly touched
+            state = result.state = TS_TOUCH;  // Newly touched
             break;
 
         // We are dragging
         case TS_TOUCH:
         case TS_DRAG:
-            state = result.z = TS_DRAG;  // Begun dragging
+            state = result.state = TS_DRAG;  // Begun dragging
             break;
 
         default:

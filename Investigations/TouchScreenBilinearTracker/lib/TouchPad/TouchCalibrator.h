@@ -9,6 +9,14 @@ struct TCPoint {
     float y;
 };
 
+// We divide the touchpad into four TouchCalibrator Zones and bilinear interpolate within each
+struct TCZone {
+    int row;  // This zone's row 0..1
+    int col;  // This zone's col 0..1
+    float u;
+    float v;
+};
+
 // The touchpad is calibrated at 9 on-screen targets known as "nodes" each
 // associating a raw ADC coordinate tuple with a screen coordinate tuple.
 struct TouchCalibrationNode {
@@ -21,14 +29,22 @@ struct TouchCalibrationTable {
     TouchCalibrationNode nodes[9];  // row-major 3x3
 };
 
-// Getters and setters
-unsigned getNTargets(void);
-TCPoint getTargetCoordinate(unsigned idx);
-void recordCalibrationNode(unsigned idx, TCPoint adc);
+class TouchCalibrator {
+   public:
+    // Getters and setters
+    unsigned getNTargets(void);
+    TCPoint getTargetCoordinate(unsigned idx);
+    void recordCalibrationNode(unsigned idx, TCPoint adc);
 
-// Get final calibration (valid when state == Done)
-const TouchCalibrationTable& t9_calib_get();
+    // Get final calibration (valid when state == Done)
+    const TouchCalibrationTable& t9_calib_get();
 
-// Map filtered raw reading to screen coordinates using current calibration
-// Returns false if no valid calibration loaded.
-bool mapRawToScreen(const TCPoint& raw, TCPoint& screen);
+    // Map filtered raw reading to screen coordinates using current calibration
+    // Returns false if no valid calibration loaded.
+    bool mapRawToScreen(const TCPoint& raw, TCPoint& screen);
+
+   private:
+    TCPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell);
+    bool locateCell(const TouchCalibrationTable& cal, const TCPoint& raw, TCZone& cell);
+    const TouchCalibrationNode& nodeAt(const TouchCalibrationTable& c, int r, int cidx);
+};

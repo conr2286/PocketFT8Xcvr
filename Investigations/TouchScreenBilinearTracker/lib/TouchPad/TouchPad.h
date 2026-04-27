@@ -10,39 +10,43 @@ enum TouchPointState {
 };
 
 /**
- * @brief TouchPoint class (for conveying touchpad coordinates)
+ * @brief TouchPadPoint class (for conveying raw touchpad coordinates as ADC results)
  */
-class TouchPoint {
+class TouchPadPoint {
    public:
-    TouchPoint(void) {
+    TouchPadPoint(void) {
         x = y = 0;
-        z = TS_NO_TOUCH;
+        state = TS_NO_TOUCH;
     }  // Some TouchPad code depends upon zero initialization
 
-    TouchPoint(unsigned x, unsigned y, TouchPointState z) {
+    TouchPadPoint(unsigned x, unsigned y, TouchPointState z) {
         this->x = x;
         this->y = y;
-        this->z = z;
+        this->state = z;
     }
 
     bool
-    operator==(TouchPoint);
-    bool operator!=(TouchPoint);
+    operator==(TouchPadPoint);
+    bool operator!=(TouchPadPoint);
 
-    int16_t x, y;       // Touchpoint screen coordinates
-    TouchPointState z;  // Explains how to interpret coordinates
+    int16_t x, y;           // Touchpoint screen coordinates
+    TouchPointState state;  // Explains how to interpret coordinates
 };
 
 /**
  * Driver for a 4-wire resistive touchpad
  *
- * @note Perhaps this should be a singleton but we're not in a caring mood today
+ * DISCUSSION:
+ *  + The TouchPad class works with the touchpad's raw ADC readings, unscaled to the
+ *  screen coordinate system, uncorrected for misalignment between the touchpad and
+ *  the display screen, margins, or resistive non-linearities.
+ *  + Perhaps this should be a singleton but we're not in a caring mood today
  */
 class TouchPad {
    public:
     TouchPad(uint8_t xp, uint8_t xm, uint8_t yp, uint8_t ym, uint8_t xr, uint8_t yr);
-    TouchPoint getTouchPoint(void);                       // Non-blocking, low-level interrogation of touchpad ADC coordinates
-    TouchPoint getTouchEvent(void);                       // Blocking, low-level interrogation of touchpad ADC coordinates
+    TouchPadPoint getTouchPoint(void);                    // Non-blocking, low-level, interrogation of touchpad ADC coordinates
+    TouchPadPoint getTouchEvent(void);                    // Non-blocking, stateful, filtered interrogation of touchpad ADC coordinates
     bool isNear(unsigned a, unsigned b, unsigned delta);  // Are two unsigned integers close in value?
 
    private:

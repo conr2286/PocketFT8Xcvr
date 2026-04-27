@@ -43,21 +43,21 @@
 // 9 target positions for 320x480
 static const int N_TARGETS = 9;
 static const int TARGET_OFFSET = 32;  // Target offset in pixels from display edges
-static const TCPoint theTargetCoordinates[N_TARGETS] = {
-    {0, 0}, {160, 0}, {319, 0}, {0, 240}, {160, 240}, {319, 240}, {0, 479}, {160, 479}, {319, 479}};
 // static const TCPoint theTargetCoordinates[N_TARGETS] = {
-//     {TARGET_OFFSET, TARGET_OFFSET}, {160, TARGET_OFFSET}, {319 - TARGET_OFFSET, TARGET_OFFSET}, {TARGET_OFFSET, 240}, {160, 240}, {319 - TARGET_OFFSET, 240}, {TARGET_OFFSET, 479 - TARGET_OFFSET}, {160, 479 - TARGET_OFFSET}, {319 - TARGET_OFFSET, 479 - TARGET_OFFSET}};
+//    {0, 0}, {160, 0}, {319, 0}, {0, 240}, {160, 240}, {319, 240}, {0, 479}, {160, 479}, {319, 479}};
+static const TCPoint theTargetCoordinates[N_TARGETS] = {
+    {TARGET_OFFSET, TARGET_OFFSET}, {160, TARGET_OFFSET}, {319 - TARGET_OFFSET, TARGET_OFFSET}, {TARGET_OFFSET, 240}, {160, 240}, {319 - TARGET_OFFSET, 240}, {TARGET_OFFSET, 479 - TARGET_OFFSET}, {160, 479 - TARGET_OFFSET}, {319 - TARGET_OFFSET, 479 - TARGET_OFFSET}};
 
 // Build the calibration table
 static TouchCalibrationTable theCalibrationTable;
 // static bool validCalibration = false;
 
 // Getters
-unsigned getNTargets(void) { return N_TARGETS; }
-TCPoint getTargetCoordinate(unsigned idx) { return theTargetCoordinates[idx]; }
+unsigned TouchCalibrator::getNTargets(void) { return N_TARGETS; }
+TCPoint TouchCalibrator::getTargetCoordinate(unsigned idx) { return theTargetCoordinates[idx]; }
 
 // Setter binds a target node's ADC readings to its screen coordinates in the calibration table
-void recordCalibrationNode(unsigned idx, TCPoint adc) {
+void TouchCalibrator::recordCalibrationNode(unsigned idx, TCPoint adc) {
     if (idx >= getNTargets()) return;                                  // Sanity check
     theCalibrationTable.nodes[idx].screen = getTargetCoordinate(idx);  // The target's screen coordinates
     theCalibrationTable.nodes[idx].raw = adc;                          // The touchpad's ADC coordinate values
@@ -67,23 +67,16 @@ void recordCalibrationNode(unsigned idx, TCPoint adc) {
 }
 
 static TouchPad touchPad = TouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
-bool t9_read_filtered(TCPoint& result, uint16_t& z) {
-    TouchPoint raw = touchPad.getTouchEvent();
-    if (raw.z == TS_NO_TOUCH) return false;
-    result.x = raw.x;
-    result.y = raw.y;
-    z = (raw.x + raw.y) / 2;
-    return true;
-}
+// bool t9_read_filtered(TCPoint& result, uint16_t& z) {
+//     TouchPadPoint raw = touchPad.getTouchEvent();
+//     if (raw.state == TS_NO_TOUCH) return false;
+//     result.x = raw.x;
+//     result.y = raw.y;
+//     z = (raw.x + raw.y) / 2;
+//     return true;
+// }
 
 // ---------- Mapping: raw -> screen (bilinear) ----------
-// We divide the touchpad into four TouchCalibrator Zones and bilinear interpolate within each
-struct TCZone {
-    int row;  // This zone's row 0..1
-    int col;  // This zone's col 0..1
-    float u;
-    float v;
-};
 
 /**
  * @brief Find the calibration table node for row/col
@@ -92,7 +85,7 @@ struct TCZone {
  * @param cidx Column index 0..2
  * @return Calibration node for row/col
  */
-static const TouchCalibrationNode& nodeAt(const TouchCalibrationTable& c, int r, int cidx) {
+const TouchCalibrationNode& TouchCalibrator::nodeAt(const TouchCalibrationTable& c, int r, int cidx) {
     // Sanity checks
     if ((r < 0) || (r >= 3) || (cidx < 0) || (cidx >= 3)) {
         DTRACE();
@@ -127,7 +120,7 @@ static float max(float a, float b, float c) {
  * cell) edges.  When asked to interpolate a raw touchpoint lying outside the known cellular
  * region, we snap to the nearby cell's row/col.
  */
-static bool locateCell(const TouchCalibrationTable& cal, const TCPoint& raw, TCZone& cell) {
+bool TouchCalibrator::locateCell(const TouchCalibrationTable& cal, const TCPoint& raw, TCZone& cell) {
     int row = -1, col = -1;
 
     // Perhaps the raw touchpoint lies above the top row
@@ -221,7 +214,7 @@ static bool locateCell(const TouchCalibrationTable& cal, const TCPoint& raw, TCZ
  *
  *
  */
-static TCPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
+TCPoint TouchCalibrator::bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
     // Identify the cell's four corners
     const TouchCalibrationNode& n00 = nodeAt(cal, cell.row, cell.col);
     const TouchCalibrationNode& n10 = nodeAt(cal, cell.row, cell.col + 1);
@@ -253,7 +246,7 @@ static TCPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
     return out;
 }
 
-bool mapRawToScreen(const TCPoint& raw, TCPoint& screen) {
+bool TouchCalibrator::mapRawToScreen(const TCPoint& raw, TCPoint& screen) {
     TCZone cell;
     if (!locateCell(theCalibrationTable, raw, cell)) {
         DPRINTF("locateCell raw.x=%f raw.y=%f\n failed\n", raw.x, raw.y);
