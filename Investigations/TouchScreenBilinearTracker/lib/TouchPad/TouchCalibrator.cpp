@@ -1,3 +1,38 @@
+/**
+ * SYNOPSIS:
+ *  Touch Calibrator corrects non-linearities and manufacturing variances in a resistive touchpad
+ *
+ * USAGE:
+ *  An application executes a calibration procedure once for new touchpad hardware prior to
+ *  its reliance on the touchpad.  The calibration procedure constructs a table of calibration
+ *  data associating the touchpad's actual ADC readings with the display's screen coordinates.
+ *
+ * DISCUSSION:
+ *  Calibration associates 9 on-screen target points with the touchpad's ADC readings for each.
+ *  The 9 calibration points divide the touchscreen into four zones known as "cells" enabling
+ *  bilinear interpolation within each cell.  Following calibration, the mapRawToScreen() method
+ *  translates raw touchpad ADC coordinate readings into screen coordinates.
+ *
+ *  Without calibration, a touchpad reports touch events as raw ADC values without scaling
+ *  to the display screen coordinate system, nor correcting for manufacturing misalignment
+ *  between the physical touchpad and screen, margins, nor resistive nonlinearities arising
+ *  near the corners.
+ *
+ *  This calibrator's implementation depends upon single-precision floating point calculations
+ *  as the necessary hardware is commonly available on 32-bit MCUs supporting touchscreens.
+ *
+ *  This implementation relies upon a driver implemented in the TouchPad class to perform the
+ *  raw touchpad ADC readings.
+ *
+ * ATTRIBUTION:
+ *  Original implementation by Jim Conrad with significant guidance from CoPilot.
+ *
+ * LICENSE:
+ *  Copyright (C) 2026 Jim Conrad
+ *  MIT https://opensource.org/license/mit
+ *
+ */
+
 #include "TouchCalibrator.h"
 #include "hwdefs.h"
 #include "TouchPad.h"
