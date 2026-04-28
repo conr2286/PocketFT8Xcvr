@@ -22,7 +22,7 @@ HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_DRST, PIN_MOSI, PIN_DCLK, PIN_MI
 TouchPad theTouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
 
 // Build the touchscreen calibrator
-TouchCalibrator touchCalibrator;
+TouchCalibrator touchCalibrator(theTouchPad, 320, 480);
 
 /**
  * @brief Display specified target
@@ -92,6 +92,7 @@ void waitForTouchEnd(void) {
  */
 void setup() {
     Serial.begin(115200);
+    delay(500);  // Wait for PlatformIO serial
     Serial.printf("Starting...\n");
 
     // Get the display running

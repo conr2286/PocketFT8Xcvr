@@ -1,10 +1,22 @@
 #pragma once
 
 #include <Arduino.h>
+#include "TouchPad.h"
 
 // ---------- Basic types ----------
 
-struct TCPoint {
+class TCPoint {
+   public:
+    TCPoint(void) { x = y = 0.0; }
+
+    TCPoint(const float x, const float y) {
+        this->x = x;
+        this->y = y;
+    }
+
+    bool operator==(TCPoint);
+    bool operator!=(TCPoint);
+
     float x;
     float y;
 };
@@ -29,8 +41,13 @@ struct TouchCalibrationTable {
     TouchCalibrationNode nodes[9];  // row-major 3x3
 };
 
+#define N_TARGETS 9
+
 class TouchCalibrator {
    public:
+    // Constructors
+    TouchCalibrator(TouchPad& touchPadDriver, unsigned screenWidth, unsigned screenHeight);
+
     // Getters and setters
     unsigned getNTargets(void);
     TCPoint getTargetCoordinate(unsigned idx);
@@ -47,4 +64,7 @@ class TouchCalibrator {
     TCPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell);
     bool locateCell(const TouchCalibrationTable& cal, const TCPoint& raw, TCZone& cell);
     const TouchCalibrationNode& nodeAt(const TouchCalibrationTable& c, int r, int cidx);
+
+    TCPoint theTargetCoordinates[N_TARGETS];
+    TouchPad& touchPad;
 };

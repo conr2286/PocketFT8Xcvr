@@ -25,8 +25,7 @@ class TouchPadPoint {
         this->state = z;
     }
 
-    bool
-    operator==(TouchPadPoint);
+    bool operator==(TouchPadPoint);
     bool operator!=(TouchPadPoint);
 
     int16_t x, y;           // Touchpoint screen coordinates

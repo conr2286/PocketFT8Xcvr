@@ -41,16 +41,10 @@
 // ---------- Internal helpers ----------
 
 // 9 target positions for 320x480
-static const int N_TARGETS = 9;
-static const int TARGET_OFFSET = 32;  // Target offset in pixels from display edges
-// static const TCPoint theTargetCoordinates[N_TARGETS] = {
-//    {0, 0}, {160, 0}, {319, 0}, {0, 240}, {160, 240}, {319, 240}, {0, 479}, {160, 479}, {319, 479}};
-static const TCPoint theTargetCoordinates[N_TARGETS] = {
-    {TARGET_OFFSET, TARGET_OFFSET}, {160, TARGET_OFFSET}, {319 - TARGET_OFFSET, TARGET_OFFSET}, {TARGET_OFFSET, 240}, {160, 240}, {319 - TARGET_OFFSET, 240}, {TARGET_OFFSET, 479 - TARGET_OFFSET}, {160, 479 - TARGET_OFFSET}, {319 - TARGET_OFFSET, 479 - TARGET_OFFSET}};
+static const int TARGET_MARGIN = 15;  // Target offset in pixels from display edges
 
 // Build the calibration table
 static TouchCalibrationTable theCalibrationTable;
-// static bool validCalibration = false;
 
 // Getters
 unsigned TouchCalibrator::getNTargets(void) { return N_TARGETS; }
@@ -66,17 +60,28 @@ void TouchCalibrator::recordCalibrationNode(unsigned idx, TCPoint adc) {
             theCalibrationTable.nodes[idx].screen.x, theCalibrationTable.nodes[idx].screen.y);
 }
 
-static TouchPad touchPad = TouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
-// bool t9_read_filtered(TCPoint& result, uint16_t& z) {
-//     TouchPadPoint raw = touchPad.getTouchEvent();
-//     if (raw.state == TS_NO_TOUCH) return false;
-//     result.x = raw.x;
-//     result.y = raw.y;
-//     z = (raw.x + raw.y) / 2;
-//     return true;
-// }
+TouchCalibrator::TouchCalibrator(TouchPad& touchPadDriver, unsigned screenWidth, unsigned screenHeight) : touchPad(touchPadDriver) {
+    // Calculate the target point margins and midpoints
+    float margin = TARGET_MARGIN;
+    float topMargin = margin;
+    float botMargin = screenHeight - margin;
+    float leftMargin = margin;
+    float rightMargin = screenWidth - margin;
+    unsigned horizMidpoint = screenWidth / 2;
+    unsigned vertMidpoint = screenHeight / 2;
 
-// ---------- Mapping: raw -> screen (bilinear) ----------
+    // Initialize the screen coordinates of the calibration target points
+    theTargetCoordinates[0] = TCPoint(leftMargin, topMargin);     // Upper-left target
+    theTargetCoordinates[1] = TCPoint(horizMidpoint, topMargin);  // Top-center
+    theTargetCoordinates[2] = TCPoint(rightMargin, topMargin);    // Upper-right
+    theTargetCoordinates[3] = TCPoint(leftMargin, vertMidpoint);
+    theTargetCoordinates[4] = TCPoint(horizMidpoint, vertMidpoint);  // Center
+    theTargetCoordinates[5] = TCPoint(rightMargin, vertMidpoint);
+    theTargetCoordinates[6] = TCPoint(leftMargin, botMargin);  // Lower-left
+    theTargetCoordinates[7] = TCPoint(horizMidpoint, botMargin);
+    theTargetCoordinates[8] = TCPoint(rightMargin, botMargin);  // Lower-right
+
+}  // TouchCalibrator()
 
 /**
  * @brief Find the calibration table node for row/col
