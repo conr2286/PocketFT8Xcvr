@@ -38,15 +38,11 @@
 #include "TouchPad.h"
 #include "DEBUG.h"
 
-// ---------- Internal helpers ----------
-
-// 9 target positions for 320x480
+// We typically inset the calibration targets by a small margin to avoid
+// asking operator to touch on the margin.
 static const int TARGET_MARGIN = 15;  // Target offset in pixels from display edges
 
-// Build the calibration table
-static TouchCalibrationTable theCalibrationTable;
-
-// Getters
+// Getter implementations
 unsigned TouchCalibrator::getNTargets(void) { return N_TARGETS; }
 TCPoint TouchCalibrator::getTargetCoordinate(unsigned idx) { return theTargetCoordinates[idx]; }
 
@@ -60,7 +56,9 @@ void TouchCalibrator::recordCalibrationNode(unsigned idx, TCPoint adc) {
             theCalibrationTable.nodes[idx].screen.x, theCalibrationTable.nodes[idx].screen.y);
 }
 
-TouchCalibrator::TouchCalibrator(TouchPad& touchPadDriver, unsigned screenWidth, unsigned screenHeight) : touchPad(touchPadDriver) {
+TouchCalibrator::TouchCalibrator(TouchPad& touchPadDriver) : touchPad(touchPadDriver) {}
+
+void TouchCalibrator::setScreenSize(unsigned screenWidth, unsigned screenHeight) {
     // Calculate the target point margins and midpoints
     float margin = TARGET_MARGIN;
     float topMargin = margin;
@@ -99,7 +97,7 @@ const TouchCalibrationNode& TouchCalibrator::nodeAt(const TouchCalibrationTable&
 }
 
 /**
- * @brief Return the maximum of three values
+ * @brief Helper returns the maximum of three values
  * @param a value1
  * @param b value2
  * @param c value3

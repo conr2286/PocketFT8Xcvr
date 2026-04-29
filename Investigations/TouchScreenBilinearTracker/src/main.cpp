@@ -22,7 +22,7 @@ HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_DRST, PIN_MOSI, PIN_DCLK, PIN_MI
 TouchPad theTouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
 
 // Build the touchscreen calibrator
-TouchCalibrator touchCalibrator(theTouchPad, 320, 480);
+TouchCalibrator touchCalibrator(theTouchPad);
 
 /**
  * @brief Display specified target
@@ -100,7 +100,8 @@ void setup() {
     tft.fillScreen(HX8357_BLACK);  // Erase screen
 
     // Touchscreen calibration
-    unsigned nTargets = touchCalibrator.getNTargets();
+    touchCalibrator.setScreenSize(320, 480);            // Define screen width/height
+    unsigned nTargets = touchCalibrator.getNTargets();  // How many targets are required?
     for (unsigned nodeIndex = 0; nodeIndex < nTargets; nodeIndex++) {
         char s[256];
 

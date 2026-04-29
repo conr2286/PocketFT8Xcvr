@@ -45,26 +45,32 @@ struct TouchCalibrationTable {
 
 class TouchCalibrator {
    public:
-    // Constructors
-    TouchCalibrator(TouchPad& touchPadDriver, unsigned screenWidth, unsigned screenHeight);
+    // Constructor
+    TouchCalibrator(TouchPad& touchPadDriver);
 
-    // Getters and setters
+    // Methods associated with performing a calibration of the touchpad to the screen
+    void setScreenSize(unsigned screenWidth, unsigned screenHeight);
     unsigned getNTargets(void);
     TCPoint getTargetCoordinate(unsigned idx);
     void recordCalibrationNode(unsigned idx, TCPoint adc);
 
-    // Get final calibration (valid when state == Done)
-    const TouchCalibrationTable& t9_calib_get();
-
     // Map filtered raw reading to screen coordinates using current calibration
     // Returns false if no valid calibration loaded.
     bool mapRawToScreen(const TCPoint& raw, TCPoint& screen);
+
+    // Save/restore the calibration state to/from a stream
+    bool serialize(Stream theStream);    // Save calibration data to a Stream
+    bool deserialize(Stream theStream);  // Restore calibration data from a Stream
 
    private:
     TCPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell);
     bool locateCell(const TouchCalibrationTable& cal, const TCPoint& raw, TCZone& cell);
     const TouchCalibrationNode& nodeAt(const TouchCalibrationTable& c, int r, int cidx);
 
-    TCPoint theTargetCoordinates[N_TARGETS];
-    TouchPad& touchPad;
+    // Attributes initialized by the constructor and need not be serialized
+    TouchPad& touchPad;  // Our interface to the touchpad hardware
+
+    // Calibration attributes that must be serialized/deserialized to avoid recalibration
+    TCPoint theTargetCoordinates[N_TARGETS];  // Screen coordinates of the calibration targets
+    TouchCalibrationTable theCalibrationTable;
 };
