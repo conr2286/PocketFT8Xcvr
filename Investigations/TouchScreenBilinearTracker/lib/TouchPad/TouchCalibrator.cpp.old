@@ -33,6 +33,7 @@
  *
  */
 
+#include <Arduino.h>
 #include "TouchCalibrator.h"
 #include "hwdefs.h"
 #include "TouchPad.h"
@@ -43,11 +44,11 @@
 static const int TARGET_MARGIN = 15;  // Target offset in pixels from display edges
 
 // Getter implementations
-unsigned TouchCalibrator::getNTargets(void) { return N_TARGETS; }
-TCPoint TouchCalibrator::getTargetCoordinate(unsigned idx) { return theTargetCoordinates[idx]; }
+unsigned TouchScreen::getNTargets(void) { return N_TARGETS; }
+TouchScreenPoint TouchScreen::getTargetCoordinate(unsigned idx) { return targetCoordinates[idx]; }
 
 // Setter binds a target node's ADC readings to its screen coordinates in the calibration table
-void TouchCalibrator::recordCalibrationNode(unsigned idx, TCPoint adc) {
+void TouchScreen::recordCalibrationNode(unsigned idx, TouchScreenPoint adc) {
     if (idx >= getNTargets()) return;                                  // Sanity check
     theCalibrationTable.nodes[idx].screen = getTargetCoordinate(idx);  // The target's screen coordinates
     theCalibrationTable.nodes[idx].raw = adc;                          // The touchpad's ADC coordinate values
@@ -56,9 +57,9 @@ void TouchCalibrator::recordCalibrationNode(unsigned idx, TCPoint adc) {
             theCalibrationTable.nodes[idx].screen.x, theCalibrationTable.nodes[idx].screen.y);
 }
 
-TouchCalibrator::TouchCalibrator(TouchPad& touchPadDriver) : touchPad(touchPadDriver) {}
+TouchScreen::TouchScreen(TouchPad& touchPadDriver) : touchPad(touchPadDriver) {}
 
-void TouchCalibrator::setScreenSize(unsigned screenWidth, unsigned screenHeight) {
+void TouchScreen::begin(unsigned screenWidth, unsigned screenHeight) {
     // Calculate the target point margins and midpoints
     float margin = TARGET_MARGIN;
     float topMargin = margin;
@@ -69,17 +70,17 @@ void TouchCalibrator::setScreenSize(unsigned screenWidth, unsigned screenHeight)
     unsigned vertMidpoint = screenHeight / 2;
 
     // Initialize the screen coordinates of the calibration target points
-    theTargetCoordinates[0] = TCPoint(leftMargin, topMargin);     // Upper-left target
-    theTargetCoordinates[1] = TCPoint(horizMidpoint, topMargin);  // Top-center
-    theTargetCoordinates[2] = TCPoint(rightMargin, topMargin);    // Upper-right
-    theTargetCoordinates[3] = TCPoint(leftMargin, vertMidpoint);
-    theTargetCoordinates[4] = TCPoint(horizMidpoint, vertMidpoint);  // Center
-    theTargetCoordinates[5] = TCPoint(rightMargin, vertMidpoint);
-    theTargetCoordinates[6] = TCPoint(leftMargin, botMargin);  // Lower-left
-    theTargetCoordinates[7] = TCPoint(horizMidpoint, botMargin);
-    theTargetCoordinates[8] = TCPoint(rightMargin, botMargin);  // Lower-right
+    targetCoordinates[0] = TouchScreenPoint(leftMargin, topMargin);     // Upper-left target
+    targetCoordinates[1] = TouchScreenPoint(horizMidpoint, topMargin);  // Top-center
+    targetCoordinates[2] = TouchScreenPoint(rightMargin, topMargin);    // Upper-right
+    targetCoordinates[3] = TouchScreenPoint(leftMargin, vertMidpoint);
+    targetCoordinates[4] = TouchScreenPoint(horizMidpoint, vertMidpoint);  // Center
+    targetCoordinates[5] = TouchScreenPoint(rightMargin, vertMidpoint);
+    targetCoordinates[6] = TouchScreenPoint(leftMargin, botMargin);  // Lower-left
+    targetCoordinates[7] = TouchScreenPoint(horizMidpoint, botMargin);
+    targetCoordinates[8] = TouchScreenPoint(rightMargin, botMargin);  // Lower-right
 
-}  // TouchCalibrator()
+}  // TouchScreen()
 
 /**
  * @brief Find the calibration table node for row/col
@@ -88,7 +89,7 @@ void TouchCalibrator::setScreenSize(unsigned screenWidth, unsigned screenHeight)
  * @param cidx Column index 0..2
  * @return Calibration node for row/col
  */
-const TouchCalibrationNode& TouchCalibrator::nodeAt(const TouchCalibrationTable& c, int r, int cidx) {
+const TouchCalibrationNode& TouchScreen::nodeAt(const TouchCalibrationTable& c, int r, int cidx) {
     // Sanity checks
     if ((r < 0) || (r >= 3) || (cidx < 0) || (cidx >= 3)) {
         DTRACE();
@@ -123,7 +124,7 @@ static float max(float a, float b, float c) {
  * cell) edges.  When asked to interpolate a raw touchpoint lying outside the known cellular
  * region, we snap to the nearby cell's row/col.
  */
-bool TouchCalibrator::locateCell(const TouchCalibrationTable& cal, const TCPoint& raw, TCZone& cell) {
+bool TouchScreen::locateCell(const TouchCalibrationTable& cal, const TouchScreenPoint& raw, TCZone& cell) {
     int row = -1, col = -1;
 
     // Perhaps the raw touchpoint lies above the top row
@@ -217,7 +218,7 @@ bool TouchCalibrator::locateCell(const TouchCalibrationTable& cal, const TCPoint
  *
  *
  */
-TCPoint TouchCalibrator::bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
+TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
     // Identify the cell's four corners
     const TouchCalibrationNode& n00 = nodeAt(cal, cell.row, cell.col);
     const TouchCalibrationNode& n10 = nodeAt(cal, cell.row, cell.col + 1);
@@ -229,7 +230,7 @@ TCPoint TouchCalibrator::bilinear(const TouchCalibrationTable& cal, const TCZone
 
     DPRINTF("u=%f v=%f\n", u, v);
 
-    TCPoint out;
+    TouchScreenPoint out;
 
     // For x-Axis, blend weights within that cell.  If the touch was in this cell's exact
     // center, the weights would be u==v==0.5 as each corner gets weight 0.25
@@ -249,7 +250,7 @@ TCPoint TouchCalibrator::bilinear(const TouchCalibrationTable& cal, const TCZone
     return out;
 }
 
-bool TouchCalibrator::mapRawToScreen(const TCPoint& raw, TCPoint& screen) {
+bool TouchScreen::mapRawToScreen(const TouchScreenPoint& raw, TouchScreenPoint& screen) {
     TCZone cell;
     if (!locateCell(theCalibrationTable, raw, cell)) {
         DPRINTF("locateCell raw.x=%f raw.y=%f\n failed\n", raw.x, raw.y);
@@ -265,4 +266,4 @@ bool TouchCalibrator::mapRawToScreen(const TCPoint& raw, TCPoint& screen) {
     if (screen.y >= 479) screen.y = 479;
 
     return true;
-}
+}  // mapRawToScreen()

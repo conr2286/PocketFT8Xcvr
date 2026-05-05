@@ -1,18 +1,24 @@
 /**
  * @brief TouchPad Driver
  *
- * This library implements a C "driver" for the resistive Adafruit 3.5" TFT 320x480
- * Touchscreen Breakout Board w/MicroSD Socket - HX8357D (Product 2050).
+ * DISCUSSION:
+ * This library implements a C++ "driver" for the resistive "Adafruit 3.5" TFT 320x480
+ * Touchscreen Breakout Board w/MicroSD Socket - HX8357D" (Product 2050) touchpad.
  *
  * Sadly, there are a couple weirdo artifacts (the X and Y axis 510 Ohm resistors,
  * XR and YR) specific to the PocketFT8Xcvr hardware and Teensy debugging support.
+ *
+ * TERMINOLOGY:
+ * We frequently use the term TouchPad to refer to the resistive touchpad overlay,
+ * and the term TouchScreen to refer to the assembly of the TouchPad and display.
+ * Associated with the TouchPad are ADC conversion results while TouchScreen
+ * coordinates appear in the rotated and scaled display coordinate system.
  */
 
 #include <Arduino.h>
 #include <stdint.h>
 
 #include "DEBUG.h"
-// #include "hwdefs.h"
 #include "TouchPad.h"
 
 // Define the number of microseconds to allow analog signals to settle prior to ADC sampling
@@ -30,8 +36,7 @@ static const unsigned ADC_SETTLE_US = 20;
  * @note Note where MCU analog pins are required as their use here is a bit
  * unconventional to deal with peculiarities of the Adafruit touchpad HW.
  *
- * @note Perhaps this should be a singleton but if you really need more than
- * one touchpad then I guess you can have them.
+ * @note Perhaps this should be a singleton I wasn't in the mood today.
  *
  * @note The PocketFT8Xcvr hardware has a 510 ohm resistor connected to each
  * axis... a bit unusual and left over from legacy hardware.  We use them
@@ -39,6 +44,8 @@ static const unsigned ADC_SETTLE_US = 20;
  * accumulated noise.  I'm not sure if this remains necessary on current HW
  * but, because they remain on the board, we at least have to float them to
  * avoid interfering with the ADC readings.
+ *
+ * @todo [Re]Move 510 Ohm resistor code
  *
  */
 TouchPad::TouchPad(uint8_t xp, uint8_t xm, uint8_t yp, uint8_t ym, uint8_t xr, uint8_t yr) {
@@ -48,23 +55,21 @@ TouchPad::TouchPad(uint8_t xp, uint8_t xm, uint8_t yp, uint8_t ym, uint8_t xr, u
     this->ym = ym;
     this->xr = xr;
     this->yr = yr;
-    this->state = TS_NO_TOUCH;  // Assume nothing is touching the pad
 
-    // TODO:  Initialize these in a more portable fashion as these are bound to Adafruit T3.5" TFT and Teensy ADC
+    // TODO:  Initialize these in a more portable fashion as these are bound to
+    // the Adafruit T3.5" TFT and Teensy ADC in an Arduino environment
     this->adcMax = 1023;  // Maximum value returned by ADC
-    this->nCols = 320;    // Number of touchscreen columns
-    this->nRows = 480;    // Number of touchscreen rows
 }
 
 /**
  * @brief Determine if a is approximately equal to b
  * @param a value1
  * @param b value2
- * @param delta allowed difference
+ * @param tolerance allowed difference
  * @return true if a lies within the allowed difference of b
  */
-bool TouchPad::isNear(unsigned a, unsigned b, unsigned delta) {
-    if ((a >= b - delta) && (a <= b + delta)) return true;
+bool TouchPad::isNear(unsigned a, unsigned b, unsigned tolerance) {
+    if ((a >= b - tolerance) && (a <= b + tolerance)) return true;
     return false;
 }  // isNear()
 
@@ -103,29 +108,27 @@ void TouchPad::vccPin(unsigned pin) {
 }  // vccPin()
 
 /**
- * @brief Non-blocking read of touchscreen coordinates
- * @return TouchPadPoint coordinates as raw 10-bit ADC readings
+ * @brief Raw, non-blocking read of touchscreen coordinates
+ * @param result TouchPadPoint coordinates as raw 10-bit ADC readings
+ * @return true if touching, false if not
  *
  * NOTES:
- *  + Returned TouchPadPoint.z=TS_NO_TOUCH if the x/y result is invalid
  *  + Returned TouchPadPoint x/y are in raw, unfiltered, unscaled ADC values
  *  + The x value corresponds to the HW x-Axis as does the y value to the HW y-Axis
- *  + Does not discern dragging
  *
- * DESIGN:
+ * DISCUSSION:
  *  + The conventional approach, calculating z (estimated touch pressure) is not
  *  used here to identify a valid touch event.  Our simplified approach drives the
  *  entire x-Axis to Vcc and then measures the signal on the floating y-Axis,
  *  expecting to see ~Vcc on the y-Axis during a valid touch event.
+ *  + There is not noise filtering performed here.  See readFiltered() for more info.
  *  + Resistive touchpads are notoriously nonlinear but no correction/calibration
  *  is performed here.  We just acquire the ADC readings.
  *  + The touchpad signals are driven through the MCU digital outputs, and are read
  *  using the MCU ADC and Arduino analogRead() which, on the Teensy 4.1 MCU, will be
  *  using ADC2 by default as ADC1 is assigned to the Teensy audio pipeline.
- *  + Use getTouchEvent to distinguish between TS_TOUCH and TS_DRAG
  */
-TouchPadPoint TouchPad::getTouchPoint(void) {
-    TouchPadPoint result;
+bool TouchPad::readRaw(TouchPadPoint& result) {
     int adcX, adcY, adcZ;  // The unscaled ADC readings
     bool touching;         // true ==> valid touch event
 
@@ -184,20 +187,25 @@ TouchPadPoint TouchPad::getTouchPoint(void) {
         floatPin(yp);                      // Remove Vcc to save battery
 
         // Return a valid result in the unrotated, uncorrected screen coordinate system
-        result.y = adcY;          // Calc y-Axis screen coordinate
-        result.x = adcX;          // Calc x-Axis screen coordinate
-        result.state = TS_TOUCH;  //
-        // DPRINTF("result.x=%d result.y=%d result.z=%d\n", result.x, result.y, result.z);
+        result.y = adcY;  // Calc y-Axis screen coordinate
+        result.x = adcX;  // Calc x-Axis screen coordinate
+        // result.state = TS_TOUCH;  //
+        //  DPRINTF("result.x=%d result.y=%d result.z=%d\n", result.x, result.y, result.z);
     } else {
         result.x = result.y = 0;
-        result.state = TS_NO_TOUCH;  // Operator is not touching the pad
+        // result.state = TS_NO_TOUCH;  // Operator is not touching the pad
     }
 
-    return result;
-}  // getTouchPoint()
+    return touching;
+}  // readRaw()
 
+/**
+ * @brief Helper routine to sort ascending an array of integer values
+ * @tparam N Array size
+ * @param a The array data
+ */
 template <int N>
-static void sort_small(uint16_t (&a)[N]) {
+void TouchPad::sort_small(uint16_t (&a)[N]) {
     for (int i = 1; i < N; i++) {
         uint16_t v = a[i];
         int j = i - 1;
@@ -207,35 +215,30 @@ static void sort_small(uint16_t (&a)[N]) {
         }
         a[j + 1] = v;
     }
-}
+}  // sort_small()
 
 /**
  * @brief Non-blocking, filtered, stateful interrogation of the TouchPad
  * @return TouchPadPoint
  *
  * DISCUSSION:
- *  + This is a non-blocking service reporting TS_NO_TOUCH if the stylus
- *  is not touching, or is removed, during the measurement.
- *  + We filter by averaging two readings.  This may change if problematic.
- *  + We maintain a state variable to discern when a touch event begins, when
- *  the stylus is dragging across the pad, and when the stylus is removed.
+ *  + We filter by finding the median of multiple readings.  This may change
+ *  if problematic.
  *  + Coordinates are returned as raw ADC values, not screen coordinates,
- *  and uncorrected for margins, non-linearities, etc.
- *
+ *  and uncorrected for margins, non-linearities, rotation, etc.
  */
-TouchPadPoint TouchPad::getTouchEvent(void) {
-    TouchPadPoint result;  // We depend upon constructor initializing their attributes
-
-    const int N = 3;  // #samples (needs to be an odd number)
+bool TouchPad::readFiltered(TouchPadPoint& result) {
+    const int N = 3;  // #samples (must be an odd number)
     uint16_t xs[N], ys[N];
+    bool ok;
 
     for (int i = 0; i < N; i++) {
-        TouchPadPoint raw = getTouchPoint();
+        TouchPadPoint raw;
+        ok = readRaw(raw);
 
         // Handle invalid (not touching, erroneous, whatever) readings
-        if (raw.state == TS_NO_TOUCH) {
-            state = result.state = TS_NO_TOUCH;  // Record touch event state as not touching and inform caller
-            return result;                       // TS_NO_TOUCH
+        if (!ok) {
+            return false;
         }
 
         // Save readings
@@ -250,23 +253,6 @@ TouchPadPoint TouchPad::getTouchEvent(void) {
     result.x = xs[N / 2];  // Median x value
     result.y = ys[N / 2];  // Median y value
 
-    // Analyze state
-    switch (state) {
-        // We have begun a new touch event
-        case TS_NO_TOUCH:
-            state = result.state = TS_TOUCH;  // Newly touched
-            break;
-
-        // We are dragging
-        case TS_TOUCH:
-        case TS_DRAG:
-            state = result.state = TS_DRAG;  // Begun dragging
-            break;
-
-        default:
-            break;
-    }
-
     // DPRINTF("state=%d result.x=%d result.y=%d result.z=%d\n", state, result.x, result.y, result.z);
-    return result;
+    return true;
 }
