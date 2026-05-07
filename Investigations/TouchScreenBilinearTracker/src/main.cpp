@@ -132,13 +132,16 @@ void setup() {
 void loop() {
     bool ok;
     TouchPadPoint p;
+    gfx.setRotation(3);
     ok = theTouchPad.readFiltered(p);             // Read the touchpad
     if (ok) {                                     // Did we actually get anything?
         TouchScreenPoint raw = toTCPoint(p);      // Change coordinates to float
         TouchScreenPoint screen;                  // Corrected screen coordinates
         touchScreen.mapRawToScreen(raw, screen);  // Apply calibration
         DPRINTF("raw (%f,%f) mapped to screen (%f,%f)\n", raw.x, raw.y, screen.x, screen.y);
-        gfx.fillCircle((int)screen.x, (int)screen.y, 2, HX8357_YELLOW);  // Display corrected coordinates
+        touchScreen.rotate(screen);
+        DPRINTF("Rotated to (%f,%f)\n", screen.x, screen.y);
+        gfx.fillCircle((int)screen.x, (int)screen.y, 2, HX8357_YELLOW);  // Display corrected coordinates as dots
         waitForTouchEnd();                                               // Wait for drag to end
     }
     delay(50);

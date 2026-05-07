@@ -267,15 +267,19 @@ TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const T
 
 /**
  * @brief Rotates a point from the default GFX rotation into the GFX rotation actually in use
- * @param p The point whose coordinates will rotate
+ * @param p Referenced point whose coordinates will rotate
  *
  * DISCUSSION:
  *  We assume the touchpad hardware coordinate system is in the default GFX rotation (0).  We
  *  rotate the specified point's coordinates in-placed to the rotation actually in use by GFX.
  */
 void TouchScreen::rotate(TouchScreenPoint& p) {
+    float x = p.x;
+    float y = p.y;
+
     // Query and implement the GFX rotation for the touchscreen
-    switch (gfx.getRotation()) {
+    int rotation = gfx.getRotation();
+    switch (rotation) {
         // Default (portrait) --- There's nothing to do here
         case 0:
             DTRACE();
@@ -283,16 +287,24 @@ void TouchScreen::rotate(TouchScreenPoint& p) {
 
         // Landscape (90-degree clockwise)
         case 1:
+            // p.x = gfx.height() - 1 - y;
+            // p.y = x;
+            p.x = y;
+            p.y = gfx.height() - 1- x;
             DTRACE();
             break;
 
         // Portrait (180-degree clockwise, upside-down)
         case 2:
             DTRACE();
+            p.x = gfx.width() - 1 - x;
+            p.y = gfx.height() - 1 - y;
             break;
 
         // Landscape (270-degree clockwise)
         case 3:
+            p.x = gfx.width() - 1 - y;
+            p.y = x;
             DTRACE();
             break;
 
@@ -302,7 +314,46 @@ void TouchScreen::rotate(TouchScreenPoint& p) {
             break;
     }  // switch
 
+    DPRINTF("Rot%d:  (%f,%f) ==> (%f,%f)\n", rotation, x, y, p.x, p.y);
+
 }  // rotate()
+
+// struct Point {
+//     unsigned x;
+//     unsigned y;
+// };
+
+// // Rotate point p by rot degrees (0, 90, 180, 270 clockwise)
+// // w = display width, h = display height
+// void rotatePoint(Point& p, unsigned rot, unsigned w, unsigned h) {
+//     unsigned x = p.x;
+//     unsigned y = p.y;
+
+//     switch (rot) {
+//         case 0:
+//             // no change
+//             break;
+
+//         case 90:  // clockwise
+//             p.x = h - 1 - y;
+//             p.y = x;
+//             break;
+
+//         case 180:
+//             p.x = w - 1 - x;
+//             p.y = h - 1 - y;
+//             break;
+
+//         case 270:  // clockwise
+//             p.x = y;
+//             p.y = w - 1 - x;
+//             break;
+
+//         default:
+//             // invalid rotation → do nothing
+//             break;
+//     }
+// }
 
 bool TouchScreen::mapRawToScreen(const TouchScreenPoint& raw, TouchScreenPoint& screen) {
     TCZone cell;

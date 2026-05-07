@@ -60,6 +60,7 @@ class TouchScreen {
     // Map filtered raw reading to screen coordinates using current calibration
     // Returns false if no valid calibration loaded.
     bool mapRawToScreen(const TouchScreenPoint& raw, TouchScreenPoint& screen);
+    void rotate(TouchScreenPoint& p);
 
     // Save/restore the calibration state to/from a stream
     bool serialize(File theFile);    // Save calibration data to a Stream
@@ -71,7 +72,6 @@ class TouchScreen {
     bool locateCell(const TouchCalibrationTable& cal, const TouchScreenPoint& raw, TCZone& cell);
     const TouchCalibrationNode& nodeAt(const TouchCalibrationTable& c, const int r, const int cidx);
     uint16_t crc16(const uint8_t* data, const size_t length);
-    void rotate(TouchScreenPoint& p);
 
     // Attributes that need not be serialized
     TouchPad& touchPad;      // The touchpad driver
