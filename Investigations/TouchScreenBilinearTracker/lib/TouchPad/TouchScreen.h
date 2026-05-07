@@ -55,7 +55,7 @@ class TouchScreen {
     void begin(void);
     unsigned getNTargets(void);
     TouchScreenPoint getTargetCoordinate(const unsigned idx);
-    void recordCalibrationNode(const unsigned idx, const TouchScreenPoint adc);
+    bool recordCalibrationNode(const unsigned idx, const TouchScreenPoint adc);
 
     // Map filtered raw reading to screen coordinates using current calibration
     // Returns false if no valid calibration loaded.
@@ -69,14 +69,13 @@ class TouchScreen {
    private:
     // Our private methods and helpers
     TouchScreenPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell);
-    bool locateCell(const TouchCalibrationTable& cal, const TouchScreenPoint& raw, TCZone& cell);
-    const TouchCalibrationNode& nodeAt(const TouchCalibrationTable& c, const int r, const int cidx);
+    bool locateCell(const TouchScreenPoint& raw, TCZone& cell);
+    const TouchCalibrationNode& nodeAt(const int r, const int cidx);
     uint16_t crc16(const uint8_t* data, const size_t length);
 
     // Attributes that need not be serialized
-    TouchPad& touchPad;      // The touchpad driver
-    HX8357_t3n& gfx;         // The touchscreen driver
-    uint16_t width, height;  // The touchpad hardware's width & height in pixels
+    TouchPad& touchPad;  // The touchpad driver
+    HX8357_t3n& gfx;     // The touchscreen driver
 
     // These calibration attributes must be serialized/deserialized to avoid recalibration
     TouchScreenPoint targetCoordinates[N_TARGETS];  // Screen coordinates of the calibration targets

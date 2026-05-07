@@ -51,23 +51,62 @@
 // asking operator to touch on the margin.
 static const int TARGET_MARGIN = 15;  // Target offset in pixels from display edges
 
-// Getter implementations
+/**
+ * @brief Get the number of calibration targets used by the interpolator
+ * @return Count of targets
+ */
 unsigned TouchScreen::getNTargets(void) { return N_TARGETS; }
+
+/**
+ * @brief Get the target screen coordinates for the specified node
+ * @param idx Node index
+ * @return The X/Y coordinates
+ */
 TouchScreenPoint TouchScreen::getTargetCoordinate(unsigned idx) { return targetCoordinates[idx]; }
 
-// Setter binds a target node's ADC readings to its screen coordinates in the calibration table
-void TouchScreen::recordCalibrationNode(unsigned idx, TouchScreenPoint adc) {
-    if (idx >= getNTargets()) return;                                  // Sanity check
+/**
+ * @brief Record a single node in the calibration table
+ * @param idx Selects which node
+ * @param adc TouchPad's ADC X/Y coordinates for this node
+ * @return true if successful
+ *
+ * WARNING:
+ *  Calibration must be performed with GFX in its default rotation (i.e. setRotation(0))
+ *
+ * DISCUSSION:
+ *  The calibration table contains a "node" entry for each calibration target.  The table
+ *  associates TouchPad ADC X/Y coordinates with display screen coordinates.  The bilinear
+ *  interpolator uses this table to map arbitrary TouchPad coordinate to TouchScreen coordinates.
+ */
+bool TouchScreen::recordCalibrationNode(unsigned idx, TouchScreenPoint adc) {
+    // Sanity checks
+    if (idx >= getNTargets()) return false;                            // Ridiculous index
+    if (gfx.getRotation() != 0) return false;                          // Calibration must occur unrotated
     theCalibrationTable.nodes[idx].screen = getTargetCoordinate(idx);  // The target's screen coordinates
     theCalibrationTable.nodes[idx].raw = adc;                          // The touchpad's ADC coordinate values
     DPRINTF("Node[%d] maps touchpoint (%f,%f) to screen (%f,%f)\n", idx,
             theCalibrationTable.nodes[idx].raw.x, theCalibrationTable.nodes[idx].raw.y,
             theCalibrationTable.nodes[idx].screen.x, theCalibrationTable.nodes[idx].screen.y);
+    return true;
 }
 
-TouchScreen::TouchScreen(TouchPad& touchPadDriver, HX8357_t3n& touchScreenDriver) : touchPad(touchPadDriver), gfx(touchScreenDriver) {}
+/**
+ * @brief Constructor
+ * @param touchPadDriver Reference to the TouchPad driver
+ * @param gfxDriver Reference to the Adafruit GFX driver
+ */
+TouchScreen::TouchScreen(TouchPad& touchPadDriver, HX8357_t3n& gfxDriver) : touchPad(touchPadDriver), gfx(gfxDriver) {}
 
+/**
+ * @brief Initialize the TouchScreen object
+ *
+ * DISCUSSION:
+ *  We do this here rather than our constructor to avoid invoking methods in potentially uninitialized
+ *  objects referenced here.
+ */
 void TouchScreen::begin() {
+    unsigned width, height;  // Screen dimensions in setRotation(0)
+
     // The Adafruit GFX driver knows the touchpad's width and height (in pixels)
     uint8_t gfxRotation = gfx.getRotation();  // The GFX driver's screen rotation code
     gfx.setRotation(0);                       // Temporarily set the rotation to its default value
@@ -104,12 +143,12 @@ void TouchScreen::begin() {
  * @param cidx Column index 0..2
  * @return Calibration node for row/col
  */
-const TouchCalibrationNode& TouchScreen::nodeAt(const TouchCalibrationTable& c, int r, int cidx) {
+const TouchCalibrationNode& TouchScreen::nodeAt(int r, int cidx) {
     // Sanity checks
     if ((r < 0) || (r >= 3) || (cidx < 0) || (cidx >= 3)) {
         DTRACE();
     }
-    return c.nodes[r * 3 + cidx];
+    return theCalibrationTable.nodes[r * 3 + cidx];
 }
 
 /**
@@ -139,19 +178,19 @@ static float max(float a, float b, float c) {
  * cell) edges.  When asked to interpolate a raw touchpoint lying outside the known cellular
  * region, we snap to the nearby cell's row/col.
  */
-bool TouchScreen::locateCell(const TouchCalibrationTable& cal, const TouchScreenPoint& raw, TCZone& cell) {
+bool TouchScreen::locateCell(const TouchScreenPoint& raw, TCZone& cell) {
     int row = -1, col = -1;
 
     // Perhaps the raw touchpoint lies above the top row
-    float top = max(cal.nodes[0].raw.y, cal.nodes[1].raw.y, cal.nodes[2].raw.y);
+    float top = max(theCalibrationTable.nodes[0].raw.y, theCalibrationTable.nodes[1].raw.y, theCalibrationTable.nodes[2].raw.y);
     if (raw.y < top) {
         row = 0;  // Snap to the top row
         DTRACE();
     } else {
         // Find the row band containing the touchpoint
         for (int r = 0; r < 2; r++) {
-            float y0 = nodeAt(cal, r, 0).raw.y;
-            float y1 = nodeAt(cal, r + 1, 0).raw.y;
+            float y0 = nodeAt(r, 0).raw.y;
+            float y1 = nodeAt(r + 1, 0).raw.y;
             if ((raw.y >= y0 && raw.y <= y1) || (raw.y <= y0 && raw.y >= y1)) {
                 DPRINTF("raw.y=%f y0=%f y1=%f\n", raw.y, y0, y1);
                 row = r;
@@ -167,15 +206,15 @@ bool TouchScreen::locateCell(const TouchCalibrationTable& cal, const TouchScreen
     }
 
     // Perhaps the raw touchpoint lies to the left of the leftmost column
-    float leftmost = max(cal.nodes[0].raw.x, cal.nodes[3].raw.x, cal.nodes[6].raw.x);
+    float leftmost = max(theCalibrationTable.nodes[0].raw.x, theCalibrationTable.nodes[3].raw.x, theCalibrationTable.nodes[6].raw.x);
     if (raw.x < leftmost) {
         col = 0;  // Snap to leftmost column
         DTRACE();
     } else {
         // Find column band
         for (int c = 0; c < 2; c++) {
-            float x0 = nodeAt(cal, 0, c).raw.x;
-            float x1 = nodeAt(cal, 0, c + 1).raw.x;
+            float x0 = nodeAt(0, c).raw.x;
+            float x1 = nodeAt(0, c + 1).raw.x;
             if ((raw.x >= x0 && raw.x <= x1) || (raw.x <= x0 && raw.x >= x1)) {
                 col = c;
                 break;
@@ -192,9 +231,9 @@ bool TouchScreen::locateCell(const TouchCalibrationTable& cal, const TouchScreen
     DPRINTF("row=%d, col=%d\n", row, col);
     // if ((row < 0) || (col < 0)) return false;
 
-    const TouchCalibrationNode& n00 = nodeAt(cal, row, col);
-    const TouchCalibrationNode& n10 = nodeAt(cal, row, col + 1);
-    const TouchCalibrationNode& n01 = nodeAt(cal, row + 1, col);
+    const TouchCalibrationNode& n00 = nodeAt(row, col);
+    const TouchCalibrationNode& n10 = nodeAt(row, col + 1);
+    const TouchCalibrationNode& n01 = nodeAt(row + 1, col);
 
     float dx = n10.raw.x - n00.raw.x;
     float dy = n01.raw.y - n00.raw.y;
@@ -235,10 +274,10 @@ bool TouchScreen::locateCell(const TouchCalibrationTable& cal, const TouchScreen
  */
 TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
     // Identify the cell's four corners
-    const TouchCalibrationNode& n00 = nodeAt(cal, cell.row, cell.col);
-    const TouchCalibrationNode& n10 = nodeAt(cal, cell.row, cell.col + 1);
-    const TouchCalibrationNode& n01 = nodeAt(cal, cell.row + 1, cell.col);
-    const TouchCalibrationNode& n11 = nodeAt(cal, cell.row + 1, cell.col + 1);
+    const TouchCalibrationNode& n00 = nodeAt(cell.row, cell.col);
+    const TouchCalibrationNode& n10 = nodeAt(cell.row, cell.col + 1);
+    const TouchCalibrationNode& n01 = nodeAt(cell.row + 1, cell.col);
+    const TouchCalibrationNode& n11 = nodeAt(cell.row + 1, cell.col + 1);
 
     float u = cell.u;  // Normalized x placement 0..1 of raw touch within cell
     float v = cell.v;  // Normalized y placement 0..1 of raw touch within cell
@@ -290,7 +329,7 @@ void TouchScreen::rotate(TouchScreenPoint& p) {
             // p.x = gfx.height() - 1 - y;
             // p.y = x;
             p.x = y;
-            p.y = gfx.height() - 1- x;
+            p.y = gfx.height() - 1 - x;
             DTRACE();
             break;
 
@@ -357,7 +396,7 @@ void TouchScreen::rotate(TouchScreenPoint& p) {
 
 bool TouchScreen::mapRawToScreen(const TouchScreenPoint& raw, TouchScreenPoint& screen) {
     TCZone cell;
-    if (!locateCell(theCalibrationTable, raw, cell)) {
+    if (!locateCell(raw, cell)) {
         DPRINTF("locateCell raw.x=%f raw.y=%f\n failed\n", raw.x, raw.y);
         return false;
     }
