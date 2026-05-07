@@ -3,7 +3,7 @@
  *  TouchScreen interrogates the touch pad returning touchscreen coordinates
  *
  * USAGE:
- *  An application must execute a calibration procedure once for the touchpad hardware.
+ *  An application must execute a calibration procedure once for the touchpad.
  *  The calibration procedure constructs a table of calibration "nodes" that map
  *  the touchpad's raw ADC readings with the display's screen coordinates.
  *
@@ -101,7 +101,7 @@ TouchScreen::TouchScreen(TouchPad& touchPadDriver, HX8357_t3n& gfxDriver) : touc
  * @brief Initialize the TouchScreen object
  *
  * DISCUSSION:
- *  We do this here rather than our constructor to avoid invoking methods in potentially uninitialized
+ *  We do this here rather than in constructor to avoid invoking methods in potentially uninitialized
  *  objects referenced here.
  */
 void TouchScreen::begin() {
@@ -305,12 +305,12 @@ TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const T
 }
 
 /**
- * @brief Rotates a point from the default GFX rotation into the GFX rotation actually in use
+ * @brief Rotates a point from the default GFX rotation (0) to the current GFX rotation
  * @param p Referenced point whose coordinates will rotate
  *
  * DISCUSSION:
- *  We assume the touchpad hardware coordinate system is in the default GFX rotation (0).  We
- *  rotate the specified point's coordinates in-placed to the rotation actually in use by GFX.
+ *  We assume the touchpad hardware coordinate system is always in the default GFX rotation (0).  We
+ *  rotate the specified point's coordinates in-place to the rotation actually in use by GFX.
  */
 void TouchScreen::rotate(TouchScreenPoint& p) {
     float x = p.x;
@@ -319,7 +319,7 @@ void TouchScreen::rotate(TouchScreenPoint& p) {
     // Query and implement the GFX rotation for the touchscreen
     int rotation = gfx.getRotation();
     switch (rotation) {
-        // Default (portrait) --- There's nothing to do here
+        // Default (portrait) --- TouchPad and screen are aligned
         case 0:
             DTRACE();
             break;
@@ -357,43 +357,18 @@ void TouchScreen::rotate(TouchScreenPoint& p) {
 
 }  // rotate()
 
-// struct Point {
-//     unsigned x;
-//     unsigned y;
-// };
-
-// // Rotate point p by rot degrees (0, 90, 180, 270 clockwise)
-// // w = display width, h = display height
-// void rotatePoint(Point& p, unsigned rot, unsigned w, unsigned h) {
-//     unsigned x = p.x;
-//     unsigned y = p.y;
-
-//     switch (rot) {
-//         case 0:
-//             // no change
-//             break;
-
-//         case 90:  // clockwise
-//             p.x = h - 1 - y;
-//             p.y = x;
-//             break;
-
-//         case 180:
-//             p.x = w - 1 - x;
-//             p.y = h - 1 - y;
-//             break;
-
-//         case 270:  // clockwise
-//             p.x = y;
-//             p.y = w - 1 - x;
-//             break;
-
-//         default:
-//             // invalid rotation → do nothing
-//             break;
-//     }
-// }
-
+/**
+ * @brief Map a raw TouchPad coordinate to the screen coordinate system
+ * @param raw TouchPad ADC X/Y coordinate
+ * @param screen Resulting screen coordinate
+ * @return true if successful
+ *
+ * DISCUSSION:
+ *  This is where we invoke the bilinear interpolator to map raw ADC coordinates to
+ *  screen pixel coordinates.  We perform the mapping without regard for the GFX
+ *  rotation.  You can use rotate() to rotate the screen coordinate returned from
+ *  mapRawToScreen().
+ */
 bool TouchScreen::mapRawToScreen(const TouchScreenPoint& raw, TouchScreenPoint& screen) {
     TCZone cell;
     if (!locateCell(raw, cell)) {
