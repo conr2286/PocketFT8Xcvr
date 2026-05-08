@@ -4,11 +4,14 @@
 #include <FS.h>
 #include <HX8357_t3n.h>
 #include "TouchPad.h"
+#include "AGUI.h"
 
-// ---------- Basic types ----------
-
+// Number of TouchScreen calibration target nodes
 #define N_TARGETS 9
 
+/**
+ * @brief TouchScreeenPoint deals with points in the screen coordinate system
+ */
 class TouchScreenPoint {
    public:
     TouchScreenPoint(void) { x = y = 0.0; }
@@ -53,14 +56,17 @@ class TouchScreen {
 
     // Methods associated with performing a calibration of the touchpad to the screen
     void begin(void);
+    bool calibrate(void);
     unsigned getNTargets(void);
     TouchScreenPoint getTargetCoordinate(const unsigned idx);
     bool recordCalibrationNode(const unsigned idx, const TouchScreenPoint adc);
+    bool testCalibration(AGUI& agui);
 
     // Map filtered raw reading to screen coordinates using current calibration
     // Returns false if no valid calibration loaded.
-    bool mapRawToScreen(const TouchScreenPoint& raw, TouchScreenPoint& screen);
+    bool mapRawToScreen(const TouchPadPoint& raw, TouchScreenPoint& screen);
     void rotate(TouchScreenPoint& p);
+    bool readTouchEvent(TouchScreenPoint& result);
 
     // Save/restore the calibration state to/from a stream
     bool serialize(File theFile);    // Save calibration data to a Stream
@@ -69,15 +75,22 @@ class TouchScreen {
    private:
     // Our private methods and helpers
     TouchScreenPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell);
-    bool locateCell(const TouchScreenPoint& raw, TCZone& cell);
+    bool locateCell(const TouchPadPoint& raw, TCZone& cell);
     const TouchCalibrationNode& nodeAt(const int r, const int cidx);
     uint16_t crc16(const uint8_t* data, const size_t length);
+    void displayTarget(unsigned nodeIndex);
+    void eraseTarget(unsigned nodeIndex);
+    TouchScreenPoint toTCPoint(TouchPadPoint p);
+    TouchScreenPoint readTouchPad(void);
+    void waitForTouchEnd(void);
 
-    // Attributes that need not be serialized
-    TouchPad& touchPad;  // The touchpad driver
-    HX8357_t3n& gfx;     // The touchscreen driver
+    // Attributes that should not be serialized
+    TouchPad& touchPad;  // Reference to the touchpad driver
+    HX8357_t3n& gfx;     // Reference to the touchscreen driver
+    uint16_t width;      // TouchPad width in pixels
+    uint16_t height;     // TouchPad height in pixels
 
     // These calibration attributes must be serialized/deserialized to avoid recalibration
     TouchScreenPoint targetCoordinates[N_TARGETS];  // Screen coordinates of the calibration targets
-    TouchCalibrationTable theCalibrationTable;      // This is the serializable calibration data
+    TouchCalibrationTable calibrationTable;         // This is the serializable calibration data
 };

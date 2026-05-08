@@ -32,7 +32,8 @@
  *  but these are implemented in TouchSerialization.cpp, not here.
  *
  * ATTRIBUTION:
- *  Original implementation by Jim Conrad with crucial guidance from CoPilot.
+ *  Original implementation by Jim Conrad with crucial guidance from CoPilot.  Say what you want,
+ *  but the damn thing was more useful than some humans I've worked with over the past 50 years.
  *
  * LICENSE:
  *  Copyright (C) 2026 Jim Conrad
@@ -80,13 +81,13 @@ TouchScreenPoint TouchScreen::getTargetCoordinate(unsigned idx) { return targetC
  */
 bool TouchScreen::recordCalibrationNode(unsigned idx, TouchScreenPoint adc) {
     // Sanity checks
-    if (idx >= getNTargets()) return false;                            // Ridiculous index
-    if (gfx.getRotation() != 0) return false;                          // Calibration must occur unrotated
-    theCalibrationTable.nodes[idx].screen = getTargetCoordinate(idx);  // The target's screen coordinates
-    theCalibrationTable.nodes[idx].raw = adc;                          // The touchpad's ADC coordinate values
+    if (idx >= getNTargets()) return false;                         // Ridiculous index
+    if (gfx.getRotation() != 0) return false;                       // Calibration must occur unrotated
+    calibrationTable.nodes[idx].screen = getTargetCoordinate(idx);  // The target's screen coordinates
+    calibrationTable.nodes[idx].raw = adc;                          // The touchpad's ADC coordinate values
     DPRINTF("Node[%d] maps touchpoint (%f,%f) to screen (%f,%f)\n", idx,
-            theCalibrationTable.nodes[idx].raw.x, theCalibrationTable.nodes[idx].raw.y,
-            theCalibrationTable.nodes[idx].screen.x, theCalibrationTable.nodes[idx].screen.y);
+            calibrationTable.nodes[idx].raw.x, calibrationTable.nodes[idx].raw.y,
+            calibrationTable.nodes[idx].screen.x, calibrationTable.nodes[idx].screen.y);
     return true;
 }
 
@@ -101,18 +102,16 @@ TouchScreen::TouchScreen(TouchPad& touchPadDriver, HX8357_t3n& gfxDriver) : touc
  * @brief Initialize the TouchScreen object
  *
  * DISCUSSION:
- *  We do this here rather than in constructor to avoid invoking methods in potentially uninitialized
+ *  We initialize here rather than in constructor to avoid invoking methods in potentially uninitialized
  *  objects referenced here.
  */
 void TouchScreen::begin() {
-    unsigned width, height;  // Screen dimensions in setRotation(0)
-
     // The Adafruit GFX driver knows the touchpad's width and height (in pixels)
     uint8_t gfxRotation = gfx.getRotation();  // The GFX driver's screen rotation code
-    gfx.setRotation(0);                       // Temporarily set the rotation to its default value
-    width = gfx.width();                      // Get touchpad hardware width (pixels) from GFX
-    height = gfx.height();                    // And height
-    gfx.setRotation(gfxRotation);             // Restore GFX rotation
+    gfx.setRotation(0);                       // We need the touchpad's width/height in its natural rotation
+    width = gfx.width();                      // Record touchpad hardware width (pixels) from GFX
+    height = gfx.height();                    // And height in pixels
+    gfx.setRotation(gfxRotation);             // Restore application's GFX rotation
 
     // Calculate the target point margins and midpoints
     float margin = TARGET_MARGIN;
@@ -148,7 +147,7 @@ const TouchCalibrationNode& TouchScreen::nodeAt(int r, int cidx) {
     if ((r < 0) || (r >= 3) || (cidx < 0) || (cidx >= 3)) {
         DTRACE();
     }
-    return theCalibrationTable.nodes[r * 3 + cidx];
+    return calibrationTable.nodes[r * 3 + cidx];
 }
 
 /**
@@ -178,11 +177,11 @@ static float max(float a, float b, float c) {
  * cell) edges.  When asked to interpolate a raw touchpoint lying outside the known cellular
  * region, we snap to the nearby cell's row/col.
  */
-bool TouchScreen::locateCell(const TouchScreenPoint& raw, TCZone& cell) {
+bool TouchScreen::locateCell(const TouchPadPoint& raw, TCZone& cell) {
     int row = -1, col = -1;
 
     // Perhaps the raw touchpoint lies above the top row
-    float top = max(theCalibrationTable.nodes[0].raw.y, theCalibrationTable.nodes[1].raw.y, theCalibrationTable.nodes[2].raw.y);
+    float top = max(calibrationTable.nodes[0].raw.y, calibrationTable.nodes[1].raw.y, calibrationTable.nodes[2].raw.y);
     if (raw.y < top) {
         row = 0;  // Snap to the top row
         DTRACE();
@@ -206,7 +205,7 @@ bool TouchScreen::locateCell(const TouchScreenPoint& raw, TCZone& cell) {
     }
 
     // Perhaps the raw touchpoint lies to the left of the leftmost column
-    float leftmost = max(theCalibrationTable.nodes[0].raw.x, theCalibrationTable.nodes[3].raw.x, theCalibrationTable.nodes[6].raw.x);
+    float leftmost = max(calibrationTable.nodes[0].raw.x, calibrationTable.nodes[3].raw.x, calibrationTable.nodes[6].raw.x);
     if (raw.x < leftmost) {
         col = 0;  // Snap to leftmost column
         DTRACE();
@@ -310,7 +309,8 @@ TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const T
  *
  * DISCUSSION:
  *  We assume the touchpad hardware coordinate system is always in the default GFX rotation (0).  We
- *  rotate the specified point's coordinates in-place to the rotation actually in use by GFX.
+ *  rotate the specified point's coordinates in-place to match the rotation actually in use by the
+ *  GFX display driver.
  */
 void TouchScreen::rotate(TouchScreenPoint& p) {
     float x = p.x;
@@ -369,20 +369,45 @@ void TouchScreen::rotate(TouchScreenPoint& p) {
  *  rotation.  You can use rotate() to rotate the screen coordinate returned from
  *  mapRawToScreen().
  */
-bool TouchScreen::mapRawToScreen(const TouchScreenPoint& raw, TouchScreenPoint& screen) {
+bool TouchScreen::mapRawToScreen(const TouchPadPoint& raw, TouchScreenPoint& screen) {
     TCZone cell;
+
+    // The touchpad is divided into four zones known as "cells" having two rows
+    // and two columns.  Interpolation will occur within one of these cells.
     if (!locateCell(raw, cell)) {
         DPRINTF("locateCell raw.x=%f raw.y=%f\n failed\n", raw.x, raw.y);
         return false;
     }
 
-    screen = bilinear(theCalibrationTable, cell);
+    // Use the calibration table to interpolate within the touched cell
+    screen = bilinear(calibrationTable, cell);
 
-    // Deal with inaccuracies near edges
+    // Deal with out-of-bounds near edges
     if (screen.x < 0) screen.x = 0;
-    if (screen.x > 319) screen.x = 319;
+    if (screen.x > width - 1) screen.x = width - 1;
     if (screen.y < 0) screen.y = 0;
-    if (screen.y >= 479) screen.y = 479;
+    if (screen.y >= height - 1) screen.y = height - 1;
 
     return true;
 }  // mapRawToScreen()
+
+/**
+ * @brief Read touchscreen event
+ * @param result Resulting screen coordinate of touch event if successful
+ * @return true if successful
+ *
+ * DISCUSSION:
+ *  Non-blocking read through TouchScreen, producing result in the screen
+ *  coordinate system in the GFX current rotation.  Returns false if the TouchPad
+ *  is not touched.  The result is filtered for noise, calibrated, and rotated into
+ *  the screen coordinate system.
+ */
+bool TouchScreen::readTouchEvent(TouchScreenPoint& result) {
+    TouchPadPoint raw;
+    bool ok = touchPad.readFiltered(raw);  // Raw ADC coordinates
+    if (ok) {
+        ok = mapRawToScreen(raw, result);  // Calibrated map to screen coordinates
+        if (ok) rotate(result);            // Rotate into current GFX rotation
+    }
+    return ok;
+}

@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @brief TouchPadPoint class (for conveying raw touchpad coordinates as ADC results)
+ * @brief TouchPadPoint class conveys raw touchpad coordinates as raw ADC values
  */
 class TouchPadPoint {
    public:

@@ -6,7 +6,7 @@
  * Touchscreen Breakout Board w/MicroSD Socket - HX8357D" (Product 2050) touchpad.
  *
  * Sadly, there are a couple weirdo artifacts (the X and Y axis 510 Ohm resistors,
- * XR and YR) specific to the PocketFT8Xcvr hardware and Teensy debugging support.
+ * XR and YR) specific to the PocketFT8Xcvr PCB and Teensy debugging support.
  *
  * TERMINOLOGY:
  * We frequently use the term TouchPad to refer to the resistive touchpad overlay,

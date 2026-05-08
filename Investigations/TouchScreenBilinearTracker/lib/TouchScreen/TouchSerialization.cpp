@@ -17,18 +17,22 @@
  * allowing the linker to select the media (e.g. SD, EEPROM, etc) required by the
  * application.  This implementation is for a File (e.g. SD) media.
  *
+ * The caller is responsible for creating and closing the serialized data file.
+ *
+ * The calibration data is protected from inadvertent damage by a CRC.
+ *
  * ATTRIBUTION:
- *  Original implementation by Jim Conrad with CRC guidance from CoPilot.
+ *  Original implementation by Jim Conrad with crucial CRC guidance from CoPilot.
  *
  * LICENSE:
  *  Copyright (C) 2026 Jim Conrad
  *  MIT https://opensource.org/license/mit
  */
 bool TouchScreen::serialize(File theFile) {
-    theCalibrationTable.checksum = crc16((uint8_t*)&theCalibrationTable.nodes, sizeof(TouchCalibrationNode) * N_TARGETS);  // Checksum of nodes[]
-    int n = theFile.write(&theCalibrationTable, sizeof(TouchCalibrationTable));                                            // Write nodes and checksum to theFile
-    return n == sizeof(TouchCalibrationTable);                                                                             // Hopefully wrote the entire array
-}
+    calibrationTable.checksum = crc16((uint8_t*)&calibrationTable.nodes, sizeof(TouchCalibrationNode) * N_TARGETS);  // Checksum of nodes[]
+    int n = theFile.write(&calibrationTable, sizeof(TouchCalibrationTable));                                         // Write nodes and checksum to theFile
+    return n == sizeof(TouchCalibrationTable);                                                                       // Hopefully wrote the entire array
+}  // serialize()
 
 /**
  * @brief Restore ("deserialize") the TouchScreen state from a File
@@ -36,11 +40,11 @@ bool TouchScreen::serialize(File theFile) {
  * @return true if successful, false otherwise
  */
 bool TouchScreen::deserialize(File theFile) {
-    int n = theFile.read(&theCalibrationTable, sizeof(TouchCalibrationTable));                                          // Read the calibration data and stored checksum
-    if (n != sizeof(TouchCalibrationTable)) return false;                                                               // Check for FileIO problems
-    uint16_t computedChecksum = crc16((uint8_t*)&theCalibrationTable.nodes, sizeof(TouchCalibrationNode) * N_TARGETS);  // Computed checksum
-    return computedChecksum == theCalibrationTable.checksum;                                                            // Confirm computed and read checksums match
-}
+    int n = theFile.read(&calibrationTable, sizeof(TouchCalibrationTable));                                          // Read the calibration data and stored checksum
+    if (n != sizeof(TouchCalibrationTable)) return false;                                                            // Check for FileIO problems
+    uint16_t computedChecksum = crc16((uint8_t*)&calibrationTable.nodes, sizeof(TouchCalibrationNode) * N_TARGETS);  // Computed checksum
+    return computedChecksum == calibrationTable.checksum;                                                            // Confirm computed and read checksums match
+}  // deserialize()
 
 /**
  * @brief Helper method to calculate a simple 16-bit CRC
@@ -69,4 +73,4 @@ uint16_t TouchScreen::crc16(const uint8_t* data, size_t length) {
         }
     }
     return crc;
-}
+}  // crc16()

@@ -102,25 +102,9 @@ void setup() {
     gfx.fillScreen(HX8357_BLACK);  // Erase screen
     gfx.setRotation(0);
 
-    // Touchscreen calibration
+    // Calibrate the touchscreen
     touchScreen.begin();
-    unsigned nTargets = touchScreen.getNTargets();  // How many targets are required?
-    for (unsigned nodeIndex = 0; nodeIndex < nTargets; nodeIndex++) {
-        char s[256];
-
-        // Prompt the operator
-        gfx.setCursor(50, 100);
-        sprintf(s, "Touch target %d of %d\n", nodeIndex + 1, nTargets);  // Prompt msg
-        gfx.print(s);
-        displayTarget(nodeIndex);  // Display the target for operator to touch
-
-        // Read and record the calibration data
-        TouchScreenPoint adc = readTouchPad();              // Read touchpad coordinates as ADC values
-        touchScreen.recordCalibrationNode(nodeIndex, adc);  // Record info for this node
-        waitForTouchEnd();                                  // Wait for operator to quit dragging stylus on the touchpad
-        eraseTarget(nodeIndex);                             // Erase target from display
-        delay(200);                                         // Don't rush the operator
-    }
+    touchScreen.calibrate();
 
     // Erase screen before proceeding
     gfx.fillScreen(HX8357_BLACK);
@@ -131,17 +115,12 @@ void setup() {
  */
 void loop() {
     bool ok;
-    TouchPadPoint p;
-    gfx.setRotation(3);
-    ok = theTouchPad.readFiltered(p);             // Read the touchpad
-    if (ok) {                                     // Did we actually get anything?
-        TouchScreenPoint raw = toTCPoint(p);      // Change coordinates to float
-        TouchScreenPoint screen;                  // Corrected screen coordinates
-        touchScreen.mapRawToScreen(raw, screen);  // Apply calibration
-        DPRINTF("raw (%f,%f) mapped to screen (%f,%f)\n", raw.x, raw.y, screen.x, screen.y);
-        touchScreen.rotate(screen);
-        DPRINTF("Rotated to (%f,%f)\n", screen.x, screen.y);
-        gfx.fillCircle((int)screen.x, (int)screen.y, 2, HX8357_YELLOW);  // Display corrected coordinates as dots
+    TouchScreenPoint screen;  // Corrected screen coordinates
+    gfx.setRotation(3);       // GFX rotation
+    ok = touchScreen.readTouchEvent(screen);
+    if (ok) {  // Did we actually get anything?
+        DPRINTF("screen: (%f,%f)\n", screen.x, screen.y);
+        gfx.fillCircle((int)screen.x, (int)screen.y, 2, HX8357_YELLOW);  // Display corrected screen coordinates as dots
         waitForTouchEnd();                                               // Wait for drag to end
     }
     delay(50);
