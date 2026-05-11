@@ -51,7 +51,7 @@
 #include "NODEBUG.h"       //For printf-style debugging on a Teensy sans JTAG :(
 
 //-----------------------------------------------------------------------------
-HX8357_t3n* AGUI::gfx;
+//HX8357_t3n& AGUI::gfx;
 const GFXfont* AGUI::appFont;  // Default font for this application
 
 //-----------------------------------------------------------------------------
@@ -78,7 +78,7 @@ AGUI::AGUI(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font) {
     // Serial.print("AGUI()=");
 
     // Record configuration params
-    gfx = &tft;                 // Adafruit display object
+    gfx = tft;                 // Adafruit display object
     appFont = &font;            // Application's default font
     screenRotation = rotation;  // See Adafruit HX8357 doc for values
 
@@ -109,14 +109,14 @@ AGUI::AGUI(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font) {
  * @note GFX supports a single clip window
  */
 void AGUI::setClipRect(ACoord clipX, ACoord clipY, ACoord clipW, ACoord clipH) {
-    gfx->setClipRect(clipX, clipY, clipW, clipH);
+    gfx.setClipRect(clipX, clipY, clipW, clipH);
 }
 
 /**
  * @brief Set the clip window to the full-screen
  */
 void AGUI::setClipRect(void) {
-    gfx->setClipRect();
+    gfx.setClipRect();
 }
 
 /**
@@ -126,7 +126,7 @@ void AGUI::setClipRect(void) {
  * @param color Specified color
  */
 void AGUI::drawPixel(int16_t x, int16_t y, AColor color) {
-    gfx->drawPixel(x, y, color);
+    gfx.drawPixel(x, y, color);
 }
 
 /**
@@ -140,7 +140,7 @@ void AGUI::drawPixel(int16_t x, int16_t y, AColor color) {
 
 void AGUI::fillRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor color) {
     DPRINTF("xCoord=%d yCoord=%d, w=%d, h=%d, c=0x%04x\n", xCoord, yCoord, w, h, color);
-    gfx->fillRect(xCoord, yCoord, w, h, color);
+    gfx.fillRect(xCoord, yCoord, w, h, color);
     // DTRACE();
 }
 
@@ -154,7 +154,7 @@ void AGUI::fillRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor col
  * @param color Fill color
  */
 void AGUI::fillRoundRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, ACoord r, AColor color) {
-    gfx->fillRoundRect(xCoord, yCoord, w, h, r, color);
+    gfx.fillRoundRect(xCoord, yCoord, w, h, r, color);
 }
 
 /**
@@ -166,7 +166,7 @@ void AGUI::fillRoundRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, ACoor
  * @param color Specified color
  */
 void AGUI::drawRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor color) {
-    gfx->drawRect(xCoord, yCoord, w, h, color);
+    gfx.drawRect(xCoord, yCoord, w, h, color);
 }
 
 /**
@@ -180,7 +180,7 @@ void AGUI::drawRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, AColor col
  */
 void AGUI::drawRoundRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, ACoord r,
                          AColor color) {
-    gfx->drawRoundRect(xCoord, yCoord, w, h, r, color);
+    gfx.drawRoundRect(xCoord, yCoord, w, h, r, color);
 }
 
 //-----------------------------------------------------------------------------
@@ -193,14 +193,14 @@ void AGUI::drawRoundRect(ACoord xCoord, ACoord yCoord, ACoord w, ACoord h, ACoor
  * @param f Pointer to the GFXfont struct
  */
 void AGUI::setFont(const GFXfont* f) {
-    gfx->setFont(f);
+    gfx.setFont(f);
 }
 
 /**
  * @brief Select the specified GFX font
  */
 void AGUI::setFont(void) {
-    gfx->setFont();
+    gfx.setFont();
 }
 
 /**
@@ -208,7 +208,7 @@ void AGUI::setFont(void) {
  * @param f Pointer to an ILI9341_t3_font struct
  */
 void AGUI::setFont(const ILI9341_t3_font_t& f) {
-    gfx->setFont(f);
+    gfx.setFont(f);
 }
 
 /**
@@ -225,7 +225,7 @@ void AGUI::setFont(const ILI9341_t3_font_t& f) {
  */
 ACoord AGUI::getLeading() {
     DTRACE();
-    return gfx->getLeading();
+    return gfx.getLeading();
 }
 
 /**
@@ -234,7 +234,7 @@ ACoord AGUI::getLeading() {
  * @param yCoord coordinate
  */
 void AGUI::setCursor(ACoord xCoord, ACoord yCoord) {
-    gfx->setCursor(xCoord, yCoord);
+    gfx.setCursor(xCoord, yCoord);
 }
 
 /**
@@ -244,7 +244,7 @@ void AGUI::setCursor(ACoord xCoord, ACoord yCoord) {
  * @note Subsequent text will be displayed in the specified color
  */
 void AGUI::setTextColor(AColor fg) {
-    gfx->setTextColor(fg);
+    gfx.setTextColor(fg);
 }
 
 /**
@@ -255,7 +255,7 @@ void AGUI::setTextColor(AColor fg) {
  * @note Subsequent text will be displayed in the specified colors
  */
 void AGUI::setTextColor(AColor fg, AColor bg) {
-    gfx->setTextColor(fg, bg);
+    gfx.setTextColor(fg, bg);
 }
 
 /**
@@ -263,7 +263,7 @@ void AGUI::setTextColor(AColor fg, AColor bg) {
  * @param w true==>wrap, false if not
  */
 void AGUI::setTextWrap(bool w) {
-    gfx->setTextWrap(w);
+    gfx.setTextWrap(w);
 }
 
 /**
@@ -276,7 +276,7 @@ void AGUI::setTextWrap(bool w) {
  * at the current cursor position.
  */
 size_t AGUI::writeText(const uint8_t* buffer, size_t size) {
-    return gfx->write(buffer, size);
+    return gfx.write(buffer, size);
 }
 
 /**
@@ -285,7 +285,7 @@ size_t AGUI::writeText(const uint8_t* buffer, size_t size) {
  * @return #chars actually written
  */
 size_t AGUI::writeText(String str) {
-    return gfx->write((const uint8_t*)str.c_str(), str.length());
+    return gfx.write((const uint8_t*)str.c_str(), str.length());
 }
 
 /**
@@ -301,7 +301,7 @@ size_t AGUI::writeText(String str) {
  */
 void AGUI::getTextBounds(const uint8_t* buffer, uint16_t len, ACoord x, ACoord y,
                          ACoord* x1, ACoord* y1, ACoord* w, ACoord* h) {
-    gfx->getTextBounds(buffer, len, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
+    gfx.getTextBounds(buffer, len, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
 }
 
 /**
@@ -316,7 +316,7 @@ void AGUI::getTextBounds(const uint8_t* buffer, uint16_t len, ACoord x, ACoord y
  */
 void AGUI::getTextBounds(const char* string, ACoord x, ACoord y,
                          ACoord* x1, ACoord* y1, ACoord* w, ACoord* h) {
-    gfx->getTextBounds(string, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
+    gfx.getTextBounds(string, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
 }
 
 /**
@@ -331,14 +331,14 @@ void AGUI::getTextBounds(const char* string, ACoord x, ACoord y,
  */
 void AGUI::getTextBounds(const String& str, ACoord x, ACoord y,
                          ACoord* x1, ACoord* y1, ACoord* w, ACoord* h) {
-    gfx->getTextBounds(str, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
+    gfx.getTextBounds(str, (int16_t)x, (int16_t)y, (int16_t*)x1, (int16_t*)y1, (uint16_t*)w, (uint16_t*)h);
 }  // getTextBounds()
 
 /**
  * @brief Set the scrollable text area rectangle
  */
 void AGUI::setScrollTextArea(ACoord x, ACoord y, ALength w, ALength h) {
-    gfx->setScrollTextArea(x, y, w, h);
+    gfx.setScrollTextArea(x, y, w, h);
 }
 
 /**
@@ -346,21 +346,21 @@ void AGUI::setScrollTextArea(ACoord x, ACoord y, ALength w, ALength h) {
  * @param color Background
  */
 void AGUI::setScrollBackgroundColor(AColor color) {
-    gfx->setScrollBackgroundColor(color);
+    gfx.setScrollBackgroundColor(color);
 }
 
 /**
  * @brief Enable text scrolling
  */
 void AGUI::enableScroll() {
-    gfx->enableScroll();
+    gfx.enableScroll();
 }
 
 /**
  * @brief Disable text scrolling
  */
 void AGUI::disableScroll() {
-    gfx->disableScroll();
+    gfx.disableScroll();
 }
 
 /**
@@ -371,7 +371,7 @@ void AGUI::disableScroll() {
  * and filling in rows of scroll background color below.
  */
 void AGUI::scrollTextArea(uint8_t scrollSize) {
-    gfx->scrollTextArea(scrollSize);
+    gfx.scrollTextArea(scrollSize);
 }
 
 /**
@@ -379,5 +379,5 @@ void AGUI::scrollTextArea(uint8_t scrollSize) {
  * @param color The new color configuration
  */
 void AGUI::resetScrollBackgroundColor(AColor color) {
-    gfx->resetScrollBackgroundColor(color);
+    gfx.resetScrollBackgroundColor(color);
 }
