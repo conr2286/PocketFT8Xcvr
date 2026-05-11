@@ -226,6 +226,39 @@ void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
     }
 }  // processTouch()
 
+// /**
+//  * @brief Alternative method to process a touch event
+//  * @param xCoord Touch point's xCoord
+//  * @param yCoord Touch point's yCoord
+//  *
+//  * DISCUSSION:
+//  *  + All touch events for widgets pass through processTouch
+//  *  + If the touch point lies within a widget, we notify that widget
+//  *  + Else we notify the closest nearBy widget (if any)
+//  */
+// void AWidget::processTouch(uint16_t xCoord, uint16_6 yCoord) {
+//     DTRACE();
+//     AWidget* closestWidget = NULL;
+
+//     // Examine widgets to determine which is closest to touch point
+//     for (AWidget* thisWidget = allWidgets; thisWidget != NULL; thisWidget = thisWidget->next) {
+//         // If touch point lies inside thisWidget then search no further
+//         if (thisWidget->boundary.isWithin(xCoord, yCoord)) {
+//             closestWidget = thisWidget;
+//             break;
+//         }
+
+//         // Perhaps thisWidget lies closer to the touch point than closestWidget?
+//         uint16_t d1 = thisWidget->distanceTo(xCoord, yCoord);  // Distance in pixels from thisWidget to touch point
+//         if ((closestWidget != NULL) && (d1 < closestWidget->distanceTo(xCoord, yCoord))) {
+//             if (d1 <= nearBy) closestWidget = thisWidget;
+//         }
+//     }
+
+//     // Notify closestWidget (if any) about touch event
+//     if (closestWidget != NULL) closestWidget->onTouchWidget(xCoord, yCoord);
+// }
+
 /**
  * @brief Determine if a widget has a drawn border
  * @return true if has a border, else false

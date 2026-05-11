@@ -18,6 +18,7 @@ class AWidget {
     AWidget& operator=(const AWidget& that);
 
     static void processTouch(uint16_t xCoord, uint16_t yCoord);  // All touch events pass through processTouch()
+
     bool hasBorder(void);
     void repaint(void) { onRepaintWidget(); }
     inline ALength width(void) const { return boundary.w; }
