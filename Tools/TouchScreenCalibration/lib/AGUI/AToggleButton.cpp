@@ -32,7 +32,7 @@
  */
 AToggleButton::AToggleButton(const char* txt, ACoord x1, ACoord y1, ALength w, ALength h, int userDat, bool border) {
     // if (!Serial) Serial.begin(9600);
-    DPRINTF("str='%s', x1=%d, y1=%d, w=%d, h=%d\n", str, x1, y1, w, h);
+    DPRINTF("txt='%s', x1=%d, y1=%d, w=%d, h=%d\n", txt, x1, y1, w, h);
 
     // Remember location and extent of the boundary box
     boundary.setCorners(x1, y1, w, h);

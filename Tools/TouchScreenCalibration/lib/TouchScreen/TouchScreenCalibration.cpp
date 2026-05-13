@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include "TouchScreen.h"
 #include "TouchPad.h"
+#include "DEBUG.h"
 
 /**
  * @brief Helper to display specified target on GFX screen
@@ -15,6 +16,7 @@ void TouchScreen::displayTarget(unsigned nodeIndex) {
     // Display target
     TouchScreenPoint p = getTargetCoordinate(nodeIndex);             // Screen coordinates for center of target
     gfx.fillCircle((unsigned)p.x, (unsigned)p.y, 2, HX8357_YELLOW);  // Display target
+    DPRINTF("nodeIndex=%d, p.x=%d p.y=%d\n", nodeIndex, (unsigned)p.x, (unsigned)p.y);
 }  // displayTarget()
 
 /**
@@ -84,6 +86,7 @@ bool TouchScreen::calibrate(void) {
         char s[256];
 
         // Prompt the operator and display this target
+        gfx.fillScreen(HX8357_BLACK);
         gfx.setCursor(50, 100);
         snprintf(s, sizeof(s), "Touch target %d of %d\n", nodeIndex + 1, nTargets);  // Prompt msg
         gfx.print(s);

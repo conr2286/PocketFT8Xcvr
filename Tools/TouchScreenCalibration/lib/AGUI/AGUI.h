@@ -62,7 +62,7 @@ class AGUI {
     const static AColor spColor = AColor::A_GREY;       // Application special color
 
     // Etc variables (all must be static or initialized in default constructor)
-    static HX8357_t3n& gfx;  // Adafruit's GFX Library
+    static HX8357_t3n* gfx;  // Adafruit's GFX Library
     uint8_t screenRotation;  // See Adafruit HX8357 library doc for values
 
    private:

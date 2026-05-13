@@ -50,7 +50,7 @@
 
 // We typically inset the calibration targets by a small margin to avoid
 // asking operator to touch on the margin.
-static const int TARGET_MARGIN = 15;  // Target offset in pixels from display edges
+static const int TARGET_MARGIN = 30;  // Target offset in pixels from display edges
 
 /**
  * @brief Get the number of calibration targets used by the interpolator
@@ -96,14 +96,15 @@ bool TouchScreen::recordCalibrationNode(unsigned idx, TouchScreenPoint adc) {
  * @param touchPadDriver Reference to the TouchPad driver
  * @param gfxDriver Reference to the Adafruit GFX driver
  */
-TouchScreen::TouchScreen(TouchPad& touchPadDriver, HX8357_t3n& gfxDriver) : touchPad(touchPadDriver), gfx(gfxDriver) {}
+TouchScreen::TouchScreen(TouchPad& touchPadDriver, HX8357_t3n& gfxDriver) : touchPad(touchPadDriver), gfx(gfxDriver) {
+}
 
 /**
  * @brief Initialize the TouchScreen object
  *
  * DISCUSSION:
  *  We initialize here rather than in constructor to avoid invoking methods in potentially uninitialized
- *  objects referenced here.
+ *  objects (e.g. gfx) referenced here.
  */
 void TouchScreen::begin() {
     // The Adafruit GFX driver knows the touchpad's width and height (in pixels)
@@ -121,6 +122,7 @@ void TouchScreen::begin() {
     float rightMargin = width - margin;
     unsigned horizMidpoint = width / 2;
     unsigned vertMidpoint = height / 2;
+    DPRINTF("leftMargin=%f rightMargin=%f topMargin=%f botMargin=%f TARGET_MARGIN=%d\n", leftMargin, rightMargin, topMargin, botMargin, TARGET_MARGIN);
 
     // Initialize the screen coordinates of the calibration target points
     targetCoordinates[0] = TouchScreenPoint(leftMargin, topMargin);     // Upper-left target
