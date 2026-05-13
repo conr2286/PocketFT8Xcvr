@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include <SPI.h>
+#include <SD.h>
 
 #include "Adafruit_GFX.h"
 #include "HX8357_t3n.h"
@@ -30,71 +32,6 @@ TouchScreen touchScreen(theTouchPad, gfx);
 // Build the GUI
 static AGUI& agui = AGUI::getInstance(gfx, 3, FT8Font);
 
-// /**
-//  * @brief Display specified target
-//  * @param nodeIndex Target index
-//  */
-// void displayTarget(unsigned nodeIndex) {
-//     // Sanity check
-//     if (nodeIndex >= touchScreen.getNTargets()) return;
-
-//     // Display target
-//     TouchScreenPoint p = touchScreen.getTargetCoordinate(nodeIndex);  // Screen coordinates for center of target
-//     gfx.fillCircle((unsigned)p.x, (unsigned)p.y, 2, HX8357_YELLOW);   // Display target
-// }  // displayTarget()
-
-// /**
-//  * @brief Erase displayed target
-//  * @param nodeIndex Target index
-//  */
-// void eraseTarget(unsigned nodeIndex) {
-//     // Sanity check
-//     if (nodeIndex >= touchScreen.getNTargets()) return;
-
-//     // Erase target
-//     TouchScreenPoint p = touchScreen.getTargetCoordinate(nodeIndex);  // Screen coordinates for center of target
-//     gfx.fillCircle((unsigned)p.x, (unsigned)p.y, 2, HX8357_BLACK);    // Display target
-// }  // displayTarget()
-
-// /**
-//  * @brief Helper to Convert a TouchPadPoint into a TouchScreenPoint
-//  * @param p TouchPadPoint
-//  * @return TouchScreenPoint
-//  *
-//  * @note The touchpad hardware works with integer types while calibrator works with floats
-//  */
-// TouchScreenPoint toTCPoint(TouchPadPoint p) {
-//     TouchScreenPoint result;
-//     result.x = p.x;
-//     result.y = p.y;
-//     return result;
-// }
-
-// /**
-//  * @brief Blocking read of touchpad ADC coordinates
-//  * @return ADC coordinates as a TouchScreenPoint type
-//  */
-// TouchScreenPoint readTouchPad(void) {
-//     TouchPadPoint p;
-//     bool ok;
-//     do {
-//         ok = theTouchPad.readFiltered(p);  // Read touchpad...
-//     } while (!ok);  //...until we get valid coordinates
-//     return toTCPoint(p);  // Return valid coordinates as floats
-// }
-
-// /**
-//  * @brief Wait for touch/drag event to complete
-//  *
-//  * @note A touch event ends when the operator lifts the stylus from the pad
-//  */
-// void waitForTouchEnd(void) {
-//     TouchPadPoint p;
-//     while (!theTouchPad.readRaw(p)) {
-//         delay(50);
-//     }
-// }
-
 /**
  * @brief Arduino initialization
  */
@@ -102,6 +39,14 @@ void setup() {
     Serial.begin(115200);
     delay(1000);  // Wait for PlatformIO serial
     Serial.printf("Starting...\n");
+
+    Wire.setSDA(PIN_SDA);
+    Wire.setSCL(PIN_SCL);
+    Wire.begin();
+
+    Wire1.setSDA(PIN_SDA2);
+    Wire1.setSCL(PIN_SCL2);
+    Wire1.begin();
 
     // Get the display running
     gfx.begin();
@@ -112,23 +57,37 @@ void setup() {
     touchScreen.begin();
 
     // Do the calibration
-    bool result = touchScreen.doCalibration(agui);
-    DPRINTF("doCalibration()=%d\n", result);
+    bool ok = false;
 
+    do {
+        // Do the calibration
+        ok = touchScreen.doCalibration(agui);
+        DPRINTF("doCalibration()=%d\n", ok);
+
+        // Serialize successful calibration?
+        if (ok) {
+            DTRACE();
+            // Get the SD file system running
+            if (!SD.begin(BUILTIN_SDCARD)) {
+                DTRACE();
+            }
+            File calibFile = SD.open("TOUCHSCR.DAT", FILE_WRITE);
+            if (calibFile) {
+                DTRACE();
+                if (!touchScreen.serialize(calibFile)) {
+                    DTRACE();
+                }
+            } else {
+                DTRACE();
+            }
+            calibFile.close();
+        }
+
+    } while (!ok);
 }
 
 /**
  * @brief Track touch events with displayed dots across the screen
  */
 void loop() {
-    // bool ok;
-    // TouchScreenPoint screen;  // Corrected screen coordinates
-    // gfx.setRotation(3);       // GFX rotation
-    // ok = touchScreen.readTouchEvent(screen);
-    // if (ok) {  // Did we actually get anything?
-    //     DPRINTF("screen: (%f,%f)\n", screen.x, screen.y);
-    //     gfx.fillCircle((int)screen.x, (int)screen.y, 2, HX8357_YELLOW);  // Display corrected screen coordinates as dots
-    //     waitForTouchEnd();                                               // Wait for drag to end
-    // }
-    // delay(50);
 }

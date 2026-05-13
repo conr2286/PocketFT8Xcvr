@@ -75,7 +75,7 @@ bool TouchScreen::doCalibration(AGUI& agui) {
                 else if (cancelButton.isWithin(p.x, p.y))
                     cmd = Command::CANCEL;
                 else
-                    delay(50);
+                    delay(100);
                 DPRINTF("cmd=%u\n", static_cast<unsigned>(cmd));
             }
         } while (cmd == Command::NONE);
@@ -83,9 +83,10 @@ bool TouchScreen::doCalibration(AGUI& agui) {
         // Does operator want to test the calibration (again)
         DPRINTF("cmd=%u\n", static_cast<unsigned>(cmd));
         if (cmd == Command::TEST) {
+            delay(200);
             // Wait for the operator to touch a test location on the screen
             while (!readTouchEvent(p)) {
-                delay(50);  // Wait a moment
+                delay(100);  // Wait a moment
             }
 
             // Display where touch event landed on the screen
