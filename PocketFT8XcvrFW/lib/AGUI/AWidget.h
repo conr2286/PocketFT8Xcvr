@@ -17,7 +17,9 @@ class AWidget {
     AWidget(const AWidget& existing);
     AWidget& operator=(const AWidget& that);
 
-    static void processTouch(uint16_t xCoord, uint16_t yCoord);  // All touch events pass through processTouch()
+    static void processTouch(uint16_t xCoord, uint16_t yCoord);  // All touch events may pass through static processTouch()
+    bool isWithin(uint16_t xCoord, uint16_t yCoord);             // Or you can poll a widget using touch coordinates
+
     bool hasBorder(void);
     void repaint(void) { onRepaintWidget(); }
     inline ALength width(void) const { return boundary.w; }

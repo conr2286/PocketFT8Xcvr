@@ -13,12 +13,12 @@
  * screen coordinates.
  */
 void ARect::setCorners(ACoord x1, ACoord y1, ALength w, ALength h) {
-    this->x1 = x1;
-    this->y1 = y1;
-    this->w = w;
-    this->h = h;
-    this->x2 = x1 + w;
-    this->y2 = y1 + h;
+    this->x1 = x1;          // Upper left pixel
+    this->y1 = y1;          // Upper left pixel
+    this->w = w;            // Width in pixels
+    this->h = h;            // Height in pixels
+    this->x2 = x1 + w - 1;  // Rightmost pixel
+    this->y2 = y1 + h - 1;  // Bottommost pixel
     // DPRINTF("boundary.x1=%d, boundary.x2=%d\n", x1, x2);
 }
 

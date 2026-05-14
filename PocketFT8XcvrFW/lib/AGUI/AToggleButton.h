@@ -23,7 +23,7 @@
 class AToggleButton : public AWidget {
    public:
     // Constructors
-    AToggleButton(const char* str, ACoord x1, ACoord y1, ALength w, ALength h, int userData, bool border = true);
+    AToggleButton(const char* str, ACoord x1, ACoord y1, ALength w=50, ALength h=30, int userData=0, bool border = true);
     virtual ~AToggleButton() {}
 
     // Public methods

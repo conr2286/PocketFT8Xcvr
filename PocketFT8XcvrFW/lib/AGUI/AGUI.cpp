@@ -1,6 +1,6 @@
 /**
  * AGUI isolates the widget implementations from the various Adafruit GFX library variations.
- * There's some minor added functionality but it's mostly an adapter to glue widgets to GFX.
+ * There's some minor added functionality but it's mostly an adapter to glue widgets to gfx->
  *  + Display types (e.g. TFT, etc)
  *  + Display controllers (e.g. HX8357, etc)
  *  + Display size (e.g. 480x320, etc)
@@ -92,7 +92,7 @@ AGUI::AGUI(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font) {
 }
 
 //-----------------------------------------------------------------------------
-//  Graphical methods: these *very* closely map into GFX.  Their implementation
+//  Graphical methods: these *very* closely map into gfx->  Their implementation
 //  here as a shim here attempts to provide some minimal independence of the
 //  the higher-level code from the GFX display driver.
 //
@@ -219,7 +219,7 @@ void AGUI::setFont(const ILI9341_t3_font_t& f) {
  * of the text and the white space between lines
  *
  * @note You may have to modify or subclass the GFX library to implement this because
- * the required font metrics for the calculation are protected in Adafruit_GFX.   If
+ * the required font metrics for the calculation are protected in Adafruit_gfx->   If
  * you *really* don't want to do this, you could just cast-it-in-brass here if you're
  * only using a single font.
  */

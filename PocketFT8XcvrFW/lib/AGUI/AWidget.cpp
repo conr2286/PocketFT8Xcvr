@@ -163,12 +163,12 @@ AWidget& AWidget::operator=(const AWidget& that) {
  * when this widget is destroyed.
  */
 AWidget::~AWidget() {
-    DPRINTF("~AWidget()=0x%x\n", this);
+    // DPRINTF("~AWidget()=0x%x\n", this);
 
     // Erase this widget from the display
-    // DPRINTF("x1=%d y1=%d, x2=%d y2=%d\n", boundary.x1, boundary.y1, boundary.x2, boundary.y2);
-    AGUI::gfx->setClipRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1);
-    AGUI::gfx->fillRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1, boundary.y2 - boundary.y1, bgColor);
+    DPRINTF("this=0x%x x1=%d y1=%d, x2=%d y2=%d\n", this, boundary.x1, boundary.y1, boundary.x2, boundary.y2);
+    AGUI::gfx->setClipRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1 + 1, boundary.y2 - boundary.y1 + 1);
+    AGUI::gfx->fillRect(boundary.x1, boundary.y1, boundary.x2 - boundary.x1 + 1, boundary.y2 - boundary.y1 + 1, bgColor);
 
     // Unlink this widget if it resides at the head of the list of all widgets
     if (allWidgets == this) {
@@ -226,6 +226,39 @@ void AWidget::processTouch(uint16_t xCoord, uint16_t yCoord) {
     }
 }  // processTouch()
 
+// /**
+//  * @brief Alternative method to process a touch event
+//  * @param xCoord Touch point's xCoord
+//  * @param yCoord Touch point's yCoord
+//  *
+//  * DISCUSSION:
+//  *  + All touch events for widgets pass through processTouch
+//  *  + If the touch point lies within a widget, we notify that widget
+//  *  + Else we notify the closest nearBy widget (if any)
+//  */
+// void AWidget::processTouch(uint16_t xCoord, uint16_6 yCoord) {
+//     DTRACE();
+//     AWidget* closestWidget = NULL;
+
+//     // Examine widgets to determine which is closest to touch point
+//     for (AWidget* thisWidget = allWidgets; thisWidget != NULL; thisWidget = thisWidget->next) {
+//         // If touch point lies inside thisWidget then search no further
+//         if (thisWidget->boundary.isWithin(xCoord, yCoord)) {
+//             closestWidget = thisWidget;
+//             break;
+//         }
+
+//         // Perhaps thisWidget lies closer to the touch point than closestWidget?
+//         uint16_t d1 = thisWidget->distanceTo(xCoord, yCoord);  // Distance in pixels from thisWidget to touch point
+//         if ((closestWidget != NULL) && (d1 < closestWidget->distanceTo(xCoord, yCoord))) {
+//             if (d1 <= nearBy) closestWidget = thisWidget;
+//         }
+//     }
+
+//     // Notify closestWidget (if any) about touch event
+//     if (closestWidget != NULL) closestWidget->onTouchWidget(xCoord, yCoord);
+// }
+
 /**
  * @brief Determine if a widget has a drawn border
  * @return true if has a border, else false
@@ -252,4 +285,17 @@ bool AWidget::overlaps(AWidget* someWidget) {
 
     // This and someWidget must overlap somehow
     return true;
+}
+
+/**
+ * @brief Poll widget to determine if coordinates lie within it
+ * @param xCoord
+ * @param yCoord
+ * @return true if coordinates lie within this widget's boundary
+ *
+ * DISCUSSION:
+ *  This public method can be used to poll a widget with touch coordinates
+ */
+bool AWidget::isWithin(uint16_t xCoord, uint16_t yCoord) {
+    return boundary.isWithin(xCoord, yCoord);
 }
