@@ -17,7 +17,7 @@
 #include "hwdefs.h"
 #include <Wire.h>
 
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 #ifdef __AVR
 #include <avr/pgmspace.h>
@@ -118,23 +118,30 @@ TSPoint TouchScreen::getPoint(void) {
 
     valid = 1;
 
+    // // Clear accumulated charge on the Y-AXIS
+    // pinMode(_ydm, OUTPUT);
+    // digitalWrite(_ydm, LOW);
+    // delayMicroseconds(5);
+
     // Setup to read yCoord from rotated (landscape) screen
-    pinMode(_yp, INPUT);   // Float Y-Axis pins
-    pinMode(_ym, INPUT);   // Float Y-Axis pins
-    pinMode(_xp, OUTPUT);  // Bias the X-Axis pins
-    pinMode(_xm, OUTPUT);  // Bias the X-Axis pins
+    pinMode(_yp, INPUT_DISABLE);   // Float Y-Axis pins
+    pinMode(_ydm, INPUT_DISABLE);  // Float Y-Axis pins
+    pinMode(_xdp, OUTPUT);         // Bias the X-Axis pins
+    pinMode(_xm, OUTPUT);          // Bias the X-Axis pins
 
     digitalWrite(_xm, HIGH);  // Bias X-Axis with Vcc
-    digitalWrite(_xp, LOW);   // Bias X-Axis with Vcc
-    delayMicroseconds(20);    // Fast ARM chips need to allow voltages to settle
+    digitalWrite(_xdp, LOW);  // Bias X-Axis with Vcc
+
+    delayMicroseconds(20);  // Fast ARM chips need to allow voltages to settle
 
     for (i = 0; i < NUMSAMPLES; i++) {
 #if HW_VERSION < 4
         err = adc.convertAndRead(MCP342x::channel1, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value1, status);  // Read schematic signal YD+
 #else
-        // value1 = analogRead2(PIN_YDP);  // Version 4+ HW has YDP on A17
-        value1 = analogRead(PIN_YDP);  // Version 4+ HW has YDP on A17
+        // value1 = analogRead2(PIN_YP);  // Version 4+ HW has YDP on A17
+        value1 = analogRead(PIN_YP);  // Version 4+ HW has YDP on A17
 #endif
+        // DPRINTF("ADC returned value1=%d\n", value1);
         samples[i] = value1;
     }
 
@@ -150,23 +157,31 @@ TSPoint TouchScreen::getPoint(void) {
 
     y = samples[1];  // JRC:  I think this is the Y-Coord of a rotated screen because we biased the display hardware's X-Axis
 
-    // Setup to read xCoord from rotated (landscape) screen
-    pinMode(_xp, INPUT);   // Float X-Axis pins
-    pinMode(_xm, INPUT);   // Float X-Axis pins
-    pinMode(_yp, OUTPUT);  // Bias Y-Axis
-    pinMode(_ym, OUTPUT);  // Bias Y-Axis
+    // // Clear accumulated charge on the Y-AXIS
+    // pinMode(_xdp, OUTPUT);
+    // digitalWrite(_xdp, LOW);
+    // delayMicroseconds(5);
 
-    digitalWrite(_ym, LOW);   // Bias Y-Axis with Vcc
+    // Setup to read xCoord from rotated (landscape) screen
+    pinMode(_xdp, INPUT_DISABLE);  // Float X-Axis pins
+    pinMode(_xm, INPUT_DISABLE);   // Float X-Axis pins
+    pinMode(_yp, OUTPUT);          // Bias Y-Axis
+    pinMode(_ydm, OUTPUT);         // Bias Y-Axis
+
+    digitalWrite(_ydm, LOW);  // Bias Y-Axis with Vcc
     digitalWrite(_yp, HIGH);  // Bias Y-Axis with Vcc
-    delayMicroseconds(20);    // Fast ARM chips need to allow voltages to settle
+
+    delayMicroseconds(20);  // Fast ARM chips need to allow voltages to settle
 
     for (i = 0; i < NUMSAMPLES; i++) {
 #if HW_VERSION < 4
         err = adc.convertAndRead(MCP342x::channel2, MCP342x::oneShot, MCP342x::resolution12, MCP342x::gain1, 1000000, value2, status);  // Schematic signal XD-
 #else
-        // value2 = analogRead2(PIN_XDM);  // Version 4+ has XDP on Pin A16
-        value2 = analogRead(PIN_XDM);  // Version 4+ has XDM on Pin A16
+        // value2 = analogRead2(PIN_XM);  // Version 4+ has XDP on Pin A16
+        value2 = analogRead(PIN_XM);  // Version 4+ has XDM on Pin A16
 #endif
+        // DPRINTF("ADC returned value2=%d\n", value2);
+
         samples[i] = value2;
     }
 
@@ -180,25 +195,27 @@ TSPoint TouchScreen::getPoint(void) {
     }
 #endif
 
-    x = samples[1];  // JRC:  I think this is the X-Coord of a rotated screen because we biased the display hardware's Y-Axis
+    x = samples[1];  // JRC:  I think this is the X-Coord of a rotated screen because we biased the display hardware's Y-Axis above
 
     if (!valid) {
         z = 0;
     } else {
         z = x + y;
+        // DPRINTF("Result:  x=%d, y=%d, z=%d\n", x, y, z);
     }
+    // DPRINTF("Result:  x=%d, y=%d, z=%d\n", x, y, z);
     return TSPoint(x, y, z);
 }
 
-TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
+TouchScreen::TouchScreen(uint8_t xdp, uint8_t yp, uint8_t xm, uint8_t ydm,
                          uint16_t rxplate = 0) {
     Serial.begin(9600);
     DTRACE();
 
     _yp = yp;
     _xm = xm;
-    _ym = ym;
-    _xp = xp;
+    _ydm = ydm;
+    _xdp = xdp;
     _rxplate = rxplate;
 
 #if HW_VERSION < 4
@@ -212,22 +229,22 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
     DTRACE();
 
 #if defined(USE_FAST_PINIO)
-    xp_port = portOutputRegister(digitalPinToPort(_xp));
+    xp_port = portOutputRegister(digitalPinToPort(_xdp));
     yp_port = portOutputRegister(digitalPinToPort(_yp));
     xm_port = portOutputRegister(digitalPinToPort(_xm));
-    ym_port = portOutputRegister(digitalPinToPort(_ym));
+    ym_port = portOutputRegister(digitalPinToPort(_ydm));
 
-    xp_pin = digitalPinToBitMask(_xp);
+    xp_pin = digitalPinToBitMask(_xdp);
     yp_pin = digitalPinToBitMask(_yp);
     xm_pin = digitalPinToBitMask(_xm);
-    ym_pin = digitalPinToBitMask(_ym);
+    ym_pin = digitalPinToBitMask(_ydm);
 #endif
 
     pressureThreshhold = 10;
 }
 
 // JRC:  I think these read methods are stale code
-
+#if 0
 /**
  * @brief Read the touch event's X value
  *
@@ -235,12 +252,12 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym,
  */
 int TouchScreen::readTouchX(void) {
     pinMode(_yp, INPUT);
-    pinMode(_ym, INPUT);
+    pinMode(_ydm, INPUT);
     digitalWrite(_yp, LOW);
-    digitalWrite(_ym, LOW);
+    digitalWrite(_ydm, LOW);
 
-    pinMode(_xp, OUTPUT);
-    digitalWrite(_xp, HIGH);
+    pinMode(_xdp, OUTPUT);
+    digitalWrite(_xdp, HIGH);
     pinMode(_xm, OUTPUT);
     digitalWrite(_xm, LOW);
 
@@ -252,15 +269,15 @@ int TouchScreen::readTouchX(void) {
  * @return int the Y measurement
  */
 int TouchScreen::readTouchY(void) {
-    pinMode(_xp, INPUT);
+    pinMode(_xdp, INPUT);
     pinMode(_xm, INPUT);
-    digitalWrite(_xp, LOW);
+    digitalWrite(_xdp, LOW);
     digitalWrite(_xm, LOW);
 
     pinMode(_yp, OUTPUT);
     digitalWrite(_yp, HIGH);
-    pinMode(_ym, OUTPUT);
-    digitalWrite(_ym, LOW);
+    pinMode(_ydm, OUTPUT);
+    digitalWrite(_ydm, LOW);
 
     return (1023 - analogRead(_xm));
 }
@@ -271,12 +288,12 @@ int TouchScreen::readTouchY(void) {
  */
 uint16_t TouchScreen::pressure(void) {
     // Set X+ to ground
-    pinMode(_xp, OUTPUT);
-    digitalWrite(_xp, LOW);
+    pinMode(_xdp, OUTPUT);
+    digitalWrite(_xdp, LOW);
 
     // Set Y- to VCC
-    pinMode(_ym, OUTPUT);
-    digitalWrite(_ym, HIGH);
+    pinMode(_ydm, OUTPUT);
+    digitalWrite(_ydm, HIGH);
 
     // Hi-Z X- and Y+
     digitalWrite(_xm, LOW);
@@ -302,3 +319,4 @@ uint16_t TouchScreen::pressure(void) {
         return (1023 - (z2 - z1));
     }
 }
+#endif

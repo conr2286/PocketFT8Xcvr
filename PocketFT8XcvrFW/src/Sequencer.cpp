@@ -1037,12 +1037,12 @@ void Sequencer::locatorEvent(Decode* msg) {
  *  @return true if interesting, false if not
  *
  *  Examples of messages that may or may not be of interest to KQ7B:
- *    CQ AG0E EN15          //Interesting
- *    KQ7B AG0E -9          //Interesting
- *    CQ POTA AG0E EN15     //Not interesting (TODO someday???)
- *.   KQ7B/R AG0E EN15      //Interesting
+ *    CQ W1AW EN15          //Interesting
+ *    KQ7B W1AW -9          //Interesting
+ *    CQ POTA W1AW EN15     //Not interesting (TODO someday???)
+ *.   KQ7B/R W1AW EN15      //Interesting
  *    F4CQS KX8XX EN74      //Not interesting
- *.   KQ7BA AG0E EN15       //Not interesting
+ *.   KQ7BA W1AW EN15       //Not interesting
  *
  **/
 bool Sequencer::isMsgForUs(Decode* msg) {

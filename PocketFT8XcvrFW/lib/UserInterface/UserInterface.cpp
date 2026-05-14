@@ -26,7 +26,7 @@
 #include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"        //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
-#include "NODEBUG.h"          //USB Serial debugging on the Teensy 4.1
+#include "DEBUG.h"            //USB Serial debugging on the Teensy 4.1
 #include "PocketFT8Xcvr.h"    //Globals
 #include "Sequencer.h"        //RoboOp
 #include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
@@ -38,7 +38,7 @@
 #include "Process_DSP.h"
 
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_DRST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
-TouchScreen ts = TouchScreen(PIN_XDP, PIN_YP, PIN_XM, PIN_YDM, 282);                  // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
+TouchScreen ts = TouchScreen(PIN_XP, PIN_YR, PIN_XR, PIN_YM, 282);                    // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
 static AGUI& gui = AGUI::getInstance(tft, 3, FT8Font);                                // Get reference to a configured instance of AGUI
 // gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
 
@@ -292,6 +292,8 @@ void pollTouchscreen() {
         if (pi.z > MINPRESSURE) {                        // Has screen been touched?
             pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);  // Map to resistance to screen coordinate
             pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
+            DPRINTF("pollTouchscreen:  pi.x=%d pi.y=%d pi.z=%d\n", pi.x, pi.y, pi.z);
+            DPRINTF("pollTouchscreen:  pw.x=%d pw.y=%d\n", pw.x, pw.y);
 
             // AWidget can determine which widget was touched and notify it
             AWidget::processTouch(pw.x, pw.y);  // Notify widgets that something was touched
@@ -572,11 +574,13 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
             color = A_GREY;
             break;
         case QSO_MSG_RECVD:  // New received message
+#ifndef PIO_UNIT_TESTING
             if (seq.inQSO(pNewMsg->field1)) {
                 color = A_WHITE;  // New message is from the station in our QSO
             } else {
                 color = A_BLUE;  // New message is from a breaker/tail-ender
             }
+#endif
             break;
         case QSO_MSG_XMITING:  // Transmitting (in progress) message
             if (pLastMsgItem != NULL)

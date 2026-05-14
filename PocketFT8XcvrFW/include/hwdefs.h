@@ -58,18 +58,18 @@
 #define PIN_RCV 15  // FW implementation of ~PTT (i.e. RECV) in V2.0 boards
 
 // Adafruit resistive touchscreen pins (External ADC HW option)
-#define PIN_YP 38   // must be an analog output pin
-#define PIN_XM 37   // must be an analog output pin
-#define PIN_YDM 36  // Any digital pin
-#define PIN_XDP 39  // Any digital pin
+#define PIN_YR 38  // must be an analog output pin
+#define PIN_XR 37  // must be an analog output pin
+#define PIN_YM 36  // Any digital pin
+#define PIN_XP 39  // Any digital pin
 
 #if HW_VERSION >= 4
 // Version 4.X hardware internal Teensy 4.1 ADC pins (Note:  Versions 2.X and 3.x
 // use an external ADC read via I2C rather than an internal ADC) for reading the
 // touchscreen pins (Schematic signals XDM and YDP).  Note:  You can
 // patch a V3.X PCB to make these signal connections for the internal ADC
-#define PIN_XDM A16  // Y-Coord analog input signal sampled from display's floating XM pin (A16)
-#define PIN_YDP A17  // X-Coord analog input signal sampled from display's floating YP pin (A17)
+#define PIN_XM A16  // Y-Coord analog input signal sampled from display's floating XM pin (A16)
+#define PIN_YP A17  // X-Coord analog input signal sampled from display's floating YP pin (A17)
 #endif
 
 // GPS pins (Teensy 4.1 Serial1)
