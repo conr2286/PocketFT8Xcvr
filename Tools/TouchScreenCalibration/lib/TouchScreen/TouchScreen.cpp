@@ -1,6 +1,6 @@
 /**
  * SYNOPSIS:
- *  TouchScreen interrogates the touch pad returning touchscreen coordinates
+ *  Calibrated TouchScreen provides screen coordinate interface to TouchPad
  *
  * USAGE:
  *  An application must execute a calibration procedure once for the touchpad.
@@ -81,13 +81,17 @@ TouchScreenPoint TouchScreen::getTargetCoordinate(unsigned idx) { return targetC
  */
 bool TouchScreen::recordCalibrationNode(unsigned idx, TouchScreenPoint adc) {
     // Sanity checks
-    if (idx >= getNTargets()) return false;                         // Ridiculous index
-    if (gfx.getRotation() != 0) return false;                       // Calibration must occur unrotated
+    if (!initialized) return false;
+    if (idx >= getNTargets()) return false;    // Ridiculous index
+    if (gfx.getRotation() != 0) return false;  // Calibration must occur unrotated
+
+    // Record this node
     calibrationTable.nodes[idx].screen = getTargetCoordinate(idx);  // The target's screen coordinates
     calibrationTable.nodes[idx].raw = adc;                          // The touchpad's ADC coordinate values
     DPRINTF("Node[%d] maps touchpoint (%f,%f) to screen (%f,%f)\n", idx,
             calibrationTable.nodes[idx].raw.x, calibrationTable.nodes[idx].raw.y,
             calibrationTable.nodes[idx].screen.x, calibrationTable.nodes[idx].screen.y);
+
     return true;
 }
 
@@ -96,8 +100,10 @@ bool TouchScreen::recordCalibrationNode(unsigned idx, TouchScreenPoint adc) {
  * @param touchPadDriver Reference to the TouchPad driver
  * @param gfxDriver Reference to the Adafruit GFX driver
  */
-TouchScreen::TouchScreen(TouchPad& touchPadDriver, HX8357_t3n& gfxDriver) : touchPad(touchPadDriver), gfx(gfxDriver) {
-}
+TouchScreen::TouchScreen(TouchPad& touchPadDriver, HX8357_t3n& gfxDriver) : touchPad(touchPadDriver),
+                                                                            gfx(gfxDriver),
+                                                                            initialized(false),
+                                                                            calibrated(false) {}
 
 /**
  * @brief Initialize the TouchScreen object
@@ -105,6 +111,9 @@ TouchScreen::TouchScreen(TouchPad& touchPadDriver, HX8357_t3n& gfxDriver) : touc
  * DISCUSSION:
  *  We initialize here rather than in constructor to avoid invoking methods in potentially uninitialized
  *  objects (e.g. gfx) referenced here.
+ *
+ * DEPENDENCIES:
+ *  TouchScreen constructor builds the association with the Adafruit GFX library
  */
 void TouchScreen::begin() {
     // The Adafruit GFX driver knows the touchpad's width and height (in pixels)
@@ -134,6 +143,9 @@ void TouchScreen::begin() {
     targetCoordinates[6] = TouchScreenPoint(leftMargin, botMargin);  // Lower-left
     targetCoordinates[7] = TouchScreenPoint(horizMidpoint, botMargin);
     targetCoordinates[8] = TouchScreenPoint(rightMargin, botMargin);  // Lower-right
+
+    // Mark this object initialized
+    initialized = true;
 
 }  // TouchScreen()
 
@@ -180,6 +192,12 @@ static float max(float a, float b, float c) {
  * region, we snap to the nearby cell's row/col.
  */
 bool TouchScreen::locateCell(const TouchPadPoint& raw, TCZone& cell) {
+    // Sanity checks
+    if (!initialized || !calibrated) {
+        DTRACE();
+        return false;
+    }
+
     int row = -1, col = -1;
 
     // Perhaps the raw touchpoint lies above the top row
@@ -274,6 +292,14 @@ bool TouchScreen::locateCell(const TouchPadPoint& raw, TCZone& cell) {
  *
  */
 TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
+    TouchScreenPoint out;
+
+    // Sanity checks
+    if (!initialized || !calibrated) {
+        DTRACE();
+        return out;
+    }
+
     // Identify the cell's four corners
     const TouchCalibrationNode& n00 = nodeAt(cell.row, cell.col);
     const TouchCalibrationNode& n10 = nodeAt(cell.row, cell.col + 1);
@@ -284,8 +310,6 @@ TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const T
     float v = cell.v;  // Normalized y placement 0..1 of raw touch within cell
 
     DPRINTF("u=%f v=%f\n", u, v);
-
-    TouchScreenPoint out;
 
     // For x-Axis, blend weights within that cell.  If the touch was in this cell's exact
     // center, the weights would be u==v==0.5 as each corner gets weight 0.25
@@ -303,7 +327,7 @@ TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const T
         (u) * (v)*n11.screen.y;
 
     return out;
-}
+}  // bilinear()
 
 /**
  * @brief Rotates a point from the default GFX rotation (0) to the current GFX rotation
@@ -374,6 +398,12 @@ void TouchScreen::rotate(TouchScreenPoint& p) {
 bool TouchScreen::mapRawToScreen(const TouchPadPoint& raw, TouchScreenPoint& screen) {
     TCZone cell;
 
+    // Sanity checks
+    if (!initialized || !calibrated) {
+        DTRACE();
+        return false;
+    }
+
     // The touchpad is divided into four zones known as "cells" having two rows
     // and two columns.  Interpolation will occur within one of these cells.
     if (!locateCell(raw, cell)) {
@@ -406,10 +436,18 @@ bool TouchScreen::mapRawToScreen(const TouchPadPoint& raw, TouchScreenPoint& scr
  */
 bool TouchScreen::readTouchEvent(TouchScreenPoint& result) {
     TouchPadPoint raw;
+
+    // Sanity checks
+    if (!initialized || !calibrated) {
+        DTRACE();
+        return false;
+    }
+
+    // Read ADC coords and map to calibrated screen coords
     bool ok = touchPad.readFiltered(raw);  // Raw ADC coordinates
     if (ok) {
         ok = mapRawToScreen(raw, result);  // Calibrated map to screen coordinates
         if (ok) rotate(result);            // Rotate into current GFX rotation
     }
     return ok;
-}
+}  // readTouchEvent()

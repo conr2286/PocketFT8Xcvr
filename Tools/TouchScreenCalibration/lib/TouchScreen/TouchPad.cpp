@@ -18,7 +18,7 @@
 #include <Arduino.h>
 #include <stdint.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "TouchPad.h"
 
 // Define the number of microseconds to allow analog signals to settle prior to ADC sampling

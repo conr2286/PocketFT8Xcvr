@@ -5,14 +5,9 @@
  */
 class TouchPadPoint {
    public:
-    TouchPadPoint(void) {
-        x = y = 0;
-    }  // Some TouchPad code depends upon zero initialization
+    TouchPadPoint(void) : x(0), y(0) {}  // Some TouchPad code depends upon zero initialization
 
-    TouchPadPoint(unsigned x, unsigned y) {
-        this->x = x;
-        this->y = y;
-    }
+    TouchPadPoint(unsigned cx, unsigned cy) : x(cx), y(cy) {}
 
     bool operator==(TouchPadPoint);
     bool operator!=(TouchPadPoint);

@@ -1,3 +1,17 @@
+/**
+ * Program to produce a TouchScreen calibration data file, TOUCHSCR.DAT, on SD
+ *
+ * USAGE:
+ *  Restores the TouchScreen calibration data from the TOUCHSCR.DAT file if available.
+ *  Else,  guides the operator through a calibration exercise using 9 targets.
+ *  Once calibration has been achieved, erases the screen and displays operator's
+ *  touchpoints.
+ *
+ * DISCUSSION:
+ *  + Developed using PlatformIO targeting the Teensy 4.1 Arduino environment
+ *  + Developed for the Adafruit P2050 TFT resistive touchscreen display
+ */
+
 #include <Arduino.h>
 #include <SPI.h>
 #include <SD.h>
@@ -20,6 +34,9 @@
 #define PIN_DCLK 13  // Teensy 4.1
 #define PIN_MISO 12
 
+// Calibration data (serialized) file name
+#define CALIBRATION_DATA_FILENAME "TOUCHSCR.DAT"
+
 // Build the Pocket FT8 Transceivers TFT display object
 HX8357_t3n gfx = HX8357_t3n(PIN_CS, PIN_DC, PIN_DRST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 TFT driver and pin definitions
 
@@ -36,10 +53,14 @@ static AGUI& agui = AGUI::getInstance(gfx, 3, FT8Font);
  * @brief Arduino initialization
  */
 void setup() {
-    Serial.begin(115200);
-    delay(1000);  // Wait for PlatformIO serial
-    Serial.printf("Starting...\n");
+    File calibFile;
 
+    // Start serial connection with PlatformIO for debugging
+    Serial.begin(115200);
+    delay(100);                      // Wait for PlatformIO serial
+    Serial.printf("Starting...\n");  // Always announce alive-and-well... so far
+
+    // Get the I2C bus's running
     Wire.setSDA(PIN_SDA);
     Wire.setSCL(PIN_SCL);
     Wire.begin();
@@ -48,46 +69,60 @@ void setup() {
     Wire1.setSCL(PIN_SCL2);
     Wire1.begin();
 
-    // Get the display running
+    // Get the SD file system running
+    if (!SD.begin(BUILTIN_SDCARD)) {
+        DTRACE();
+    }
+
+    // Get the TFT display running
     gfx.begin();
     gfx.fillScreen(HX8357_BLACK);  // Erase screen
     gfx.setRotation(0);
 
-    // Initialize the TouchScreen calibration package
+    // Get the TouchScreen package running
     touchScreen.begin();
 
-    // Do the calibration
-    bool ok = false;
+    // Attempt to restore calibration data from SD file
+    if (calibFile = SD.open(CALIBRATION_DATA_FILENAME, FILE_READ)) {
+        DTRACE();
+        touchScreen.deserialize(calibFile);
+        calibFile.close();
+    }
 
-    do {
-        // Do the calibration
-        ok = touchScreen.doCalibration(agui);
-        DPRINTF("doCalibration()=%d\n", ok);
+    // If unable to restore calibration from file then have operator [re]calibrate the touchscreen
+    if (!touchScreen.isCalibrated()) {
+        do {
+            // Do the calibration
+            touchScreen.doCalibration(agui);  // UI controls calibration steps
 
-        // Serialize successful calibration?
-        if (ok) {
-            DTRACE();
-            // Get the SD file system running
-            if (!SD.begin(BUILTIN_SDCARD)) {
+            // Serialize a successful calibration
+            if (touchScreen.isCalibrated()) {
                 DTRACE();
-            }
-            File calibFile = SD.open("TOUCHSCR.DAT", FILE_WRITE);
-            if (calibFile) {
-                DTRACE();
-                if (!touchScreen.serialize(calibFile)) {
+
+                File calibFile = SD.open(CALIBRATION_DATA_FILENAME, FILE_WRITE);
+                if (calibFile) {
+                    DTRACE();
+                    if (!touchScreen.serialize(calibFile)) {
+                        DTRACE();
+                    }
+                } else {
                     DTRACE();
                 }
-            } else {
-                DTRACE();
+                calibFile.close();
             }
-            calibFile.close();
-        }
 
-    } while (!ok);
+        } while (!touchScreen.isCalibrated());
+    }
 }
 
 /**
- * @brief Track touch events with displayed dots across the screen
+ * @brief Nothing to do here
  */
 void loop() {
+    TouchScreenPoint p;
+    delay(100);
+    if (touchScreen.readTouchEvent(p)) {
+        // Display where touch event landed on the screen
+        agui.gfx->fillCircle(p.x, p.y, 2, A_YELLOW);
+    }
 }

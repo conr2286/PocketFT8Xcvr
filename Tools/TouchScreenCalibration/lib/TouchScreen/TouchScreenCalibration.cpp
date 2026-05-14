@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "TouchScreen.h"
 #include "TouchPad.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 /**
  * @brief Helper to display specified target on GFX screen
@@ -81,6 +81,8 @@ void TouchScreen::waitForTouchEnd(void) {
 bool TouchScreen::calibrate(void) {
     unsigned nTargets = getNTargets();  // How many targets are required?
 
+    calibrated = false;
+
     // Loop executes once for each calibration target
     for (unsigned nodeIndex = 0; nodeIndex < nTargets; nodeIndex++) {
         char s[256];
@@ -99,6 +101,8 @@ bool TouchScreen::calibrate(void) {
         eraseTarget(nodeIndex);                 // Erase target from display
         delay(200);                             // Don't rush the operator
     }
+
+    calibrated = true;
 
     return true;
 }

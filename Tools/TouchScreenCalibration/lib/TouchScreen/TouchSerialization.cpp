@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <FS.h>
+#include <NODEBUG.h>
 
 #include "TouchScreen.h"
 
@@ -29,6 +30,13 @@
  *  MIT https://opensource.org/license/mit
  */
 bool TouchScreen::serialize(File theFile) {
+    // Sanity checks
+    if (!initialized || !calibrated) {
+        DTRACE();
+        return false;
+    }
+
+    // Save calibration data and its checksum
     calibrationTable.checksum = crc16((uint8_t*)&calibrationTable.nodes, sizeof(TouchCalibrationNode) * N_TARGETS);  // Checksum of nodes[]
     int n = theFile.write(&calibrationTable, sizeof(TouchCalibrationTable));                                         // Write nodes and checksum to theFile
     return n == sizeof(TouchCalibrationTable);                                                                       // Hopefully wrote the entire array
@@ -40,10 +48,21 @@ bool TouchScreen::serialize(File theFile) {
  * @return true if successful, false otherwise
  */
 bool TouchScreen::deserialize(File theFile) {
-    int n = theFile.read(&calibrationTable, sizeof(TouchCalibrationTable));                                          // Read the calibration data and stored checksum
-    if (n != sizeof(TouchCalibrationTable)) return false;                                                            // Check for FileIO problems
+    // Sanity checks
+    if (!initialized) {
+        DTRACE();
+        return false;
+    }
+
+    // Restore calibration data from file
+    int n = theFile.read(&calibrationTable, sizeof(TouchCalibrationTable));  // Read the calibration data and stored checksum
+    if (n != sizeof(TouchCalibrationTable)) return false;                    // Check for FileIO problems
+
+    // Verify checksum
     uint16_t computedChecksum = crc16((uint8_t*)&calibrationTable.nodes, sizeof(TouchCalibrationNode) * N_TARGETS);  // Computed checksum
-    return computedChecksum == calibrationTable.checksum;                                                            // Confirm computed and read checksums match
+    calibrated = (computedChecksum == calibrationTable.checksum);
+
+    return calibrated;  // Confirm computed and read checksums match
 }  // deserialize()
 
 /**

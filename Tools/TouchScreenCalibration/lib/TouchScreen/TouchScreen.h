@@ -14,12 +14,9 @@
  */
 class TouchScreenPoint {
    public:
-    TouchScreenPoint(void) { x = y = 0.0; }
+    TouchScreenPoint(void) : x(0.0), y(0.0) {}
 
-    TouchScreenPoint(const float x, const float y) {
-        this->x = x;
-        this->y = y;
-    }
+    TouchScreenPoint(const float cx, const float cy) : x(cx), y(cy) {}
 
     bool operator==(TouchScreenPoint);
     bool operator!=(TouchScreenPoint);
@@ -61,6 +58,7 @@ class TouchScreen {
     TouchScreenPoint getTargetCoordinate(const unsigned idx);
     bool recordCalibrationNode(const unsigned idx, const TouchScreenPoint adc);
     bool doCalibration(AGUI& agui);
+    bool isCalibrated(void) { return calibrated; }
 
     // Map filtered raw reading to screen coordinates using current calibration
     // Returns false if no valid calibration loaded.
@@ -89,6 +87,8 @@ class TouchScreen {
     HX8357_t3n& gfx;     // Reference to the touchscreen driver
     uint16_t width;      // TouchPad width in pixels
     uint16_t height;     // TouchPad height in pixels
+    bool initialized;    // true if TouchScreen object has been initialized
+    bool calibrated;     // true if TouchScreen object has calibration data
 
     // These calibration attributes must be serialized/deserialized to avoid recalibration
     TouchScreenPoint targetCoordinates[N_TARGETS];  // Screen coordinates of the calibration targets

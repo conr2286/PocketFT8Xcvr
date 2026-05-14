@@ -3,7 +3,7 @@
 #include <AGUI.h>
 #include <Arduino.h>
 #include <AToggleButton.h>
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 // Define screen layout of buttons
 static const unsigned buttonWidth = 80;
@@ -35,6 +35,12 @@ static const unsigned buttonSpacing = 20;  // Space between buttons
  *      + Invoke TouchScreen.begin()
  */
 bool TouchScreen::doCalibration(AGUI& agui) {
+    // Sanity checks
+    if (!initialized) {
+        DTRACE();
+        return false;
+    }
+
     // Initialization
     unsigned saveRotation = agui.gfx->getRotation();  // GFX Display rotation
     agui.gfx->setRotation(0);                         // We need display coords aligned with touchpad HW coordinates
@@ -99,6 +105,8 @@ bool TouchScreen::doCalibration(AGUI& agui) {
     // Restore rotation and return result
     agui.gfx->setRotation(saveRotation);
     DTRACE();
-    return cmd == Command::OK;
+
+    calibrated = (cmd == Command::OK);
+    return calibrated;
 
 }  // doCalibration()
