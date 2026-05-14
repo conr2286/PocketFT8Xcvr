@@ -228,6 +228,7 @@ FLASHMEM void setup(void) {
     Serial.begin(9600);
     Serial.println("Starting...");
 
+    // Start the I2C bus's
     Wire.setSDA(PIN_SDA);
     Wire.setSCL(PIN_SCL);
     Wire.begin();
@@ -246,7 +247,7 @@ FLASHMEM void setup(void) {
 
     DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
 
-    //Start-up the GPS system
+    // Start-up the GPS system
     gpsHelper.begin();
 
     // Get the UI running
