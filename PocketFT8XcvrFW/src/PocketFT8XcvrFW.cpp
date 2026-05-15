@@ -250,9 +250,9 @@ FLASHMEM void setup(void) {
     // Start-up the GPS system
     gpsHelper.begin();
 
-    // Initialize the SD library if the card is available.  Without an SD card, we have no CONFIG info.  :(
+    // Initialize the SD library if the card is available.  Without an SD card, we have no CONFIG info.
     // If it were ever important, we could save CONFIG info in EEPROM and only use the SD card to install
-    // a new configuration.  Note:  The UI wants the SD card to deserialize the TouchScreen calibration data.
+    // a new configuration.  Also the UI uses the SD card to deserialize the TouchScreen calibration data.
     if (!SD.begin(BUILTIN_SDCARD)) {
         ui.applicationMsgs->setText("ERROR:  Unable to access SD card");
         delay(2000);
@@ -264,7 +264,7 @@ FLASHMEM void setup(void) {
 
     // Confirm firmware built with the modified teensy4/AudioStream.h library file in the Arduino IDE.  Our FT8 decoder
     // won't run at the standard Teensy sample rate.  In the best-of-all-possible-worlds, we'd implement this check at
-    // compile time, but KQ7B hasn't found how to check at compile-time with a float value for AUDIO_SAMPLE_RATE_EXACT.
+    // compile time, but KQ7B hasn't determined how to check at compile-time with a float value for AUDIO_SAMPLE_RATE_EXACT.
     if (AUDIO_SAMPLE_RATE_EXACT != 6400.0f) {
         ui.applicationMsgs->setText("FATAL:  AUDIO_SAMPLE_RATE_EXACT!=6400.0F", A_RED);
         Serial.println("FATAL:  You *must* copy AudioStream6400.h to .../teensy/hardware/avr/1.59.0/cores/teensy4/AudioStream.h\n");
