@@ -69,8 +69,7 @@ AGUI& AGUI::getInstance(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font) 
  * @param rotation GFX screen rotation parameter
  * @param font Pointer to a default GFX font structure
  *
- * @note The design imagined AGUI as a singleton (one display), however the
- * implementation didn't go out of its way to limit you to a single display.
+ * @note The design imagined AGUI as a singleton (one display).
  *
  */
 AGUI::AGUI(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font) {

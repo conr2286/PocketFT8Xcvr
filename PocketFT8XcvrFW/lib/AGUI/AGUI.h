@@ -18,7 +18,7 @@ class AGUI {
     AGUI(const AGUI&) = delete;
     AGUI& operator=(const AGUI&) = delete;
 
-    // The singleton object's static accessor method
+    // The singleton object's static accessor method.  Public uses this, not the constructor.
     static AGUI& getInstance(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font);
 
     // Graphics methods
@@ -67,6 +67,6 @@ class AGUI {
 
    private:
     // Singleton's constructor and destructor
-    AGUI(HX8357_t3n& gfx, uint8_t rotation, const GFXfont& font);  // Constructor
+    AGUI(HX8357_t3n& gfx, uint8_t rotation, const GFXfont& font);  // Private constructor for singleton.  See getInstance().
     ~AGUI() {};                                                    // Not implemented
 };
