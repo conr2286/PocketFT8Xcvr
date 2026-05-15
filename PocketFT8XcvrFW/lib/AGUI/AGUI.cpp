@@ -83,7 +83,7 @@ AGUI::AGUI(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font) {
     screenRotation = rotation;  // See Adafruit HX8357 doc for values
 
     // Setup the Adafruit display and graphics library for use by our application
-    tft.begin(30000000UL, 2000000UL);  // Configure SPI clock speeds
+    tft.begin(30000000UL, 2000000UL);  // Configure SPI clock speeds for Teensy 4.1
     tft.setRotation(rotation);         // Configure screen rotation
     tft.setFont(appFont);              // Configure the font
     tft.fillScreen(HX8357_BLACK);      // Erase the display
