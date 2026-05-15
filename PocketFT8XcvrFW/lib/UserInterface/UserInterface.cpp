@@ -13,34 +13,44 @@
 #include <Adafruit_GFX.h>  //WARNING:  #include Adafruit_GFX prior to HX8357_t3n
 #include <Arduino.h>       //We use many Arduino classes and data types
 #include <TimeLib.h>       //Teensy time
+#include <SD.h>
 
-#include "AColor.h"           //AGUI colors
-#include "ACoord.h"           // Screen coordinate data types
-#include "AGUI.h"             //The adapter for Adafruit GFX libraries
-#include "AListBox.h"         //Interactive text box
-#include "APixelBox.h"        //Interactive raster box
-#include "AScrollBox.h"       //Scrolling interactive text box
-#include "ATextBox.h"         //Non-interactive text
-#include "AToggleButton.h"    //Stateful button
-#include "Config.h"           // CONFIG.JSON
-#include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
-#include "GPShelper.h"        //Decorator for Adafruit_GPS library
-#include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
-#include "DEBUG.h"            //USB Serial debugging on the Teensy 4.1
-#include "PocketFT8Xcvr.h"    //Globals
-#include "Sequencer.h"        //RoboOp
-#include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
-#include "decode_ft8.h"       //Decoded message types
-#include "lexical.h"          //String helpers
-#include "hwdefs.h"           //Pocket FT8 pin assignments for Teensy 4.1 MCU
+#include "AColor.h"         //AGUI colors
+#include "ACoord.h"         // Screen coordinate data types
+#include "AGUI.h"           //The adapter for Adafruit GFX libraries
+#include "AListBox.h"       //Interactive text box
+#include "APixelBox.h"      //Interactive raster box
+#include "AScrollBox.h"     //Scrolling interactive text box
+#include "ATextBox.h"       //Non-interactive text
+#include "AToggleButton.h"  //Stateful button
+#include "Config.h"         // CONFIG.JSON
+#include "FT8Font.h"        //Customized font for the Pocket FT8 Revisited
+#include "GPShelper.h"      //Decorator for Adafruit_GPS library
+#include "HX8357_t3n.h"     //WARNING:  #include HX8357_t3n following Adafruit_GFX
+#include "DEBUG.h"          //USB Serial debugging on the Teensy 4.1
+#include "PocketFT8Xcvr.h"  //Globals
+#include "Sequencer.h"      //RoboOp
+#include "TouchPad.h"       //Resistive TouchPad driver
+#include "TouchScreen.h"    //Calibrated TouchScreen library
+#include "decode_ft8.h"     //Decoded message types
+#include "lexical.h"        //String helpers
+#include "hwdefs.h"         //Pocket FT8 pin assignments for Teensy 4.1 MCU
 #include "traffic_manager.h"
 #include "Station.h"
 #include "Process_DSP.h"
 
+// Calibration data (serialized) file name
+#define CALIBRATION_DATA_FILENAME "TOUCHSCR.DAT"
+
+// Build the display driver
 HX8357_t3n tft = HX8357_t3n(PIN_CS, PIN_DC, PIN_DRST, PIN_MOSI, PIN_DCLK, PIN_MISO);  // Teensy 4.1 pins
-TouchScreen ts = TouchScreen(PIN_XP, PIN_YR, PIN_XR, PIN_YM, 282);                    // The 282 ohms is the measured x-Axis resistance of 3.5" Adafruit touchscreen in 2024
-static AGUI& gui = AGUI::getInstance(tft, 3, FT8Font);                                // Get reference to a configured instance of AGUI
-// gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
+
+// Build the TouchPad and Calibrated TouchScreen objects
+TouchPad theTouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
+TouchScreen ts(theTouchPad, tft);
+
+// Build the AGUI adapter
+static AGUI& gui = AGUI::getInstance(tft, 3, FT8Font);  // Get reference to a configured instance of AGUI
 
 // Define externals required to build the application (as opposed to unit test)
 #ifndef PIO_UNIT_TESTING
@@ -72,15 +82,51 @@ void DecodedMsgsBox::setMsg(int index, char* msg) {
  * @brief Start-up the Adafruit Display, GFX adapter and library, the resistive touchscreen, and widgets
  */
 void UserInterface::begin() {
-    // DTRACE();
+    File calibFile;
 
-    // Define the interfaces/adapters for accessing the underlying graphics libraries and hardware
-    // gui = new AGUI(&tft, 3, &FT8Font);  // Graphics adapter insulation from the multitude of Adafruit GFX libraries
+    DTRACE();
 
-    // Build the Waterfall object
+    // Get the TouchScreen calibration data
+    ts.begin();  // Start the TouchScreen
+
+    //  Attempt to restore calibration data from SD file
+    calibFile = SD.open(CALIBRATION_DATA_FILENAME, FILE_READ);
+    if (calibFile) {
+        DTRACE();
+        ts.deserialize(calibFile);
+        calibFile.close();
+    }
+
+    // If deserialize fails then we'll need a manual calibration from operator
+    if (!ts.isCalibrated()) {
+        DTRACE();
+        do {
+            // Do the calibration
+            ts.doCalibration(gui);  // UI controls calibration steps
+
+            // Serialize a successful calibration
+            if (ts.isCalibrated()) {
+                DTRACE();
+
+                File calibFile = SD.open(CALIBRATION_DATA_FILENAME, FILE_WRITE);
+                if (calibFile) {
+                    DTRACE();
+                    if (!ts.serialize(calibFile)) {
+                        DTRACE();
+                    }
+                } else {
+                    DTRACE();
+                }
+                calibFile.close();
+            }
+
+        } while (!ts.isCalibrated());
+    }
+
+    // Build the Waterfall control
     theWaterfall = new Waterfall();
 
-    // Build the stationInfo
+    // Build the stationInfo controls
     stationInfo = new AListBox(InfoX, InfoY, InfoW, InfoH, A_DARK_GREY);
     itemDate = stationInfo->addItem(stationInfo, "", A_RED);
     itemTime = stationInfo->addItem(stationInfo, "", A_RED);
@@ -107,7 +153,7 @@ void UserInterface::begin() {
     b5 = new MenuButton("M1", ButtonX + 5 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 5);
     b6 = new MenuButton("M2", ButtonX + 6 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 6);
     b7 = new MenuButton("SY", ButtonX + 7 * ButtonSpacing, ButtonY, ButtonWidth, ButtonHeight, 7);
-}
+}  // begin()
 
 /**
  * @brief Initialize Waterfall cursor frequencies
@@ -281,29 +327,35 @@ static unsigned long lastTime = millis();
  * really required, we pace the touchscreen (i.e. getPoint()) measurements.
  */
 void pollTouchscreen() {
-    TSPoint pi, pw;
-    // uint16_t draw_x, draw_y, touch_x, touch_y;
+    // TSPoint pi, pw;
+    // // uint16_t draw_x, draw_y, touch_x, touch_y;
 
     unsigned long thisTime = millis();  // Current time
 
     if ((thisTime - lastTime) >= 250) {  // 250 mS between measurements
-        pi = ts.getPoint();              // Read the screen
+        // pi = ts.getPoint();              // Read the screen
 
-        if (pi.z > MINPRESSURE) {                        // Has screen been touched?
-            pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);  // Map to resistance to screen coordinate
-            pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
-            DPRINTF("pollTouchscreen:  pi.x=%d pi.y=%d pi.z=%d\n", pi.x, pi.y, pi.z);
-            DPRINTF("pollTouchscreen:  pw.x=%d pw.y=%d\n", pw.x, pw.y);
+        // if (pi.z > MINPRESSURE) {                        // Has screen been touched?
+        //     pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);  // Map to resistance to screen coordinate
+        //     pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
+        //     DPRINTF("pollTouchscreen:  pi.x=%d pi.y=%d pi.z=%d\n", pi.x, pi.y, pi.z);
+        //     DPRINTF("pollTouchscreen:  pw.x=%d pw.y=%d\n", pw.x, pw.y);
 
-            // AWidget can determine which widget was touched and notify it
-            AWidget::processTouch(pw.x, pw.y);  // Notify widgets that something was touched
+        //     // AWidget can determine which widget was touched and notify it
+        //     AWidget::processTouch(pw.x, pw.y);  // Notify widgets that something was touched
 
-            // check_FT8_Touch();
-            // check_WF_Touch();
-            lastTime = thisTime;  // Note the time when we last took a measurement
+        // Read the calibrated TouchScreen
+        TouchScreenPoint p;
+        if (ts.readTouchEvent(p)) {
+            DPRINTF("p.x=%u p.y=%u\n", (unsigned)p.x, (unsigned)p.y);
+            AWidget::processTouch(p.x, p.y);  // Notify widgets that something was touched
         }
+
+        // check_FT8_Touch();
+        // check_WF_Touch();
+        lastTime = thisTime;  // Note the time when we last took a measurement
     }
-}
+}  // pollTouchScreen()
 
 /**
  * @brief Callback function notified when this MenuButton is touched

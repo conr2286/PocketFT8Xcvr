@@ -250,6 +250,14 @@ FLASHMEM void setup(void) {
     // Start-up the GPS system
     gpsHelper.begin();
 
+    // Initialize the SD library if the card is available.  Without an SD card, we have no CONFIG info.  :(
+    // If it were ever important, we could save CONFIG info in EEPROM and only use the SD card to install
+    // a new configuration.  Note:  The UI wants the SD card to deserialize the TouchScreen calibration data.
+    if (!SD.begin(BUILTIN_SDCARD)) {
+        ui.applicationMsgs->setText("ERROR:  Unable to access SD card");
+        delay(2000);
+    }
+
     // Get the UI running
     ui.begin();
     ui.applicationMsgs->setText("Starting");
@@ -270,14 +278,6 @@ FLASHMEM void setup(void) {
     pinMode(PIN_RCV, OUTPUT);
     digitalWrite(PIN_RCV, HIGH);  // Disable the PA and disconnect receiver's RF input from antenna
     digitalWrite(PIN_XMT, LOW);   // Unground the receiver's RF input
-
-    // Initialize the SD library if the card is available.  Without an SD card, we have no CONFIG info.  :(
-    // If it were ever important, we could save CONFIG info in EEPROM and only use the SD card to install
-    // a new configuration.
-    if (!SD.begin(BUILTIN_SDCARD)) {
-        ui.applicationMsgs->setText("ERROR:  Unable to access SD card");
-        delay(2000);
-    }
 
     // Digest the CONFIG.JSON file
     readConfigFile();

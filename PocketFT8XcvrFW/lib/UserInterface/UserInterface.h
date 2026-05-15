@@ -2,20 +2,19 @@
 
 #include <Arduino.h>  //We use many Arduino classes and data types
 
-#include "AColor.h"           //AGUI colors
-#include "ACoord.h"           // Screen coordinate data types
-#include "AGUI.h"             //The adapter for Adafruit GFX libraries
-#include "AListBox.h"         //Interactive text box
-#include "APixelBox.h"        //Interactive raster box
-#include "AScrollBox.h"       //Scrolling interactive text box
-#include "ATextBox.h"         //Non-interactive text
-#include "AToggleButton.h"    //Stateful button
-#include "FT8Font.h"          //Customized font for the Pocket FT8 Revisited
-#include "HX8357_t3n.h"       //WARNING:  #include HX8357_t3n following Adafruit_GFX
-#include "TouchScreen_I2C.h"  //MCP342X interface to Adafruit's 2050 touchscreen
-#include "decode_ft8.h"       //Decoded message types
-#include "hwdefs.h"           //Pocket FT8 pin assignments for Teensy 4.1 MCU
-#include "Station.h"          //The Station singleton
+#include "AColor.h"         //AGUI colors
+#include "ACoord.h"         // Screen coordinate data types
+#include "AGUI.h"           //The adapter for Adafruit GFX libraries
+#include "AListBox.h"       //Interactive text box
+#include "APixelBox.h"      //Interactive raster box
+#include "AScrollBox.h"     //Scrolling interactive text box
+#include "ATextBox.h"       //Non-interactive text
+#include "AToggleButton.h"  //Stateful button
+#include "FT8Font.h"        //Customized font for the Pocket FT8 Revisited
+#include "HX8357_t3n.h"     //WARNING:  #include HX8357_t3n following Adafruit_GFX
+#include "decode_ft8.h"     //Decoded message types
+#include "hwdefs.h"         //Pocket FT8 pin assignments for Teensy 4.1 MCU
+#include "Station.h"        //The Station singleton
 
 // Transmit/Receive/Pending indicator icon
 typedef enum {
