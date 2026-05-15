@@ -252,10 +252,10 @@ FLASHMEM void setup(void) {
 
     // Initialize the SD library if the card is available.  Without an SD card, we have no CONFIG info.
     // If it were ever important, we could save CONFIG info in EEPROM and only use the SD card to install
-    // a new configuration.  Also the UI uses the SD card to deserialize the TouchScreen calibration data.
+    // a new configuration.  Also the UI uses the SD card to deserialize the TouchScreen calibration data
+    // though this could move to EEPROM as well.
     if (!SD.begin(BUILTIN_SDCARD)) {
-        ui.applicationMsgs->setText("ERROR:  Unable to access SD card");
-        delay(2000);
+        DPRINTF("ERROR:  Unable to access SD card\n");
     }
 
     // Get the UI running
