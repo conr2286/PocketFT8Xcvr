@@ -57,7 +57,7 @@ class TouchScreen {
     unsigned getNTargets(void);
     TouchScreenPoint getTargetCoordinate(const unsigned idx);
     bool recordCalibrationNode(const unsigned idx, const TouchScreenPoint adc);
-    bool doCalibration(AGUI& agui);
+    bool doCalibration(AGUI& theGUI);
     bool isCalibrated(void) { return calibrated; }
 
     // Map filtered raw reading to screen coordinates using current calibration
