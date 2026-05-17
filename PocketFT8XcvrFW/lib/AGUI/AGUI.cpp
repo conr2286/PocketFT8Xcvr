@@ -56,6 +56,17 @@ const GFXfont* AGUI::appFont;  // Default font for this application
 //  Initialization
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief AGUI Myers singleton's getInstance() static method
+ * @param tft Reference to the Adafruit GFX display object
+ * @param rotation Adafruit GFX rotation code
+ * @param font Adafruit GFX font
+ * @return Reference to the static AGUI instance
+ *
+ * DISCUSSION:
+ *  If you need to implement getInstance() void of parameters, it can be moved into
+ *  the UserInterface code where the AGUI constructor's parameters are available.
+ */
 AGUI& AGUI::getInstance(HX8357_t3n& tft, uint8_t rotation, const GFXfont& font) {
     static AGUI theInstance(tft, rotation, font);  // The one-and-only instance of AGUI
     return theInstance;
