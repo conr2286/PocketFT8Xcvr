@@ -97,7 +97,7 @@ void test_Wire2(void) {
     // We expect to find one I2C device (Si5351) responding on the Wire2 bus.
     printf("Found %d devices on SDA1/SCL1 (Wire2)\n", nDevices);
 // Patched V3 boards need HW_VERSION 3
-#define HW_VERSION 3  // Remove this definition for "real" V4 boards
+// #define HW_VERSION 4  // Remove this definition for "real" V4 boards
 #if HW_VERSION < 4
     TEST_ASSERT_EQUAL(2, nDevices);  // V3 boards find Si5351 and MCP342X
 #else

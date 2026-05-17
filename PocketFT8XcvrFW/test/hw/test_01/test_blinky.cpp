@@ -6,9 +6,6 @@
  *  + Teensy MCU:  Must be able to load and execute this test program
  *  + XMIT LED:  This test blinks the XMIT LED for about 10 seconds
  *
- * USAGE:
- *  pio test -vvv -f "hw/test_01" //Execute just this test
- *  pio test -vvv -f "hw/*"       //Execute all the hw tests
  *
  */
 
