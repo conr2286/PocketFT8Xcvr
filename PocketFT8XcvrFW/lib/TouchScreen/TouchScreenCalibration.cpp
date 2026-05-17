@@ -66,7 +66,7 @@ TouchScreenPoint TouchScreen::readTouchPad(void) {
  */
 void TouchScreen::waitForTouchEnd(void) {
     TouchPadPoint p;
-    while (!touchPad.readRaw(p)) {
+    while (touchPad.readRaw(p)) {
         delay(50);
     }
 }

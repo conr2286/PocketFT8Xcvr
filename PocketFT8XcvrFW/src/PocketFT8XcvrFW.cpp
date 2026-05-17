@@ -93,7 +93,7 @@
 #include "Process_DSP.h"
 #include "Sequencer.h"
 #include "Timer.h"
-#include "TouchScreen_I2C.h"
+#include "TouchScreen.h"
 #include "UserInterface.h"
 #include "WF_Table.h"
 #include "arm_math.h"

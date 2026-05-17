@@ -16,7 +16,7 @@
 
 #include "Process_DSP.h"
 #include "Sequencer.h"
-#include "TouchScreen_I2C.h"
+#include "TouchScreen.h"
 #include "msgTypes.h"
 #include "hwdefs.h"
 
@@ -47,7 +47,6 @@ int test;
 extern int master_decoded;
 extern void sync_FT8(void);
 extern int tune_flag;
-
 
 const float ft8_shift = 6.25;  // FT8 Hz/bin???
 // int start_up_offset_freq;
