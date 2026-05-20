@@ -68,7 +68,7 @@ TouchPad::TouchPad(uint8_t xp, uint8_t xm, uint8_t yp, uint8_t ym, uint8_t xr, u
  * @param tolerance allowed difference
  * @return true if a lies within the allowed difference of b
  */
-bool TouchPad::isNear(unsigned a, unsigned b, unsigned tolerance) {
+bool TouchPad::isNear(int a, int b, int tolerance) {
     if ((a >= b - tolerance) && (a <= b + tolerance)) return true;
     return false;
 }  // isNear()

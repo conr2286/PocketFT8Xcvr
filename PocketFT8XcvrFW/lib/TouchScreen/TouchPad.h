@@ -27,9 +27,9 @@ class TouchPadPoint {
 class TouchPad {
    public:
     TouchPad(uint8_t xp, uint8_t xm, uint8_t yp, uint8_t ym, uint8_t xr, uint8_t yr);
-    bool readRaw(TouchPadPoint& result);                  // Non-blocking, low-level, interrogation of touchpad ADC coordinates
-    bool readFiltered(TouchPadPoint& result);             // Non-blocking, stateful, filtered interrogation of touchpad ADC coordinates
-    bool isNear(unsigned a, unsigned b, unsigned delta);  // Are two unsigned integers close in value?
+    bool readRaw(TouchPadPoint& result);       // Non-blocking, low-level, interrogation of touchpad ADC coordinates
+    bool readFiltered(TouchPadPoint& result);  // Non-blocking, stateful, filtered interrogation of touchpad ADC coordinates
+    bool isNear(int a, int b, int delta);      // Are two unsigned integers close in value?
 
    private:
     uint8_t xp, xm, yp, ym, xr, yr;  // The MCU pin numbers connected to touchpad's X+, X-, Y+ and Y- pins and their resistors
