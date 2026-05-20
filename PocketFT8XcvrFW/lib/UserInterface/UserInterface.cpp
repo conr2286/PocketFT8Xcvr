@@ -50,7 +50,7 @@ TouchPad theTouchPad(PIN_XP, PIN_XM, PIN_YP, PIN_YM, PIN_XR, PIN_YR);
 TouchScreen ts(theTouchPad, tft);
 
 // Build the AGUI adapter
-static AGUI& gui = AGUI::getInstance(tft, 3, FT8Font);  // Get reference to a configured instance of AGUI
+static AGUI& gui = AGUI::getInstance(tft, 1, FT8Font);  // Get reference to a configured instance of AGUI
 
 // Define externals required to build the application (as opposed to unit test)
 #ifndef PIO_UNIT_TESTING
