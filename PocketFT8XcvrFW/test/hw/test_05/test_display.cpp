@@ -1,10 +1,10 @@
 /**
  * TEST
- *  + A very basic test to be executed on a non-smoking, new board
+ *  + Exercise the Adafruit 320x480 TFT display (P2050)
  *
  * EXERCISED
  *  + Teensy MCU:  Must be able to load and execute this test program
- *  + XMIT LED:  This test blinks the XMIT LED for about 10 seconds
+ *  + TFT Display
  *
  *
  */
