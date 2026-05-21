@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: PocketFT8Revisited.aux
+The style file: plain.bst
+Database file #1: PocketFT8Revisited.bib
+You've used 2 entries,
+            2118 wiz_defined-function locations,
+            507 strings with 4298 characters,
+and the built_in function-call counts, 434 in all, are:
+= -- 40
+> -- 14
+< -- 0
++ -- 7
+- -- 4
+* -- 22
+:= -- 87
+add.period$ -- 6
+call.type$ -- 2
+change.case$ -- 8
+chr.to.int$ -- 0
+cite$ -- 2
+duplicate$ -- 20
+empty$ -- 35
+format.name$ -- 4
+if$ -- 83
+int.to.chr$ -- 0
+int.to.str$ -- 2
+missing$ -- 2
+newline$ -- 13
+num.names$ -- 4
+pop$ -- 8
+preamble$ -- 1
+purify$ -- 6
+quote$ -- 0
+skip$ -- 14
+stack$ -- 0
+substring$ -- 11
+swap$ -- 2
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 8
+warning$ -- 0
+while$ -- 4
+width$ -- 3
+write$ -- 22

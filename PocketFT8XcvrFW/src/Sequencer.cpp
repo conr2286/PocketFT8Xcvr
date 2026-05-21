@@ -127,7 +127,7 @@
 #include <string.h>
 
 #include "Config.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 #include "LogFactory.h"
 #include "PocketFT8Xcvr.h"
 #include "SequencerStates.h"

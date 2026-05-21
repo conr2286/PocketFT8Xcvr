@@ -1,0 +1,106 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{cite}
+
+% Set double spacing
+%\doublespacing
+
+% Formatting for Title, starting halfway down the first page
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\Large\bfseries}{}{0em}{}
+
+
+\setlength\headheight{24pt}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{Author Last Name: Shortened Title}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+\vspace*{2.5in} % Pushes the title halfway down page 1
+\begin{center}
+    {\LARGE \bfseries Pocket FT8 Transceiver Revisited} \par
+    \vspace{0.25in}
+    {\large Jim Conrad, KQ7B} \par
+    {132 Mill Creek MDW, Grangeville, ID 83530 USA}
+\end{center}
+
+\begin{center}
+The Pocket FT8 Transceiver Revisited is a portable software defined amateur radio transceiver.
+\end{center}
+
+\section{Introduction}
+Charles Hill's original Pocket FT8 project has inspired several self-contained FT8 \cite{qstft8} \cite{qexft8} transceiver follow-ons.
+This rendition honors the original Pocket FT8 vision with simplified hardware and enhanced firmware features.
+The result is a highly portable, single-band, HF transceiver focused on backpacking and mountain day hikes offering:
+
+  \begin{itemize} [noitemsep]
+  \item Self-contained --- the radio \textit{is} the computer
+  \item Compact board size (4.0X2.8")
+  \item FT8 modulation (no CW or SSB)
+  \item 275+ mW RF output (QRPP)
+  \item Single LP filter slot
+  \item 480x320 pixel TFT display
+  \item Touchscreen GUI controls
+  \item Waterfall display of FT8 traffic
+  \item FT8 ``standard" QSO sequencer
+  \item Automatic QSO logging to an  ADIF file
+  \item JSON station configuration file
+  \item Low jitter TCXO
+  \item GPS disciplined date, time and location (grid square)
+  \item Operation from a single 5V USB power block
+  \item Four layer PCB
+  \end{itemize}
+ 
+
+While the feature set purposely constrains the hardware complexity, power consumption and space requirements, the focus on FT8  alone is a compromise.
+In its favor, FT8 forgoes the need for the telegraph key, microphone and headset accessories typical of multi-mode transceivers.
+By embedding the software defined radio and FT8 on a single board, Pocket FT8 leaves the laptop at home.
+Furthermore, FT8's  weak signal performance relaxes the need for ``high" transmit power, enabling an off-the-shelf USB power bank to satisfy the power requirements.
+On the other hand, most FT8 QSOs are terse, context-like, exchanges following a  standard sequence with little operator involvement following initiation of the contact.
+Alternative designs address situations where this compromise becomes unacceptable.
+  
+ \section{Hardware}
+ \subsection*{Hardware Design}
+ \subsection*{FL1 Design}
+FL1 mainly provides harmonic rejection for the transmitted signal.
+On 40 meters, the five pole Chebyshev design provides for 1 dB of ripple peaking inside the band.
+
+During receive, the Chebyshev low-pass design offers only minimal rejection of out-of-band signals. 
+While this has not proven to be a significant issue in the wilderness use-case, the receiver might benefit from a bandpass design in other applications.
+ \subsection*{Hardware Construction}
+
+\subsection*{T1}
+T1 is a broadband, bifilar wound transformer consisting of 10 turns of 26 AWG on an FT37-43 core.
+
+\subsection*{FL1}
+The FL1 low-pass filter can be assembled and tested on a small daughter board.
+With some effort, it can probably be made pluggable to facilitate band changes.
+
+\section{Software}
+\subsection*{Software Design}
+
+\subsection*{Software Construction}
+
+
+\section{Testing}
+
+\section{Operation}
+
+\section{Future}
+
+\section{Acknowledgements}
+
+
+%\newpage
+\bibliographystyle{plain}
+\bibliography{PocketFT8Revisited}
+\end{document}
+
+
