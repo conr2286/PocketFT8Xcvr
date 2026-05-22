@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <FS.h>
-#include <NODEBUG.h>
+#include <DEBUG.h>
 
 #include "TouchScreen.h"
 

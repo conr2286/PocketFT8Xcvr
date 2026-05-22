@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "TouchScreen.h"
 #include "TouchPad.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 /**
  * @brief Helper to display specified target on GFX screen

@@ -3,7 +3,7 @@
 #include <AGUI.h>
 #include <Arduino.h>
 #include <AToggleButton.h>
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 // Define screen layout of buttons
 static const unsigned buttonWidth = 80;

@@ -1,5 +1,7 @@
 
 #include <Adafruit_GFX.h>
+#include <SPI.H>
+#include <SD.h>
 
 #include "DEBUG.h"
 #include "HX8357_t3n.h"
@@ -14,7 +16,12 @@ static UserInterface& ui = UserInterface::getInstance();  // User Interface
 // Station thisStation;
 Station& thisStation = Station::getInstance();  // Station model
 
-//
+/**
+ * @brief Exercises the StationInfo widget
+ *
+ * DISCUSSION:
+ *  Displays station callsign, operating frequency, offset and Transmit/Receive indicator.
+ */
 void test_StationInfo(void) {
     TEST_MESSAGE("test_StationInfo()\n");
     ui.displayFrequency();
@@ -28,6 +35,12 @@ void test_StationInfo(void) {
     ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);
 }
 
+/**
+ * @brief Displays a long list of "decoded" messages
+ *
+ * DISCUSSION:
+ *  The second message, WA1ABC W1AW -2 S3, is left highlighted
+ */
 void test_DecodedMsgs(void) {
     TEST_MESSAGE("test_DecodedMsgs()\n");
     ui.allDecodedMsgs->setMsg(0, "WA0ABC W1AW -1 S3");
@@ -120,12 +133,17 @@ void test_AbortButton() {
 
 extern void process_touch(void);
 void test_TouchScreen() {
-    TEST_MESSAGE("Touch any displayed button in the next 15 seconds");
-    for (int i = 0; i < 150; i++) {
+    TEST_MESSAGE("Press SY to end test_UserInterface");
+    ui.applicationMsgs->setText("Press SY to exit");
+
+    while (true) {
         pollTouchscreen();
-        delay(100);
     }
-    TEST_MESSAGE("Finished\n");
+    // for (int i = 0; i < 150; i++) {
+    //     pollTouchscreen();
+    //     delay(100);
+    // }
+    // TEST_MESSAGE("Finished\n");
 }
 
 int runUnityTests(void) {
@@ -146,14 +164,20 @@ String foobar;
 
 void setup() {
     Serial.begin(9600);
+    delay(100);
 
     // Mock the Station assembly
     thisStation.setCallsign("AA0A");
-    thisStation.setLocator("BB0B");
+    thisStation.setLocator("DN15");
     thisStation.setRig("TX1");
-    thisStation.setMyName("CCCC");
-    thisStation.setFrequency(1234);
-    thisStation.setCursorFreq(555);
+    thisStation.setMyName("Joe");
+    thisStation.setFrequency(7074);
+    thisStation.setCursorFreq(1000);
+
+    // Get the SD file system running
+    if (!SD.begin(BUILTIN_SDCARD)) {
+        DTRACE();
+    }
 
     ui.begin();
 
@@ -171,4 +195,5 @@ void tearDown(void) {
 }
 
 // loop() not actually used
-void loop() {}
+void loop() {
+}

@@ -39,6 +39,10 @@
 #include "Station.h"
 #include "Process_DSP.h"
 
+#ifdef PIO_UNIT_TESTING
+#include "unity.h"
+#endif
+
 // Calibration data (serialized) file name
 #define CALIBRATION_DATA_FILENAME "TOUCHSCR.DAT"
 
@@ -327,22 +331,9 @@ static unsigned long lastTime = millis();
  * really required, we pace the touchscreen (i.e. getPoint()) measurements.
  */
 void pollTouchscreen() {
-    // TSPoint pi, pw;
-    // // uint16_t draw_x, draw_y, touch_x, touch_y;
-
     unsigned long thisTime = millis();  // Current time
 
     if ((thisTime - lastTime) >= 250) {  // 250 mS between measurements
-        // pi = ts.getPoint();              // Read the screen
-
-        // if (pi.z > MINPRESSURE) {                        // Has screen been touched?
-        //     pw.x = map(pi.x, TS_MINX, TS_MAXX, 0, 480);  // Map to resistance to screen coordinate
-        //     pw.y = map(pi.y, TS_MINY, TS_MAXY, 0, 320);
-        //     DPRINTF("pollTouchscreen:  pi.x=%d pi.y=%d pi.z=%d\n", pi.x, pi.y, pi.z);
-        //     DPRINTF("pollTouchscreen:  pw.x=%d pw.y=%d\n", pw.x, pw.y);
-
-        //     // AWidget can determine which widget was touched and notify it
-        //     AWidget::processTouch(pw.x, pw.y);  // Notify widgets that something was touched
 
         // Read the calibrated TouchScreen
         TouchScreenPoint p;
@@ -351,8 +342,6 @@ void pollTouchscreen() {
             AWidget::processTouch(p.x, p.y);  // Notify widgets that something was touched
         }
 
-        // check_FT8_Touch();
-        // check_WF_Touch();
         lastTime = thisTime;  // Note the time when we last took a measurement
     }
 }  // pollTouchScreen()
@@ -363,7 +352,11 @@ void pollTouchscreen() {
 void MenuButton::onTouchButton(int buttonId) {
     DPRINTF("onTouchButton #%d\n", buttonId);
 
-#ifndef PIO_UNIT_TESTING              // Omit application product code when compiling tests
+#ifdef PIO_UNIT_TESTING
+    if (buttonId == 7) {
+        UNITY_END();
+    }
+#else
     ui.applicationMsgs->setText("");  // Clear existing application message, if any
 
     // Dispatch touch event into the application program
@@ -426,7 +419,7 @@ void MenuButton::onTouchButton(int buttonId) {
             seq.msgButtonEvent(config.m2);
             break;
 
-        // Ignore unknown button identifiers
+        // System
         case 7:
             DPRINTF("Sy\n");
             sync_FT8();
@@ -512,7 +505,9 @@ void UserInterface::setCursorLine(uint16_t cursorFreq) {
 void DecodedMsgsBox::onTouchItem(AListBoxItem* pItem) {
     DPRINTF("onTouchItem(index=%d,)\n", index);
     pItem->setItemColors(A_BLACK, A_GREY);  // Highlight this item
-#ifndef PIO_UNIT_TESTING
+#ifdef PIO_UNIT_TESTING
+    // Really should do something here for test builds
+#else
     int index = getItemIndex(pItem);      // Lookup item's index
     seq.clickDecodedMessageEvent(index);  // Notify Sequencer when operator clicks a received message
 #endif
