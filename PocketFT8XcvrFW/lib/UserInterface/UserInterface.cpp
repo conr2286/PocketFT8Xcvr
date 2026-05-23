@@ -353,10 +353,19 @@ void MenuButton::onTouchButton(int buttonId) {
     DPRINTF("onTouchButton #%d\n", buttonId);
 
 #ifdef PIO_UNIT_TESTING
+    //**This is the test build code for onTouchButton()
+
+    // Wait a moment then reset this button
+    delay(100);
+    reset();
+
+    // Did test operator request the test to end?
     if (buttonId == 7) {
+        DTRACE();
         UNITY_END();
     }
 #else
+    //**This is the production build code for onTouchButton()
     ui.applicationMsgs->setText("");  // Clear existing application message, if any
 
     // Dispatch touch event into the application program
@@ -444,13 +453,14 @@ void MenuButton::onTouchButton(int buttonId) {
 const float ft8_shift = 6.25;  // FT8 Hz/bin???  TODO:  move this elsewhere
 
 void Waterfall::onTouchPixel(ACoord x, ACoord y) {
-#ifndef PIO_UNIT_TESTING
     ui.cursor_line = x;  // X-Offset (pixels) of the cursor in Waterfall widget
     ui.thisStation.setCursorFreq(((float)ui.cursor_line + (float)ft8_min_bin) * ft8_shift);
+#ifndef PIO_UNIT_TESTING
     set_Xmit_Freq();
+#endif
+
     DPRINTF("cursor_line=%u cursorFreq=%u \n", ui.cursor_line, ui.thisStation.getCursorFreq());
     ui.displayFrequency();  // Update station info display too
-#endif
 
 }  // Waterfall::onTouchPixel()
 

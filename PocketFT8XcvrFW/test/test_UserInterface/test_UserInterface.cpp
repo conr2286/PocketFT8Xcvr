@@ -1,4 +1,16 @@
-
+/**
+ * @brief Exercise the UserInterface object using Unity in the PlatformIO teensy41 environment
+ *
+ * DISCUSSION:
+ *  No, this is not a true unit test with mocks and all that... but it does execute within
+ *  the Unity test framework, and it exercises the UserInterface object sans the radio code.
+ *
+ *  As readily feasible, this test exercises the various features of the Pocket FT8
+ *  Transceiver's user interface without requiring the test operator's interactions.
+ *  After completing this phase of testing within the Arduino setup() function, the test
+ *  begins a second phase inside loop() where it responds to the test operator's
+ *  interactions with the UI through the touchpad.  Pressing the SY button exits the test.
+ */
 #include <Adafruit_GFX.h>
 #include <SPI.H>
 #include <SD.h>
@@ -9,11 +21,10 @@
 #include "unity.h"
 #include "Station.h"
 
-// extern UserInterface ui;
-// UserInterface ui;
+// Build a reference to the UserInterface singleton
 static UserInterface& ui = UserInterface::getInstance();  // User Interface
 
-// Station thisStation;
+// Build a reference to the Station model singleton
 Station& thisStation = Station::getInstance();  // Station model
 
 /**
@@ -133,12 +144,12 @@ void test_AbortButton() {
 
 extern void process_touch(void);
 void test_TouchScreen() {
-    TEST_MESSAGE("Press SY to end test_UserInterface");
+    TEST_MESSAGE("\nPress SY to exit test_UserInterface\n");
     ui.applicationMsgs->setText("Press SY to exit");
 
-    while (true) {
-        pollTouchscreen();
-    }
+    // while (true) {
+    //     pollTouchscreen();
+    // }
     // for (int i = 0; i < 150; i++) {
     //     pollTouchscreen();
     //     delay(100);
@@ -157,7 +168,7 @@ int runUnityTests(void) {
     RUN_TEST(test_AbortButton);
     RUN_TEST(test_popup);
     RUN_TEST(test_TouchScreen);
-    return UNITY_END();
+    return /*UNITY_END()*/;  // UserInterface.cpp invokes UNITY_END()
 }
 
 String foobar;
@@ -194,6 +205,13 @@ void tearDown(void) {
     Serial.println("Finished");
 }
 
-// loop() not actually used
+/**
+ * @brief The Great Arduino scheduler loop
+ *
+ * DISCUSSION:
+ *  Testing uses loop() to poll the touchscreen and respond to touch events through
+ *  the User Interface
+ */
 void loop() {
+    pollTouchscreen();
 }
