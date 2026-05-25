@@ -157,6 +157,24 @@ void test_TouchScreen() {
     // TEST_MESSAGE("Finished\n");
 }
 
+static bool inLoop = false;  // Test code in loop()
+/**
+ * @brief Callback function invoked by UserInterace MenuButton::onTouchButton()
+ * @param button Pointer to this button
+ * @param buttonId UserInterface's id number for this button
+ */
+void buttonPressCallback(MenuButton* button, int buttonId) {
+    delay(100);
+    DTRACE();
+    if (inLoop) button->reset();  // Reset button following setup()
+
+    // Did test operator request the test to end?
+    if (buttonId == 7) {
+        DTRACE();
+        UNITY_END();
+    }
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_StationInfo);
@@ -214,5 +232,6 @@ void tearDown(void) {
  *  the User Interface
  */
 void loop() {
+    inLoop = true;  // Test is now in interactive mode responding to operator touch events
     pollTouchscreen();
 }

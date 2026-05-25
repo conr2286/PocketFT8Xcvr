@@ -349,21 +349,14 @@ void pollTouchscreen() {
 /**
  * @brief Callback function notified when this MenuButton is touched
  */
+#ifdef PIO_UNIT_TESTING
+void buttonPressCallback(MenuButton* button, int buttonId);
+#endif
 void MenuButton::onTouchButton(int buttonId) {
     DPRINTF("onTouchButton #%d\n", buttonId);
 
 #ifdef PIO_UNIT_TESTING
-    //**This is the test build code for onTouchButton()
-
-    // Wait a moment then reset this button
-    delay(100);
-    reset();
-
-    // Did test operator request the test to end?
-    if (buttonId == 7) {
-        DTRACE();
-        UNITY_END();
-    }
+    buttonPressCallback(this, buttonId);  // Notify test callback code of button press
 #else
     //**This is the production build code for onTouchButton()
     ui.applicationMsgs->setText("");  // Clear existing application message, if any
