@@ -515,10 +515,12 @@ void UserInterface::setCursorLine(uint16_t cursorFreq) {
 void DecodedMsgsBox::onTouchItem(AListBoxItem* pItem) {
     DPRINTF("onTouchItem(index=%d,)\n", index);
     pItem->setItemColors(A_BLACK, A_GREY);  // Highlight this item
+    int index = getItemIndex(pItem);        // Lookup item's index
 #ifdef PIO_UNIT_TESTING
-    // Really should do something here for test builds
+    delay(100);                             // TESTING:  Wait a moment
+    pItem->setItemColors(A_GREY, A_BLACK);  // TESTING:  Clear highlight
+    DPRINTF("Click index=%d\n", index);     // TESTING:  Display index
 #else
-    int index = getItemIndex(pItem);      // Lookup item's index
     seq.clickDecodedMessageEvent(index);  // Notify Sequencer when operator clicks a received message
 #endif
 }
