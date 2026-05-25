@@ -21,7 +21,7 @@
 
 #include "AGUI.h"
 #include "AWidget.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 /**
  * @brief Build an item (an entry) for AListBox
@@ -495,8 +495,7 @@ int AListBox::removeItem(int index) {
  * @note The coordinates are those of the screen, not offsets within this AListBox
  */
 void AListBox::onTouchWidget(ACoord xTouch, ACoord yTouch) {
-    DTRACE();
-
+    DPRINTF("xTouch=%d yTouch=%d\n", xTouch, yTouch);
     // Find the selected item
     AListBoxItem* item = getSelectedItem(xTouch, yTouch);  // Which item was touched?
     if (item == nullptr) return;                           // Not an item
@@ -523,6 +522,7 @@ AListBoxItem* AListBox::getSelectedItem(ACoord xClick, ACoord yClick) const {
     // Calculate index of clicked item
     unsigned index = (yClick - boundary.y1) / leading;
     if (index >= maxItems) return nullptr;  // Validate calculated index
+    DPRINTF("boundary.y1=%d yClick=%d leading=%d index=%d\n", boundary.y1, yClick, leading, index);
 
     // Return pointer or nullptr (empty indices of displayedItems[] are nullptr)
     return (displayedItems[index]);

@@ -218,6 +218,8 @@ void setup() {
     // delay(1000);
     runUnityTests();
     delay(1000);
+
+    ui.allDecodedMsgs->setItemColor(1, A_WHITE, A_BLACK);  // Restore highlighted test item's color scheme
 }
 
 void tearDown(void) {

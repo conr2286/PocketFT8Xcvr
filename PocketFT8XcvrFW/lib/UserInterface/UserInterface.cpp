@@ -506,9 +506,10 @@ void UserInterface::setCursorLine(uint16_t cursorFreq) {
  * engage that station in a QSO.
  */
 void DecodedMsgsBox::onTouchItem(AListBoxItem* pItem) {
-    DPRINTF("onTouchItem(index=%d,)\n", index);
     pItem->setItemColors(A_BLACK, A_GREY);  // Highlight this item
     int index = getItemIndex(pItem);        // Lookup item's index
+    DPRINTF("onTouchItem(index=%d)\n", index);
+
 #ifdef PIO_UNIT_TESTING
     delay(100);                             // TESTING:  Wait a moment
     pItem->setItemColors(A_GREY, A_BLACK);  // TESTING:  Clear highlight
