@@ -28,7 +28,7 @@
 #include "FT8Font.h"        //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"      //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"     //WARNING:  #include HX8357_t3n following Adafruit_GFX
-#include "DEBUG.h"          //USB Serial debugging on the Teensy 4.1
+#include "NODEBUG.h"        //USB Serial debugging on the Teensy 4.1
 #include "PocketFT8Xcvr.h"  //Globals
 #include "Sequencer.h"      //RoboOp
 #include "TouchPad.h"       //Resistive TouchPad driver

@@ -228,7 +228,7 @@ FLASHMEM void setup(void) {
     Serial.begin(9600);
     Serial.println("Starting...");
 
-    // Start the I2C bus's
+    // Start the two I2C bus's
     Wire.setSDA(PIN_SDA);
     Wire.setSCL(PIN_SCL);
     Wire.begin();
@@ -245,7 +245,7 @@ FLASHMEM void setup(void) {
         while (true) continue;      // Hang here
     }
 
-    DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
+    // DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
 
     // Start-up the GPS system
     gpsHelper.begin();
@@ -379,11 +379,11 @@ FLASHMEM void setup(void) {
     // frequency, or maidenhead grid square locator for our station.  ToDo:  Find a better way to explain all this
     // to our operator as the transmitter is always disabled until we get a GPS fix when CONFIG.JSON doesn't specify
     // a locator.  For now, we'll only display a warning if debugging messages are enabled.
-    if (!thisStation.canTransmit()) {
-        // ui.applicationMsgs->setText("Transmitter disabled");
-        DPRINTF("The transmitter is not yet enabled\n");
-        // delay(5000);
-    }
+    // if (!thisStation.canTransmit()) {
+    //     // ui.applicationMsgs->setText("Transmitter disabled");
+    //     DPRINTF("The transmitter is not yet enabled\n");
+    //     // delay(5000);
+    // }
 
     // Start the QSO Sequencer (RoboOp) and our receiver
     seq.begin(thisStation.getQSOtimeout(), config.logFilename);  // Parameter configures Sequencer's run-on QSO timeout and the logfile name
