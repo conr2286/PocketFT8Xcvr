@@ -9,6 +9,9 @@ Import("env")
 print("wait2test");
 
 if "test" in env.GetBuildType():
+    # Delay before upload to let USB state settle between back-to-back test runs.
+    env.AddPreAction("upload", lambda *_, **__: time.sleep(2))
+    # Keep a short delay after upload so monitor/test startup is less racy.
     env.AddPostAction("upload", lambda *_, **__: time.sleep(2))
 
 
