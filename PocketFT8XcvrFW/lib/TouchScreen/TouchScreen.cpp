@@ -165,19 +165,6 @@ const TouchCalibrationNode& TouchScreen::nodeAt(int r, int cidx) {
 }
 
 /**
- * @brief Helper returns the maximum of three values
- * @param a value1
- * @param b value2
- * @param c value3
- * @return maximum value
- */
-static float max(float a, float b, float c) {
-    if (a > b && a > c) return a;
-    if (b > a && b > c) return b;
-    return c;
-}
-
-/**
  * @brief Locate which of the four rectangular cells the touchpoint resides
  * @param cal Calibration table
  * @param raw Touchpoint x/y coordinates
@@ -200,51 +187,51 @@ bool TouchScreen::locateCell(const TouchPadPoint& raw, TCZone& cell) {
 
     int row = -1, col = -1;
 
-    // Perhaps the raw touchpoint lies above the top row
-    float top = max(calibrationTable.nodes[0].raw.y, calibrationTable.nodes[1].raw.y, calibrationTable.nodes[2].raw.y);
-    if (raw.y < top) {
-        row = 0;  // Snap to the top row
-        DTRACE();
-    } else {
-        // Find the row band containing the touchpoint
-        for (int r = 0; r < 2; r++) {
-            float y0 = nodeAt(r, 0).raw.y;
-            float y1 = nodeAt(r + 1, 0).raw.y;
-            if ((raw.y >= y0 && raw.y <= y1) || (raw.y <= y0 && raw.y >= y1)) {
-                DPRINTF("raw.y=%f y0=%f y1=%f\n", raw.y, y0, y1);
-                row = r;
-                break;
-            }
-        }
+    // Use row/column averages so cell location is less sensitive to skewed raw nodes.
+    float rowY[3];
+    float colX[3];
+    for (int r = 0; r < 3; r++) {
+        rowY[r] = (nodeAt(r, 0).raw.y + nodeAt(r, 1).raw.y + nodeAt(r, 2).raw.y) / 3.0f;
+    }
+    for (int c = 0; c < 3; c++) {
+        colX[c] = (nodeAt(0, c).raw.x + nodeAt(1, c).raw.x + nodeAt(2, c).raw.x) / 3.0f;
     }
 
-    // If we haven't yet found the row, then it must lie below the bottom boundary
+    // Locate row band (works regardless of increasing or decreasing raw axis).
+    for (int r = 0; r < 2; r++) {
+        float y0 = rowY[r];
+        float y1 = rowY[r + 1];
+        if ((raw.y >= y0 && raw.y <= y1) || (raw.y <= y0 && raw.y >= y1)) {
+            DPRINTF("raw.y=%f y0=%f y1=%f\n", raw.y, y0, y1);
+            row = r;
+            break;
+        }
+    }
     if (row == -1) {
-        row = 1;  // Snap to the bottom row
+        float center0 = (rowY[0] + rowY[1]) * 0.5f;
+        float center1 = (rowY[1] + rowY[2]) * 0.5f;
+        float d0 = (raw.y >= center0) ? (raw.y - center0) : (center0 - raw.y);
+        float d1 = (raw.y >= center1) ? (raw.y - center1) : (center1 - raw.y);
+        row = (d0 <= d1) ? 0 : 1;
         DTRACE();
     }
 
-    // Perhaps the raw touchpoint lies to the left of the leftmost column
-    float leftmost = max(calibrationTable.nodes[0].raw.x, calibrationTable.nodes[3].raw.x, calibrationTable.nodes[6].raw.x);
-    if (raw.x < leftmost) {
-        col = 0;  // Snap to leftmost column
-        DTRACE();
-    } else {
-        // Find column band
-        for (int c = 0; c < 2; c++) {
-            float x0 = nodeAt(0, c).raw.x;
-            float x1 = nodeAt(0, c + 1).raw.x;
-            if ((raw.x >= x0 && raw.x <= x1) || (raw.x <= x0 && raw.x >= x1)) {
-                DPRINTF("raw.x=%f x0=%f x1=%f\n", raw.x, x0, x1);
-                col = c;
-                break;
-            }
+    // Locate column band (works regardless of increasing or decreasing raw axis).
+    for (int c = 0; c < 2; c++) {
+        float x0 = colX[c];
+        float x1 = colX[c + 1];
+        if ((raw.x >= x0 && raw.x <= x1) || (raw.x <= x0 && raw.x >= x1)) {
+            DPRINTF("raw.x=%f x0=%f x1=%f\n", raw.x, x0, x1);
+            col = c;
+            break;
         }
     }
-
-    // If we haven't found the column, it must lie beyond the rightmost boundary
     if (col == -1) {
-        col = 1;
+        float center0 = (colX[0] + colX[1]) * 0.5f;
+        float center1 = (colX[1] + colX[2]) * 0.5f;
+        float d0 = (raw.x >= center0) ? (raw.x - center0) : (center0 - raw.x);
+        float d1 = (raw.x >= center1) ? (raw.x - center1) : (center1 - raw.x);
+        col = (d0 <= d1) ? 0 : 1;
         DTRACE();
     }
 
@@ -272,7 +259,6 @@ bool TouchScreen::locateCell(const TouchPadPoint& raw, TCZone& cell) {
 
 /**
  * @brief Bilinear interpolator
- * @param cal Calibration table
  * @param cell Bilinear cell containing the touchpoint
  * @return Screen coordinates of interpolated point
  *
