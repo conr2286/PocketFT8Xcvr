@@ -141,6 +141,7 @@ void test_AbortButton() {
 }
 
 extern void process_touch(void);
+static unsigned long t0;
 /**
  * @brief Begin interactive touchscreen test
  *
@@ -150,6 +151,7 @@ extern void process_touch(void);
 void test_TouchScreen() {
     TEST_MESSAGE("Press SY to exit test_UserInterface");
     ui.applicationMsgs->setText("TouchScreen test");
+    t0 = millis();
 }
 
 static bool inLoop = false;  // Test code in loop()
@@ -221,9 +223,14 @@ void tearDown(void) {
  *
  * DISCUSSION:
  *  Testing uses loop() to poll the touchscreen and respond to touch events through
- *  the User Interface
+ *  the User Interface for timout milliseconds
  */
+static unsigned long timeout = 10000;  // Milliseconds till timeout
 void loop() {
+    // Time-out???
+    if (millis() - t0 > timeout) UNITY_END();
+
+    // Interactive touchscreen testing mode
     inLoop = true;  // Test is now in interactive mode responding to operator touch events
     pollTouchscreen();
 }

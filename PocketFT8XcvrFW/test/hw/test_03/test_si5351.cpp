@@ -81,6 +81,7 @@ void test_si5351_init(void) {
     }
 
     // Check Si5351 status register bits
+    delay(10);                                // Wait a bit for chip
     TEST_ASSERT_EQUAL_INT(0, status & 0x10);  // Check for missing CLKIN signal
     TEST_ASSERT_EQUAL_INT(0, status & 0x80);  // Confirm initialization complete
 
