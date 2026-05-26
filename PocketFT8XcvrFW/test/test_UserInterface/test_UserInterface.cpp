@@ -68,8 +68,6 @@ void test_DecodedMsgs(void) {
     ui.allDecodedMsgs->setMsg(10, "THIS MESSAGE NOT DISPLAYED");
 
     delay(1000);
-    // AWidget::processTouch(20, 124); //Highlight item 0
-    delay(1000);
     ui.allDecodedMsgs->setItemColor(1, A_BLACK, A_LIGHT_GREY);  // Highlight item 1
 }
 
@@ -77,9 +75,9 @@ void test_popup(void) {
     TEST_MESSAGE("test_popup()\n");
     delay(1000);
     ATextBox* popup = new ATextBox("I am the popup widget", 0, 0, 440, 310, A_RED);
-    delay(2000);   // Leave popup on the screen for a bit
+    delay(1000);   // Leave popup on the screen for a bit
     delete popup;  // Should repaint overlapping widgets
-    delay(2000);   // Leave repainted gui visible for a moment
+    delay(1000);   // Leave repainted gui visible for a moment
 }
 
 void test_StationMsgs(void) {
@@ -96,7 +94,7 @@ void test_StationMsgs(void) {
     ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, &msg2, QSO_MSG_XMITD);
     ui.theQSOMsgs->addStationMessageItem(ui.theQSOMsgs, "NA1A KQ7B 73", QSO_MSG_XMITPEND);
     ui.theQSOMsgs->addItem(ui.theQSOMsgs, "1234567890ABCDEFGHIJKLMNOP");  // Invoke base class addItem to display long undecoded string
-    delay(2000);
+    delay(1000);
     AWidget::processTouch(270, 120);  // Touch W1AW's CQ message
     delay(1000);
 }  // test_StationMsgs()
@@ -115,7 +113,7 @@ void test_Waterfall() {
 void test_AppMessage() {
     TEST_MESSAGE("test_AppMessage\n");
     ui.applicationMsgs->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-    delay(5000);
+    delay(1000);
 }
 
 void test_CQButton() {
@@ -143,25 +141,22 @@ void test_AbortButton() {
 }
 
 extern void process_touch(void);
+/**
+ * @brief Begin interactive touchscreen test
+ *
+ * DISCUSSION:
+ *  This test mostly executes in loop() polling for and responding to touchscreen events
+ */
 void test_TouchScreen() {
-    TEST_MESSAGE("\nPress SY to exit test_UserInterface\n");
-    ui.applicationMsgs->setText("Press SY to exit");
-
-    // while (true) {
-    //     pollTouchscreen();
-    // }
-    // for (int i = 0; i < 150; i++) {
-    //     pollTouchscreen();
-    //     delay(100);
-    // }
-    // TEST_MESSAGE("Finished\n");
+    TEST_MESSAGE("Press SY to exit test_UserInterface");
+    ui.applicationMsgs->setText("TouchScreen test");
 }
 
 static bool inLoop = false;  // Test code in loop()
 /**
  * @brief Callback function invoked by UserInterace MenuButton::onTouchButton()
  * @param button Pointer to this button
- * @param buttonId UserInterface's id number for this button
+ * @param buttonId UserInterface's id number for this pressed button
  */
 void buttonPressCallback(MenuButton* button, int buttonId) {
     delay(100);
@@ -210,15 +205,11 @@ void setup() {
 
     ui.begin();
 
-    // ATextBox foo = ATextBox("foo", 0, 200, 100, 100);
-    // delay(1000);
-
     // Run the tests
-    // delay(1000);
     runUnityTests();
     delay(1000);
 
-    ui.allDecodedMsgs->setItemColor(1, A_WHITE, A_BLACK);  // Restore highlighted test item's color scheme
+    ui.allDecodedMsgs->setItemColor(1, A_WHITE, A_BLACK);  // Restore above highlighted test item's color scheme
 }
 
 void tearDown(void) {

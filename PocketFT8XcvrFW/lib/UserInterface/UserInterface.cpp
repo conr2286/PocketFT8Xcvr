@@ -4,8 +4,9 @@
  * @note UserInterface.cpp attempts to consolidate all user interface decisions and objects
  * in this single location facilitating future tweaks to the hardware and design.
  *
- * #ifndef PIO_UNIT_TESTING is widely used to disable application code to allow the
- * user interface to be unit tested by itself.
+ * #ifdef PIO_UNIT_TESTING is widely used to disable application, or enable test code,
+ * to allow the user interface to be unit tested sans radio.  It's not a real unit test
+ * but it's a lot better than nothing at all.
  */
 
 #include "UserInterface.h"
@@ -511,9 +512,9 @@ void DecodedMsgsBox::onTouchItem(AListBoxItem* pItem) {
     DPRINTF("onTouchItem(index=%d)\n", index);
 
 #ifdef PIO_UNIT_TESTING
-    delay(100);                             // TESTING:  Wait a moment
-    pItem->setItemColors(A_GREY, A_BLACK);  // TESTING:  Clear highlight
-    DPRINTF("Click index=%d\n", index);     // TESTING:  Display index
+    delay(300);                              // TESTING:  Wait for operator to view highlighted item
+    pItem->setItemColors(A_WHITE, A_BLACK);  // TESTING:  Clear highlight
+    DPRINTF("Click index=%d\n", index);      // TESTING:  Display index
 #else
     seq.clickDecodedMessageEvent(index);  // Notify Sequencer when operator clicks a received message
 #endif

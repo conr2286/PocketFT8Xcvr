@@ -47,7 +47,7 @@
 #include "TouchScreen.h"
 #include "hwdefs.h"
 #include "TouchPad.h"
-#include "DEBUG.h"
+#include "NODEBUG.h"
 
 // We typically inset the calibration targets by a small margin to avoid
 // asking operator to touch on the margin.
