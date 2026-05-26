@@ -192,9 +192,8 @@ int runUnityTests(void) {
 String foobar;
 
 void setup() {
-    // delay(500);
     Serial.begin(9600);
-    // delay(100);
+    if (!Serial) delay(100);
 
     // Mock the Station assembly
     thisStation.setCallsign("AA0A");

@@ -72,7 +72,7 @@ class TouchScreen {
 
    private:
     // Our private methods and helpers
-    TouchScreenPoint bilinear(const TouchCalibrationTable& cal, const TCZone& cell);
+    TouchScreenPoint bilinear(const TCZone& cell);
     bool locateCell(const TouchPadPoint& raw, TCZone& cell);
     const TouchCalibrationNode& nodeAt(const int r, const int cidx);
     uint16_t crc16(const uint8_t* data, const size_t length);

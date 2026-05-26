@@ -46,7 +46,7 @@
 #include "TouchScreen.h"
 #include "hwdefs.h"
 #include "TouchPad.h"
-#include "NODEBUG.h"
+#include "DEBUG.h"
 
 // We typically inset the calibration targets by a small margin to avoid
 // asking operator to touch on the margin.
@@ -235,6 +235,7 @@ bool TouchScreen::locateCell(const TouchPadPoint& raw, TCZone& cell) {
             float x0 = nodeAt(0, c).raw.x;
             float x1 = nodeAt(0, c + 1).raw.x;
             if ((raw.x >= x0 && raw.x <= x1) || (raw.x <= x0 && raw.x >= x1)) {
+                DPRINTF("raw.x=%f x0=%f x1=%f\n", raw.x, x0, x1);
                 col = c;
                 break;
             }
@@ -291,7 +292,8 @@ bool TouchScreen::locateCell(const TouchPadPoint& raw, TCZone& cell) {
  *
  *
  */
-TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const TCZone& cell) {
+#include <cmath>
+TouchScreenPoint TouchScreen::bilinear(const TCZone& cell) {
     TouchScreenPoint out;
 
     // Sanity checks
@@ -309,7 +311,7 @@ TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const T
     float u = cell.u;  // Normalized x placement 0..1 of raw touch within cell
     float v = cell.v;  // Normalized y placement 0..1 of raw touch within cell
 
-    DPRINTF("u=%f v=%f\n", u, v);
+    DPRINTF("cell.row=%d cell.col=%d u=%f v=%f\n", cell.row, cell.col, u, v);
 
     // For x-Axis, blend weights within that cell.  If the touch was in this cell's exact
     // center, the weights would be u==v==0.5 as each corner gets weight 0.25
@@ -318,6 +320,7 @@ TouchScreenPoint TouchScreen::bilinear(const TouchCalibrationTable& cal, const T
         (u) * (1 - v) * n10.screen.x +      // Weight of top-right
         (1 - u) * (v)*n01.screen.x +        // Weight of bottom-left
         (u) * (v)*n11.screen.x;             // Weight of bottom-right
+    DPRINTF("n00.screen.x=%f n10.screen.x=%f n01.screen.x=%f n11.screen.x=%f\n", n00.screen.x, n10.screen.x, n01.screen.x, n11.screen.x);
 
     // Repeat for y-Axis
     out.y =
@@ -398,6 +401,8 @@ void TouchScreen::rotate(TouchScreenPoint& p) {
 bool TouchScreen::mapRawToScreen(const TouchPadPoint& raw, TouchScreenPoint& screen) {
     TCZone cell;
 
+    DPRINTF("mapRawToScreen for raw.x=%d raw.y=%d\n", raw.x, raw.y);
+
     // Sanity checks
     if (!initialized || !calibrated) {
         DTRACE();
@@ -412,7 +417,8 @@ bool TouchScreen::mapRawToScreen(const TouchPadPoint& raw, TouchScreenPoint& scr
     }
 
     // Use the calibration table to interpolate within the touched cell
-    screen = bilinear(calibrationTable, cell);
+    screen = bilinear(cell);
+    DPRINTF("screen.x=%f screen.y=%f\n", screen.x, screen.y);
 
     // Deal with out-of-bounds near edges
     if (screen.x < 0) screen.x = 0;
