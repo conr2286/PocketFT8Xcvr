@@ -42,6 +42,7 @@
  */
 
 #include <Arduino.h>
+#include <cmath>
 #include "HX8357_t3n.h"
 #include "TouchScreen.h"
 #include "hwdefs.h"
@@ -160,13 +161,14 @@ const TouchCalibrationNode& TouchScreen::nodeAt(int r, int cidx) {
     // Sanity checks
     if ((r < 0) || (r >= 3) || (cidx < 0) || (cidx >= 3)) {
         DTRACE();
+        r = 0;  // Substitute safe values so we don't crash
+        cidx = 0;
     }
     return calibrationTable.nodes[r * 3 + cidx];
 }
 
 /**
  * @brief Locate which of the four rectangular cells the touchpoint resides
- * @param cal Calibration table
  * @param raw Touchpoint x/y coordinates
  * @param cell Returned cell
  * @return Error indication
@@ -241,14 +243,57 @@ bool TouchScreen::locateCell(const TouchPadPoint& raw, TCZone& cell) {
     const TouchCalibrationNode& n00 = nodeAt(row, col);
     const TouchCalibrationNode& n10 = nodeAt(row, col + 1);
     const TouchCalibrationNode& n01 = nodeAt(row + 1, col);
+    const TouchCalibrationNode& n11 = nodeAt(row + 1, col + 1);
 
-    float dx = n10.raw.x - n00.raw.x;
-    float dy = n01.raw.y - n00.raw.y;
-    if (dx == 0.0f || dy == 0.0f)
+    // Solve inverse bilinear in raw-coordinate space for (u,v).
+    // This preserves precision for skewed/non-orthogonal raw calibration cells.
+    const float ax = n00.raw.x;
+    const float bx = n10.raw.x - n00.raw.x;
+    const float cx = n01.raw.x - n00.raw.x;
+    const float dx = n11.raw.x - n10.raw.x - n01.raw.x + n00.raw.x;
+
+    const float ay = n00.raw.y;
+    const float by = n10.raw.y - n00.raw.y;
+    const float cy = n01.raw.y - n00.raw.y;
+    const float dy = n11.raw.y - n10.raw.y - n01.raw.y + n00.raw.y;
+
+    // Start from affine estimate so Newton iterations converge quickly.
+    float u = 0.5f;
+    float v = 0.5f;
+    if (bx != 0.0f) u = (raw.x - n00.raw.x) / bx;
+    if (cy != 0.0f) v = (raw.y - n00.raw.y) / cy;
+
+    for (int iter = 0; iter < 8; iter++) {
+        const float f1 = ax + bx * u + cx * v + dx * u * v - raw.x;
+        const float f2 = ay + by * u + cy * v + dy * u * v - raw.y;
+
+        if ((fabsf(f1) + fabsf(f2)) < 0.001f) {
+            break;
+        }
+
+        const float j11 = bx + dx * v;
+        const float j12 = cx + dx * u;
+        const float j21 = by + dy * v;
+        const float j22 = cy + dy * u;
+        const float det = j11 * j22 - j12 * j21;
+        if (fabsf(det) < 1.0e-6f) {
+            break;
+        }
+
+        const float du = (f1 * j22 - f2 * j12) / det;
+        const float dv = (j11 * f2 - j21 * f1) / det;
+
+        u -= du;
+        v -= dv;
+
+        if ((fabsf(du) + fabsf(dv)) < 0.0005f) {
+            break;
+        }
+    }
+
+    if (!isfinite(u) || !isfinite(v)) {
         return false;
-
-    float u = (raw.x - n00.raw.x) / dx;
-    float v = (raw.y - n00.raw.y) / dy;
+    }
 
     cell.row = row;
     cell.col = col;
@@ -278,7 +323,6 @@ bool TouchScreen::locateCell(const TouchPadPoint& raw, TCZone& cell) {
  *
  *
  */
-#include <cmath>
 TouchScreenPoint TouchScreen::bilinear(const TCZone& cell) {
     TouchScreenPoint out;
 

@@ -53,10 +53,36 @@ TouchScreenPoint TouchScreen::toTCPoint(TouchPadPoint p) {
 TouchScreenPoint TouchScreen::readTouchPad(void) {
     TouchPadPoint p;
     bool ok;
+
+    // Average several filtered samples while the stylus is held on target to
+    // reduce calibration-node noise and improve interpolation precision.
+    const int N = 7;
+    float sumX = 0.0f;
+    float sumY = 0.0f;
+    int nRead = 0;
+
     do {
         ok = touchPad.readFiltered(p);  // Read touchpad...
     } while (!ok);  //...until we get valid coordinates
-    return toTCPoint(p);  // Return valid coordinates as floats
+
+    sumX += p.x;
+    sumY += p.y;
+    nRead = 1;
+
+    // Collect more samples if the stylus remains down.
+    for (; nRead < N; nRead++) {
+        if (!touchPad.readFiltered(p)) {
+            break;
+        }
+        sumX += p.x;
+        sumY += p.y;
+        delay(2);
+    }
+
+    TouchScreenPoint result;
+    result.x = sumX / nRead;
+    result.y = sumY / nRead;
+    return result;
 }
 
 /**
