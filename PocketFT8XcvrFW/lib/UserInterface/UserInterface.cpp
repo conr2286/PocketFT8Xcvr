@@ -28,7 +28,7 @@
 #include "FT8Font.h"        //Customized font for the Pocket FT8 Revisited
 #include "GPShelper.h"      //Decorator for Adafruit_GPS library
 #include "HX8357_t3n.h"     //WARNING:  #include HX8357_t3n following Adafruit_GFX
-#include "NODEBUG.h"        //USB Serial debugging on the Teensy 4.1
+#include "DEBUG.h"          //USB Serial debugging on the Teensy 4.1
 #include "PocketFT8Xcvr.h"  //Globals
 #include "Sequencer.h"      //RoboOp
 #include "TouchPad.h"       //Resistive TouchPad driver
@@ -392,15 +392,22 @@ void MenuButton::onTouchButton(int buttonId) {
             if (getState()) {
                 setAutoReplyToCQ(true);  // If button is on then enable RoboOp
                 if (config.enableDuplicates) {
-                    ui.applicationMsgs->setText("Robo replying to dups");
+                    ui.applicationMsgs->setText("Robo on with dups");
                 } else {
-                    ui.applicationMsgs->setText("Robo ignoring dups");
-                    auto_flag = 1;  // Enable RoboOp to continuously respond to received CQ msgs
+                    ui.applicationMsgs->setText("Robo on sans dups");
+
+                    // Enable fully robotic operation for debugging (see comments in Sequencer)
+                    // auto_flag = 1;  // Enable RoboOp to endlessly work CQ stations (violates FT8 license)
                 }
             } else {
-                setAutoReplyToCQ(false);  // Else disable RoboOp
-                ui.applicationMsgs->setText("Robo disabled");
-                auto_flag = 0;  // Ensure RoboOp will not respond continuously
+                // setAutoReplyToCQ(false);  // Else disable RoboOp
+                ui.applicationMsgs->setText("Robo off");
+                seq.abortButtonEvent();  // Ask Sequencer to abort transmissions (if any)
+                // ui.b1->setState(false);       // Turn button "off" (it doesn't really toggle)
+                // ui.b1->onRepaintWidget();     // Repaint the now "off" button
+                ui.applicationMsgs->reset();  // Reset (clear) the Application Messages box
+
+                // auto_flag = 0;  // Ensure RoboOp will not respond continuously (See comments in Sequencer)
             }
             break;
 
@@ -609,7 +616,7 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pContainer, Str
 QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessages, Decode* pNewMsg, QSOMsgEvent msgEvent) {
     int newItemIndex = nDisplayedItems;
     String newMsg = pNewMsg->toString();
-    AColor color = A_GREY;
+    AColor color = A_LIGHT_GREY;
     QSOMessagesItem* pLastMsgItem = NULL;
 
     // Sanity check
@@ -625,7 +632,7 @@ QSOMessagesItem* QSOMessages::addStationMessageItem(QSOMessages* pStationMessage
     // Choose text color to reflect the message type
     switch (msgEvent) {
         case QSO_MSG_XMITPEND:  // New message pending transmission
-            color = A_GREY;
+            color = A_LIGHT_GREY;
             break;
         case QSO_MSG_RECVD:  // New received message
 #ifndef PIO_UNIT_TESTING

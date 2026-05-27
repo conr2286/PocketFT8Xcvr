@@ -501,10 +501,10 @@ void Sequencer::cqMsgEvent(Decode* msg) {
     // Avoid responding to previously logged duplicates unless enabled by CONFIG.JSON
     String dupMsg;
     if (config.enableDuplicates) {
-        dupMsg = String("Robo replying to ") + String(msg->field2);
+        dupMsg = String("Reply to ") + String(msg->field2);
         ui.applicationMsgs->setText(dupMsg.c_str());
     } else if (ContactLogFile::isKnownCallsign(msg->field2)) {
-        dupMsg = String("Robo ignoring ") + String(msg->field2);
+        dupMsg = String("Ignoring ") + String(msg->field2);
         ui.applicationMsgs->setText(dupMsg.c_str());
         return;  // RoboOp ignores stations already in the log
     }
@@ -738,7 +738,7 @@ void Sequencer::clickDecodedMessageEvent(Decode* msg) {
  * activity, and is normally stopped when that QSO/TUNE completes normally.
  * The duration was established by begin() and configurable in CONFIG.JSON.
  *
- * NOTE:  Timer events are not fully asynchronous (we don't have to worry
+ * NOTE:  Timer events are synchronous, not asynchronous, (we don't have to worry
  * about them interrupting us doing something else --- there are no critical
  * section worries here).
  */
@@ -747,11 +747,16 @@ void Sequencer::onTimerEvent(Timer* thisTimer) {
     Sequencer& theSequencer = Sequencer::getSequencer();
     DFPRINTF("sequenceNumber=%lu, state=%u\n", theSequencer.sequenceNumber, theSequencer.state);
 
-    // auto_flag enables RoboOp to continue to respond to received CQ messages
-    if (auto_flag == 1)
-        setAutoReplyToCQ(true);
-    else
-        setAutoReplyToCQ(false);
+    // auto_flag enables RoboOp to continue to respond to received CQ messages.  This flag was
+    // used during development for debugging.  However, Franke, Somerville and Taylor require
+    // "Robotic or unattended QSOs must be explicitly disallowed" and so auto_flag is disabled.
+    // For your maximum confusion, RoboOp is not a true robotic/unattended QSO as it merely
+    // enables this station to respond to a single CQ:  the operator must restart RoboOp after
+    // each QSO attempt.
+    // if (auto_flag == 1)
+    //     setAutoReplyToCQ(true);
+    // else
+    //     setAutoReplyToCQ(false);
 
     // Decide what to do about the time-out
     switch (theSequencer.state) {
@@ -836,7 +841,7 @@ void Sequencer::onTimerEvent(Timer* thisTimer) {
 void Sequencer::abortButtonEvent() {
     DTRACE();
     setAutoReplyToCQ(false);                          // Disable RoboOp's auto replies
-    onTimerEvent(NULL);                               // Pretend the QSO Timer expired
+    onTimerEvent(NULL);                               // Pretend the QSO Timer expired (ends QSO if any)
     ui.setXmitRecvIndicator(INDICATOR_ICON_RECEIVE);  // Let operator know receiver is on
 }  // abortButtonEvent()
 
