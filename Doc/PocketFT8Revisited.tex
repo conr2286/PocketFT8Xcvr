@@ -1,10 +1,17 @@
 \documentclass[12pt, letterpaper]{article}
-\usepackage[margin=0.5in]{geometry}
+
+
+% Include supporting packages
+\usepackage[top=1in, bottom=1in]{geometry}
 \usepackage{setspace}
 \usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{setspace}
-\usepackage{cite}
+\usepackage{url}
+\usepackage{graphicx}
+%\usepackage{cite}
+%\usepackage{hyperref}
+
 
 % Set double spacing
 %\doublespacing
@@ -18,12 +25,12 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[R]{Author Last Name: Shortened Title}
+%\fancyhead[R]{Author Last Name: Shortened Title}
 \fancyfoot[C]{\thepage}
 
 \begin{document}
 
-\vspace*{2.5in} % Pushes the title halfway down page 1
+\vspace*{.5in} % Pushes the title  down page 1
 \begin{center}
     {\LARGE \bfseries Pocket FT8 Transceiver Revisited} \par
     \vspace{0.25in}
@@ -32,42 +39,64 @@
 \end{center}
 
 \begin{center}
-The Pocket FT8 Transceiver Revisited is a portable software defined amateur radio transceiver.
+Pocket FT8 Transceiver Revisited is a portable software defined QRPP transceiver.
 \end{center}
 
-\section{Introduction}
-Charles Hill's original Pocket FT8 project has inspired several self-contained FT8 \cite{qstft8} \cite{qexft8} transceiver follow-ons.
-This rendition honors the original Pocket FT8 vision with simplified hardware and enhanced firmware features.
-The result is a highly portable, single-band, HF transceiver focused on backpacking and mountain day hikes offering:
+\section{Introduction and Features}
+
+Charles Hill's original Pocket FT8 project\cite{pocketFT8} has inspired several\cite{dxFT8}\cite{tinyDX} fully self-contained FT8 transceiver derivatives in which the computer \textit{is} the radio.
+This derivative revisits Charles' original concept with simplified hardware and enhanced firmware features while retaining the highly portable, single-band, QRPP, HF transceiver concept for backpacking and day hike applications.
+The features include:
 
   \begin{itemize} [noitemsep]
-  \item Self-contained --- the radio \textit{is} the computer
-  \item Compact board size (4.0X2.8")
-  \item FT8 modulation (no CW or SSB)
+  \item Open source hardware and firmware
+  \item Self-contained and light-weight
+  \item Compact, 4-layer PCB (4.0X2.8")
+  \item FT8 modulation
   \item 275+ mW RF output (QRPP)
-  \item Single LP filter slot
-  \item 480x320 pixel TFT display
-  \item Touchscreen GUI controls
-  \item Waterfall display of FT8 traffic
-  \item FT8 ``standard" QSO sequencer
-  \item Automatic QSO logging to an  ADIF file
-  \item JSON station configuration file
+  \item Single RF filter slot
   \item Low jitter TCXO
   \item GPS disciplined date, time and location (grid square)
+  \item 480x320 pixel TFT calibrated touchscreen
+  \item Waterfall traffic display
+  \item FT8 QSO sequencer
+  \item Automatic QSO logging to an  ADIF file
+  \item JSON station configuration file
   \item Operation from a single 5V USB power block
-  \item Four layer PCB
   \end{itemize}
  
-
-While the feature set purposely constrains the hardware complexity, power consumption and space requirements, the focus on FT8  alone is a compromise.
-In its favor, FT8 forgoes the need for the telegraph key, microphone and headset accessories typical of multi-mode transceivers.
-By embedding the software defined radio and FT8 on a single board, Pocket FT8 leaves the laptop at home.
-Furthermore, FT8's  weak signal performance relaxes the need for ``high" transmit power, enabling an off-the-shelf USB power bank to satisfy the power requirements.
-On the other hand, most FT8 QSOs are terse, context-like, exchanges following a  standard sequence with little operator involvement following initiation of the contact.
-Alternative designs address situations where this compromise becomes unacceptable.
+The FT8 protocol\cite{qexFT8}, designed for weak signal communication,  reduces the transceiver's power requirements, weight, and replaces the telegraph key, microphone, and headset accessory with a touchscreen display.
+Consolidating the FT8 radio and its touchscreen with an embedded computer eliminates the need to pack a computer in addition to the radio.
+Further integration of a GPS receiver provides the UTC date and time for ADIF logging as well as the Maidenhead grid square and FT8 time-synchronization.
+On the other hand, FT8 QSOs are usually terse, contest-like exchanges conveying a sequence of structured messages with minimal operator involvement following establishment of a contact.  
+While FT8 is not always appropriate, alternative designs\cite{kh1}\cite{qmx}  cover many of those situations.
   
  \section{Hardware}
- \subsection*{Hardware Design}
+The transceiver (Figure \ref{fig:schematic}) is designed around a Teensy 4.1 600 mHz, 32-bit ARM Cortex-M7 MCU with hardware floating point, USB, SPI, I2C, 1 mB of RAM, and two ADCs.
+
+When transmitting, the MCU reprograms the Si5351 clock generator's output for each of the eight FT8 Frequency Shift Keying (FSK) tones, a direct FSK scheme, unlike the audio FSK (aFSK) widely used with a SSB transmitters' microphone jack connected from a laptop headphone circuit.
+Frequency stability is achieved by locking the Si5351 to a low jitter Temperature Controlled Crystal Oscillator (TCXO) reference.
+The Si5351's output is buffered by one element of a SN74ACT244 octal bus driver whose remaining seven buffers function in parallel as the transmitter's power amplifier (PA).
+A five-pole Chebyshev low-pass filter (Figure \ref{fig:lpFilter}) with 1 dB of ripple peaking near the expected operating frequency  provides harmonic rejection.
+The PA delivers 275 mW through the filter.
+
+The Si4735 implements the receiver's RF section and delivers FT8 audio tones to the MCU's audio pipeline via ADC2.
+While the Si4735 may lack the performance of alternative designs, its capabilities compare to the QRPP transmitter:  on-the-air experience has been the receiver decodes more stations than respond.
+Early prototypes resolved the Si4735's sensitivity to noise on its I2C bus by moving other I2C peripherals to a different bus.
+The Si4735's phase-locked loop (PLL) is locked to one of the Si5351 clock generator's outputs.
+
+An Adafruit 3.5" TFT 320x480 touchscreen with an HX8357D controller serve as the graphical user interface device.
+The display achieves satisfactory performance over an SPI bus from the MCU while the resistive touchscreen connects to the MCU's ADC1.
+While the compact display is ideal for portable operation, accurate interaction with the touchscreen favors use of a stylus.
+
+
+
+
+
+
+
+
+ 
  \subsection*{FL1 Design}
 FL1 mainly provides harmonic rejection for the transmitted signal.
 On 40 meters, the five pole Chebyshev design provides for 1 dB of ripple peaking inside the band.
@@ -98,8 +127,27 @@ With some effort, it can probably be made pluggable to facilitate band changes.
 \section{Acknowledgements}
 
 
+% Schematic
+\begin{figure}[b]
+\centering
+\includegraphics[width=0.9\textheight, angle=90]{images/Schematic.pdf}
+\caption{Schematic}
+\label{fig:schematic}
+\end{figure}
+
+% Chebyshev Low-Pass Filter Bode Plot
+\begin{figure}[b]
+\centering
+\includegraphics[width=1.0\textwidth]{images/LPfilter.png}
+\caption{Chebyshev Low-Pass Filter Bode Plot}
+\label{fig:lpFilter}
+\end{figure}
+
+
 %\newpage
-\bibliographystyle{plain}
+\bibliographystyle{IEEEtran}
+%\bibliographystyle{plain}
+%\bibliographystyle{ieeetr}
 \bibliography{PocketFT8Revisited}
 \end{document}
 

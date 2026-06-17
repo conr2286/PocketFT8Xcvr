@@ -1,46 +1,56 @@
 This is BibTeX, Version 0.99e (TeX Live 2026)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: PocketFT8Revisited.aux
-The style file: plain.bst
+The style file: IEEEtran.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: PocketFT8Revisited.bib
-You've used 2 entries,
-            2118 wiz_defined-function locations,
-            507 strings with 4298 characters,
-and the built_in function-call counts, 434 in all, are:
-= -- 40
-> -- 14
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+
+Done.
+You've used 6 entries,
+            4087 wiz_defined-function locations,
+            849 strings with 7905 characters,
+and the built_in function-call counts, 1994 in all, are:
+= -- 137
+> -- 18
 < -- 0
-+ -- 7
++ -- 10
 - -- 4
-* -- 22
-:= -- 87
-add.period$ -- 6
-call.type$ -- 2
-change.case$ -- 8
+* -- 82
+:= -- 371
+add.period$ -- 10
+call.type$ -- 6
+change.case$ -- 3
 chr.to.int$ -- 0
-cite$ -- 2
-duplicate$ -- 20
-empty$ -- 35
+cite$ -- 6
+duplicate$ -- 164
+empty$ -- 199
 format.name$ -- 4
-if$ -- 83
+if$ -- 418
 int.to.chr$ -- 0
-int.to.str$ -- 2
-missing$ -- 2
-newline$ -- 13
+int.to.str$ -- 6
+missing$ -- 38
+newline$ -- 51
 num.names$ -- 4
-pop$ -- 8
+pop$ -- 118
 preamble$ -- 1
-purify$ -- 6
-quote$ -- 0
-skip$ -- 14
+purify$ -- 0
+quote$ -- 2
+skip$ -- 147
 stack$ -- 0
-substring$ -- 11
-swap$ -- 2
+substring$ -- 1
+swap$ -- 97
 text.length$ -- 0
 text.prefix$ -- 0
-top$ -- 0
-type$ -- 8
+top$ -- 5
+type$ -- 6
 warning$ -- 0
 while$ -- 4
-width$ -- 3
-write$ -- 22
+width$ -- 7
+write$ -- 75
