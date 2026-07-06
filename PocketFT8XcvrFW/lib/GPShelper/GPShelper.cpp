@@ -194,3 +194,50 @@ bool GPShelper::obtainGPSData(unsigned timeoutSeconds, void (*gpsAcquiringFix)(u
 
     return false;  // Failure
 }
+
+/**
+ * @brief Obtain UTC date/time from GPS device's internal RTC without requiring a satellite fix
+ *
+ * The GPS device's internal RTC maintains UTC time between power cycles (when battery-backed).
+ * This method reads NMEA messages from the GPS to obtain the current UTC date/time without
+ * requiring a satellite fix, making it suitable for logging prior to satellite acquisition.
+ *
+ * @param timeoutSeconds Number of seconds to wait for GPS to provide a time
+ * @return true if GPS provided valid UTC date and time (accessible via member variables), false if timeout
+ */
+bool GPShelper::obtainGPSrtcTime(unsigned timeoutSeconds) {
+    bool gotTime = false;
+    bool gotDate = false;
+
+    unsigned long t0 = millis();
+
+    while ((millis() - t0) <= timeoutSeconds * 1000) {
+        if (gpsDevice->read()) {
+            if (gpsDevice->newNMEAreceived()) {
+                if (gpsDevice->parse(gpsDevice->lastNMEA())) {
+                    // Retrieve date/time from GPS RTC without requiring a satellite fix.
+                    // The GPS module's internal RTC provides UTC time even before satellite acquisition.
+                    // Require the time to be fresh (< 500 ms old) to avoid stale readings near a second boundary.
+                    if (gpsDevice->secondsSinceTime() < 0.500) {
+                        elapsedMillis = millis();
+                        hour = gpsDevice->hour;
+                        minute = gpsDevice->minute;
+                        second = gpsDevice->seconds;
+                        milliseconds = gpsDevice->milliseconds + gpsDevice->secondsSinceTime() * 1000.0;
+                        gotTime = true;
+                    }
+                    // A year of 0 indicates the GPS has not yet provided a valid date (e.g., no battery backup
+                    // and no satellite fix since power-on).  Only accept non-zero years as valid.
+                    if (gpsDevice->year != 0) {
+                        year = gpsDevice->year;
+                        month = gpsDevice->month;
+                        day = gpsDevice->day;
+                        gotDate = true;
+                    }
+                    if (gotTime && gotDate) return true;
+                }
+            }
+        }
+    }
+    return false;
+}

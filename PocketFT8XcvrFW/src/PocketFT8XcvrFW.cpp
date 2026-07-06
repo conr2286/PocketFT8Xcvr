@@ -364,15 +364,19 @@ FLASHMEM void setup(void) {
     delay(10);
     ui.displayFrequency();  // Displays carrier and cursor frequency in Station Messages box
 
-    // Arrange for the Teensy MCU to obtain and sync its data/time from the Teensy RTC
-    // Serial.printf("MM:DD:YY = %02d:%02d:%02d\n", month(), day(), year());
-    // TODO:  There's a bug in here somewhere... we aren't properly restoring UTC time
-    // from a previously initialized RTC.
-    setSyncProvider(getTeensy3Time);
-    DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
+    // Use GPS RTC UTC time if available; otherwise fall back to Teensy RTC.
+    // The GPS module's internal RTC maintains UTC time even before satellite acquisition,
+    // making it suitable for logging.  The Teensy RTC may be in an unknown time zone.
+    if (gpsHelper.obtainGPSrtcTime(5)) {
+        setTime(gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.day, gpsHelper.month, gpsHelper.year);
+        DPRINTF("GPS RTC UTC time: %02u:%02u:%02u %02u/%02u/%02u\n", gpsHelper.hour, gpsHelper.minute, gpsHelper.second, gpsHelper.month, gpsHelper.day, gpsHelper.year);
+    } else {
+        // GPS unavailable; fall back to Teensy RTC (time zone unknown, not UTC)
+        setSyncProvider(getTeensy3Time);
+        DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
+    }
     ui.displayDate();  // Likely not yet GPS disciplined
     ui.displayTime();  //...and thus displayed in YELLOW
-    // Serial.printf("MM:DD:YY = %02d:%02d:%02d\n", month(), day(), year());
 
     // Final station initialization
     thisStation.setRig(String("https://github.com/conr2286/PocketFT8Xcvr"));  // Hey!  That's us!  :)
