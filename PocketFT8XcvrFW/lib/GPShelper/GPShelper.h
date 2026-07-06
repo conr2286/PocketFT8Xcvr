@@ -34,6 +34,7 @@ class GPShelper {
 
     // Publicly accessible methods
     bool obtainGPSData(unsigned timeoutSeconds, void (*gpsAcquiringFix)(unsigned));  // Returns true and assigns member var values if it obtains a GPS fix
+    bool obtainGPSrtcTime(unsigned timeoutSeconds);                                  // Returns true with UTC date/time from GPS RTC without requiring a satellite fix
     volatile bool hasFix(void);
     void begin(void);
 
