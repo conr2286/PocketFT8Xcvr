@@ -217,6 +217,7 @@ bool GPShelper::obtainGPSrtcTime(unsigned timeoutSeconds) {
                 if (gpsDevice->parse(gpsDevice->lastNMEA())) {
                     // Retrieve date/time from GPS RTC without requiring a satellite fix.
                     // The GPS module's internal RTC provides UTC time even before satellite acquisition.
+                    // Require the time to be fresh (< 500 ms old) to avoid stale readings near a second boundary.
                     if (gpsDevice->secondsSinceTime() < 0.500) {
                         elapsedMillis = millis();
                         hour = gpsDevice->hour;
@@ -225,6 +226,8 @@ bool GPShelper::obtainGPSrtcTime(unsigned timeoutSeconds) {
                         milliseconds = gpsDevice->milliseconds + gpsDevice->secondsSinceTime() * 1000.0;
                         gotTime = true;
                     }
+                    // A year of 0 indicates the GPS has not yet provided a valid date (e.g., no battery backup
+                    // and no satellite fix since power-on).  Only accept non-zero years as valid.
                     if (gpsDevice->year != 0) {
                         year = gpsDevice->year;
                         month = gpsDevice->month;
