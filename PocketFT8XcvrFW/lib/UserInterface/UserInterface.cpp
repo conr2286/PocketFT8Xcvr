@@ -218,7 +218,7 @@ void UserInterface::displayDate(bool forceUpdate) {
         if (gpsHelper.validGPSdata) {
             fg = A_GREEN;
         } else {
-            fg = A_YELLOW;
+            fg = A_RED;
         }
         itemDate->setItemText(String(str), fg);  // Green if GPS Disciplined
         lastDay = thisDay;                       // Remember the new date
@@ -244,7 +244,7 @@ void UserInterface::displayTime() {
         if (gpsHelper.validGPSdata) {
             fg = A_GREEN;  // Valid UTC time
         } else {
-            fg = A_YELLOW;  //"Does anyone really know what time it is?" -- Chicago
+            fg = A_RED;  //"Does anyone really know what time it is?" -- Chicago
         }
         itemTime->setItemText(String(str), fg);  // Green if GPS Disciplined
         lastSecond = thisSecond;

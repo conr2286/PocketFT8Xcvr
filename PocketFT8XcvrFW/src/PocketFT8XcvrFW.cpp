@@ -371,7 +371,7 @@ FLASHMEM void setup(void) {
     setSyncProvider(getTeensy3Time);
     DPRINTF("hour():minute():second() = %02u:%02u:%02u, timeStatus()=%u, getTeensy3Time()=%lu\n", hour(), minute(), second(), timeStatus(), getTeensy3Time());
     ui.displayDate();  // Likely not yet GPS disciplined
-    ui.displayTime();  //...and thus displayed in YELLOW
+    ui.displayTime();  //...and thus displayed in RED
     // Serial.printf("MM:DD:YY = %02d:%02d:%02d\n", month(), day(), year());
 
     // Final station initialization
