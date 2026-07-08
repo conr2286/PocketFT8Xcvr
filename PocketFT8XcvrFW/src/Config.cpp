@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <SD.h>
 
-#include "DEBUG.h"
+#include "NODEBUG.h"
 #include "PocketFT8Xcvr.h"
 #include "UserInterface.h"
 

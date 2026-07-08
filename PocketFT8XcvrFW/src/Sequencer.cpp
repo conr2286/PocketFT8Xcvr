@@ -2,32 +2,40 @@
  * SYNOPSIS
  *  Sequencer --- (AKA "RoboOp") Implements a state machine for automated sequencing of FT8 QSOs
  *
- * !!!DON'T PANIC!!!
+ * 42  !!!DON'T PANIC!!!  42
  *  Following the progress of a large state machine like this is challenging.
  *  While the complete FT8 implementation accommodates arcane corner cases to
- *  handle unexpected, exceptional events, the main flow is not so bad.
- *  Here's the main flow for how the Sequencer initiates a QSO by calling CQ:
+ *  handle unexpected, exceptional events, the main flow is really not so bad.
+ *  Here's the flow for how the RoboOp sequences a QSO begun with our CQ:
  *
  *  Timeslot  CurrentState  Event           Action              NextState   Commentary
  *    0       IDLE          timeslotEvent   N/A                 IDLE        We are monitoring FT8 traffic
- *    0       IDLE          cqButtonEvent   Prepare CQ msg      CQ_PENDING  Operator pressed CQ button
- *    1       CQ_PENDING    timeslotEvent   actionPendXmit
- *            XMIT_CQ       Arm the transmitter for CQ
- *    1       XMIT_CQ       timeslotEvent   N/A                 LISTEN_LOC  Transmit CQ
- *    2       LISTEN_LOC    locatorEvent    Prepare RSL msg     RSL_PENDING Receive grid locator
- *    2       RSL_PENDING   timeslotEvent   actionPendXmit
- *            XMIT_RSL      Arm transmitter for RSL
- *    3       XMIT_RSL      timeslotEvent   N/A                 LISTEN_RRSL Transmit RSL
- *    3       LISTEN_RRSL   rslMsgEvent        Prepare RRR msg     RRR_PENDING Receive RRSL
- *    4       RRR_PENDING   timeslotEvent   actionPendXmit
- *            XMIT_RRR      Arm transmitter for RRR
- *    4       XMIT_RRR      timeslotEvent   N/A                 LISTEN_73   Transmit RRR
- *    5       LISTEN_73     eotMsgNoReplyEvent        N/A                 IDLE        QSO finished normally
+ *    0       IDLE          cqButtonEvent   Prepare CQ msg      CQ_PENDING  Operator pressed CQ button, wait for timeslot
+ *    1       CQ_PENDING    timeslotEvent   actionPendXmit                  Start transmitting CQ
+ *    1       XMIT_CQ       timeslotEvent   N/A                 LISTEN_LOC  Finished sending CQ, start listening for replies
+ *    2       LISTEN_LOC    locatorEvent    Prepare RSL msg     RSL_PENDING Received their grid locator
+ *    2       RSL_PENDING   timeslotEvent   actionPendXmit                  Start transmitting RSL to remote
+ *    3       XMIT_RSL      timeslotEvent   N/A                 LISTEN_RRSL Now listen for our RRSL
+ *    3       LISTEN_RRSL   rslMsgEvent     Prepare RRR msg     RRR_PENDING Received our RRSL
+ *    4       RRR_PENDING   timeslotEvent   actionPendXmit                  Start transmitting RRR msg
+ *    4       XMIT_RRR      timeslotEvent   N/A                 LISTEN_73   Now listen for 73
+ *    5       LISTEN_73     eotMsgNoReplyEvent N/A              IDLE        Received 73:  QSO finished normally
  *
- *  The above includes events arising from three sources:  timeslot boundaries, GUI buttons,
- *  and received messages.  For many events, Sequencer undertakes one of two actions:
- *  prepare a message to transmit, or arm the transmitter to begin in an appropriate timeslot.
+ *  See... that wasn't so bad.  The devil is in the details... like what happens if we
+ *  receive a completely unexpected msg from the remote station, or they retransmit a
+ *  msg we though we already received, or we timeout while attempting to re-re-re-transmit
+ *  something to the remote station.  Most of this code is about the devil in the details.
+ *
+ *  Many events arise from three sources:  timeslot events, GUI buttons,
+ *  and received messages.  For many, Sequencer undertakes an action:
+ *  prepare a message to [re]transmit in an appropriate timeslot, listen for the remote
+ *  station to respond to us, or start the transmitter (in this the appropriate timeslot).
  *  The reference [1] below provides more information about sequencing an FT8 QSO.
+ *
+ *  Timer events, not to be confused with FT8 timeslot events, often deal with the nasty
+ *  business of a QSO gone bad.  This can arise due to QSB, QRM, QLF or even QRT.
+ *  Our typical response is to abort the QSO (they aren't responding, at least not as
+ *  we expect), or return to an IDLE state to monitor the traffic.
  *
  *  All FT8 messages, received and transmitted, worldwide, start on 15-second
  *  timeslot intervals.  The intervals begin precisely at 0, 15, 30 and 45 seconds
@@ -35,12 +43,12 @@
  *  12.6 seconds to transmit, the remaining dwell time is available for decoding
  *  messages and preparing a response, if any.  Consider what happens in the
  *  following sequence adopted from [1] below (Sequencer's state, event and action
- *  names are ommitted to simpify the discussion):
+ *  names are ommitted to simpify the discussion about timeslots):
  *
  *  Timeslot  Destn Source  Content Commentary
  *     0      CQ    K1JT    FN20    K1JT transmits CQ
  *     1                            K1JT listens but hears no response
- *     2      CQ    K1JT    FN20    Retransmit CQ
+ *     2      CQ    K1JT    FN20    K1JT retransmits CQ
  *     3                            K1JT again hears no response
  *     4      CQ    K1JT    FN20    Retransmit CQ
  *     5      K1JT  K9AN    EN50    K9AN responds to K1JT with their grid square locator
@@ -104,7 +112,7 @@
  *  are decoded (so it can prepare a response to transmit in the following timeslot).
  *  If this doesn't happen for some reason, sequencer is aware of even/odd timeslots and
  *  will pend its response until a suitable timeslot when the remote station should be
- *  listening.  The QSO can get really fouled up beyond all recognition (FUBAR) if the
+ *  listening.  The QSO will really foul up beyond all recognition (FUBAR) if the
  *  remote station changes their even/odd timeslot for transmissions.
  *
  *  Sequencer employs a timer to recognize QSO wreckage (changing band conditions,
