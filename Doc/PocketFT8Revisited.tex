@@ -63,7 +63,7 @@ Features include:
   \item JSON station configuration file
   \item Operation from a  5V USB power bank
   \end{itemize}
-The FT8 protocol\cite{qexFT8}, designed for weak signal communication is ideal for portable, battery-operated, QRPP operation.
+The FT8 protocol\cite{qexFT8}, designed for weak signal communication excels in portable, battery-operated, QRPP operation.
 While traditional  setups consist of a  computer, transceiver, and, in some cases, an audio interface,  Pocket FT8  integrates these  functions in a single, self-contained package.
 The use of FT8 reduces the transceiver's power requirements and weight while also  eliminating the telegraph key, microphone, and headset accessories accompanying SSB/CW transceivers.
 Consolidating the  radio with the FT8 encoder/decoder in an embedded computer eliminates the need to pack a computer in  addition to the radio.
@@ -104,10 +104,39 @@ The SD card must be inserted in the Teensy slot, not the unsupported Adafruit di
 The use of a connected GPS improves the transceiver's usability and is strongly recommended.
 The GPS connection is made with a 5-pin ribbon cable to J3.
 A GPS fix automatically configures the station's maidenhead grid square locator as well as the UTC date and time.
-Without the GPS, the transmitter will use the manually configured locator, and will restore the date and time from Teensy's battery-backed clock.
-Without the GPS, the station's timezone is unknown and QSOs may not be logged using UTC time as required by ADIF.
+Without the GPS, the transmitter uses the manually configured locator, and restores the date and time from Teensy's battery-backed clock.
+Without the GPS, the station's timezone is unknown and QSOs may not be logged using UTC time (required by ADIF standards).
 Without the GPS, the transceiver's knowledge of the FT8 15-second timeslot boundaries drifts with the battery-backed clock.
 Use the GPS whenever possible.
+
+The transceiver's user interface consists of a waterfall display of activity within the receiver's passband, a status display, a display of decoded messages, a transcript of the current QSO's traffic (if any), and a set of menu buttons.
+Brighter colors in the waterfall indicate stronger signals.
+The status display indicates the station's callsign, maidenhead grid square locator, date, time, etc.
+Values deemed certain appear in green text, while unvalidated content appear in yellow.
+
+FT8's AFSK legacy specifies the operating frequency as the carrier frequency (in kHz) and an audio offset (in Hz); the actual unmodulated operating frequency is their sum.
+The transceiver's carrier frequency must be configured in CONFIG.SYS.
+The default offset is 1000 Hz and is changed by touching the waterfall display.
+
+The transceiver boots up when 5V power is applied to the Teensy's USB port.
+The status display indicates the station's callsign and operating frequency as obtained from CONFIG.JSON.
+Until a GPS fix is obtained, the status display presents the battery-backed date, time and the grid square in yellow.
+Following a GPS fix, the UTC date and time, and the maidenhead grid square, appear in green text.
+During initialization, the transceiver reads the content of the log file, if any, and notes the callsigns of upto 1000 previously worked stations.
+By default, RoboOp will not rework those stations.
+
+Following initialization, the transceiver begins displaying decoded FT8 messages from other stations.
+Received CQ messages are highlighted to gain your attention.
+The limited display size requires the signal strength of the decoded messages to appear as simple S values (e.g. S1, S2, ... S9) rather than dB as in WSJTX.
+When the band is quiet, you may be able to contact almost any heard station; in a noisy band, only the stronger stations may be able to decode your QRPP transmissions.
+Touch a decoded station's message (e.g. CQ) to initiate a QSO with that station.
+Alternatively, you may use the CQ menu button to begin transmitting your own CQ messages.
+RoboOp (the firmware sequencing a WSJTX-style QSO) will begin transmitting at the next appropriate FT8 timeslot, avoiding those timeslots when a called station will likely transmit.
+If you do not receive an appropriate response, RoboOp  repeats your transmission until the configured timeout period expires, or you touch the ABort button.
+In all cases, RoboOp attempts to avoid transmitting in the same timeslot as a specified remote is expected to transmit.
+In crowded band conditions, you may wish to change the offset frequency (by touching the waterfall) to select a quiet location.
+
+
 
 
   

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  19 AUG 2026 16:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  19 AUG 2026 18:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -272,91 +272,91 @@ Overfull \hbox (4.53253pt too wide) in paragraph at lines 84--85
 e ``canned" 13-character
  []
 
-[2] [3]
-<images/Schematic.pdf, id=16, 1011.78pt x 614.295pt>
+[2] [3] [4]
+<images/Schematic.pdf, id=19, 1011.78pt x 614.295pt>
 File: images/Schematic.pdf Graphic file (type pdf)
 <use images/Schematic.pdf>
-Package pdftex.def Info: images/Schematic.pdf  used on input line 173.
+Package pdftex.def Info: images/Schematic.pdf  used on input line 202.
 (pdftex.def)             Requested size: 585.38303pt x 355.41962pt.
-<images/LPfilter.png, id=17, 5781.6pt x 3468.96pt>
+<images/LPfilter.png, id=20, 5781.6pt x 3468.96pt>
 File: images/LPfilter.png Graphic file (type png)
 <use images/LPfilter.png>
-Package pdftex.def Info: images/LPfilter.png  used on input line 181.
+Package pdftex.def Info: images/LPfilter.png  used on input line 210.
 (pdftex.def)             Requested size: 430.00462pt x 257.99057pt.
 
-Overfull \hbox (33.1206pt too wide) in paragraph at lines 206--206
+Overfull \hbox (33.1206pt too wide) in paragraph at lines 235--235
 []\OT1/cmtt/m/n/12 //-CONFIG.JSON----------------------------------------------
 ---------------[] 
  []
 
 
-Overfull \hbox (33.1206pt too wide) in paragraph at lines 206--206
+Overfull \hbox (33.1206pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "frequency": 7074,               //REQUIRED:  Operating f
 requency in kHz[] 
  []
 
 
-Overfull \hbox (20.7706pt too wide) in paragraph at lines 206--206
+Overfull \hbox (20.7706pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "myName" : "Jim",                //OPTIONAL:  Operator's 
 personal name[] 
  []
 
 
-Overfull \hbox (8.4206pt too wide) in paragraph at lines 206--206
+Overfull \hbox (8.4206pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "M0" : "CQ KQ7B/IDAHO",          //OPTIONAL:  13-Char Fre
 e Text Msg0[] 
  []
 
 
-Overfull \hbox (8.4206pt too wide) in paragraph at lines 206--206
+Overfull \hbox (8.4206pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "M1" : "IDAHO",                  //OPTIONAL:  13-Char Fre
 e Text Msg1[] 
  []
 
 
-Overfull \hbox (8.4206pt too wide) in paragraph at lines 206--206
+Overfull \hbox (8.4206pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "M2" : "QRT"                     //OPTIONAL:  13-Char Fre
 e Text Msg2[] 
  []
 
 
-Overfull \hbox (33.1206pt too wide) in paragraph at lines 206--206
+Overfull \hbox (33.1206pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "tcxoCorrection": -5,            //OPTIONAL:  TCXO freq c
 orrection in Hz[] 
  []
 
 
-Overfull \hbox (8.4206pt too wide) in paragraph at lines 206--206
+Overfull \hbox (8.4206pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "locator": "",                   //OPTIONAL:  4-char maid
 enhead grid[] 
  []
 
 
-Overfull \hbox (2.24559pt too wide) in paragraph at lines 206--206
+Overfull \hbox (2.24559pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "enableAVC": true,               //OPTIONAL:  0=disabled,
  1=enabled[] 
  []
 
 
-Overfull \hbox (26.9456pt too wide) in paragraph at lines 206--206
+Overfull \hbox (26.9456pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "qsoTimeout": 180,               //OPTIONAL:  Seconds Rob
 oOp will retry[] 
  []
 
 
-Overfull \hbox (26.9456pt too wide) in paragraph at lines 206--206
+Overfull \hbox (26.9456pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "enableDuplicates": false,       //OPTIONAL:  Enable dupl
 icate contacts[] 
  []
 
 
-Overfull \hbox (2.24559pt too wide) in paragraph at lines 206--206
+Overfull \hbox (2.24559pt too wide) in paragraph at lines 235--235
 []   \OT1/cmtt/m/n/12 "my_sota_ref" : "W7I/IC-257",    //OPTIONAL:  SOTA Refere
 nce Number[] 
  []
 
-(./PocketFT8Revisited.bbl [4]) [5] [6 <./images/Schematic.pdf>] [7 <./images/LP
-filter.png>] (./PocketFT8Revisited.aux)
+(./PocketFT8Revisited.bbl) [5] [6 <./images/Schematic.pdf>] [7 <./images/LPfilt
+er.png>] (./PocketFT8Revisited.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -365,17 +365,17 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  3728 strings out of 467525
  57981 string characters out of 5418982
- 483339 words of memory out of 5000000
+ 482339 words of memory out of 5000000
  32620 multiletter control sequences out of 15000+600000
  633801 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,11n,65p,283b,414s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,11n,65p,283b,335s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><
 /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></
 usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></u
 sr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on PocketFT8Revisited.pdf (7 pages, 289644 bytes).
+Output written on PocketFT8Revisited.pdf (7 pages, 292159 bytes).
 PDF statistics:
  60 PDF objects out of 1000 (max. 8388607)
  37 compressed objects within 1 object stream
