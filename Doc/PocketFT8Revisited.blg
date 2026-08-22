@@ -13,44 +13,44 @@ Database file #1: PocketFT8Revisited.bib
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
 
 Done.
-You've used 6 entries,
+You've used 5 entries,
             4087 wiz_defined-function locations,
-            849 strings with 7905 characters,
-and the built_in function-call counts, 1994 in all, are:
-= -- 137
-> -- 18
+            847 strings with 7926 characters,
+and the built_in function-call counts, 1698 in all, are:
+= -- 116
+> -- 17
 < -- 0
-+ -- 10
++ -- 9
 - -- 4
-* -- 82
-:= -- 371
-add.period$ -- 10
-call.type$ -- 6
+* -- 69
+:= -- 322
+add.period$ -- 9
+call.type$ -- 5
 change.case$ -- 3
 chr.to.int$ -- 0
-cite$ -- 6
-duplicate$ -- 164
-empty$ -- 199
+cite$ -- 5
+duplicate$ -- 138
+empty$ -- 167
 format.name$ -- 4
-if$ -- 418
+if$ -- 353
 int.to.chr$ -- 0
-int.to.str$ -- 6
-missing$ -- 38
-newline$ -- 51
+int.to.str$ -- 5
+missing$ -- 32
+newline$ -- 46
 num.names$ -- 4
-pop$ -- 118
+pop$ -- 100
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 147
+skip$ -- 121
 stack$ -- 0
 substring$ -- 1
-swap$ -- 97
+swap$ -- 79
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 6
+type$ -- 5
 warning$ -- 0
 while$ -- 4
-width$ -- 7
-write$ -- 75
+width$ -- 6
+write$ -- 66

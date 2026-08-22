@@ -44,15 +44,10 @@ B.~A{\c S}URO{\u G}LU. (2025, July) Dx ft8 a multiband ft8 digital mode 5 bands
 S.~F. K. B. S. G. J.~T. (K1JT), ``The ft4 and ft8 communication protocols,''
   \emph{QEX}, July/August 2020.
 
-\bibitem{kh1}
+\bibitem{mtp}
 \BIBentryALTinterwordspacing
-(2026, May). [Online]. Available:
-  \url{https://elecraft.com/products/kh1-transceiver}
-\BIBentrySTDinterwordspacing
-
-\bibitem{qmx}
-\BIBentryALTinterwordspacing
-(2026, May). [Online]. Available: \url{https://qrp-labs.com/qmxp.html}
+ [Online]. Available:
+  \url{https://github.com/PaulStoffregen/Teensyduino_Examples/tree/master/USB_Media_Transfer/Basic_SD_Card}
 \BIBentrySTDinterwordspacing
 
 \end{thebibliography}

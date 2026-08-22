@@ -9,6 +9,10 @@
 \usepackage{setspace}
 \usepackage{url}
 \usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+\usepackage{enumitem}
+
 %\usepackage{cite}
 %\usepackage{hyperref}
 
@@ -21,6 +25,7 @@
 \titleformat{\section}{\normalfont\Large\bfseries}{}{0em}{}
 
 
+
 \setlength\headheight{24pt}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -28,7 +33,10 @@
 %\fancyhead[R]{Author Last Name: Shortened Title}
 \fancyfoot[C]{\thepage}
 
+
+
 \begin{document}
+\small
 
 \vspace*{.5in} % Pushes the title  down page 1
 \begin{center}
@@ -58,26 +66,89 @@ Features include:
   \item GPS disciplined date, time and location (grid square)
   \item 480x320 pixel TFT calibrated touchscreen
   \item Waterfall traffic display
-  \item Standard FT8 QSO sequencer
-  \item Automatic QSO logging to an  ADIF file
-  \item JSON station configuration file
+  \item Standard FT8 QSO sequencer, "RoboOp"
+  \item micro-SD card accessible via USB
+  \item Automatic QSO logging to an ADIF file on SD
+  \item JSON station configuration file on SD
   \item Operation from a  5V USB power bank
   \end{itemize}
-The FT8 protocol\cite{qexFT8}, designed for weak signal communication excels in portable, battery-operated, QRPP operation.
-While traditional  setups consist of a  computer, transceiver, and, in some cases, an audio interface,  Pocket FT8  integrates these  functions in a single, self-contained package.
-The use of FT8 reduces the transceiver's power requirements and weight while also  eliminating the telegraph key, microphone, and headset accessories accompanying SSB/CW transceivers.
-Consolidating the  radio with the FT8 encoder/decoder in an embedded computer eliminates the need to pack a computer in  addition to the radio.
-Further integration of a GPS receiver provides the UTC date and time for ADIF logging as well as the Maidenhead grid square and FT8 time-synchronization.
-Of course, FT8 QSOs are  terse, contest-like exchanges conveying sequenced,  structured messages with minimal operator intervention after contact has been established.
-Although FT8 is not always appropriate, commercial alternative designs\cite{kh1}\cite{qmx}  cover many of those situations.
+The FT8 protocol\cite{qexFT8}, designed for weak signal communication, excels in portable, battery-operated, QRPP operation.
+While traditional  setups consist of a  computer, transceiver, and, in some cases, an audio interface.
+Pocket FT8  integrates these  functions in a single, self-contained package.
+Use of FT8 reduces the transceiver's power requirements and weight while also  eliminating the telegraph key, microphone, and headset accessories accompanying SSB/CW transceivers.
+Consolidating the  radio with the FT8 encoder/decoder in an embedded computer eliminates the need to carry a computer into the field.
+Further integration of a GPS receiver offers UTC date and time for ADIF logging as well as the Maidenhead grid square and synchonization with FT8 time-slots.
 
-\section{CONFIG.JSON}
-The radio requires an SD card in the Teensy card slot containing a station configuration file entitled, CONFIG.JSON.
-A sample JSON configuration file appears in Figure \ref{fig:config}.
+FT8 QSOs are  terse, contest-like exchanges conveying sequenced,  structured messages with minimal operator intervention after contact establishment.
+Because an FT8 message requires an extremely quick response, WSJT-X\cite{qexFT8} and related FT8 applications automate the message exchange between stations as human response times are woefully inadequate.
+Pocket FT8 Revisited includes a QSO sequencer, affectionately known as, RoboOp, implementing WSJT-X style message sequencing for Tx1 through Tx6.
+Akin to WSJT-X, RoboOp retransmits the previous message if it doesn't receive a valid response.
+A configurable QSO timer guards against endless retransmissions.
 
-Only two parameter entries, the station's callsign and operating frequency, are required; all remaining parameters illustrated in Figure \ref{fig:config} may be omitted.
-The callsign must conform to the WSJTX requirements.
-The operating frequency must be provided in kHz (without a fraction) and it must be compatible with the low-pass filter installed in the filter slot, FL1.
+The Teensy micro SD card slot holds both the operator-supplied configuration file, CONFIG.JSON, and the ADIF log file produced during station operation.
+The executing firmware supports the Media Transfer Protocol\cite{mtp} (MTP) enabling an optional host computer to access the Teensy SD card via USB without removing the media.
+MTP is often the preferred way to read the log file when the SD card is not accessible through the transceiver's enclosure.
+
+\section{Transceiver Construction}
+TBD
+
+\section{Building the Firmware}
+The firmware was developed on MacOS but should build on Windows or linux.  
+In all cases, use Visual Studio Code and PlatformIO to build and install the firmware.
+Install the required development tools for your computer's operating system and project source code:
+
+%% Begin right-aligned wrapped sidebar
+%\begin{wrapfigure}{r}{0.35\textwidth}
+%  \centering
+%  \fbox{% Put a box around the sidebar
+%    \begin{minipage}{0.32\textwidth}
+%    \footnotesize
+%      \textbf{Why PlatformIO?}
+%      
+%      While the Arduino IDE is attractive for smaller projects, full featured tools such as PlatformIO greatly accelerate developement of larger projects (PocketFT8XcvrFW contains over 40,000 lines of code).
+%    \end{minipage}%
+%  }
+%\end{wrapfigure}
+\begin{itemize} [noitemsep]
+\item Visual Studio Code
+\item C/C++ 23 compiler/linker
+\item \texttt{PocketFT8XcvrFW} source code 
+\end{itemize}
+
+You will need some Visual Studio Code extensions for C/C++ embedded systems development.
+From within Visual Studio Code, install:
+\begin{itemize} [noitemsep]
+\item PlatformiO IDE
+\item C/C++ DevTools
+\item C/C++ Extension Pack
+\item C/C++Themes
+\item CMake Tools
+\end{itemize}
+
+You will likely need to edit the \texttt{PocketFT8XcvrFW/platform.io} project configuration for your development environment, especially parameters describing which USB port connects to Teensy, and the \texttt{lib\_extra\_dirs} pathnames.
+
+You can test your development environment by having PlatformIO build \texttt{test\_01}, an implementation of blinky, with a pio command, \texttt{pio test -f hw/test\_01}.
+
+\section{Installing and Debugging the Firmware}
+Connect your development computer to Teensy's USB port.
+With all \texttt{platformio.ini} references to ports commented-out, click on PlatformIO's ``Upload" icon.
+If all goes well, PlatformIO will automatically locate the correct USB port and install the firmware.
+Upon occasion, PlatformIO may not dependably locate the correct port which you may resolve by manually configuring that port in \texttt{platformio.ini}.
+
+Teensy 4.1 does not include a debugging port such as JTAG.
+Consequently, all debugging to date has been achieved using debugging messages written to Teensy's USB serial port.
+The \texttt{DEBUG.h} and \texttt{NODEBUG.h} contain C macros (e.g. DPRINTF) facilitating use of debugging messages.
+Including \texttt{DEBUG.h} in a source file enables that file's debugging messages, while including \texttt{NODEBUG.h} disables them.
+
+
+\section{Transceiver Configuration}
+You must use a computer to create a configuration file, \texttt{CONFIG.JSON}, on a micro SD card and install the card in the Teensy slot as the radio can not boot-up without it.
+After the radio is operational, all the files on the SD card are accessible via USB through MTP.
+Sample JSON configuration files appear in Figure \ref{fig:config} and in the github project's Examples folder.
+
+Only two config parameter entries, the station's callsign and operating frequency, are essential; all remaining parameters illustrated in Figure \ref{fig:config} may be omitted.
+The callsign must conform to the WSJT-X requirements.
+The operating frequency must be provided in kHz (without a decimal fraction) and that frequency must be compatible with the low-pass filter installed in the filter slot, FL1.
 
 The operator's personal name is optional and is included in log file entries when provided.
 
@@ -85,31 +156,41 @@ The optional M0, M1 and M2 entries program three possible ``canned" 13-character
 
 When GPS is not reliable, the station's 4-character maidenhead grid square locator may be configured manually.
 
-The Si4735 automatic volume control feature may optionally configured off (false) or on (true). 
-The default is on (true).
+The Si4735 automatic volume control feature may be optionally configured off (\texttt{false}). 
+The default is on (\texttt{true}).
 
-The FT8 QSO sequencer, affectionately (satirically?) known as ``RoboOp,"  retransmits this station's last message when it receives no or an unexpected response from the remote station until the qsoTimeout period (in seconds) expires.
-By default, RoboOp tracks recently worked stations and avoids contacting duplicates; the enableDuplicates parameter will override this prohibition.
+To prevent endless retransmissions, RoboOp maintains a timer and abandons a QSO after the \texttt{qsoTimeout} period (in seconds) expires.
 
-Successful QSOs, those exchanging callsigns and signal reports, are logged to an ADIF file whose name may be optionally configured to override the default, ``LOGFILE.ADIF".
-The log file is always written to the Teensy SD card.
-If your station is located at a SOTA site, you may wish in configure a SOTA Reference Number to be included in the log file.
+By default, RoboOp tracks recently worked stations and avoids contacting duplicates; the \texttt{enableDuplicates} parameter override this prohibition if set to \texttt{true}.
 
-\section{Operation}
-The only truly required connections to the radio are power, antenna and the SD card containing the CONFIG.JSON file.
-Five volt power is supplied through the Teensy 4.1's USB Micro-B port.
-The antenna must be connected to the transceiver's SMA port.
-The SD card must be inserted in the Teensy slot, not the unsupported Adafruit display slot.
+Successful QSOs, those exchanging callsigns and signal reports, are logged to an ADIF file whose name may be optionally configured to override the default, \texttt{LOGFILE.ADIF}.
+This is useful, for example, if you'd like to maintain different log files for different dates or QTHs.
+In all cases, the log file is written to the Teensy micro SD card.
 
-The use of a connected GPS improves the transceiver's usability and is strongly recommended.
-The GPS connection is made with a 5-pin ribbon cable to J3.
+If your station is located at a SOTA site, you may wish in configure a SOTA Reference Number to be included in the log entries.
+
+\section{Connections}
+The only truly required connections to the radio are power, antenna and the micro SD card containing the CONFIG.JSON file.
+Five volt power must be supplied through the Teensy 4.1's USB Micro-B port.
+Commonly available USB power banks are satisfactory.
+The HF antenna must be connected to the transceiver's SMA port.
+The micro SD card must be inserted in the Teensy slot, not the unsupported Adafruit display slot.
+
+The use of a connected GPS significantly improves the transceiver's usability and is strongly recommended.
+The GPS connection is made with a 5-pin ribbon cable to J3 for received data (\texttt{GPSRX}), transmitted data (\texttt{GPSTX}), Pulse Per Second (\texttt{PPS}), power (\texttt{+5V}) and ground (\texttt{GND}) as illustrated in Figure \ref{fig:schematic}.
 A GPS fix automatically configures the station's maidenhead grid square locator as well as the UTC date and time.
-Without the GPS, the transmitter uses the manually configured locator, and restores the date and time from Teensy's battery-backed clock.
-Without the GPS, the station's timezone is unknown and QSOs may not be logged using UTC time (required by ADIF standards).
-Without the GPS, the transceiver's knowledge of the FT8 15-second timeslot boundaries drifts with the battery-backed clock.
+Lacking the GPS, the radio uses the manually configured locator and restores the current date and time from Teensy's battery-backed clock.
+Without the GPS, the station's timezone is unknown and QSOs may not be logged using UTC time as required by ADIF.
+Without the GPS, the transceiver's knowledge of the FT8 15-second time slot boundaries drifts with the battery-backed clock.
+Because FT8 requires transmissions to begin at accurately known time slots, communication is frustrated or impossible with timing errors.
+When a GPS fix has never been achieved, Teensy's battery-back clock is using date and time values obtained by the boot loader; these are unlikely to be particularly accurate nor UTC.
 Use the GPS whenever possible.
 
-The transceiver's user interface consists of a waterfall display of activity within the receiver's passband, a status display, a display of decoded messages, a transcript of the current QSO's traffic (if any), and a set of menu buttons.
+There is no microphone, key or headphone connection.
+The computer \emph{is} the radio, and only digital modulation is supported.
+
+\section{User Interface}
+The transceiver's user interface consists of a waterfall display of activity within the receiver's passband, a station status display, a display of decoded messages, a transcript of the current QSO's traffic (if any), and a set of menu buttons.
 Brighter colors in the waterfall indicate stronger signals.
 The status display indicates the station's callsign, maidenhead grid square locator, date, time, etc.
 Values deemed certain appear in green text, while unvalidated content appear in yellow.
@@ -127,13 +208,13 @@ By default, RoboOp will not rework those stations.
 
 Following initialization, the transceiver begins displaying decoded FT8 messages from other stations.
 Received CQ messages are highlighted to gain your attention.
-The limited display size requires the signal strength of the decoded messages to appear as simple S values (e.g. S1, S2, ... S9) rather than dB as in WSJTX.
+The limited display size requires the signal strength of the decoded messages to appear as simple S values (e.g. S1, S2, ... S9) rather than dB as in WSJT-X.
 When the band is quiet, you may be able to contact almost any heard station; in a noisy band, only the stronger stations may be able to decode your QRPP transmissions.
 Touch a decoded station's message (e.g. CQ) to initiate a QSO with that station.
 Alternatively, you may use the CQ menu button to begin transmitting your own CQ messages.
-RoboOp (the firmware sequencing a WSJTX-style QSO) will begin transmitting at the next appropriate FT8 timeslot, avoiding those timeslots when a called station will likely transmit.
+RoboOp (the firmware sequencing a WSJT-X-style QSO) will begin transmitting at the next appropriate FT8 time slots, avoiding those time slotss when a called station will likely transmit.
 If you do not receive an appropriate response, RoboOp  repeats your transmission until the configured timeout period expires, or you touch the ABort button.
-In all cases, RoboOp attempts to avoid transmitting in the same timeslot as a specified remote is expected to transmit.
+In all cases, RoboOp attempts to avoid transmitting in the same time slots as a specified remote is expected to transmit.
 In crowded band conditions, you may wish to change the offset frequency (by touching the waterfall) to select a quiet location.
 
 
