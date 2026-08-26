@@ -1,7 +1,6 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  22 AUG 2026 10:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  26 AUG 2026 15:38
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
 **PocketFT8Revisited.tex
 (./PocketFT8Revisited.tex
@@ -9,8 +8,8 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 (/usr/local/texlive/2026/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/size12.clo
-File: size12.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count275
 \c@section=\count276
@@ -281,37 +280,6 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \WF@everypar=\toks25
 Package: wrapfig 2003/01/31  v 3.6
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/titlesec/titlesec.sty
-Package: titlesec 2025/01/04 v2.17 Sectioning titles
-\ttl@box=\box57
-\beforetitleunit=\skip56
-\aftertitleunit=\skip57
-\ttl@plus=\dimen175
-\ttl@minus=\dimen176
-\ttl@toksa=\toks26
-\titlewidth=\dimen177
-\titlewidthlast=\dimen178
-\titlewidthfirst=\dimen179
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
-Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
-
-\f@nch@headwidth=\skip58
-\f@nch@offset@elh=\skip59
-\f@nch@offset@erh=\skip60
-\f@nch@offset@olh=\skip61
-\f@nch@offset@orh=\skip62
-\f@nch@offset@elf=\skip63
-\f@nch@offset@erf=\skip64
-\f@nch@offset@olf=\skip65
-\f@nch@offset@orf=\skip66
-\f@nch@height=\skip67
-\f@nch@footalignment=\skip68
-\f@nch@widthL=\skip69
-\f@nch@widthC=\skip70
-\f@nch@widthR=\skip71
-\@temptokenb=\toks27
-)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count313
@@ -319,24 +287,24 @@ File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 (./PocketFT8Revisited.aux)
 \openout1 = `PocketFT8Revisited.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -355,14 +323,14 @@ LaTeX Font Info:    ... okay on input line 38.
 * \oddsidemargin=19.8752pt
 * \evensidemargin=19.8752pt
 * \topmargin=-37.0pt
-* \headheight=24.0pt
+* \headheight=12.0pt
 * \headsep=25.0pt
-* \topskip=12.0pt
+* \topskip=10.0pt
 * \footskip=30.0pt
-* \marginparwidth=44.0pt
-* \marginparsep=10.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
 * \columnsep=10.0pt
-* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
 * \hoffset=0.0pt
 * \voffset=0.0pt
 * \mag=1000
@@ -375,16 +343,16 @@ LaTeX Font Info:    ... okay on input line 38.
 (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count314
-\scratchdimen=\dimen180
-\scratchbox=\box58
+\scratchdimen=\dimen175
+\scratchbox=\box57
 \nofMPsegments=\count315
 \nofMParguments=\count316
-\everyMPshowfont=\toks28
+\everyMPshowfont=\toks26
 \MPscratchCnt=\count317
-\MPscratchDim=\dimen181
+\MPscratchDim=\dimen176
 \MPnumerator=\count318
 \makeMPintoPDFobject=\count319
-\everyMPtoPDFconversion=\toks29
+\everyMPtoPDFconversion=\toks27
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -394,7 +362,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 38.
+Package hyperref Info: Link coloring OFF on input line 22.
 
 (./PocketFT8Revisited.out) (./PocketFT8Revisited.out)
 \@outlinefile=\write3
@@ -405,116 +373,59 @@ Package hyperref Info: Link coloring OFF on input line 38.
 {/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] [2] [3] 
 [4] [5]
-<images/Schematic.pdf, id=102, 1011.78pt x 614.295pt>
+<images/Schematic.pdf, id=79, 1011.78pt x 614.295pt>
 File: images/Schematic.pdf Graphic file (type pdf)
 <use images/Schematic.pdf>
-Package pdftex.def Info: images/Schematic.pdf  used on input line 283.
+Package pdftex.def Info: images/Schematic.pdf  used on input line 276.
 (pdftex.def)             Requested size: 585.38303pt x 355.41962pt.
-<images/LPfilter.png, id=103, 5781.6pt x 3468.96pt>
+<images/LPfilter.png, id=80, 5781.6pt x 3468.96pt>
 File: images/LPfilter.png Graphic file (type png)
 <use images/LPfilter.png>
-Package pdftex.def Info: images/LPfilter.png  used on input line 291.
+Package pdftex.def Info: images/LPfilter.png  used on input line 284.
+(pdftex.def)             Requested size: 430.00462pt x 257.99057pt.
+<images/SpectralPurity.png, id=81, 5781.6pt x 3468.96pt>
+File: images/SpectralPurity.png Graphic file (type png)
+<use images/SpectralPurity.png>
+Package pdftex.def Info: images/SpectralPurity.png  used on input line 292.
 (pdftex.def)             Requested size: 430.00462pt x 257.99057pt.
 
-Overfull \hbox (33.1206pt too wide) in paragraph at lines 316--316
-[]\OT1/cmtt/m/n/12 //-CONFIG.JSON----------------------------------------------
----------------[] 
+(./PocketFT8Revisited.bbl
+Underfull \hbox (badness 2478) in paragraph at lines 39--42
+[]\OT1/cmr/m/n/10 ------. (2026, May). [On-line]. Avail-able: []$https : / / an
+trak . org . tr / blog /
  []
 
-
-Overfull \hbox (33.1206pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "frequency": 7074,               //REQUIRED:  Operating f
-requency in kHz[] 
- []
-
-
-Overfull \hbox (20.7706pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "myName" : "Jim",                //OPTIONAL:  Operator's 
-personal name[] 
- []
-
-
-Overfull \hbox (8.4206pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "M0" : "CQ KQ7B/IDAHO",          //OPTIONAL:  13-Char Fre
-e Text Msg0[] 
- []
-
-
-Overfull \hbox (8.4206pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "M1" : "IDAHO",                  //OPTIONAL:  13-Char Fre
-e Text Msg1[] 
- []
-
-
-Overfull \hbox (8.4206pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "M2" : "QRT"                     //OPTIONAL:  13-Char Fre
-e Text Msg2[] 
- []
-
-
-Overfull \hbox (33.1206pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "tcxoCorrection": -5,            //OPTIONAL:  TCXO freq c
-orrection in Hz[] 
- []
-
-
-Overfull \hbox (8.4206pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "locator": "",                   //OPTIONAL:  4-char maid
-enhead grid[] 
- []
-
-
-Overfull \hbox (2.24559pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "enableAVC": true,               //OPTIONAL:  0=disabled,
- 1=enabled[] 
- []
-
-
-Overfull \hbox (26.9456pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "qsoTimeout": 180,               //OPTIONAL:  Seconds Rob
-oOp will retry[] 
- []
-
-
-Overfull \hbox (26.9456pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "enableDuplicates": false,       //OPTIONAL:  Enable dupl
-icate contacts[] 
- []
-
-
-Overfull \hbox (2.24559pt too wide) in paragraph at lines 316--316
-[]   \OT1/cmtt/m/n/12 "my_sota_ref" : "W7I/IC-257",    //OPTIONAL:  SOTA Refere
-nce Number[] 
- []
-
-(./PocketFT8Revisited.bbl) [6] [7 <./images/Schematic.pdf>] [8 <./images/LPfilt
-er.png>] (./PocketFT8Revisited.aux)
+) [6] [7 <./images/Schematic.pdf>] [8 <./images/LPfilter.png> <./images/Spectra
+lPurity.png>] [9] (./PocketFT8Revisited.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `PocketFT8Revisited.out' has not changed.
-(rerunfilecheck)             Checksum: F271B73E2B4A4E470D27A362BE902383;1703.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 10754 strings out of 467525
- 165993 string characters out of 5418982
- 602366 words of memory out of 5000000
- 39522 multiletter control sequences out of 15000+600000
- 634273 words of font info for 63 fonts, out of 8000000 for 9000
+ 10132 strings out of 467525
+ 156226 string characters out of 5418982
+ 589484 words of memory out of 5000000
+ 38895 multiletter control sequences out of 15000+600000
+ 634560 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,308b,457s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
-></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
-/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></u
-sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></us
-r/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr
-/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/
-local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on PocketFT8Revisited.pdf (8 pages, 336947 bytes).
+ 75i,8n,79p,452b,561s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
+usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></us
+r/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/
+local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/lo
+cal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local
+/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/
+texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/t
+exlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on PocketFT8Revisited.pdf (9 pages, 389067 bytes).
 PDF statistics:
- 171 PDF objects out of 1000 (max. 8388607)
- 142 compressed objects within 2 object streams
- 30 named destinations out of 1000 (max. 500000)
- 115 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 170 PDF objects out of 1000 (max. 8388607)
+ 133 compressed objects within 2 object streams
+ 40 named destinations out of 1000 (max. 500000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

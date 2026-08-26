@@ -1,4 +1,4 @@
-\documentclass[12pt, letterpaper]{article}
+\documentclass[10pt, letterpaper,]{article}
 
 
 % Include supporting packages
@@ -9,106 +9,88 @@
 \usepackage{setspace}
 \usepackage{url}
 \usepackage{graphicx}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{wrapfig}
 \usepackage{enumitem}
 
-%\usepackage{cite}
-%\usepackage{hyperref}
 
-
-% Set double spacing
-%\doublespacing
-
-% Formatting for Title, starting halfway down the first page
-\usepackage{titlesec}
-\titleformat{\section}{\normalfont\Large\bfseries}{}{0em}{}
-
-
-
-\setlength\headheight{24pt}
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-%\fancyhead[R]{Author Last Name: Shortened Title}
-\fancyfoot[C]{\thepage}
-
+\title{Pocket FT8 Revisited}
+\author{Jim Conrad, KQ7B}
+\date{\today}
 
 
 \begin{document}
-\small
+	\maketitle
+%\small
 
-\vspace*{.5in} % Pushes the title  down page 1
-\begin{center}
-    {\LARGE \bfseries Pocket FT8 Transceiver Revisited} \par
-    \vspace{0.25in}
-    {\large Jim Conrad, KQ7B} \par
-    {132 Mill Creek MDW, Grangeville, ID 83530 USA}
-\end{center}
+%\vspace*{.5in} % Pushes the title  down page 1
+%\begin{center}
+%    {\LARGE \bfseries Pocket FT8 Revisited} \par
+%    \vspace{0.25in}
+%    {\large Jim Conrad, KQ7B} \par
+%    {132 Mill Creek MDW, Grangeville, ID 83530 USA}
+%\end{center}
 
-\begin{center}
-The Pocket FT8 Transceiver Revisited is a self-contained, portable software defined QRPP transceiver.
-\end{center}
 
-\section{Introduction and Features}
+\begin{abstract}
+ The original Pocket FT8  was a small, self-contained, portable, software defined, QRPP, FT8 transceiver. 
+ This article revisits the original Pocket FT8 concept with hardware and firmware enhancements to create a compact digital rig  suitable for outdoor adventuring.
+\end{abstract}
 
-Charles Hill's original Pocket FT8 project\cite{pocketFT8} inspired several fully self-contained FT8 transceiver derivatives\cite{dxFT8}\cite{tinyDX} in which the computer \textit{is} the radio.
-This derivative revisits the original concept with simplified hardware and enhanced firmware while retaining the pocket-size, single-band, QRPP, HF transceiver concept for outdoor adventuring. 
+\section*{Introduction and Features}
+Charles Hill's original Pocket FT8 project\cite{pocketFT8} inspired several fully self-contained FT8 transceiver derivatives\cite{dxFT8}\cite{tinyDX} in which an embedded computer \textit{is} the rig.
+This derivative offers simplified hardware and enhanced firmware while retaining the compact-size, single-band, QRPP, HF transceiver concept.
 Features include:
   \begin{itemize} [noitemsep]
   \item Open source hardware and firmware
+  \item 600 mHz Teensy 4.1 Micro Controller Unit (MCU)
   \item Self-contained and light-weight
   \item Compact, 4-layer PCB (4.0X2.8")
-  \item FSK FT8 modulator/demodulator
-  \item 275+ mW RF output (QRPP)
+  \item Direct FSK, FT8 modulator/demodulator
+  \item QRPP 275+ mW RF output
   \item RF filter slot
   \item Low jitter TCXO
   \item GPS disciplined date, time and location (grid square)
   \item 480x320 pixel TFT calibrated touchscreen
   \item Waterfall traffic display
-  \item Standard FT8 QSO sequencer, "RoboOp"
-  \item micro-SD card accessible via USB
+  \item Standard FT8 QSO sequencer
+  \item Micro-SD card accessible via USB
   \item Automatic QSO logging to an ADIF file on SD
   \item JSON station configuration file on SD
-  \item Operation from a  5V USB power bank
+  \item Operation from a  5V, USB power bank
   \end{itemize}
 The FT8 protocol\cite{qexFT8}, designed for weak signal communication, excels in portable, battery-operated, QRPP operation.
-While traditional  setups consist of a  computer, transceiver, and, in some cases, an audio interface.
-Pocket FT8  integrates these  functions in a single, self-contained package.
+Pocket FT8 integrates the traditional digital station's computer, transceiver, rig controller, and digital/audio interface in a single, self-contained package.
 Use of FT8 reduces the transceiver's power requirements and weight while also  eliminating the telegraph key, microphone, and headset accessories accompanying SSB/CW transceivers.
 Consolidating the  radio with the FT8 encoder/decoder in an embedded computer eliminates the need to carry a computer into the field.
 Further integration of a GPS receiver offers UTC date and time for ADIF logging as well as the Maidenhead grid square and synchonization with FT8 time-slots.
 
-FT8 QSOs are  terse, contest-like exchanges conveying sequenced,  structured messages with minimal operator intervention after contact establishment.
+FT8 QSOs are  terse, contest-like exchanges conveying sequenced,  structured messages with minimal operator intervention following contact establishment.
 Because an FT8 message requires an extremely quick response, WSJT-X\cite{qexFT8} and related FT8 applications automate the message exchange between stations as human response times are woefully inadequate.
-Pocket FT8 Revisited includes a QSO sequencer, affectionately known as, RoboOp, implementing WSJT-X style message sequencing for Tx1 through Tx6.
-Akin to WSJT-X, RoboOp retransmits the previous message if it doesn't receive a valid response.
+Pocket FT8 Revisited includes a QSO sequencer, affectionately known as RoboOp, implementing WSJT-X style message sequencing for Tx1 through Tx6.
+Akin to WSJT-X, RoboOp retransmits the previous message if it doesn't receive a valid response from the remote station.
 A configurable QSO timer guards against endless retransmissions.
 
 The Teensy micro SD card slot holds both the operator-supplied configuration file, CONFIG.JSON, and the ADIF log file produced during station operation.
 The executing firmware supports the Media Transfer Protocol\cite{mtp} (MTP) enabling an optional host computer to access the Teensy SD card via USB without removing the media.
-MTP is often the preferred way to read the log file when the SD card is not accessible through the transceiver's enclosure.
+MTP is  the preferred way to read the log file when the SD card is not accessible through the transceiver's enclosure.
 
-\section{Transceiver Construction}
+\section*{Transceiver Construction}
 TBD
 
-\section{Building the Firmware}
+\section*{Low Pass Filter}
+FL1 in the Figure \ref{fig:schematic} removes harmonics from the digital PA.
+A suitable five-pole Chebyshev design for the 40m band is in the \texttt{RFFilters/5Pole40MLPFilter} folder.
+This filter was designed with Marki's on-line tool to allow 1 dB of ripple  peaking near the 40M FT8 7074 kHz calling frequency, and its performance was simulated with LTSpice.
+A Bode plot instrumentation of KQ7B's real-world implementation of 40M FL1 design appears in Figure \ref{fig:lpFilter}.
+A spectrum analyzer plot of the transceiver's ouput through the 40M FL1 implementation appears in Figure \ref{fig:spectralPurity}.
+The third hamonic is the most prominent and is suppressed by about 50 dB.
+
+\section*{Building the Firmware}
 The firmware was developed on MacOS but should build on Windows or linux.  
 In all cases, use Visual Studio Code and PlatformIO to build and install the firmware.
 Install the required development tools for your computer's operating system and project source code:
 
-%% Begin right-aligned wrapped sidebar
-%\begin{wrapfigure}{r}{0.35\textwidth}
-%  \centering
-%  \fbox{% Put a box around the sidebar
-%    \begin{minipage}{0.32\textwidth}
-%    \footnotesize
-%      \textbf{Why PlatformIO?}
-%      
-%      While the Arduino IDE is attractive for smaller projects, full featured tools such as PlatformIO greatly accelerate developement of larger projects (PocketFT8XcvrFW contains over 40,000 lines of code).
-%    \end{minipage}%
-%  }
-%\end{wrapfigure}
 \begin{itemize} [noitemsep]
 \item Visual Studio Code
 \item C/C++ 23 compiler/linker
@@ -125,30 +107,32 @@ From within Visual Studio Code, install:
 \item CMake Tools
 \end{itemize}
 
-You will likely need to edit the \texttt{PocketFT8XcvrFW/platform.io} project configuration for your development environment, especially parameters describing which USB port connects to Teensy, and the \texttt{lib\_extra\_dirs} pathnames.
+You will likely need to modify the \texttt{PocketFT8XcvrFW/platform.io} project configuration for your development environment.
+In particular, you may wish to edit (or comment-out) the parameters describing which of your computer's USB ports connects to Teensy.
+You may also need to edit the \texttt{lib\_extra\_dirs} pathnames.
 
-You can test your development environment by having PlatformIO build \texttt{test\_01}, an implementation of blinky, with a pio command, \texttt{pio test -f hw/test\_01}.
+You can test your development environment by having PlatformIO build \texttt{test\_01}, an implementation of blinky, with  the pio command, \texttt{pio test -f hw/test\_01}.
 
-\section{Installing and Debugging the Firmware}
+\section*{Installing and Debugging the Firmware}
 Connect your development computer to Teensy's USB port.
 With all \texttt{platformio.ini} references to ports commented-out, click on PlatformIO's ``Upload" icon.
 If all goes well, PlatformIO will automatically locate the correct USB port and install the firmware.
-Upon occasion, PlatformIO may not dependably locate the correct port which you may resolve by manually configuring that port in \texttt{platformio.ini}.
+Upon occasion, PlatformIO may not dependably locate the correct port and you may need to manually configuring that port in \texttt{platformio.ini}.
 
 Teensy 4.1 does not include a debugging port such as JTAG.
 Consequently, all debugging to date has been achieved using debugging messages written to Teensy's USB serial port.
-The \texttt{DEBUG.h} and \texttt{NODEBUG.h} contain C macros (e.g. DPRINTF) facilitating use of debugging messages.
+The \texttt{DEBUG.h} and \texttt{NODEBUG.h} header files define C macros (e.g. DPRINTF) facilitating use of debugging messages.
 Including \texttt{DEBUG.h} in a source file enables that file's debugging messages, while including \texttt{NODEBUG.h} disables them.
 
 
-\section{Transceiver Configuration}
-You must use a computer to create a configuration file, \texttt{CONFIG.JSON}, on a micro SD card and install the card in the Teensy slot as the radio can not boot-up without it.
+\section*{Transceiver Configuration}
+Use a computer to create a station configuration file, \texttt{CONFIG.JSON}, on a micro-SD card and install the card in the Teensy slot as the radio can not boot-up without it.
 After the radio is operational, all the files on the SD card are accessible via USB through MTP.
 Sample JSON configuration files appear in Figure \ref{fig:config} and in the github project's Examples folder.
 
 Only two config parameter entries, the station's callsign and operating frequency, are essential; all remaining parameters illustrated in Figure \ref{fig:config} may be omitted.
 The callsign must conform to the WSJT-X requirements.
-The operating frequency must be provided in kHz (without a decimal fraction) and that frequency must be compatible with the low-pass filter installed in the filter slot, FL1.
+The operating frequency must be provided in integral kHz (no decimal fraction) and that frequency must be compatible with the low-pass filter installed in the filter slot, FL1.
 
 The operator's personal name is optional and is included in log file entries when provided.
 
@@ -169,7 +153,7 @@ In all cases, the log file is written to the Teensy micro SD card.
 
 If your station is located at a SOTA site, you may wish in configure a SOTA Reference Number to be included in the log entries.
 
-\section{Connections}
+\section*{Connections}
 The only truly required connections to the radio are power, antenna and the micro SD card containing the CONFIG.JSON file.
 Five volt power must be supplied through the Teensy 4.1's USB Micro-B port.
 Commonly available USB power banks are satisfactory.
@@ -189,7 +173,7 @@ Use the GPS whenever possible.
 There is no microphone, key or headphone connection.
 The computer \emph{is} the radio, and only digital modulation is supported.
 
-\section{User Interface}
+\section*{User Interface}
 The transceiver's user interface consists of a waterfall display of activity within the receiver's passband, a station status display, a display of decoded messages, a transcript of the current QSO's traffic (if any), and a set of menu buttons.
 Brighter colors in the waterfall indicate stronger signals.
 The status display indicates the station's callsign, maidenhead grid square locator, date, time, etc.
@@ -221,7 +205,7 @@ In crowded band conditions, you may wish to change the offset frequency (by touc
 
 
   
- \section{Hardware Overview}
+ \section*{Hardware Overview}
 The Pocket FT8  transceiver (Figure \ref{fig:schematic}) is designed around a Teensy 4.1, 600 mHz, 32-bit ARM Cortex-M7 MCU with hardware floating point, USB, SPI, I2C, 1 mB of RAM, and two ADCs.
 
 When transmitting, the MCU reprograms the Si5351 clock generator's output for each of the eight FT8 Frequency Shift Keying (FSK) tones, a direct FSK scheme, unlike the Audio FSK (AFSK) widely used with a SSB transmitters' microphone jack.
@@ -262,19 +246,28 @@ T1 is a broadband, bifilar wound transformer consisting of 10 turns of 26 AWG on
 The FL1 low-pass filter can be assembled and tested on a small daughter board.
 With some effort, it can probably be made pluggable to facilitate band changes.
 
-\section{Software}
+\section*{Software}
 \subsection*{Software Design}
 
 \subsection*{Software Construction}
 
 
-\section{Testing}
+\section*{Testing}
 
-\section{Operation}
+\section*{Future}
 
-\section{Future}
+\section*{Acknowledgements}
+Pocket FT8 Revisited is a derivative of Charles Hill's original Pocket FT8 project\cite{pocketFT8} with important contributions from Ricardo Caritti's Si4735 library, Karlis Goba (YL3JG)'s FT4/FT8 encoder/decoder, Barb (WB2CBA)'s SN74ACT244 PA, and, of course, Franke, Somerville and Taylor's work on WSJT-X\cite{qexFT8}.
+Someone, somewhere, possibly in a FaceBook post, noted that the Si4735 desensitizes in the presence of I2C bus traffic with other devices; I found this to be absolutely true and their post saved the day.
+Perhaps everyone doing this kind of work has been inspired by Hans Summers (G0UPL)'s experiments and designs at QRP Labs.  
+If your operating interests don't include hours of analysis and debugging at a lab bench, you may find what you're looking for at, \url{https://qrp-labs.com}.
 
-\section{Acknowledgements}
+\section*{Authors}
+\begin{description}
+	\item[Jim Conrad] is a retired engineer from the computer industry and academia.  His career contributed to pioneering implementations of personal computer networking, embedded device networking, and color electrophotography before teaching computing to aspiring engineers.  He now lives on a small farm in northern Idaho.  ``Never let the people who didn't try tell you what you can or cannot do."
+
+\end{description}
+
 
 
 % Schematic
@@ -291,6 +284,14 @@ With some effort, it can probably be made pluggable to facilitate band changes.
 \includegraphics[width=1.0\textwidth]{images/LPfilter.png}
 \caption{Chebyshev Low-Pass Filter Bode Plot}
 \label{fig:lpFilter}
+\end{figure}
+
+% Spectral purity
+\begin{figure}[b]
+\centering
+\includegraphics[width=1.0\textwidth]{images/SpectralPurity.png}
+\caption{Spectral Purity}
+\label{fig:spectralPurity}
 \end{figure}
 
 % CONFIG.JSON
@@ -324,6 +325,7 @@ With some effort, it can probably be made pluggable to facilitate band changes.
 %\bibliographystyle{plain}
 %\bibliographystyle{ieeetr}
 \bibliography{PocketFT8Revisited}
+
 \end{document}
 
 
